@@ -85,6 +85,10 @@ body, html {
   flex-direction: column;
   justify-content: center;
 }
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element .sorter img:nth-child(1) {
+  transform: rotate(180deg);
+  margin-right: 0.7px;
+}
 .wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element:nth-child(1) {
   width: clamp(200px, 50vw, 550px);
 }

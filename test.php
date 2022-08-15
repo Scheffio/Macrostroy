@@ -1,3 +1,3 @@
 <?php
 echo "test!";
-die();
+die();1

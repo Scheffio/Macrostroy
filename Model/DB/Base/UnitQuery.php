@@ -24,16 +24,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnitQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUnitQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildUnitQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
- * @method     ChildUnitQuery orderByVersion($order = Criteria::ASC) Order by the version column
- * @method     ChildUnitQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
- * @method     ChildUnitQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  *
  * @method     ChildUnitQuery groupById() Group by the id column
  * @method     ChildUnitQuery groupByName() Group by the name column
  * @method     ChildUnitQuery groupByIsAvailable() Group by the is_available column
- * @method     ChildUnitQuery groupByVersion() Group by the version column
- * @method     ChildUnitQuery groupByVersionCreatedAt() Group by the version_created_at column
- * @method     ChildUnitQuery groupByVersionCreatedBy() Group by the version_created_by column
  *
  * @method     ChildUnitQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUnitQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -73,27 +67,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnitQuery rightJoinWithWork() Adds a RIGHT JOIN clause and with to the query using the Work relation
  * @method     ChildUnitQuery innerJoinWithWork() Adds a INNER JOIN clause and with to the query using the Work relation
  *
- * @method     ChildUnitQuery leftJoinUnitVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the UnitVersion relation
- * @method     ChildUnitQuery rightJoinUnitVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UnitVersion relation
- * @method     ChildUnitQuery innerJoinUnitVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the UnitVersion relation
- *
- * @method     ChildUnitQuery joinWithUnitVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UnitVersion relation
- *
- * @method     ChildUnitQuery leftJoinWithUnitVersion() Adds a LEFT JOIN clause and with to the query using the UnitVersion relation
- * @method     ChildUnitQuery rightJoinWithUnitVersion() Adds a RIGHT JOIN clause and with to the query using the UnitVersion relation
- * @method     ChildUnitQuery innerJoinWithUnitVersion() Adds a INNER JOIN clause and with to the query using the UnitVersion relation
- *
- * @method     \DB\MaterialQuery|\DB\TechnicQuery|\DB\WorkQuery|\DB\UnitVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\MaterialQuery|\DB\TechnicQuery|\DB\WorkQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUnit|null findOne(?ConnectionInterface $con = null) Return the first ChildUnit matching the query
  * @method     ChildUnit findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUnit matching the query, or a new ChildUnit object populated from the query conditions when no match is found
  *
  * @method     ChildUnit|null findOneById(int $id) Return the first ChildUnit filtered by the id column
  * @method     ChildUnit|null findOneByName(string $name) Return the first ChildUnit filtered by the name column
- * @method     ChildUnit|null findOneByIsAvailable(boolean $is_available) Return the first ChildUnit filtered by the is_available column
- * @method     ChildUnit|null findOneByVersion(int $version) Return the first ChildUnit filtered by the version column
- * @method     ChildUnit|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildUnit filtered by the version_created_at column
- * @method     ChildUnit|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildUnit filtered by the version_created_by column *
+ * @method     ChildUnit|null findOneByIsAvailable(boolean $is_available) Return the first ChildUnit filtered by the is_available column *
 
  * @method     ChildUnit requirePk($key, ?ConnectionInterface $con = null) Return the ChildUnit by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUnit requireOne(?ConnectionInterface $con = null) Return the first ChildUnit matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -101,9 +82,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnit requireOneById(int $id) Return the first ChildUnit filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUnit requireOneByName(string $name) Return the first ChildUnit filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUnit requireOneByIsAvailable(boolean $is_available) Return the first ChildUnit filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUnit requireOneByVersion(int $version) Return the first ChildUnit filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUnit requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildUnit filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUnit requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildUnit filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUnit[]|Collection find(?ConnectionInterface $con = null) Return ChildUnit objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildUnit> find(?ConnectionInterface $con = null) Return ChildUnit objects based on current ModelCriteria
@@ -113,26 +91,13 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildUnit> findByName(string $name) Return ChildUnit objects filtered by the name column
  * @method     ChildUnit[]|Collection findByIsAvailable(boolean $is_available) Return ChildUnit objects filtered by the is_available column
  * @psalm-method Collection&\Traversable<ChildUnit> findByIsAvailable(boolean $is_available) Return ChildUnit objects filtered by the is_available column
- * @method     ChildUnit[]|Collection findByVersion(int $version) Return ChildUnit objects filtered by the version column
- * @psalm-method Collection&\Traversable<ChildUnit> findByVersion(int $version) Return ChildUnit objects filtered by the version column
- * @method     ChildUnit[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildUnit objects filtered by the version_created_at column
- * @psalm-method Collection&\Traversable<ChildUnit> findByVersionCreatedAt(string $version_created_at) Return ChildUnit objects filtered by the version_created_at column
- * @method     ChildUnit[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildUnit objects filtered by the version_created_by column
- * @psalm-method Collection&\Traversable<ChildUnit> findByVersionCreatedBy(string $version_created_by) Return ChildUnit objects filtered by the version_created_by column
  * @method     ChildUnit[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildUnit> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class UnitQuery extends ModelCriteria
 {
-
-    // versionable behavior
-
-    /**
-     * Whether the versioning is enabled
-     */
-    static $isVersioningEnabled = true;
-protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\UnitQuery object.
@@ -225,7 +190,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, is_available, version, version_created_at, version_created_by FROM unit WHERE id = :p0';
+        $sql = 'SELECT id, name, is_available FROM unit WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -415,122 +380,6 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         $this->addUsingAlias(UnitTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersion(1234); // WHERE version = 1234
-     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
-     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
-     * </code>
-     *
-     * @param mixed $version The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersion($version = null, ?string $comparison = null)
-    {
-        if (is_array($version)) {
-            $useMinMax = false;
-            if (isset($version['min'])) {
-                $this->addUsingAlias(UnitTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($version['max'])) {
-                $this->addUsingAlias(UnitTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(UnitTableMap::COL_VERSION, $version, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version_created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
-     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
-     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
-     * </code>
-     *
-     * @param mixed $versionCreatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
-    {
-        if (is_array($versionCreatedAt)) {
-            $useMinMax = false;
-            if (isset($versionCreatedAt['min'])) {
-                $this->addUsingAlias(UnitTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($versionCreatedAt['max'])) {
-                $this->addUsingAlias(UnitTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(UnitTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version_created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
-     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
-     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $versionCreatedBy The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($versionCreatedBy)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(UnitTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
 
         return $this;
     }
@@ -932,138 +781,6 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         return $this->useExistsQuery('Work', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\UnitVersion object
-     *
-     * @param \DB\UnitVersion|ObjectCollection $unitVersion the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByUnitVersion($unitVersion, ?string $comparison = null)
-    {
-        if ($unitVersion instanceof \DB\UnitVersion) {
-            $this
-                ->addUsingAlias(UnitTableMap::COL_ID, $unitVersion->getId(), $comparison);
-
-            return $this;
-        } elseif ($unitVersion instanceof ObjectCollection) {
-            $this
-                ->useUnitVersionQuery()
-                ->filterByPrimaryKeys($unitVersion->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByUnitVersion() only accepts arguments of type \DB\UnitVersion or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the UnitVersion relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinUnitVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UnitVersion');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'UnitVersion');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the UnitVersion relation UnitVersion object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\UnitVersionQuery A secondary query class using the current class as primary query
-     */
-    public function useUnitVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinUnitVersion($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UnitVersion', '\DB\UnitVersionQuery');
-    }
-
-    /**
-     * Use the UnitVersion relation UnitVersion object
-     *
-     * @param callable(\DB\UnitVersionQuery):\DB\UnitVersionQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withUnitVersionQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useUnitVersionQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to UnitVersion table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\UnitVersionQuery The inner query object of the EXISTS statement
-     */
-    public function useUnitVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('UnitVersion', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to UnitVersion table for a NOT EXISTS query.
-     *
-     * @see useUnitVersionExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\UnitVersionQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useUnitVersionNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('UnitVersion', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
      * Exclude object from result
      *
      * @param ChildUnit $unit Object to remove from the list of results
@@ -1138,34 +855,6 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
 
             return $affectedRows;
         });
-    }
-
-    // versionable behavior
-
-    /**
-     * Checks whether versioning is enabled
-     *
-     * @return bool
-     */
-    static public function isVersioningEnabled(): bool
-    {
-        return self::$isVersioningEnabled;
-    }
-
-    /**
-     * Enables versioning
-     */
-    static public function enableVersioning(): void
-    {
-        self::$isVersioningEnabled = true;
-    }
-
-    /**
-     * Disables versioning
-     */
-    static public function disableVersioning(): void
-    {
-        self::$isVersioningEnabled = false;
     }
 
 }

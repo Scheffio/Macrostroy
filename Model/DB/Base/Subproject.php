@@ -2,24 +2,16 @@
 
 namespace DB\Base;
 
-use \DateTime;
 use \Exception;
-use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Groups as ChildGroups;
 use DB\GroupsQuery as ChildGroupsQuery;
-use DB\GroupsVersionQuery as ChildGroupsVersionQuery;
 use DB\Project as ChildProject;
 use DB\ProjectQuery as ChildProjectQuery;
-use DB\ProjectVersionQuery as ChildProjectVersionQuery;
 use DB\Subproject as ChildSubproject;
 use DB\SubprojectQuery as ChildSubprojectQuery;
-use DB\SubprojectVersion as ChildSubprojectVersion;
-use DB\SubprojectVersionQuery as ChildSubprojectVersionQuery;
 use DB\Map\GroupsTableMap;
-use DB\Map\GroupsVersionTableMap;
 use DB\Map\SubprojectTableMap;
-use DB\Map\SubprojectVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -32,7 +24,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'subproject' table.
@@ -101,7 +92,7 @@ abstract class Subproject implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (публичный, приватный)
+     * Доступ (открытый, приватный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -110,38 +101,9 @@ abstract class Subproject implements ActiveRecordInterface
     /**
      * The value for the project_id field.
      * ID проекта
-     * @var        int
-     */
-    protected $project_id;
-
-    /**
-     * The value for the version field.
-     *
-     * Note: this column has a database default value of: 0
      * @var        int|null
      */
-    protected $version;
-
-    /**
-     * The value for the version_created_at field.
-     *
-     * @var        DateTime|null
-     */
-    protected $version_created_at;
-
-    /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
-
-    /**
-     * The value for the version_comment field.
-     *
-     * @var        string|null
-     */
-    protected $version_comment;
+    protected $project_id;
 
     /**
      * @var        ChildProject
@@ -156,13 +118,6 @@ abstract class Subproject implements ActiveRecordInterface
     protected $collGroupssPartial;
 
     /**
-     * @var        ObjectCollection|ChildSubprojectVersion[] Collection to store aggregation of ChildSubprojectVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildSubprojectVersion> Collection to store aggregation of ChildSubprojectVersion objects.
-     */
-    protected $collSubprojectVersions;
-    protected $collSubprojectVersionsPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -170,27 +125,12 @@ abstract class Subproject implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
-    // versionable behavior
-
-
-    /**
-     * @var bool
-     */
-    protected $enforceVersion = false;
-
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildGroups[]
      * @phpstan-var ObjectCollection&\Traversable<ChildGroups>
      */
     protected $groupssScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildSubprojectVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildSubprojectVersion>
-     */
-    protected $subprojectVersionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -202,7 +142,6 @@ abstract class Subproject implements ActiveRecordInterface
     {
         $this->status = 'in_process';
         $this->is_available = true;
-        $this->version = 0;
     }
 
     /**
@@ -465,7 +404,7 @@ abstract class Subproject implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (открытый, приватный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -475,7 +414,7 @@ abstract class Subproject implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (открытый, приватный)
      * @return boolean
      */
     public function isAvailable()
@@ -486,63 +425,11 @@ abstract class Subproject implements ActiveRecordInterface
     /**
      * Get the [project_id] column value.
      * ID проекта
-     * @return int
+     * @return int|null
      */
     public function getProjectId()
     {
         return $this->project_id;
-    }
-
-    /**
-     * Get the [version] column value.
-     *
-     * @return int|null
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [version_created_at] column value.
-     *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime|null : string|null)
-     */
-    public function getVersionCreatedAt($format = null)
-    {
-        if ($format === null) {
-            return $this->version_created_at;
-        } else {
-            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
-    }
-
-    /**
-     * Get the [version_comment] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionComment()
-    {
-        return $this->version_comment;
     }
 
     /**
@@ -611,7 +498,7 @@ abstract class Subproject implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (публичный, приватный)
+     * Доступ (открытый, приватный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -636,7 +523,7 @@ abstract class Subproject implements ActiveRecordInterface
     /**
      * Set the value of [project_id] column.
      * ID проекта
-     * @param int $v New value
+     * @param int|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setProjectId($v)
@@ -658,86 +545,6 @@ abstract class Subproject implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [version] column.
-     *
-     * @param int|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersion($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->version !== $v) {
-            $this->version = $v;
-            $this->modifiedColumns[SubprojectTableMap::COL_VERSION] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->version_created_at !== null || $dt !== null) {
-            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
-                $this->version_created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[SubprojectTableMap::COL_VERSION_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[SubprojectTableMap::COL_VERSION_CREATED_BY] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_comment] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionComment($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_comment !== $v) {
-            $this->version_comment = $v;
-            $this->modifiedColumns[SubprojectTableMap::COL_VERSION_COMMENT] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -752,10 +559,6 @@ abstract class Subproject implements ActiveRecordInterface
             }
 
             if ($this->is_available !== true) {
-                return false;
-            }
-
-            if ($this->version !== 0) {
                 return false;
             }
 
@@ -799,21 +602,6 @@ abstract class Subproject implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SubprojectTableMap::translateFieldName('ProjectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->project_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SubprojectTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SubprojectTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SubprojectTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SubprojectTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -822,7 +610,7 @@ abstract class Subproject implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = SubprojectTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = SubprojectTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Subproject'), 0, $e);
@@ -890,8 +678,6 @@ abstract class Subproject implements ActiveRecordInterface
             $this->aProject = null;
             $this->collGroupss = null;
 
-            $this->collSubprojectVersions = null;
-
         } // if (deep)
     }
 
@@ -956,14 +742,6 @@ abstract class Subproject implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
-            // versionable behavior
-            if ($this->isVersioningNecessary()) {
-                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
-                if (!$this->isColumnModified(SubprojectTableMap::COL_VERSION_CREATED_AT)) {
-                    $this->setVersionCreatedAt(time());
-                }
-                $createVersion = true; // for postSave hook
-            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -977,10 +755,6 @@ abstract class Subproject implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                // versionable behavior
-                if (isset($createVersion)) {
-                    $this->addVersion($con);
-                }
                 SubprojectTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1047,23 +821,6 @@ abstract class Subproject implements ActiveRecordInterface
                 }
             }
 
-            if ($this->subprojectVersionsScheduledForDeletion !== null) {
-                if (!$this->subprojectVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\SubprojectVersionQuery::create()
-                        ->filterByPrimaryKeys($this->subprojectVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->subprojectVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSubprojectVersions !== null) {
-                foreach ($this->collSubprojectVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -1084,10 +841,6 @@ abstract class Subproject implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[SubprojectTableMap::COL_ID] = true;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SubprojectTableMap::COL_ID . ')');
-        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(SubprojectTableMap::COL_ID)) {
@@ -1104,18 +857,6 @@ abstract class Subproject implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SubprojectTableMap::COL_PROJECT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'project_id';
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'version';
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_COMMENT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -1143,18 +884,6 @@ abstract class Subproject implements ActiveRecordInterface
                     case 'project_id':
                         $stmt->bindValue($identifier, $this->project_id, PDO::PARAM_INT);
                         break;
-                    case 'version':
-                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
-                        break;
-                    case 'version_created_at':
-                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
-                        break;
-                    case 'version_comment':
-                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
-                        break;
                 }
             }
             $stmt->execute();
@@ -1162,13 +891,6 @@ abstract class Subproject implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', 0, $e);
-        }
-        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1232,18 +954,6 @@ abstract class Subproject implements ActiveRecordInterface
             case 4:
                 return $this->getProjectId();
 
-            case 5:
-                return $this->getVersion();
-
-            case 6:
-                return $this->getVersionCreatedAt();
-
-            case 7:
-                return $this->getVersionCreatedBy();
-
-            case 8:
-                return $this->getVersionComment();
-
             default:
                 return null;
         } // switch()
@@ -1277,15 +987,7 @@ abstract class Subproject implements ActiveRecordInterface
             $keys[2] => $this->getStatus(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getProjectId(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getVersionCreatedAt(),
-            $keys[7] => $this->getVersionCreatedBy(),
-            $keys[8] => $this->getVersionComment(),
         ];
-        if ($result[$keys[6]] instanceof \DateTimeInterface) {
-            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1321,21 +1023,6 @@ abstract class Subproject implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collGroupss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collSubprojectVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'subprojectVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'subproject_versions';
-                        break;
-                    default:
-                        $key = 'SubprojectVersions';
-                }
-
-                $result[$key] = $this->collSubprojectVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1388,18 +1075,6 @@ abstract class Subproject implements ActiveRecordInterface
             case 4:
                 $this->setProjectId($value);
                 break;
-            case 5:
-                $this->setVersion($value);
-                break;
-            case 6:
-                $this->setVersionCreatedAt($value);
-                break;
-            case 7:
-                $this->setVersionCreatedBy($value);
-                break;
-            case 8:
-                $this->setVersionComment($value);
-                break;
         } // switch()
 
         return $this;
@@ -1440,18 +1115,6 @@ abstract class Subproject implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setProjectId($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setVersion($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1510,18 +1173,6 @@ abstract class Subproject implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SubprojectTableMap::COL_PROJECT_ID)) {
             $criteria->add(SubprojectTableMap::COL_PROJECT_ID, $this->project_id);
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION)) {
-            $criteria->add(SubprojectTableMap::COL_VERSION, $this->version);
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_CREATED_AT)) {
-            $criteria->add(SubprojectTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(SubprojectTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
-        }
-        if ($this->isColumnModified(SubprojectTableMap::COL_VERSION_COMMENT)) {
-            $criteria->add(SubprojectTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1611,14 +1262,11 @@ abstract class Subproject implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
+        $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
         $copyObj->setStatus($this->getStatus());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setProjectId($this->getProjectId());
-        $copyObj->setVersion($this->getVersion());
-        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
-        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1631,17 +1279,10 @@ abstract class Subproject implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getSubprojectVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSubprojectVersion($relObj->copy($deepCopy));
-                }
-            }
-
         } // if ($deepCopy)
 
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1670,7 +1311,7 @@ abstract class Subproject implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildProject object.
      *
-     * @param ChildProject $v
+     * @param ChildProject|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
@@ -1699,7 +1340,7 @@ abstract class Subproject implements ActiveRecordInterface
      * Get the associated ChildProject object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildProject The associated ChildProject object.
+     * @return ChildProject|null The associated ChildProject object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function getProject(?ConnectionInterface $con = null)
@@ -1731,10 +1372,6 @@ abstract class Subproject implements ActiveRecordInterface
     {
         if ('Groups' === $relationName) {
             $this->initGroupss();
-            return;
-        }
-        if ('SubprojectVersion' === $relationName) {
-            $this->initSubprojectVersions();
             return;
         }
     }
@@ -1979,248 +1616,6 @@ abstract class Subproject implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collSubprojectVersions collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addSubprojectVersions()
-     */
-    public function clearSubprojectVersions()
-    {
-        $this->collSubprojectVersions = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collSubprojectVersions collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialSubprojectVersions($v = true): void
-    {
-        $this->collSubprojectVersionsPartial = $v;
-    }
-
-    /**
-     * Initializes the collSubprojectVersions collection.
-     *
-     * By default this just sets the collSubprojectVersions collection to an empty array (like clearcollSubprojectVersions());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSubprojectVersions(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collSubprojectVersions && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = SubprojectVersionTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collSubprojectVersions = new $collectionClassName;
-        $this->collSubprojectVersions->setModel('\DB\SubprojectVersion');
-    }
-
-    /**
-     * Gets an array of ChildSubprojectVersion objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildSubproject is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSubprojectVersion[] List of ChildSubprojectVersion objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildSubprojectVersion> List of ChildSubprojectVersion objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getSubprojectVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collSubprojectVersionsPartial && !$this->isNew();
-        if (null === $this->collSubprojectVersions || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collSubprojectVersions) {
-                    $this->initSubprojectVersions();
-                } else {
-                    $collectionClassName = SubprojectVersionTableMap::getTableMap()->getCollectionClassName();
-
-                    $collSubprojectVersions = new $collectionClassName;
-                    $collSubprojectVersions->setModel('\DB\SubprojectVersion');
-
-                    return $collSubprojectVersions;
-                }
-            } else {
-                $collSubprojectVersions = ChildSubprojectVersionQuery::create(null, $criteria)
-                    ->filterBySubproject($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSubprojectVersionsPartial && count($collSubprojectVersions)) {
-                        $this->initSubprojectVersions(false);
-
-                        foreach ($collSubprojectVersions as $obj) {
-                            if (false == $this->collSubprojectVersions->contains($obj)) {
-                                $this->collSubprojectVersions->append($obj);
-                            }
-                        }
-
-                        $this->collSubprojectVersionsPartial = true;
-                    }
-
-                    return $collSubprojectVersions;
-                }
-
-                if ($partial && $this->collSubprojectVersions) {
-                    foreach ($this->collSubprojectVersions as $obj) {
-                        if ($obj->isNew()) {
-                            $collSubprojectVersions[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSubprojectVersions = $collSubprojectVersions;
-                $this->collSubprojectVersionsPartial = false;
-            }
-        }
-
-        return $this->collSubprojectVersions;
-    }
-
-    /**
-     * Sets a collection of ChildSubprojectVersion objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $subprojectVersions A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setSubprojectVersions(Collection $subprojectVersions, ?ConnectionInterface $con = null)
-    {
-        /** @var null|ChildSubprojectVersion[] $subprojectVersionsToDelete */
-        $subprojectVersionsToDelete = $this->getSubprojectVersions(new Criteria(), $con)->diff($subprojectVersions);
-
-
-        //since at least one column in the foreign key is at the same time a PK
-        //we can not just set a PK to NULL in the lines below. We have to store
-        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->subprojectVersionsScheduledForDeletion = clone $subprojectVersionsToDelete;
-
-        foreach ($subprojectVersionsToDelete as $subprojectVersionRemoved) {
-            $subprojectVersionRemoved->setSubproject(null);
-        }
-
-        $this->collSubprojectVersions = null;
-        foreach ($subprojectVersions as $subprojectVersion) {
-            $this->addSubprojectVersion($subprojectVersion);
-        }
-
-        $this->collSubprojectVersions = $subprojectVersions;
-        $this->collSubprojectVersionsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related SubprojectVersion objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related SubprojectVersion objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countSubprojectVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collSubprojectVersionsPartial && !$this->isNew();
-        if (null === $this->collSubprojectVersions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSubprojectVersions) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSubprojectVersions());
-            }
-
-            $query = ChildSubprojectVersionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterBySubproject($this)
-                ->count($con);
-        }
-
-        return count($this->collSubprojectVersions);
-    }
-
-    /**
-     * Method called to associate a ChildSubprojectVersion object to this object
-     * through the ChildSubprojectVersion foreign key attribute.
-     *
-     * @param ChildSubprojectVersion $l ChildSubprojectVersion
-     * @return $this The current object (for fluent API support)
-     */
-    public function addSubprojectVersion(ChildSubprojectVersion $l)
-    {
-        if ($this->collSubprojectVersions === null) {
-            $this->initSubprojectVersions();
-            $this->collSubprojectVersionsPartial = true;
-        }
-
-        if (!$this->collSubprojectVersions->contains($l)) {
-            $this->doAddSubprojectVersion($l);
-
-            if ($this->subprojectVersionsScheduledForDeletion and $this->subprojectVersionsScheduledForDeletion->contains($l)) {
-                $this->subprojectVersionsScheduledForDeletion->remove($this->subprojectVersionsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildSubprojectVersion $subprojectVersion The ChildSubprojectVersion object to add.
-     */
-    protected function doAddSubprojectVersion(ChildSubprojectVersion $subprojectVersion): void
-    {
-        $this->collSubprojectVersions[]= $subprojectVersion;
-        $subprojectVersion->setSubproject($this);
-    }
-
-    /**
-     * @param ChildSubprojectVersion $subprojectVersion The ChildSubprojectVersion object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeSubprojectVersion(ChildSubprojectVersion $subprojectVersion)
-    {
-        if ($this->getSubprojectVersions()->contains($subprojectVersion)) {
-            $pos = $this->collSubprojectVersions->search($subprojectVersion);
-            $this->collSubprojectVersions->remove($pos);
-            if (null === $this->subprojectVersionsScheduledForDeletion) {
-                $this->subprojectVersionsScheduledForDeletion = clone $this->collSubprojectVersions;
-                $this->subprojectVersionsScheduledForDeletion->clear();
-            }
-            $this->subprojectVersionsScheduledForDeletion[]= clone $subprojectVersion;
-            $subprojectVersion->setSubproject(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2237,10 +1632,6 @@ abstract class Subproject implements ActiveRecordInterface
         $this->status = null;
         $this->is_available = null;
         $this->project_id = null;
-        $this->version = null;
-        $this->version_created_at = null;
-        $this->version_created_by = null;
-        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2268,15 +1659,9 @@ abstract class Subproject implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSubprojectVersions) {
-                foreach ($this->collSubprojectVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
         $this->collGroupss = null;
-        $this->collSubprojectVersions = null;
         $this->aProject = null;
         return $this;
     }
@@ -2291,362 +1676,6 @@ abstract class Subproject implements ActiveRecordInterface
         return (string) $this->exportTo(SubprojectTableMap::DEFAULT_STRING_FORMAT);
     }
 
-    // versionable behavior
-
-    /**
-     * Enforce a new Version of this object upon next save.
-     *
-     * @return $this
-     */
-    public function enforceVersioning()
-    {
-        $this->enforceVersion = true;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether the current state must be recorded as a version
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @return bool
-     */
-    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
-    {
-        if ($this->alreadyInSave) {
-            return false;
-        }
-
-        if ($this->enforceVersion) {
-            return true;
-        }
-
-        if (ChildSubprojectQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
-            return true;
-        }
-        if (null !== ($object = $this->getProject($con)) && $object->isVersioningNecessary($con)) {
-            return true;
-        }
-
-        if ($this->collGroupss) {
-
-            // to avoid infinite loops, emulate in save
-            $this->alreadyInSave = true;
-
-            foreach ($this->getGroupss(null, $con) as $relatedObject) {
-
-                if ($relatedObject->isVersioningNecessary($con)) {
-
-                    $this->alreadyInSave = false;
-                    return true;
-                }
-            }
-            $this->alreadyInSave = false;
-        }
-
-
-        return false;
-    }
-
-    /**
-     * Creates a version of the current object and saves it.
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ChildSubprojectVersion A version object
-     */
-    public function addVersion(?ConnectionInterface $con = null)
-    {
-        $this->enforceVersion = false;
-
-        $version = new ChildSubprojectVersion();
-        $version->setId($this->getId());
-        $version->setName($this->getName());
-        $version->setStatus($this->getStatus());
-        $version->setIsAvailable($this->getIsAvailable());
-        $version->setProjectId($this->getProjectId());
-        $version->setVersion($this->getVersion());
-        $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
-        $version->setVersionComment($this->getVersionComment());
-        $version->setSubproject($this);
-        if (($related = $this->getProject(null, $con)) && $related->getVersion()) {
-            $version->setProjectIdVersion($related->getVersion());
-        }
-        $object = $this->getGroupss(null, $con);
-
-
-        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
-            $version->setGroupsIds(array_keys($relateds));
-            $version->setGroupsVersions(array_values($relateds));
-        }
-
-        $version->save($con);
-
-        return $version;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
-    {
-        $version = $this->getOneVersion($versionNumber, $con);
-        if (!$version) {
-            throw new PropelException(sprintf('No ChildSubproject object found with version %d', $version));
-        }
-        $this->populateFromVersion($version, $con);
-
-        return $this;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param ChildSubprojectVersion $version The version object to use
-     * @param ConnectionInterface $con the connection to use
-     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
-    {
-        $loadedObjects['ChildSubproject'][$version->getId()][$version->getVersion()] = $this;
-        $this->setId($version->getId());
-        $this->setName($version->getName());
-        $this->setStatus($version->getStatus());
-        $this->setIsAvailable($version->getIsAvailable());
-        $this->setProjectId($version->getProjectId());
-        $this->setVersion($version->getVersion());
-        $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
-        $this->setVersionComment($version->getVersionComment());
-        if ($fkValue = $version->getProjectId()) {
-            if (isset($loadedObjects['ChildProject']) && isset($loadedObjects['ChildProject'][$fkValue]) && isset($loadedObjects['ChildProject'][$fkValue][$version->getProjectIdVersion()])) {
-                $related = $loadedObjects['ChildProject'][$fkValue][$version->getProjectIdVersion()];
-            } else {
-                $related = new ChildProject();
-                $relatedVersion = ChildProjectVersionQuery::create()
-                    ->filterById($fkValue)
-                    ->filterByVersionComment($version->getProjectIdVersion())
-                    ->findOne($con);
-                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                $related->setNew(false);
-            }
-            $this->setProject($related);
-        }
-        if ($fkValues = $version->getGroupsIds()) {
-            $this->clearGroupss();
-            $fkVersions = $version->getGroupsVersions();
-            $query = ChildGroupsVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(GroupsVersionTableMap::COL_ID, $value);
-                $c2 = $query->getNewCriterion(GroupsVersionTableMap::COL_VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildGroups']) && isset($loadedObjects['ChildGroups'][$relatedVersion->getId()]) && isset($loadedObjects['ChildGroups'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildGroups'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildGroups();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addGroups($related);
-                $this->collGroupssPartial = false;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets the latest persisted version number for the current object
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return int
-     */
-    public function getLastVersionNumber(?ConnectionInterface $con = null): int
-    {
-        $v = ChildSubprojectVersionQuery::create()
-            ->filterBySubproject($this)
-            ->orderByVersion('desc')
-            ->findOne($con);
-        if (!$v) {
-            return 0;
-        }
-
-        return $v->getVersion();
-    }
-
-    /**
-     * Checks whether the current object is the latest one
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return bool
-     */
-    public function isLastVersion(?ConnectionInterface $con = null)
-    {
-        return $this->getLastVersionNumber($con) == $this->getVersion();
-    }
-
-    /**
-     * Retrieves a version object for this entity and a version number
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return ChildSubprojectVersion A version object
-     */
-    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
-    {
-        return ChildSubprojectVersionQuery::create()
-            ->filterBySubproject($this)
-            ->filterByVersion($versionNumber)
-            ->findOne($con);
-    }
-
-    /**
-     * Gets all the versions of this object, in incremental order
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ObjectCollection|ChildSubprojectVersion[] A list of ChildSubprojectVersion objects
-     */
-    public function getAllVersions(?ConnectionInterface $con = null)
-    {
-        $criteria = new Criteria();
-        $criteria->addAscendingOrderByColumn(SubprojectVersionTableMap::COL_VERSION);
-
-        return $this->getSubprojectVersions($criteria, $con);
-    }
-
-    /**
-     * Compares the current object with another of its version.
-     * <code>
-     * print_r($book->compareVersion(1));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $versionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->toArray();
-        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Compares two versions of the current object.
-     * <code>
-     * print_r($book->compareVersions(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $fromVersionNumber
-     * @param int $toVersionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
-        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Computes the diff between two versions.
-     * <code>
-     * print_r($book->computeDiff(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param array $fromVersion     An array representing the original version.
-     * @param array $toVersion       An array representing the destination version.
-     * @param string $keys            Main key used for the result diff (versions|columns).
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
-    {
-        $fromVersionNumber = $fromVersion['Version'];
-        $toVersionNumber = $toVersion['Version'];
-        $ignoredColumns = array_merge(array(
-            'Version',
-            'VersionCreatedAt',
-            'VersionCreatedBy',
-            'VersionComment',
-        ), $ignoredColumns);
-        $diff = [];
-        foreach ($fromVersion as $key => $value) {
-            if (in_array($key, $ignoredColumns)) {
-                continue;
-            }
-            if ($toVersion[$key] != $value) {
-                switch ($keys) {
-                    case 'versions':
-                        $diff[$fromVersionNumber][$key] = $value;
-                        $diff[$toVersionNumber][$key] = $toVersion[$key];
-                        break;
-                    default:
-                        $diff[$key] = [
-                            $fromVersionNumber => $value,
-                            $toVersionNumber => $toVersion[$key],
-                        ];
-                        break;
-                }
-            }
-        }
-
-        return $diff;
-    }
-    /**
-     * retrieve the last $number versions.
-     *
-     * @param Integer $number The number of record to return.
-     * @param Criteria $criteria The Criteria object containing modified values.
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return PropelCollection|\DB\SubprojectVersion[] List of \DB\SubprojectVersion objects
-     */
-    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $criteria = ChildSubprojectVersionQuery::create(null, $criteria);
-        $criteria->addDescendingOrderByColumn(SubprojectVersionTableMap::COL_VERSION);
-        $criteria->limit($number);
-
-        return $this->getSubprojectVersions($criteria, $con);
-    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2673,9 +1702,7 @@ abstract class Subproject implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        $this->setVersionCreatedBy( Auth::getUser()->id() );
-        $this->setVersionComment('insert');
-        return true;
+                return true;
     }
 
     /**

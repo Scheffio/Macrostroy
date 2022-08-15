@@ -5,9 +5,10 @@
     align-items: center;
     flex-direction: column;
     margin-top: 80px;
+    padding: 5px;
     .tabs-controller {
         display: flex;
-        width: clamp(768px, 80vw, 1555px);
+        width: clamp(768px, 90vw, 1555px);
         justify-content: flex-start;
         gap: 50px;
         padding-bottom: 25px;
@@ -15,7 +16,7 @@
         &::after {
             content: '';
             display: block;
-            width: clamp(768px, 80vw, 1555px);
+            width: clamp(768px, 90vw, 1555px);
             height: 2px;
             position: absolute;
             bottom: 0;
@@ -57,9 +58,11 @@
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
+                        gap: 2px;
+                        margin-right: 8px;
                         img {
                             &:nth-child(1) {
-                                transform: rotate(180deg);
+                                transform: rotate(180deg) scale(1.07);
                                 margin-right: 0.7px;
                             }
                         }

@@ -194,12 +194,6 @@
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
-
-    <behavior name="versionable">
-      <parameter name="log_created_at" value="true" />
-      <parameter name="log_created_by" value="true" />
-      <parameter name="attr_column" value="true" />
-    </behavior>
   </table>
   
   <table name="users" idMethod="native" phpName="Users">

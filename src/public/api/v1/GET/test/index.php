@@ -1,6 +1,27 @@
 <?php
 
-die( json_encode(\inc\artemy\v1\auth\Auth::getUserOrThrow()->getEmail() ) );
+try {
+    $unit = new \DB\Unit();
+    $unit->setName('kg')->save();
+} catch (\Propel\Runtime\Exception\PropelException $e) {
+    \inc\artemy\v1\json_output\JsonOutput::error([$e->getMessage(), $e->getLine()]);
+}
+
+echo "Unit id:" . $unit->getId() . " 💩 " . "\n";
+
+try {
+    $material = new \DB\Material();
+    $material
+        ->setName('block')
+        ->setPrice('1000.00')
+        ->setUnitId( $unit->getId() )
+        ->save();
+} catch (\Propel\Runtime\Exception\PropelException $e) {
+    \inc\artemy\v1\json_output\JsonOutput::error([$e->getMessage(), $e->getLine()]);
+}
+
+
+//die( json_encode(\inc\artemy\v1\auth\Auth::getUserOrThrow()->getEmail() ) );
 
 //use DB\Unit;
 //use Propel\Runtime\Exception\PropelException;

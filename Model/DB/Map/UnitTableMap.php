@@ -58,7 +58,7 @@ class UnitTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 6;
+    public const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class UnitTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 6;
+    public const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the id field
@@ -86,21 +86,6 @@ class UnitTableMap extends TableMap
     public const COL_IS_AVAILABLE = 'unit.is_available';
 
     /**
-     * the column name for the version field
-     */
-    public const COL_VERSION = 'unit.version';
-
-    /**
-     * the column name for the version_created_at field
-     */
-    public const COL_VERSION_CREATED_AT = 'unit.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'unit.version_created_by';
-
-    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -114,11 +99,11 @@ class UnitTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', ],
-        self::TYPE_COLNAME       => [UnitTableMap::COL_ID, UnitTableMap::COL_NAME, UnitTableMap::COL_IS_AVAILABLE, UnitTableMap::COL_VERSION, UnitTableMap::COL_VERSION_CREATED_AT, UnitTableMap::COL_VERSION_CREATED_BY, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'is_available', 'version', 'version_created_at', 'version_created_by', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'IsAvailable', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'isAvailable', ],
+        self::TYPE_COLNAME       => [UnitTableMap::COL_ID, UnitTableMap::COL_NAME, UnitTableMap::COL_IS_AVAILABLE, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'is_available', ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -130,11 +115,11 @@ class UnitTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'IsAvailable' => 2, 'Version' => 3, 'VersionCreatedAt' => 4, 'VersionCreatedBy' => 5, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'isAvailable' => 2, 'version' => 3, 'versionCreatedAt' => 4, 'versionCreatedBy' => 5, ],
-        self::TYPE_COLNAME       => [UnitTableMap::COL_ID => 0, UnitTableMap::COL_NAME => 1, UnitTableMap::COL_IS_AVAILABLE => 2, UnitTableMap::COL_VERSION => 3, UnitTableMap::COL_VERSION_CREATED_AT => 4, UnitTableMap::COL_VERSION_CREATED_BY => 5, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'is_available' => 2, 'version' => 3, 'version_created_at' => 4, 'version_created_by' => 5, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'IsAvailable' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'isAvailable' => 2, ],
+        self::TYPE_COLNAME       => [UnitTableMap::COL_ID => 0, UnitTableMap::COL_NAME => 1, UnitTableMap::COL_IS_AVAILABLE => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'is_available' => 2, ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -163,28 +148,6 @@ class UnitTableMap extends TableMap
         'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
         'is_available' => 'IS_AVAILABLE',
         'unit.is_available' => 'IS_AVAILABLE',
-        'Version' => 'VERSION',
-        'Unit.Version' => 'VERSION',
-        'version' => 'VERSION',
-        'unit.version' => 'VERSION',
-        'UnitTableMap::COL_VERSION' => 'VERSION',
-        'COL_VERSION' => 'VERSION',
-        'VersionCreatedAt' => 'VERSION_CREATED_AT',
-        'Unit.VersionCreatedAt' => 'VERSION_CREATED_AT',
-        'versionCreatedAt' => 'VERSION_CREATED_AT',
-        'unit.versionCreatedAt' => 'VERSION_CREATED_AT',
-        'UnitTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
-        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
-        'version_created_at' => 'VERSION_CREATED_AT',
-        'unit.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'Unit.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'unit.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'UnitTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'unit.version_created_by' => 'VERSION_CREATED_BY',
     ];
 
     /**
@@ -207,9 +170,6 @@ class UnitTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
-        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
     }
 
     /**
@@ -240,36 +200,6 @@ class UnitTableMap extends TableMap
     1 => ':id',
   ),
 ), 'RESTRICT', 'RESTRICT', 'Works', false);
-        $this->addRelation('UnitVersion', '\\DB\\UnitVersion', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'UnitVersions', false);
-    }
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array<string, array> Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors(): array
-    {
-        return [
-            'versionable' => ['version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'false', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', 'indices' => 'false', 'attr_column' => 'true'],
-        ];
-    }
-
-    /**
-     * Method to invalidate the instance pool of all tables related to unit     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool(): void
-    {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        UnitVersionTableMap::clearInstancePool();
     }
 
     /**
@@ -417,16 +347,10 @@ class UnitTableMap extends TableMap
             $criteria->addSelectColumn(UnitTableMap::COL_ID);
             $criteria->addSelectColumn(UnitTableMap::COL_NAME);
             $criteria->addSelectColumn(UnitTableMap::COL_IS_AVAILABLE);
-            $criteria->addSelectColumn(UnitTableMap::COL_VERSION);
-            $criteria->addSelectColumn(UnitTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(UnitTableMap::COL_VERSION_CREATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.is_available');
-            $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
         }
     }
 
@@ -448,16 +372,10 @@ class UnitTableMap extends TableMap
             $criteria->removeSelectColumn(UnitTableMap::COL_ID);
             $criteria->removeSelectColumn(UnitTableMap::COL_NAME);
             $criteria->removeSelectColumn(UnitTableMap::COL_IS_AVAILABLE);
-            $criteria->removeSelectColumn(UnitTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(UnitTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(UnitTableMap::COL_VERSION_CREATED_BY);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.is_available');
-            $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
         }
     }
 

@@ -228,9 +228,6 @@ CREATE TABLE `unit`
     `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID ед.измерения',
     `name` VARCHAR(255) NOT NULL COMMENT 'Наименование',
     `is_available` TINYINT(1) DEFAULT 1 NOT NULL COMMENT 'Доступ (доступный, удаленный)',
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` TIMESTAMP NULL,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -396,27 +393,6 @@ CREATE TABLE `work_technic`
     CONSTRAINT `work_technic_ibfk_2`
         FOREIGN KEY (`work_id`)
         REFERENCES `work` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- unit_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `unit_version`;
-
-CREATE TABLE `unit_version`
-(
-    `id` int unsigned NOT NULL COMMENT 'ID ед.измерения',
-    `name` VARCHAR(255) NOT NULL COMMENT 'Наименование',
-    `is_available` TINYINT(1) DEFAULT 1 NOT NULL COMMENT 'Доступ (доступный, удаленный)',
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` TIMESTAMP NULL,
-    `version_created_by` VARCHAR(100),
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `unit_version_fk_a43ee0`
-        FOREIGN KEY (`id`)
-        REFERENCES `unit` (`id`)
-        ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier

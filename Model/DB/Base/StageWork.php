@@ -2,39 +2,25 @@
 
 namespace DB\Base;
 
-use \DateTime;
 use \Exception;
-use inc\artemy\v1\auth\Auth;
 use \PDO;
-use DB\StageMaterial as ChildStageMaterial;
-use DB\StageMaterialQuery as ChildStageMaterialQuery;
-use DB\StageMaterialVersionQuery as ChildStageMaterialVersionQuery;
-use DB\StageTechnic as ChildStageTechnic;
-use DB\StageTechnicQuery as ChildStageTechnicQuery;
-use DB\StageTechnicVersionQuery as ChildStageTechnicVersionQuery;
-use DB\StageWork as ChildStageWork;
+use DB\Stage as ChildStage;
+use DB\StageQuery as ChildStageQuery;
 use DB\StageWorkQuery as ChildStageWorkQuery;
-use DB\StageWorkVersion as ChildStageWorkVersion;
-use DB\StageWorkVersionQuery as ChildStageWorkVersionQuery;
-use DB\Map\StageMaterialTableMap;
-use DB\Map\StageMaterialVersionTableMap;
-use DB\Map\StageTechnicTableMap;
-use DB\Map\StageTechnicVersionTableMap;
+use DB\Work as ChildWork;
+use DB\WorkQuery as ChildWorkQuery;
 use DB\Map\StageWorkTableMap;
-use DB\Map\StageWorkVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'stage_work' table.
@@ -81,24 +67,10 @@ abstract class StageWork implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID работы этапа
+     * ID связь
      * @var        int
      */
     protected $id;
-
-    /**
-     * The value for the stage_id field.
-     * ID этапа
-     * @var        int
-     */
-    protected $stage_id;
-
-    /**
-     * The value for the work_id field.
-     * ID работы
-     * @var        int
-     */
-    protected $work_id;
 
     /**
      * The value for the price field.
@@ -115,54 +87,28 @@ abstract class StageWork implements ActiveRecordInterface
     protected $amount;
 
     /**
-     * The value for the version field.
-     *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
+     * The value for the work_id field.
+     * ID работы
+     * @var        int
      */
-    protected $version;
+    protected $work_id;
 
     /**
-     * The value for the version_created_at field.
-     *
-     * @var        DateTime|null
+     * The value for the stage_id field.
+     * ID этапа
+     * @var        int
      */
-    protected $version_created_at;
+    protected $stage_id;
 
     /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
+     * @var        ChildWork
      */
-    protected $version_created_by;
+    protected $aWork;
 
     /**
-     * The value for the version_comment field.
-     *
-     * @var        string|null
+     * @var        ChildStage
      */
-    protected $version_comment;
-
-    /**
-     * @var        ObjectCollection|ChildStageMaterial[] Collection to store aggregation of ChildStageMaterial objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageMaterial> Collection to store aggregation of ChildStageMaterial objects.
-     */
-    protected $collStageMaterials;
-    protected $collStageMaterialsPartial;
-
-    /**
-     * @var        ObjectCollection|ChildStageTechnic[] Collection to store aggregation of ChildStageTechnic objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageTechnic> Collection to store aggregation of ChildStageTechnic objects.
-     */
-    protected $collStageTechnics;
-    protected $collStageTechnicsPartial;
-
-    /**
-     * @var        ObjectCollection|ChildStageWorkVersion[] Collection to store aggregation of ChildStageWorkVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageWorkVersion> Collection to store aggregation of ChildStageWorkVersion objects.
-     */
-    protected $collStageWorkVersions;
-    protected $collStageWorkVersionsPartial;
+    protected $aStage;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -172,53 +118,11 @@ abstract class StageWork implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
-    // versionable behavior
-
-
-    /**
-     * @var bool
-     */
-    protected $enforceVersion = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStageMaterial[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageMaterial>
-     */
-    protected $stageMaterialsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStageTechnic[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageTechnic>
-     */
-    protected $stageTechnicsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStageWorkVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageWorkVersion>
-     */
-    protected $stageWorkVersionsScheduledForDeletion = null;
-
-    /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues(): void
-    {
-        $this->version = 0;
-    }
-
     /**
      * Initializes internal state of DB\Base\StageWork object.
-     * @see applyDefaults()
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -442,32 +346,12 @@ abstract class StageWork implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID работы этапа
+     * ID связь
      * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the [stage_id] column value.
-     * ID этапа
-     * @return int
-     */
-    public function getStageId()
-    {
-        return $this->stage_id;
-    }
-
-    /**
-     * Get the [work_id] column value.
-     * ID работы
-     * @return int
-     */
-    public function getWorkId()
-    {
-        return $this->work_id;
     }
 
     /**
@@ -491,60 +375,28 @@ abstract class StageWork implements ActiveRecordInterface
     }
 
     /**
-     * Get the [version] column value.
-     *
-     * @return int|null
+     * Get the [work_id] column value.
+     * ID работы
+     * @return int
      */
-    public function getVersion()
+    public function getWorkId()
     {
-        return $this->version;
+        return $this->work_id;
     }
 
     /**
-     * Get the [optionally formatted] temporal [version_created_at] column value.
-     *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime|null : string|null)
+     * Get the [stage_id] column value.
+     * ID этапа
+     * @return int
      */
-    public function getVersionCreatedAt($format = null)
+    public function getStageId()
     {
-        if ($format === null) {
-            return $this->version_created_at;
-        } else {
-            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
-    }
-
-    /**
-     * Get the [version_comment] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionComment()
-    {
-        return $this->version_comment;
+        return $this->stage_id;
     }
 
     /**
      * Set the value of [id] column.
-     * ID работы этапа
+     * ID связь
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -557,46 +409,6 @@ abstract class StageWork implements ActiveRecordInterface
         if ($this->id !== $v) {
             $this->id = $v;
             $this->modifiedColumns[StageWorkTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [stage_id] column.
-     * ID этапа
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->stage_id !== $v) {
-            $this->stage_id = $v;
-            $this->modifiedColumns[StageWorkTableMap::COL_STAGE_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [work_id] column.
-     * ID работы
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setWorkId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->work_id !== $v) {
-            $this->work_id = $v;
-            $this->modifiedColumns[StageWorkTableMap::COL_WORK_ID] = true;
         }
 
         return $this;
@@ -643,80 +455,48 @@ abstract class StageWork implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [version] column.
-     *
-     * @param int|null $v New value
+     * Set the value of [work_id] column.
+     * ID работы
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setVersion($v)
+    public function setWorkId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->version !== $v) {
-            $this->version = $v;
-            $this->modifiedColumns[StageWorkTableMap::COL_VERSION] = true;
+        if ($this->work_id !== $v) {
+            $this->work_id = $v;
+            $this->modifiedColumns[StageWorkTableMap::COL_WORK_ID] = true;
+        }
+
+        if ($this->aWork !== null && $this->aWork->getId() !== $v) {
+            $this->aWork = null;
         }
 
         return $this;
     }
 
     /**
-     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
+     * Set the value of [stage_id] column.
+     * ID этапа
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setVersionCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->version_created_at !== null || $dt !== null) {
-            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
-                $this->version_created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[StageWorkTableMap::COL_VERSION_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
+    public function setStageId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[StageWorkTableMap::COL_VERSION_CREATED_BY] = true;
+        if ($this->stage_id !== $v) {
+            $this->stage_id = $v;
+            $this->modifiedColumns[StageWorkTableMap::COL_STAGE_ID] = true;
         }
 
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_comment] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionComment($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_comment !== $v) {
-            $this->version_comment = $v;
-            $this->modifiedColumns[StageWorkTableMap::COL_VERSION_COMMENT] = true;
+        if ($this->aStage !== null && $this->aStage->getId() !== $v) {
+            $this->aStage = null;
         }
 
         return $this;
@@ -732,10 +512,6 @@ abstract class StageWork implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->version !== 0) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -765,32 +541,17 @@ abstract class StageWork implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : StageWorkTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : StageWorkTableMap::translateFieldName('StageId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StageWorkTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageWorkTableMap::translateFieldName('Price', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : StageWorkTableMap::translateFieldName('Price', TableMap::TYPE_PHPNAME, $indexType)];
             $this->price = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageWorkTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StageWorkTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StageWorkTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageWorkTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StageWorkTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StageWorkTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StageWorkTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_comment = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageWorkTableMap::translateFieldName('StageId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -799,7 +560,7 @@ abstract class StageWork implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = StageWorkTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = StageWorkTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\StageWork'), 0, $e);
@@ -822,6 +583,12 @@ abstract class StageWork implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
+        if ($this->aWork !== null && $this->work_id !== $this->aWork->getId()) {
+            $this->aWork = null;
+        }
+        if ($this->aStage !== null && $this->stage_id !== $this->aStage->getId()) {
+            $this->aStage = null;
+        }
     }
 
     /**
@@ -861,12 +628,8 @@ abstract class StageWork implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collStageMaterials = null;
-
-            $this->collStageTechnics = null;
-
-            $this->collStageWorkVersions = null;
-
+            $this->aWork = null;
+            $this->aStage = null;
         } // if (deep)
     }
 
@@ -931,14 +694,6 @@ abstract class StageWork implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
-            // versionable behavior
-            if ($this->isVersioningNecessary()) {
-                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
-                if (!$this->isColumnModified(StageWorkTableMap::COL_VERSION_CREATED_AT)) {
-                    $this->setVersionCreatedAt(time());
-                }
-                $createVersion = true; // for postSave hook
-            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -952,10 +707,6 @@ abstract class StageWork implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                // versionable behavior
-                if (isset($createVersion)) {
-                    $this->addVersion($con);
-                }
                 StageWorkTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -982,6 +733,25 @@ abstract class StageWork implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aWork !== null) {
+                if ($this->aWork->isModified() || $this->aWork->isNew()) {
+                    $affectedRows += $this->aWork->save($con);
+                }
+                $this->setWork($this->aWork);
+            }
+
+            if ($this->aStage !== null) {
+                if ($this->aStage->isModified() || $this->aStage->isNew()) {
+                    $affectedRows += $this->aStage->save($con);
+                }
+                $this->setStage($this->aStage);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -991,57 +761,6 @@ abstract class StageWork implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->stageMaterialsScheduledForDeletion !== null) {
-                if (!$this->stageMaterialsScheduledForDeletion->isEmpty()) {
-                    \DB\StageMaterialQuery::create()
-                        ->filterByPrimaryKeys($this->stageMaterialsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->stageMaterialsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collStageMaterials !== null) {
-                foreach ($this->collStageMaterials as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->stageTechnicsScheduledForDeletion !== null) {
-                if (!$this->stageTechnicsScheduledForDeletion->isEmpty()) {
-                    \DB\StageTechnicQuery::create()
-                        ->filterByPrimaryKeys($this->stageTechnicsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->stageTechnicsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collStageTechnics !== null) {
-                foreach ($this->collStageTechnics as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->stageWorkVersionsScheduledForDeletion !== null) {
-                if (!$this->stageWorkVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\StageWorkVersionQuery::create()
-                        ->filterByPrimaryKeys($this->stageWorkVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->stageWorkVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collStageWorkVersions !== null) {
-                foreach ($this->collStageWorkVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -1073,29 +792,17 @@ abstract class StageWork implements ActiveRecordInterface
         if ($this->isColumnModified(StageWorkTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_STAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_id';
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_WORK_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'work_id';
-        }
         if ($this->isColumnModified(StageWorkTableMap::COL_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'price';
         }
         if ($this->isColumnModified(StageWorkTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'version';
+        if ($this->isColumnModified(StageWorkTableMap::COL_WORK_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'work_id';
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_COMMENT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        if ($this->isColumnModified(StageWorkTableMap::COL_STAGE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'stage_id';
         }
 
         $sql = sprintf(
@@ -1111,29 +818,17 @@ abstract class StageWork implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'stage_id':
-                        $stmt->bindValue($identifier, $this->stage_id, PDO::PARAM_INT);
-                        break;
-                    case 'work_id':
-                        $stmt->bindValue($identifier, $this->work_id, PDO::PARAM_INT);
-                        break;
                     case 'price':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_STR);
                         break;
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
-                    case 'version':
-                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                    case 'work_id':
+                        $stmt->bindValue($identifier, $this->work_id, PDO::PARAM_INT);
                         break;
-                    case 'version_created_at':
-                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
-                        break;
-                    case 'version_comment':
-                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
+                    case 'stage_id':
+                        $stmt->bindValue($identifier, $this->stage_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1201,28 +896,16 @@ abstract class StageWork implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getStageId();
-
-            case 2:
-                return $this->getWorkId();
-
-            case 3:
                 return $this->getPrice();
 
-            case 4:
+            case 2:
                 return $this->getAmount();
 
-            case 5:
-                return $this->getVersion();
+            case 3:
+                return $this->getWorkId();
 
-            case 6:
-                return $this->getVersionCreatedAt();
-
-            case 7:
-                return $this->getVersionCreatedBy();
-
-            case 8:
-                return $this->getVersionComment();
+            case 4:
+                return $this->getStageId();
 
             default:
                 return null;
@@ -1253,69 +936,46 @@ abstract class StageWork implements ActiveRecordInterface
         $keys = StageWorkTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getStageId(),
-            $keys[2] => $this->getWorkId(),
-            $keys[3] => $this->getPrice(),
-            $keys[4] => $this->getAmount(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getVersionCreatedAt(),
-            $keys[7] => $this->getVersionCreatedBy(),
-            $keys[8] => $this->getVersionComment(),
+            $keys[1] => $this->getPrice(),
+            $keys[2] => $this->getAmount(),
+            $keys[3] => $this->getWorkId(),
+            $keys[4] => $this->getStageId(),
         ];
-        if ($result[$keys[6]] instanceof \DateTimeInterface) {
-            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collStageMaterials) {
+            if (null !== $this->aWork) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stageMaterials';
+                        $key = 'work';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'stage_materials';
+                        $key = 'work';
                         break;
                     default:
-                        $key = 'StageMaterials';
+                        $key = 'Work';
                 }
 
-                $result[$key] = $this->collStageMaterials->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aWork->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collStageTechnics) {
+            if (null !== $this->aStage) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stageTechnics';
+                        $key = 'stage';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'stage_technics';
+                        $key = 'stage';
                         break;
                     default:
-                        $key = 'StageTechnics';
+                        $key = 'Stage';
                 }
 
-                $result[$key] = $this->collStageTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collStageWorkVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'stageWorkVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'stage_work_versions';
-                        break;
-                    default:
-                        $key = 'StageWorkVersions';
-                }
-
-                $result[$key] = $this->collStageWorkVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aStage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1357,28 +1017,16 @@ abstract class StageWork implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setStageId($value);
-                break;
-            case 2:
-                $this->setWorkId($value);
-                break;
-            case 3:
                 $this->setPrice($value);
                 break;
-            case 4:
+            case 2:
                 $this->setAmount($value);
                 break;
-            case 5:
-                $this->setVersion($value);
+            case 3:
+                $this->setWorkId($value);
                 break;
-            case 6:
-                $this->setVersionCreatedAt($value);
-                break;
-            case 7:
-                $this->setVersionCreatedBy($value);
-                break;
-            case 8:
-                $this->setVersionComment($value);
+            case 4:
+                $this->setStageId($value);
                 break;
         } // switch()
 
@@ -1410,28 +1058,16 @@ abstract class StageWork implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setStageId($arr[$keys[1]]);
+            $this->setPrice($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setWorkId($arr[$keys[2]]);
+            $this->setAmount($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setPrice($arr[$keys[3]]);
+            $this->setWorkId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setAmount($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setVersion($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionComment($arr[$keys[8]]);
+            $this->setStageId($arr[$keys[4]]);
         }
 
         return $this;
@@ -1479,29 +1115,17 @@ abstract class StageWork implements ActiveRecordInterface
         if ($this->isColumnModified(StageWorkTableMap::COL_ID)) {
             $criteria->add(StageWorkTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_STAGE_ID)) {
-            $criteria->add(StageWorkTableMap::COL_STAGE_ID, $this->stage_id);
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_WORK_ID)) {
-            $criteria->add(StageWorkTableMap::COL_WORK_ID, $this->work_id);
-        }
         if ($this->isColumnModified(StageWorkTableMap::COL_PRICE)) {
             $criteria->add(StageWorkTableMap::COL_PRICE, $this->price);
         }
         if ($this->isColumnModified(StageWorkTableMap::COL_AMOUNT)) {
             $criteria->add(StageWorkTableMap::COL_AMOUNT, $this->amount);
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION)) {
-            $criteria->add(StageWorkTableMap::COL_VERSION, $this->version);
+        if ($this->isColumnModified(StageWorkTableMap::COL_WORK_ID)) {
+            $criteria->add(StageWorkTableMap::COL_WORK_ID, $this->work_id);
         }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_CREATED_AT)) {
-            $criteria->add(StageWorkTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(StageWorkTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
-        }
-        if ($this->isColumnModified(StageWorkTableMap::COL_VERSION_COMMENT)) {
-            $criteria->add(StageWorkTableMap::COL_VERSION_COMMENT, $this->version_comment);
+        if ($this->isColumnModified(StageWorkTableMap::COL_STAGE_ID)) {
+            $criteria->add(StageWorkTableMap::COL_STAGE_ID, $this->stage_id);
         }
 
         return $criteria;
@@ -1591,40 +1215,10 @@ abstract class StageWork implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setStageId($this->getStageId());
-        $copyObj->setWorkId($this->getWorkId());
         $copyObj->setPrice($this->getPrice());
         $copyObj->setAmount($this->getAmount());
-        $copyObj->setVersion($this->getVersion());
-        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
-        $copyObj->setVersionComment($this->getVersionComment());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getStageMaterials() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStageMaterial($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getStageTechnics() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStageTechnic($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getStageWorkVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStageWorkVersion($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setWorkId($this->getWorkId());
+        $copyObj->setStageId($this->getStageId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1653,801 +1247,106 @@ abstract class StageWork implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildWork object.
      *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName): void
-    {
-        if ('StageMaterial' === $relationName) {
-            $this->initStageMaterials();
-            return;
-        }
-        if ('StageTechnic' === $relationName) {
-            $this->initStageTechnics();
-            return;
-        }
-        if ('StageWorkVersion' === $relationName) {
-            $this->initStageWorkVersions();
-            return;
-        }
-    }
-
-    /**
-     * Clears out the collStageMaterials collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addStageMaterials()
-     */
-    public function clearStageMaterials()
-    {
-        $this->collStageMaterials = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collStageMaterials collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialStageMaterials($v = true): void
-    {
-        $this->collStageMaterialsPartial = $v;
-    }
-
-    /**
-     * Initializes the collStageMaterials collection.
-     *
-     * By default this just sets the collStageMaterials collection to an empty array (like clearcollStageMaterials());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initStageMaterials(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collStageMaterials && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = StageMaterialTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collStageMaterials = new $collectionClassName;
-        $this->collStageMaterials->setModel('\DB\StageMaterial');
-    }
-
-    /**
-     * Gets an array of ChildStageMaterial objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildStageWork is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStageMaterial[] List of ChildStageMaterial objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageMaterial> List of ChildStageMaterial objects
+     * @param ChildWork $v
+     * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStageMaterials(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function setWork(ChildWork $v = null)
     {
-        $partial = $this->collStageMaterialsPartial && !$this->isNew();
-        if (null === $this->collStageMaterials || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collStageMaterials) {
-                    $this->initStageMaterials();
-                } else {
-                    $collectionClassName = StageMaterialTableMap::getTableMap()->getCollectionClassName();
-
-                    $collStageMaterials = new $collectionClassName;
-                    $collStageMaterials->setModel('\DB\StageMaterial');
-
-                    return $collStageMaterials;
-                }
-            } else {
-                $collStageMaterials = ChildStageMaterialQuery::create(null, $criteria)
-                    ->filterByStageWork($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collStageMaterialsPartial && count($collStageMaterials)) {
-                        $this->initStageMaterials(false);
-
-                        foreach ($collStageMaterials as $obj) {
-                            if (false == $this->collStageMaterials->contains($obj)) {
-                                $this->collStageMaterials->append($obj);
-                            }
-                        }
-
-                        $this->collStageMaterialsPartial = true;
-                    }
-
-                    return $collStageMaterials;
-                }
-
-                if ($partial && $this->collStageMaterials) {
-                    foreach ($this->collStageMaterials as $obj) {
-                        if ($obj->isNew()) {
-                            $collStageMaterials[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collStageMaterials = $collStageMaterials;
-                $this->collStageMaterialsPartial = false;
-            }
+        if ($v === null) {
+            $this->setWorkId(NULL);
+        } else {
+            $this->setWorkId($v->getId());
         }
 
-        return $this->collStageMaterials;
-    }
+        $this->aWork = $v;
 
-    /**
-     * Sets a collection of ChildStageMaterial objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $stageMaterials A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageMaterials(Collection $stageMaterials, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildStageMaterial[] $stageMaterialsToDelete */
-        $stageMaterialsToDelete = $this->getStageMaterials(new Criteria(), $con)->diff($stageMaterials);
-
-
-        $this->stageMaterialsScheduledForDeletion = $stageMaterialsToDelete;
-
-        foreach ($stageMaterialsToDelete as $stageMaterialRemoved) {
-            $stageMaterialRemoved->setStageWork(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildWork object, it will not be re-added.
+        if ($v !== null) {
+            $v->addStageWork($this);
         }
 
-        $this->collStageMaterials = null;
-        foreach ($stageMaterials as $stageMaterial) {
-            $this->addStageMaterial($stageMaterial);
-        }
-
-        $this->collStageMaterials = $stageMaterials;
-        $this->collStageMaterialsPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related StageMaterial objects.
+     * Get the associated ChildWork object
      *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related StageMaterial objects.
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildWork The associated ChildWork object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countStageMaterials(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function getWork(?ConnectionInterface $con = null)
     {
-        $partial = $this->collStageMaterialsPartial && !$this->isNew();
-        if (null === $this->collStageMaterials || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStageMaterials) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getStageMaterials());
-            }
-
-            $query = ChildStageMaterialQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByStageWork($this)
-                ->count($con);
+        if ($this->aWork === null && ($this->work_id != 0)) {
+            $this->aWork = ChildWorkQuery::create()->findPk($this->work_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aWork->addStageWorks($this);
+             */
         }
 
-        return count($this->collStageMaterials);
+        return $this->aWork;
     }
 
     /**
-     * Method called to associate a ChildStageMaterial object to this object
-     * through the ChildStageMaterial foreign key attribute.
+     * Declares an association between this object and a ChildStage object.
      *
-     * @param ChildStageMaterial $l ChildStageMaterial
+     * @param ChildStage $v
      * @return $this The current object (for fluent API support)
-     */
-    public function addStageMaterial(ChildStageMaterial $l)
-    {
-        if ($this->collStageMaterials === null) {
-            $this->initStageMaterials();
-            $this->collStageMaterialsPartial = true;
-        }
-
-        if (!$this->collStageMaterials->contains($l)) {
-            $this->doAddStageMaterial($l);
-
-            if ($this->stageMaterialsScheduledForDeletion and $this->stageMaterialsScheduledForDeletion->contains($l)) {
-                $this->stageMaterialsScheduledForDeletion->remove($this->stageMaterialsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildStageMaterial $stageMaterial The ChildStageMaterial object to add.
-     */
-    protected function doAddStageMaterial(ChildStageMaterial $stageMaterial): void
-    {
-        $this->collStageMaterials[]= $stageMaterial;
-        $stageMaterial->setStageWork($this);
-    }
-
-    /**
-     * @param ChildStageMaterial $stageMaterial The ChildStageMaterial object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageMaterial(ChildStageMaterial $stageMaterial)
-    {
-        if ($this->getStageMaterials()->contains($stageMaterial)) {
-            $pos = $this->collStageMaterials->search($stageMaterial);
-            $this->collStageMaterials->remove($pos);
-            if (null === $this->stageMaterialsScheduledForDeletion) {
-                $this->stageMaterialsScheduledForDeletion = clone $this->collStageMaterials;
-                $this->stageMaterialsScheduledForDeletion->clear();
-            }
-            $this->stageMaterialsScheduledForDeletion[]= clone $stageMaterial;
-            $stageMaterial->setStageWork(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this StageWork is new, it will return
-     * an empty collection; or if this StageWork has previously
-     * been saved, it will retrieve related StageMaterials from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in StageWork.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStageMaterial[] List of ChildStageMaterial objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageMaterial}> List of ChildStageMaterial objects
-     */
-    public function getStageMaterialsJoinMaterial(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildStageMaterialQuery::create(null, $criteria);
-        $query->joinWith('Material', $joinBehavior);
-
-        return $this->getStageMaterials($query, $con);
-    }
-
-    /**
-     * Clears out the collStageTechnics collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addStageTechnics()
-     */
-    public function clearStageTechnics()
-    {
-        $this->collStageTechnics = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collStageTechnics collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialStageTechnics($v = true): void
-    {
-        $this->collStageTechnicsPartial = $v;
-    }
-
-    /**
-     * Initializes the collStageTechnics collection.
-     *
-     * By default this just sets the collStageTechnics collection to an empty array (like clearcollStageTechnics());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initStageTechnics(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collStageTechnics && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = StageTechnicTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collStageTechnics = new $collectionClassName;
-        $this->collStageTechnics->setModel('\DB\StageTechnic');
-    }
-
-    /**
-     * Gets an array of ChildStageTechnic objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildStageWork is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStageTechnic[] List of ChildStageTechnic objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageTechnic> List of ChildStageTechnic objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStageTechnics(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function setStage(ChildStage $v = null)
     {
-        $partial = $this->collStageTechnicsPartial && !$this->isNew();
-        if (null === $this->collStageTechnics || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collStageTechnics) {
-                    $this->initStageTechnics();
-                } else {
-                    $collectionClassName = StageTechnicTableMap::getTableMap()->getCollectionClassName();
-
-                    $collStageTechnics = new $collectionClassName;
-                    $collStageTechnics->setModel('\DB\StageTechnic');
-
-                    return $collStageTechnics;
-                }
-            } else {
-                $collStageTechnics = ChildStageTechnicQuery::create(null, $criteria)
-                    ->filterByStageWork($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collStageTechnicsPartial && count($collStageTechnics)) {
-                        $this->initStageTechnics(false);
-
-                        foreach ($collStageTechnics as $obj) {
-                            if (false == $this->collStageTechnics->contains($obj)) {
-                                $this->collStageTechnics->append($obj);
-                            }
-                        }
-
-                        $this->collStageTechnicsPartial = true;
-                    }
-
-                    return $collStageTechnics;
-                }
-
-                if ($partial && $this->collStageTechnics) {
-                    foreach ($this->collStageTechnics as $obj) {
-                        if ($obj->isNew()) {
-                            $collStageTechnics[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collStageTechnics = $collStageTechnics;
-                $this->collStageTechnicsPartial = false;
-            }
+        if ($v === null) {
+            $this->setStageId(NULL);
+        } else {
+            $this->setStageId($v->getId());
         }
 
-        return $this->collStageTechnics;
-    }
+        $this->aStage = $v;
 
-    /**
-     * Sets a collection of ChildStageTechnic objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $stageTechnics A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageTechnics(Collection $stageTechnics, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildStageTechnic[] $stageTechnicsToDelete */
-        $stageTechnicsToDelete = $this->getStageTechnics(new Criteria(), $con)->diff($stageTechnics);
-
-
-        $this->stageTechnicsScheduledForDeletion = $stageTechnicsToDelete;
-
-        foreach ($stageTechnicsToDelete as $stageTechnicRemoved) {
-            $stageTechnicRemoved->setStageWork(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildStage object, it will not be re-added.
+        if ($v !== null) {
+            $v->addStageWork($this);
         }
 
-        $this->collStageTechnics = null;
-        foreach ($stageTechnics as $stageTechnic) {
-            $this->addStageTechnic($stageTechnic);
-        }
-
-        $this->collStageTechnics = $stageTechnics;
-        $this->collStageTechnicsPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related StageTechnic objects.
+     * Get the associated ChildStage object
      *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related StageTechnic objects.
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildStage The associated ChildStage object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countStageTechnics(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function getStage(?ConnectionInterface $con = null)
     {
-        $partial = $this->collStageTechnicsPartial && !$this->isNew();
-        if (null === $this->collStageTechnics || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStageTechnics) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getStageTechnics());
-            }
-
-            $query = ChildStageTechnicQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByStageWork($this)
-                ->count($con);
+        if ($this->aStage === null && ($this->stage_id != 0)) {
+            $this->aStage = ChildStageQuery::create()->findPk($this->stage_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aStage->addStageWorks($this);
+             */
         }
 
-        return count($this->collStageTechnics);
-    }
-
-    /**
-     * Method called to associate a ChildStageTechnic object to this object
-     * through the ChildStageTechnic foreign key attribute.
-     *
-     * @param ChildStageTechnic $l ChildStageTechnic
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageTechnic(ChildStageTechnic $l)
-    {
-        if ($this->collStageTechnics === null) {
-            $this->initStageTechnics();
-            $this->collStageTechnicsPartial = true;
-        }
-
-        if (!$this->collStageTechnics->contains($l)) {
-            $this->doAddStageTechnic($l);
-
-            if ($this->stageTechnicsScheduledForDeletion and $this->stageTechnicsScheduledForDeletion->contains($l)) {
-                $this->stageTechnicsScheduledForDeletion->remove($this->stageTechnicsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildStageTechnic $stageTechnic The ChildStageTechnic object to add.
-     */
-    protected function doAddStageTechnic(ChildStageTechnic $stageTechnic): void
-    {
-        $this->collStageTechnics[]= $stageTechnic;
-        $stageTechnic->setStageWork($this);
-    }
-
-    /**
-     * @param ChildStageTechnic $stageTechnic The ChildStageTechnic object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageTechnic(ChildStageTechnic $stageTechnic)
-    {
-        if ($this->getStageTechnics()->contains($stageTechnic)) {
-            $pos = $this->collStageTechnics->search($stageTechnic);
-            $this->collStageTechnics->remove($pos);
-            if (null === $this->stageTechnicsScheduledForDeletion) {
-                $this->stageTechnicsScheduledForDeletion = clone $this->collStageTechnics;
-                $this->stageTechnicsScheduledForDeletion->clear();
-            }
-            $this->stageTechnicsScheduledForDeletion[]= clone $stageTechnic;
-            $stageTechnic->setStageWork(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this StageWork is new, it will return
-     * an empty collection; or if this StageWork has previously
-     * been saved, it will retrieve related StageTechnics from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in StageWork.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStageTechnic[] List of ChildStageTechnic objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageTechnic}> List of ChildStageTechnic objects
-     */
-    public function getStageTechnicsJoinTechnic(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildStageTechnicQuery::create(null, $criteria);
-        $query->joinWith('Technic', $joinBehavior);
-
-        return $this->getStageTechnics($query, $con);
-    }
-
-    /**
-     * Clears out the collStageWorkVersions collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addStageWorkVersions()
-     */
-    public function clearStageWorkVersions()
-    {
-        $this->collStageWorkVersions = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collStageWorkVersions collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialStageWorkVersions($v = true): void
-    {
-        $this->collStageWorkVersionsPartial = $v;
-    }
-
-    /**
-     * Initializes the collStageWorkVersions collection.
-     *
-     * By default this just sets the collStageWorkVersions collection to an empty array (like clearcollStageWorkVersions());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initStageWorkVersions(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collStageWorkVersions && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = StageWorkVersionTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collStageWorkVersions = new $collectionClassName;
-        $this->collStageWorkVersions->setModel('\DB\StageWorkVersion');
-    }
-
-    /**
-     * Gets an array of ChildStageWorkVersion objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildStageWork is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStageWorkVersion[] List of ChildStageWorkVersion objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageWorkVersion> List of ChildStageWorkVersion objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getStageWorkVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collStageWorkVersionsPartial && !$this->isNew();
-        if (null === $this->collStageWorkVersions || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collStageWorkVersions) {
-                    $this->initStageWorkVersions();
-                } else {
-                    $collectionClassName = StageWorkVersionTableMap::getTableMap()->getCollectionClassName();
-
-                    $collStageWorkVersions = new $collectionClassName;
-                    $collStageWorkVersions->setModel('\DB\StageWorkVersion');
-
-                    return $collStageWorkVersions;
-                }
-            } else {
-                $collStageWorkVersions = ChildStageWorkVersionQuery::create(null, $criteria)
-                    ->filterByStageWork($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collStageWorkVersionsPartial && count($collStageWorkVersions)) {
-                        $this->initStageWorkVersions(false);
-
-                        foreach ($collStageWorkVersions as $obj) {
-                            if (false == $this->collStageWorkVersions->contains($obj)) {
-                                $this->collStageWorkVersions->append($obj);
-                            }
-                        }
-
-                        $this->collStageWorkVersionsPartial = true;
-                    }
-
-                    return $collStageWorkVersions;
-                }
-
-                if ($partial && $this->collStageWorkVersions) {
-                    foreach ($this->collStageWorkVersions as $obj) {
-                        if ($obj->isNew()) {
-                            $collStageWorkVersions[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collStageWorkVersions = $collStageWorkVersions;
-                $this->collStageWorkVersionsPartial = false;
-            }
-        }
-
-        return $this->collStageWorkVersions;
-    }
-
-    /**
-     * Sets a collection of ChildStageWorkVersion objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $stageWorkVersions A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageWorkVersions(Collection $stageWorkVersions, ?ConnectionInterface $con = null)
-    {
-        /** @var null|ChildStageWorkVersion[] $stageWorkVersionsToDelete */
-        $stageWorkVersionsToDelete = $this->getStageWorkVersions(new Criteria(), $con)->diff($stageWorkVersions);
-
-
-        //since at least one column in the foreign key is at the same time a PK
-        //we can not just set a PK to NULL in the lines below. We have to store
-        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->stageWorkVersionsScheduledForDeletion = clone $stageWorkVersionsToDelete;
-
-        foreach ($stageWorkVersionsToDelete as $stageWorkVersionRemoved) {
-            $stageWorkVersionRemoved->setStageWork(null);
-        }
-
-        $this->collStageWorkVersions = null;
-        foreach ($stageWorkVersions as $stageWorkVersion) {
-            $this->addStageWorkVersion($stageWorkVersion);
-        }
-
-        $this->collStageWorkVersions = $stageWorkVersions;
-        $this->collStageWorkVersionsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related StageWorkVersion objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related StageWorkVersion objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countStageWorkVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collStageWorkVersionsPartial && !$this->isNew();
-        if (null === $this->collStageWorkVersions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStageWorkVersions) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getStageWorkVersions());
-            }
-
-            $query = ChildStageWorkVersionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByStageWork($this)
-                ->count($con);
-        }
-
-        return count($this->collStageWorkVersions);
-    }
-
-    /**
-     * Method called to associate a ChildStageWorkVersion object to this object
-     * through the ChildStageWorkVersion foreign key attribute.
-     *
-     * @param ChildStageWorkVersion $l ChildStageWorkVersion
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageWorkVersion(ChildStageWorkVersion $l)
-    {
-        if ($this->collStageWorkVersions === null) {
-            $this->initStageWorkVersions();
-            $this->collStageWorkVersionsPartial = true;
-        }
-
-        if (!$this->collStageWorkVersions->contains($l)) {
-            $this->doAddStageWorkVersion($l);
-
-            if ($this->stageWorkVersionsScheduledForDeletion and $this->stageWorkVersionsScheduledForDeletion->contains($l)) {
-                $this->stageWorkVersionsScheduledForDeletion->remove($this->stageWorkVersionsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildStageWorkVersion $stageWorkVersion The ChildStageWorkVersion object to add.
-     */
-    protected function doAddStageWorkVersion(ChildStageWorkVersion $stageWorkVersion): void
-    {
-        $this->collStageWorkVersions[]= $stageWorkVersion;
-        $stageWorkVersion->setStageWork($this);
-    }
-
-    /**
-     * @param ChildStageWorkVersion $stageWorkVersion The ChildStageWorkVersion object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageWorkVersion(ChildStageWorkVersion $stageWorkVersion)
-    {
-        if ($this->getStageWorkVersions()->contains($stageWorkVersion)) {
-            $pos = $this->collStageWorkVersions->search($stageWorkVersion);
-            $this->collStageWorkVersions->remove($pos);
-            if (null === $this->stageWorkVersionsScheduledForDeletion) {
-                $this->stageWorkVersionsScheduledForDeletion = clone $this->collStageWorkVersions;
-                $this->stageWorkVersionsScheduledForDeletion->clear();
-            }
-            $this->stageWorkVersionsScheduledForDeletion[]= clone $stageWorkVersion;
-            $stageWorkVersion->setStageWork(null);
-        }
-
-        return $this;
+        return $this->aStage;
     }
 
     /**
@@ -2459,18 +1358,19 @@ abstract class StageWork implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aWork) {
+            $this->aWork->removeStageWork($this);
+        }
+        if (null !== $this->aStage) {
+            $this->aStage->removeStageWork($this);
+        }
         $this->id = null;
-        $this->stage_id = null;
-        $this->work_id = null;
         $this->price = null;
         $this->amount = null;
-        $this->version = null;
-        $this->version_created_at = null;
-        $this->version_created_by = null;
-        $this->version_comment = null;
+        $this->work_id = null;
+        $this->stage_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -2490,26 +1390,10 @@ abstract class StageWork implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collStageMaterials) {
-                foreach ($this->collStageMaterials as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collStageTechnics) {
-                foreach ($this->collStageTechnics as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collStageWorkVersions) {
-                foreach ($this->collStageWorkVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collStageMaterials = null;
-        $this->collStageTechnics = null;
-        $this->collStageWorkVersions = null;
+        $this->aWork = null;
+        $this->aStage = null;
         return $this;
     }
 
@@ -2523,387 +1407,6 @@ abstract class StageWork implements ActiveRecordInterface
         return (string) $this->exportTo(StageWorkTableMap::DEFAULT_STRING_FORMAT);
     }
 
-    // versionable behavior
-
-    /**
-     * Enforce a new Version of this object upon next save.
-     *
-     * @return $this
-     */
-    public function enforceVersioning()
-    {
-        $this->enforceVersion = true;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether the current state must be recorded as a version
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @return bool
-     */
-    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
-    {
-        if ($this->alreadyInSave) {
-            return false;
-        }
-
-        if ($this->enforceVersion) {
-            return true;
-        }
-
-        if (ChildStageWorkQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
-            return true;
-        }
-        if ($this->collStageMaterials) {
-
-            // to avoid infinite loops, emulate in save
-            $this->alreadyInSave = true;
-
-            foreach ($this->getStageMaterials(null, $con) as $relatedObject) {
-
-                if ($relatedObject->isVersioningNecessary($con)) {
-
-                    $this->alreadyInSave = false;
-                    return true;
-                }
-            }
-            $this->alreadyInSave = false;
-        }
-
-        if ($this->collStageTechnics) {
-
-            // to avoid infinite loops, emulate in save
-            $this->alreadyInSave = true;
-
-            foreach ($this->getStageTechnics(null, $con) as $relatedObject) {
-
-                if ($relatedObject->isVersioningNecessary($con)) {
-
-                    $this->alreadyInSave = false;
-                    return true;
-                }
-            }
-            $this->alreadyInSave = false;
-        }
-
-
-        return false;
-    }
-
-    /**
-     * Creates a version of the current object and saves it.
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ChildStageWorkVersion A version object
-     */
-    public function addVersion(?ConnectionInterface $con = null)
-    {
-        $this->enforceVersion = false;
-
-        $version = new ChildStageWorkVersion();
-        $version->setId($this->getId());
-        $version->setStageId($this->getStageId());
-        $version->setWorkId($this->getWorkId());
-        $version->setPrice($this->getPrice());
-        $version->setAmount($this->getAmount());
-        $version->setVersion($this->getVersion());
-        $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
-        $version->setVersionComment($this->getVersionComment());
-        $version->setStageWork($this);
-        $object = $this->getStageMaterials(null, $con);
-
-
-        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
-            $version->setStageMaterialIds(array_keys($relateds));
-            $version->setStageMaterialVersions(array_values($relateds));
-        }
-
-        $object = $this->getStageTechnics(null, $con);
-
-
-        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
-            $version->setStageTechnicIds(array_keys($relateds));
-            $version->setStageTechnicVersions(array_values($relateds));
-        }
-
-        $version->save($con);
-
-        return $version;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
-    {
-        $version = $this->getOneVersion($versionNumber, $con);
-        if (!$version) {
-            throw new PropelException(sprintf('No ChildStageWork object found with version %d', $version));
-        }
-        $this->populateFromVersion($version, $con);
-
-        return $this;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param ChildStageWorkVersion $version The version object to use
-     * @param ConnectionInterface $con the connection to use
-     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
-    {
-        $loadedObjects['ChildStageWork'][$version->getId()][$version->getVersion()] = $this;
-        $this->setId($version->getId());
-        $this->setStageId($version->getStageId());
-        $this->setWorkId($version->getWorkId());
-        $this->setPrice($version->getPrice());
-        $this->setAmount($version->getAmount());
-        $this->setVersion($version->getVersion());
-        $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
-        $this->setVersionComment($version->getVersionComment());
-        if ($fkValues = $version->getStageMaterialIds()) {
-            $this->clearStageMaterials();
-            $fkVersions = $version->getStageMaterialVersions();
-            $query = ChildStageMaterialVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(StageMaterialVersionTableMap::COL_ID, $value);
-                $c2 = $query->getNewCriterion(StageMaterialVersionTableMap::COL_VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildStageMaterial']) && isset($loadedObjects['ChildStageMaterial'][$relatedVersion->getId()]) && isset($loadedObjects['ChildStageMaterial'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildStageMaterial'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildStageMaterial();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addStageMaterial($related);
-                $this->collStageMaterialsPartial = false;
-            }
-        }
-        if ($fkValues = $version->getStageTechnicIds()) {
-            $this->clearStageTechnic();
-            $fkVersions = $version->getStageTechnicVersions();
-            $query = ChildStageTechnicVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(StageTechnicVersionTableMap::COL_ID, $value);
-                $c2 = $query->getNewCriterion(StageTechnicVersionTableMap::COL_VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildStageTechnic']) && isset($loadedObjects['ChildStageTechnic'][$relatedVersion->getId()]) && isset($loadedObjects['ChildStageTechnic'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildStageTechnic'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildStageTechnic();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addStageTechnic($related);
-                $this->collStageTechnicPartial = false;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets the latest persisted version number for the current object
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return int
-     */
-    public function getLastVersionNumber(?ConnectionInterface $con = null): int
-    {
-        $v = ChildStageWorkVersionQuery::create()
-            ->filterByStageWork($this)
-            ->orderByVersion('desc')
-            ->findOne($con);
-        if (!$v) {
-            return 0;
-        }
-
-        return $v->getVersion();
-    }
-
-    /**
-     * Checks whether the current object is the latest one
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return bool
-     */
-    public function isLastVersion(?ConnectionInterface $con = null)
-    {
-        return $this->getLastVersionNumber($con) == $this->getVersion();
-    }
-
-    /**
-     * Retrieves a version object for this entity and a version number
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return ChildStageWorkVersion A version object
-     */
-    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
-    {
-        return ChildStageWorkVersionQuery::create()
-            ->filterByStageWork($this)
-            ->filterByVersion($versionNumber)
-            ->findOne($con);
-    }
-
-    /**
-     * Gets all the versions of this object, in incremental order
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ObjectCollection|ChildStageWorkVersion[] A list of ChildStageWorkVersion objects
-     */
-    public function getAllVersions(?ConnectionInterface $con = null)
-    {
-        $criteria = new Criteria();
-        $criteria->addAscendingOrderByColumn(StageWorkVersionTableMap::COL_VERSION);
-
-        return $this->getStageWorkVersions($criteria, $con);
-    }
-
-    /**
-     * Compares the current object with another of its version.
-     * <code>
-     * print_r($book->compareVersion(1));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $versionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->toArray();
-        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Compares two versions of the current object.
-     * <code>
-     * print_r($book->compareVersions(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $fromVersionNumber
-     * @param int $toVersionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
-        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Computes the diff between two versions.
-     * <code>
-     * print_r($book->computeDiff(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param array $fromVersion     An array representing the original version.
-     * @param array $toVersion       An array representing the destination version.
-     * @param string $keys            Main key used for the result diff (versions|columns).
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
-    {
-        $fromVersionNumber = $fromVersion['Version'];
-        $toVersionNumber = $toVersion['Version'];
-        $ignoredColumns = array_merge(array(
-            'Version',
-            'VersionCreatedAt',
-            'VersionCreatedBy',
-            'VersionComment',
-        ), $ignoredColumns);
-        $diff = [];
-        foreach ($fromVersion as $key => $value) {
-            if (in_array($key, $ignoredColumns)) {
-                continue;
-            }
-            if ($toVersion[$key] != $value) {
-                switch ($keys) {
-                    case 'versions':
-                        $diff[$fromVersionNumber][$key] = $value;
-                        $diff[$toVersionNumber][$key] = $toVersion[$key];
-                        break;
-                    default:
-                        $diff[$key] = [
-                            $fromVersionNumber => $value,
-                            $toVersionNumber => $toVersion[$key],
-                        ];
-                        break;
-                }
-            }
-        }
-
-        return $diff;
-    }
-    /**
-     * retrieve the last $number versions.
-     *
-     * @param Integer $number The number of record to return.
-     * @param Criteria $criteria The Criteria object containing modified values.
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return PropelCollection|\DB\StageWorkVersion[] List of \DB\StageWorkVersion objects
-     */
-    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $criteria = ChildStageWorkVersionQuery::create(null, $criteria);
-        $criteria->addDescendingOrderByColumn(StageWorkVersionTableMap::COL_VERSION);
-        $criteria->limit($number);
-
-        return $this->getStageWorkVersions($criteria, $con);
-    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2930,9 +1433,7 @@ abstract class StageWork implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        $this->setVersionCreatedBy( Auth::getUser()->id() );
-        $this->setVersionComment('insert');
-        return true;
+                return true;
     }
 
     /**

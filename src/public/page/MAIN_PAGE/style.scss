@@ -1,0 +1,81 @@
+@import '../../static/additional';
+
+.wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 80px;
+    .tabs-controller {
+        display: flex;
+        width: clamp(768px, 80vw, 1555px);
+        justify-content: flex-start;
+        gap: 50px;
+        padding-bottom: 25px;
+        position: relative;
+        &::after {
+            content: '';
+            display: block;
+            width: clamp(768px, 80vw, 1555px);
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background-color: $EstiminUnderlineColor;
+            border-radius: 2px;
+        }
+        .tabs-controller__tab-anchor {
+            display: flex;
+            align-items: center;
+            .tab-anchor__anchor-name {
+                order: 0;
+                text-decoration: none;
+                color: black;
+                @include TabAnchorName;
+                &.selected {
+                    font-size: 36px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+    .tabs-container {
+        margin-top: 40px;
+        .tabs_container__tab-element{
+            display: none;
+            .tab-header {
+                display: flex;
+                .tab-header__element{
+                    @include TabAnchorName;
+                    display: flex;
+                    height: 60px;
+                    align-items: center;
+                    user-select: none;
+                    p{
+                        margin: 0;
+                    }
+                    .sorter{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                    }
+                    &:nth-child(1) {
+                        width: clamp(200px, 50vw, 550px);
+                    }
+                    &:nth-child(4) {
+                        width: clamp(100px, 50vw, 320px);
+                    }
+                    &:nth-child(2),
+                    &:nth-child(3) {
+                        width: clamp(100px, 50vw, 190px);
+                    }
+                }
+            }
+            .grid-row {
+                display: flex;
+            }
+        }
+        .tabs_container__tab-element:target {
+            display: block;
+        }
+    }
+}

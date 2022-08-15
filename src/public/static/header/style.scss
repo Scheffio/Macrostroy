@@ -1,0 +1,106 @@
+@import '../additional';
+
+header {
+    background-color: $EstiminBackground2-2;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    .left-navigation-block {
+        margin-left: 28px;
+        display: flex;
+        align-items: center;
+        .logo{
+            img {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        .menu {
+            margin-left: 70px;
+            height: 100%;
+            display: flex;
+            line-height: 100px;
+            gap: 50px;
+            .menu__element {
+                position: relative;
+                user-select: none;
+                &.selected::after {
+                    transition: .3s;
+                    opacity: 1;
+                    transform: translateY(0px);
+                }
+                &::after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    height: 7px;
+                    background-color: $EstiminAccent;
+                    bottom: 0;
+                    left: 0;
+                    border-top-left-radius: 4px;
+                    border-top-right-radius: 4px;
+                    opacity: 0;
+                    transform: translateY(7px);
+                    transition: .3s;
+                }
+                a {
+                    text-decoration: none;
+                    @include MenuItemText;
+                    color: white;
+                }
+            }
+        }
+    }
+    .right-navigation-block {
+        display: flex;
+        align-items: center;
+        gap: 132px;
+        margin-right: 40px;
+        .search-bar {
+            position: relative;
+            &::before {
+                content: '';
+                background: url(../auth/icons/search-icon.svg);
+                display: block;
+                width: 24px;
+                height: 24px;
+                position: absolute;
+                top: 25%;
+                left: 11px;
+                cursor: pointer;
+            }
+            &::after {
+                content: '';
+                background: url(../auth/icons/filter-icon.svg);
+                display: block;
+                width: 24px;
+                height: 24px;
+                position: absolute;
+                top: 25%;
+                right: 17px;
+                cursor: pointer;
+            }
+            input {
+                width: 400px;
+                height: 44px;
+                background-color: $EstiminBackground1;
+                outline: 0;
+                border: none;
+                border-radius: 10px;
+                padding: 0 50px;
+                color: white;
+                @include InputRegularText;
+                &::placeholder {
+                    @include InputRegularText;
+                }
+            }
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
+        }
+    }
+}

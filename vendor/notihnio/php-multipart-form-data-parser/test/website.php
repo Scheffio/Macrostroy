@@ -1,0 +1,22 @@
+<?php
+
+// Autoload files using Composer autoload
+require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+
+use Notihnio\RequestParser\RequestParser;
+$request = RequestParser::parse();
+
+$files = $request->files;
+foreach ($files as $key => $file) {
+    $tmpFile = $file;
+    //cannot be serialized
+    unset($tmpFile["tmp_resource"]);
+    $files[$key] = $tmpFile;
+}
+$request->files = $files;
+
+try {
+    echo json_encode($request, JSON_THROW_ON_ERROR);
+} catch (JsonException $exception) {
+    echo $exception;
+}

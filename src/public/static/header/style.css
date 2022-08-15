@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+header {
+  background-color: #36393E;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+header .left-navigation-block {
+  margin-left: 28px;
+  display: flex;
+  align-items: center;
+}
+header .left-navigation-block .logo img {
+  width: 70px;
+  height: 70px;
+}
+header .left-navigation-block .menu {
+  margin-left: 70px;
+  height: 100%;
+  display: flex;
+  line-height: 100px;
+  gap: 50px;
+}
+header .left-navigation-block .menu .menu__element {
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+header .left-navigation-block .menu .menu__element.selected::after {
+  transition: 0.3s;
+  opacity: 1;
+  transform: translateY(0px);
+}
+header .left-navigation-block .menu .menu__element::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 7px;
+  background-color: #7289DA;
+  bottom: 0;
+  left: 0;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  opacity: 0;
+  transform: translateY(7px);
+  transition: 0.3s;
+}
+header .left-navigation-block .menu .menu__element a {
+  text-decoration: none;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+header .right-navigation-block {
+  display: flex;
+  align-items: center;
+  gap: 132px;
+  margin-right: 40px;
+}
+header .right-navigation-block .search-bar {
+  position: relative;
+}
+header .right-navigation-block .search-bar::before {
+  content: "";
+  background: url(../auth/icons/search-icon.svg);
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 25%;
+  left: 11px;
+  cursor: pointer;
+}
+header .right-navigation-block .search-bar::after {
+  content: "";
+  background: url(../auth/icons/filter-icon.svg);
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 25%;
+  right: 17px;
+  cursor: pointer;
+}
+header .right-navigation-block .search-bar input {
+  width: 400px;
+  height: 44px;
+  background-color: #282B30;
+  outline: 0;
+  border: none;
+  border-radius: 10px;
+  padding: 0 50px;
+  color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+header .right-navigation-block .search-bar input::-moz-placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+header .right-navigation-block .search-bar input:-ms-input-placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+header .right-navigation-block .search-bar input::placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+header .right-navigation-block .user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
+}/*# sourceMappingURL=style.css.map */

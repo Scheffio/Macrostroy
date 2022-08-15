@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.wrap {
+  background-image: url(../../../../../static/auth/bg/Auth.jpg);
+  width: 100%;
+  height: 100%;
+  padding-left: 100px;
+}
+.wrap .logos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 50px;
+  gap: 100px;
+}
+.wrap .title p {
+  margin-bottom: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  font-family: "Jost", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+}
+.wrap .title p:nth-child(2) {
+  display: none;
+}
+.wrap .subtitle p {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: "Jost", sans-serif;
+  margin: 0px 0px 25px 0px;
+  max-width: 700px;
+}
+.wrap .form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+}
+.wrap .form .form__input {
+  outline: none;
+  border: 0;
+  background-color: transparent;
+  border-bottom: 1px solid #d6d6d7;
+  transition: 0.3s;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.wrap .form .form__input.typing {
+  border-bottom: 1px solid #7289DA;
+}
+.wrap .form .form__input.error {
+  border-bottom: 1px solid #E47A74;
+}
+.wrap .form .form__input.success {
+  border-bottom: 1px solid #8DDE86;
+}
+.wrap .form .form__input::-moz-placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.wrap .form .form__input:-ms-input-placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.wrap .form .form__input::placeholder {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.wrap .form .action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wrap .form .action-buttons a {
+  color: #0862a4;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Jost", sans-serif;
+  opacity: 0.4;
+  transition: 0.3s;
+  text-decoration: none;
+  margin-top: 5px;
+}
+.wrap .form .action-buttons a:hover {
+  transition: 0.3s;
+  opacity: 1;
+}
+.wrap .form .action-buttons .action-buttons__login-button {
+  width: 155px;
+  height: 40px;
+  background-color: #1E2124;
+  color: white;
+  border-radius: 5px;
+  transition: 0.3s;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.wrap .form .action-buttons .action-buttons__login-button:hover {
+  transition: 0.3s;
+  background-color: white;
+  border: 2px solid #1E2124;
+  color: #1E2124;
+}
+.wrap .form .action-buttons .action-buttons__login-button:hover {
+  background-color: #F4F4F4;
+}
+
+.wrap.success .title p:nth-child(1) {
+  display: none;
+}
+.wrap.success .title p:nth-child(2) {
+  display: block;
+  margin-bottom: 0;
+}
+.wrap.success .form .form__input {
+  display: none;
+}
+.wrap.success .form .action-buttons .action-buttons__login-button {
+  display: none;
+}
+.wrap.success .form .action-buttons .action-buttons__forget-password-button {
+  opacity: 1;
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+.pop_up {
+  width: 210px;
+  height: auto;
+  padding-bottom: 20px;
+  background-color: #1E2124;
+  position: fixed;
+  z-index: 5;
+  display: none;
+}
+.pop_up::after {
+  content: "";
+  display: block;
+  background-color: #1E2124;
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 10px;
+  left: -7px;
+  z-index: 2;
+}
+.pop_up .pop_up__body {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.pop_up .pop_up__body .pop_up__title {
+  padding-top: 4px;
+  text-align: center;
+}
+.pop_up .pop_up__body .pop_up__title h1 {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+.pop_up .pop_up__body .pop_up__title h2 {
+  font-family: "Jost", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+.pop_up .pop_up__body .pop_up__text {
+  padding-top: 10px;
+}
+.pop_up .pop_up__body .pop_up__text ol {
+  list-style-type: none;
+  padding-left: 15px;
+  font-family: "Jost", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+.pop_up .pop_up__body .pop_up__text ol li {
+  position: relative;
+}
+.pop_up .pop_up__body .pop_up__text ol li::after {
+  content: "";
+  display: block;
+  background-color: white;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+  position: absolute;
+  top: 10px;
+  left: -7px;
+}/*# sourceMappingURL=style.css.map */

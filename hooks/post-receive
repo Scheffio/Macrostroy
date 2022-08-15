@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Pushing $3 $1 to github."
+git push github $3

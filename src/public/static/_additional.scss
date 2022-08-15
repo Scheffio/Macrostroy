@@ -1,0 +1,111 @@
+// Optional
+
+* {
+    box-sizing: border-box;
+    -webkit-user-drag: none;
+}
+
+a, button {
+    cursor: pointer;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+// --------------------
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// --------------------
+
+// Colors
+$EstiminBackground2: #1E2124;
+$EstiminUnderlineColor: #E0E0E1;
+$EstiminAccent: #7289DA;
+$EstiminDeleted: #E47A74;
+$EstiminSuccessful: #8DDE86;
+$EstiminSaturate-8: #0862a4;
+$EstiminBackground5: #F4F4F4;
+$EstiminBackground2-2: #36393E;
+$EstiminBackground1: #282B30;
+
+
+// ---------------------
+
+// Mixins
+@mixin Button($bgcolor, $textcolor, $width, $height) {
+    width: $width;
+    height: $height;
+    background-color: $bgcolor;
+    color: $textcolor;
+    border-radius: 5px;
+    transition: .3s;
+    font: {
+        family: 'Jost', sans-serif;
+        size: 20px;
+        weight: 400;
+    }
+    &:hover {
+        transition: .3s;
+        background-color: white;
+        border: 2px solid $bgcolor;
+        color: $bgcolor;
+    }
+}
+
+@mixin MainTitle {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 36px;
+        weight: 700;
+    }
+}
+
+@mixin InputRegularText {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 16px;
+        weight: 400;
+    }
+}
+
+@mixin PopUptTitle {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 16px;
+        weight: 700;
+    }
+    margin: 0;
+}
+
+@mixin PopUpText {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 14px;
+        weight: 400;
+    }
+    margin: 0;
+}
+
+@mixin MenuItemText {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 20px;
+        weight: 700;
+    }
+    margin: 0;
+}
+
+@mixin TabAnchorName {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 24px;
+        weight: 500;
+    }
+}
+// ---------------------

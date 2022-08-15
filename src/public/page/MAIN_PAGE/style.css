@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 80px;
+}
+.wrap .tabs-controller {
+  display: flex;
+  width: clamp(768px, 80vw, 1555px);
+  justify-content: flex-start;
+  gap: 50px;
+  padding-bottom: 25px;
+  position: relative;
+}
+.wrap .tabs-controller::after {
+  content: "";
+  display: block;
+  width: clamp(768px, 80vw, 1555px);
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #E0E0E1;
+  border-radius: 2px;
+}
+.wrap .tabs-controller .tabs-controller__tab-anchor {
+  display: flex;
+  align-items: center;
+}
+.wrap .tabs-controller .tabs-controller__tab-anchor .tab-anchor__anchor-name {
+  order: 0;
+  text-decoration: none;
+  color: black;
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+.wrap .tabs-controller .tabs-controller__tab-anchor .tab-anchor__anchor-name.selected {
+  font-size: 36px;
+  font-weight: 700;
+}
+.wrap .tabs-container {
+  margin-top: 40px;
+}
+.wrap .tabs-container .tabs_container__tab-element {
+  display: none;
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header {
+  display: flex;
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element {
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  height: 60px;
+  align-items: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element p {
+  margin: 0;
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element .sorter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element:nth-child(1) {
+  width: clamp(200px, 50vw, 550px);
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element:nth-child(4) {
+  width: clamp(100px, 50vw, 320px);
+}
+.wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element:nth-child(2), .wrap .tabs-container .tabs_container__tab-element .tab-header .tab-header__element:nth-child(3) {
+  width: clamp(100px, 50vw, 190px);
+}
+.wrap .tabs-container .tabs_container__tab-element .grid-row {
+  display: flex;
+}
+.wrap .tabs-container .tabs_container__tab-element:target {
+  display: block;
+}/*# sourceMappingURL=style.css.map */

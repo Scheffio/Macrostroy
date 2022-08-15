@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" namespace="\DB" defaultPhpNamingMethod="underscore">
+
+  <table name="groups" idMethod="native" phpName="Groups">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID группы" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)&#9;" required="true" defaultValue="in_process"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (открытый, приватный)" required="true" defaultValue="true"/>
+    <column name="subproject_id" phpName="SubprojectId" type="INTEGER" sqlType="int unsigned" description="ID подпроекта" required="true"/>
+
+    <foreign-key foreignTable="subproject" name="groups_ibfk_2">
+      <reference local="subproject_id" foreign="id"/>
+    </foreign-key>
+
+    <index name="subproject_id">
+      <index-column name="subproject_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="house" idMethod="native" phpName="House">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID дома" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="&#9;Статус (в процессе, завершен, удален)&#9;" required="true" defaultValue="in_process"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (открытый, приватный)" required="true" defaultValue="true"/>
+    <column name="group_id" phpName="GroupId" type="INTEGER" sqlType="int unsigned" description="ID группы" required="true"/>
+
+    <foreign-key foreignTable="groups" name="house_ibfk_2" onDelete="CASCADE">
+      <reference local="group_id" foreign="id"/>
+    </foreign-key>
+
+    <index name="group_id">
+      <index-column name="group_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="material" idMethod="native" phpName="Material">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID материала" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" description="Стоимость" required="true"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
+    <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед.измерения" required="true"/>
+    <foreign-key foreignTable="unit" name="material_ibfk_1" onDelete="RESTRICT" onUpdate="RESTRICT">
+      <reference local="unit_id" foreign="id"/>
+    </foreign-key>
+    <index name="unit_id">
+      <index-column name="unit_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="project" idMethod="native" phpName="Project">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID проекта" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)" required="true" defaultValue="in_process"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (открытый, приватный)" required="true" defaultValue="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="stage" idMethod="native" phpName="Stage">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID этап" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)" required="true" defaultValue="in_process"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="&#9;Доступ (открытый, приватный)" required="true" defaultValue="true"/>
+    <column name="house_id" phpName="HouseId" type="INTEGER" sqlType="int unsigned" description="ID дома"/>
+    <foreign-key foreignTable="house" name="stage_ibfk_2" onDelete="CASCADE">
+      <reference local="house_id" foreign="id"/>
+    </foreign-key>
+    <index name="house_id">
+      <index-column name="house_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="stage_material" idMethod="native" phpName="StageMaterial">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID связи" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Стоимость" required="true"/>
+    <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Кол-во" required="true"/>
+    <column name="material_id" phpName="MaterialId" type="INTEGER" sqlType="int unsigned" description="ID материала" required="true"/>
+    <column name="stage_id" phpName="StageId" type="INTEGER" sqlType="int unsigned" description="ID этапа" required="true"/>
+    <foreign-key foreignTable="material" name="stage_material_ibfk_1">
+      <reference local="material_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="stage" name="stage_material_ibfk_2">
+      <reference local="stage_id" foreign="id"/>
+    </foreign-key>
+    <index name="material_id">
+      <index-column name="material_id"/>
+    </index>
+    <index name="stage_id">
+      <index-column name="stage_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="stage_technic" idMethod="native" phpName="StageTechnic">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID связь" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" description="Стоимость" required="true"/>
+    <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" description="Кол-во" required="true"/>
+    <column name="technic_id" phpName="TechnicId" type="INTEGER" sqlType="int unsigned" description="ID техники" required="true"/>
+    <column name="stage_id" phpName="StageId" type="INTEGER" sqlType="int unsigned" description="ID этапа" required="true"/>
+    <foreign-key foreignTable="stage" name="stage_technic_ibfk_1">
+      <reference local="stage_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="technic" name="stage_technic_ibfk_2">
+      <reference local="technic_id" foreign="id"/>
+    </foreign-key>
+    <index name="stage_id">
+      <index-column name="stage_id"/>
+    </index>
+    <index name="technic_id">
+      <index-column name="technic_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="stage_work" idMethod="native" phpName="StageWork">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID связь" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" description="Стоимость" required="true"/>
+    <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" description="Кол-во" required="true"/>
+    <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
+    <column name="stage_id" phpName="StageId" type="INTEGER" sqlType="int unsigned" description="ID этапа" required="true"/>
+    <foreign-key foreignTable="work" name="stage_work_ibfk_1">
+      <reference local="work_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="stage" name="stage_work_ibfk_2">
+      <reference local="stage_id" foreign="id"/>
+    </foreign-key>
+    <index name="work_id">
+      <index-column name="work_id"/>
+    </index>
+    <index name="stage_id">
+      <index-column name="stage_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="subproject" idMethod="native" phpName="Subproject">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID подпроекта" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)" required="true" defaultValue="in_process"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (открытый, приватный)" required="true" defaultValue="true"/>
+    <column name="project_id" phpName="ProjectId" type="INTEGER" sqlType="int unsigned" description="ID проекта"/>
+    <foreign-key foreignTable="project" name="subproject_ibfk_2" onDelete="CASCADE">
+      <reference local="project_id" foreign="id"/>
+    </foreign-key>
+    <index name="project_id">
+      <index-column name="project_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="technic" idMethod="native" phpName="Technic">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID техники" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Стоимость" required="true"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
+    <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед.измерения" required="true"/>
+    <foreign-key foreignTable="unit" name="technic_ibfk_1" onDelete="RESTRICT" onUpdate="RESTRICT">
+      <reference local="unit_id" foreign="id"/>
+    </foreign-key>
+    <index name="unit_id">
+      <index-column name="unit_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="unit" idMethod="native" phpName="Unit">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID ед.измерения" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
+
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+
+    <behavior name="versionable">
+      <parameter name="log_created_at" value="true" />
+      <parameter name="log_created_by" value="true" />
+      <parameter name="attr_column" value="true" />
+    </behavior>
+  </table>
+  
+  <table name="users" idMethod="native" phpName="Users">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="email" phpName="Email" type="VARCHAR" size="249" required="true"/>
+    <column name="password" phpName="Password" type="VARCHAR" size="255" required="true"/>
+    <column name="username" phpName="Username" type="VARCHAR" size="100"/>
+    <column name="status" phpName="Status" type="TINYINT" sqlType="tinyint unsigned" required="true" defaultValue="0"/>
+    <column name="verified" phpName="Verified" type="TINYINT" sqlType="tinyint unsigned" required="true" defaultValue="0"/>
+    <column name="resettable" phpName="Resettable" type="TINYINT" sqlType="tinyint unsigned" required="true" defaultValue="1"/>
+    <column name="roles_mask" phpName="RolesMask" type="INTEGER" sqlType="int unsigned" required="true" defaultValue="0"/>
+    <column name="registered" phpName="Registered" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <column name="last_login" phpName="LastLogin" type="INTEGER" sqlType="int unsigned"/>
+    <column name="force_logout" phpName="ForceLogout" type="SMALLINT" sqlType="mediumint unsigned" required="true" defaultValue="0"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <unique name="email">
+      <unique-column name="email"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="users_confirmations" idMethod="native" phpName="UsersConfirmations">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <column name="email" phpName="Email" type="VARCHAR" size="249" required="true"/>
+    <column name="selector" phpName="Selector" type="VARCHAR" size="16" required="true"/>
+    <column name="token" phpName="Token" type="VARCHAR" size="255" required="true"/>
+    <column name="expires" phpName="Expires" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <index name="email_expires">
+      <index-column name="email"/>
+      <index-column name="expires"/>
+    </index>
+    <index name="user_id">
+      <index-column name="user_id"/>
+    </index>
+    <unique name="selector">
+      <unique-column name="selector"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  
+  <table name="users_remembered" idMethod="native" phpName="UsersRemembered">
+    <column name="id" phpName="Id" type="BIGINT" sqlType="bigint unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user" phpName="User" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <column name="selector" phpName="Selector" type="VARCHAR" size="24" required="true"/>
+    <column name="token" phpName="Token" type="VARCHAR" size="255" required="true"/>
+    <column name="expires" phpName="Expires" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <index name="user">
+      <index-column name="user"/>
+    </index>
+    <unique name="selector">
+      <unique-column name="selector"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  
+  <table name="users_resets" idMethod="native" phpName="UsersResets">
+    <column name="id" phpName="Id" type="BIGINT" sqlType="bigint unsigned" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user" phpName="User" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <column name="selector" phpName="Selector" type="VARCHAR" size="20" required="true"/>
+    <column name="token" phpName="Token" type="VARCHAR" size="255" required="true"/>
+    <column name="expires" phpName="Expires" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <index name="user_expires">
+      <index-column name="user"/>
+      <index-column name="expires"/>
+    </index>
+    <unique name="selector">
+      <unique-column name="selector"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  
+  <table name="users_throttling" idMethod="native" phpName="UsersThrottling">
+    <column name="bucket" phpName="Bucket" type="VARCHAR" size="44" primaryKey="true" required="true"/>
+    <column name="tokens" phpName="Tokens" type="FLOAT" sqlType="float unsigned" required="true"/>
+    <column name="replenished_at" phpName="ReplenishedAt" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <column name="expires_at" phpName="ExpiresAt" type="INTEGER" sqlType="int unsigned" required="true"/>
+    <index name="expires_at">
+      <index-column name="expires_at"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="work" idMethod="native" phpName="Work">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255" description="Наименование" required="true"/>
+    <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" description="Стоимость" required="true"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
+    <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед.измерения" required="true"/>
+    <foreign-key foreignTable="unit" name="work_ibfk_1" onDelete="RESTRICT" onUpdate="RESTRICT">
+      <reference local="unit_id" foreign="id"/>
+    </foreign-key>
+    <index name="unit_id">
+      <index-column name="unit_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="work_material" idMethod="native" phpName="WorkMaterial">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID связи" primaryKey="true" required="true"/>
+    <column name="material_id" phpName="MaterialId" type="INTEGER" sqlType="int unsigned" description="ID материала" required="true"/>
+    <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
+    <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Кол-во" required="true"/>
+    <foreign-key foreignTable="material" name="work_material_ibfk_1">
+      <reference local="material_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="work" name="work_material_ibfk_2">
+      <reference local="work_id" foreign="id"/>
+    </foreign-key>
+    <index name="material_id">
+      <index-column name="material_id"/>
+    </index>
+    <index name="work_id">
+      <index-column name="work_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  
+  <table name="work_technic" idMethod="native" phpName="WorkTechnic">
+    <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID связи" primaryKey="true" required="true"/>
+    <column name="technic_id" phpName="TechnicId" type="INTEGER" sqlType="int unsigned" description="ID техники" required="true"/>
+    <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
+    <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Кол-во" required="true"/>
+    <foreign-key foreignTable="technic" name="work_technic_ibfk_1">
+      <reference local="technic_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="work" name="work_technic_ibfk_2">
+      <reference local="work_id" foreign="id"/>
+    </foreign-key>
+    <index name="technic_id">
+      <index-column name="technic_id"/>
+    </index>
+    <index name="work_id">
+      <index-column name="work_id"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+
+</database>

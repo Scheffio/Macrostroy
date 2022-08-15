@@ -1,0 +1,37 @@
+{
+  "name": "house/house",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "DB\\": "Model/DB/",
+      "MysqlCredentials\\": "mysql_credentials/",
+      "inc\\artemy\\": "src/inc/artemy/",
+      "wipe\\inc\\": "src/inc/wipe/",
+      "api\\": "src/public/api/",
+      "page\\": "src/public/page/",
+      "static\\": "src/public/static/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Артемий",
+      "email": "me@artemy.net"
+    }
+  ],
+  "require": {
+    "phpmailer/phpmailer": "^6.5",
+    "ext-curl": "*",
+    "delight-im/auth": "^8.3",
+    "ext-fileinfo": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-pdo": "*",
+    "ext-openssl": "*",
+    "ext-mysqli": "*",
+    "riverline/multipart-parser": "dev-master",
+    "ext-intl": "*",
+    "propel/propel": " ~2.0@dev"
+  }
+}

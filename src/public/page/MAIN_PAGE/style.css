@@ -20,7 +20,6 @@ body, html {
   align-items: center;
   flex-direction: column;
   margin-top: 80px;
-  padding: 5px;
 }
 .wrap .tabs-controller {
   display: flex;
@@ -59,6 +58,9 @@ body, html {
 }
 .wrap .tabs-container {
   margin-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .wrap .tabs-container .tabs_container__tab-element {
   display: none;

@@ -5,7 +5,6 @@
     align-items: center;
     flex-direction: column;
     margin-top: 80px;
-    padding: 5px;
     .tabs-controller {
         display: flex;
         width: clamp(768px, 90vw, 1555px);
@@ -41,6 +40,9 @@
     }
     .tabs-container {
         margin-top: 40px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
         .tabs_container__tab-element{
             display: none;
             .tab-header {

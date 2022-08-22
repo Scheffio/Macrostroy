@@ -8,10 +8,10 @@ class MysqlCredentials
 {
     private static PDO|null $pdo = null;
 
-    public const HOST = '151.248.116.95';
-    public const DATABASE = 'db';
-    public const USER = 'www-root';
-    public const PASSWORD = 'dV5bO3sU2w';
+    public const HOST = '127.0.0.1';
+    public const DATABASE = 'macrostroy_db';
+    public const USER = 'macrostroy_user';
+    public const PASSWORD = '5dM5OeUlsE';
     public const PORT = 3306;
     public const CHARSET = 'utf8';
 

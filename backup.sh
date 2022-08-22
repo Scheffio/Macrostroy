@@ -9,4 +9,5 @@ echo "added all";
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net commit -m "miss server backup `date`" --all &&
 echo "committed all";
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net push -u origin main &&
+echo "pushed origin main";
 echo "script executed";

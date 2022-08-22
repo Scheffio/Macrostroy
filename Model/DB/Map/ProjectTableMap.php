@@ -46,6 +46,11 @@ class ProjectTableMap extends TableMap
     public const TABLE_NAME = 'project';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Project';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Project';
@@ -58,7 +63,7 @@ class ProjectTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 4;
+    public const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class ProjectTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 4;
+    public const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
@@ -91,6 +96,26 @@ class ProjectTableMap extends TableMap
     public const COL_IS_AVAILABLE = 'project.is_available';
 
     /**
+     * the column name for the version field
+     */
+    public const COL_VERSION = 'project.version';
+
+    /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'project.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'project.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'project.version_comment';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -104,11 +129,11 @@ class ProjectTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', ],
-        self::TYPE_COLNAME       => [ProjectTableMap::COL_ID, ProjectTableMap::COL_NAME, ProjectTableMap::COL_STATUS, ProjectTableMap::COL_IS_AVAILABLE, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [ProjectTableMap::COL_ID, ProjectTableMap::COL_NAME, ProjectTableMap::COL_STATUS, ProjectTableMap::COL_IS_AVAILABLE, ProjectTableMap::COL_VERSION, ProjectTableMap::COL_VERSION_CREATED_AT, ProjectTableMap::COL_VERSION_CREATED_BY, ProjectTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
     ];
 
     /**
@@ -120,11 +145,11 @@ class ProjectTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, ],
-        self::TYPE_COLNAME       => [ProjectTableMap::COL_ID => 0, ProjectTableMap::COL_NAME => 1, ProjectTableMap::COL_STATUS => 2, ProjectTableMap::COL_IS_AVAILABLE => 3, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, ],
+        self::TYPE_COLNAME       => [ProjectTableMap::COL_ID => 0, ProjectTableMap::COL_NAME => 1, ProjectTableMap::COL_STATUS => 2, ProjectTableMap::COL_IS_AVAILABLE => 3, ProjectTableMap::COL_VERSION => 4, ProjectTableMap::COL_VERSION_CREATED_AT => 5, ProjectTableMap::COL_VERSION_CREATED_BY => 6, ProjectTableMap::COL_VERSION_COMMENT => 7, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
     ];
 
     /**
@@ -159,6 +184,36 @@ class ProjectTableMap extends TableMap
         'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
         'is_available' => 'IS_AVAILABLE',
         'project.is_available' => 'IS_AVAILABLE',
+        'Version' => 'VERSION',
+        'Project.Version' => 'VERSION',
+        'version' => 'VERSION',
+        'project.version' => 'VERSION',
+        'ProjectTableMap::COL_VERSION' => 'VERSION',
+        'COL_VERSION' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'Project.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'project.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'ProjectTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'project.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'Project.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'project.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ProjectTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'project.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'Project.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'project.versionComment' => 'VERSION_COMMENT',
+        'ProjectTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'project.version_comment' => 'VERSION_COMMENT',
     ];
 
     /**
@@ -176,12 +231,16 @@ class ProjectTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\DB\\Project');
         $this->setPackage('DB');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('status', 'Status', 'CHAR', true, null, 'in_process');
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
+        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
     /**
@@ -191,13 +250,27 @@ class ProjectTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('ProjectRole', '\\DB\\ProjectRole', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':project_id',
+    1 => ':id',
+  ),
+), null, null, 'ProjectRoles', false);
+        $this->addRelation('ProjectVersion', '\\DB\\ProjectVersion', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'ProjectVersions', false);
         $this->addRelation('Subproject', '\\DB\\Subproject', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':project_id',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Subprojects', false);
+), null, null, 'Subprojects', false);
     }
 
     /**
@@ -207,7 +280,7 @@ class ProjectTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        SubprojectTableMap::clearInstancePool();
+        ProjectVersionTableMap::clearInstancePool();
     }
 
     /**
@@ -356,11 +429,19 @@ class ProjectTableMap extends TableMap
             $criteria->addSelectColumn(ProjectTableMap::COL_NAME);
             $criteria->addSelectColumn(ProjectTableMap::COL_STATUS);
             $criteria->addSelectColumn(ProjectTableMap::COL_IS_AVAILABLE);
+            $criteria->addSelectColumn(ProjectTableMap::COL_VERSION);
+            $criteria->addSelectColumn(ProjectTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(ProjectTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(ProjectTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.status');
             $criteria->addSelectColumn($alias . '.is_available');
+            $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -383,11 +464,19 @@ class ProjectTableMap extends TableMap
             $criteria->removeSelectColumn(ProjectTableMap::COL_NAME);
             $criteria->removeSelectColumn(ProjectTableMap::COL_STATUS);
             $criteria->removeSelectColumn(ProjectTableMap::COL_IS_AVAILABLE);
+            $criteria->removeSelectColumn(ProjectTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(ProjectTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(ProjectTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(ProjectTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.status');
             $criteria->removeSelectColumn($alias . '.is_available');
+            $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -474,6 +563,10 @@ class ProjectTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Project object
+        }
+
+        if ($criteria->containsKey(ProjectTableMap::COL_ID) && $criteria->keyContainsValue(ProjectTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ProjectTableMap::COL_ID.')');
         }
 
 

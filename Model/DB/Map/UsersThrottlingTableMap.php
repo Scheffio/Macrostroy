@@ -46,6 +46,11 @@ class UsersThrottlingTableMap extends TableMap
     public const TABLE_NAME = 'users_throttling';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'UsersThrottling';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\UsersThrottling';

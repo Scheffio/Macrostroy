@@ -25,11 +25,19 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildProjectQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method     ChildProjectQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
+ * @method     ChildProjectQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildProjectQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildProjectQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildProjectQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildProjectQuery groupById() Group by the id column
  * @method     ChildProjectQuery groupByName() Group by the name column
  * @method     ChildProjectQuery groupByStatus() Group by the status column
  * @method     ChildProjectQuery groupByIsAvailable() Group by the is_available column
+ * @method     ChildProjectQuery groupByVersion() Group by the version column
+ * @method     ChildProjectQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildProjectQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildProjectQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildProjectQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildProjectQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -38,6 +46,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildProjectQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildProjectQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildProjectQuery leftJoinProjectRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectRole relation
+ * @method     ChildProjectQuery rightJoinProjectRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectRole relation
+ * @method     ChildProjectQuery innerJoinProjectRole($relationAlias = null) Adds a INNER JOIN clause to the query using the ProjectRole relation
+ *
+ * @method     ChildProjectQuery joinWithProjectRole($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProjectRole relation
+ *
+ * @method     ChildProjectQuery leftJoinWithProjectRole() Adds a LEFT JOIN clause and with to the query using the ProjectRole relation
+ * @method     ChildProjectQuery rightJoinWithProjectRole() Adds a RIGHT JOIN clause and with to the query using the ProjectRole relation
+ * @method     ChildProjectQuery innerJoinWithProjectRole() Adds a INNER JOIN clause and with to the query using the ProjectRole relation
+ *
+ * @method     ChildProjectQuery leftJoinProjectVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery rightJoinProjectVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery innerJoinProjectVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the ProjectVersion relation
+ *
+ * @method     ChildProjectQuery joinWithProjectVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProjectVersion relation
+ *
+ * @method     ChildProjectQuery leftJoinWithProjectVersion() Adds a LEFT JOIN clause and with to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery rightJoinWithProjectVersion() Adds a RIGHT JOIN clause and with to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery innerJoinWithProjectVersion() Adds a INNER JOIN clause and with to the query using the ProjectVersion relation
  *
  * @method     ChildProjectQuery leftJoinSubproject($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subproject relation
  * @method     ChildProjectQuery rightJoinSubproject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subproject relation
@@ -49,7 +77,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectQuery rightJoinWithSubproject() Adds a RIGHT JOIN clause and with to the query using the Subproject relation
  * @method     ChildProjectQuery innerJoinWithSubproject() Adds a INNER JOIN clause and with to the query using the Subproject relation
  *
- * @method     \DB\SubprojectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\ProjectRoleQuery|\DB\ProjectVersionQuery|\DB\SubprojectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProject|null findOne(?ConnectionInterface $con = null) Return the first ChildProject matching the query
  * @method     ChildProject findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProject matching the query, or a new ChildProject object populated from the query conditions when no match is found
@@ -57,7 +85,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProject|null findOneById(int $id) Return the first ChildProject filtered by the id column
  * @method     ChildProject|null findOneByName(string $name) Return the first ChildProject filtered by the name column
  * @method     ChildProject|null findOneByStatus(string $status) Return the first ChildProject filtered by the status column
- * @method     ChildProject|null findOneByIsAvailable(boolean $is_available) Return the first ChildProject filtered by the is_available column *
+ * @method     ChildProject|null findOneByIsAvailable(boolean $is_available) Return the first ChildProject filtered by the is_available column
+ * @method     ChildProject|null findOneByVersion(int $version) Return the first ChildProject filtered by the version column
+ * @method     ChildProject|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildProject filtered by the version_created_at column
+ * @method     ChildProject|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildProject filtered by the version_created_by column
+ * @method     ChildProject|null findOneByVersionComment(string $version_comment) Return the first ChildProject filtered by the version_comment column *
 
  * @method     ChildProject requirePk($key, ?ConnectionInterface $con = null) Return the ChildProject by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProject requireOne(?ConnectionInterface $con = null) Return the first ChildProject matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -66,6 +98,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProject requireOneByName(string $name) Return the first ChildProject filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProject requireOneByStatus(string $status) Return the first ChildProject filtered by the status column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProject requireOneByIsAvailable(boolean $is_available) Return the first ChildProject filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProject requireOneByVersion(int $version) Return the first ChildProject filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProject requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildProject filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProject requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildProject filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProject requireOneByVersionComment(string $version_comment) Return the first ChildProject filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProject[]|Collection find(?ConnectionInterface $con = null) Return ChildProject objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildProject> find(?ConnectionInterface $con = null) Return ChildProject objects based on current ModelCriteria
@@ -77,6 +113,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildProject> findByStatus(string $status) Return ChildProject objects filtered by the status column
  * @method     ChildProject[]|Collection findByIsAvailable(boolean $is_available) Return ChildProject objects filtered by the is_available column
  * @psalm-method Collection&\Traversable<ChildProject> findByIsAvailable(boolean $is_available) Return ChildProject objects filtered by the is_available column
+ * @method     ChildProject[]|Collection findByVersion(int $version) Return ChildProject objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildProject> findByVersion(int $version) Return ChildProject objects filtered by the version column
+ * @method     ChildProject[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildProject objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildProject> findByVersionCreatedAt(string $version_created_at) Return ChildProject objects filtered by the version_created_at column
+ * @method     ChildProject[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildProject objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildProject> findByVersionCreatedBy(string $version_created_by) Return ChildProject objects filtered by the version_created_by column
+ * @method     ChildProject[]|Collection findByVersionComment(string $version_comment) Return ChildProject objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildProject> findByVersionComment(string $version_comment) Return ChildProject objects filtered by the version_comment column
  * @method     ChildProject[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildProject> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -176,7 +220,7 @@ abstract class ProjectQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available FROM project WHERE id = :p0';
+        $sql = 'SELECT id, name, status, is_available, version, version_created_at, version_created_by, version_comment FROM project WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -399,6 +443,414 @@ abstract class ProjectQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, ?string $comparison = null)
+    {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(ProjectTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(ProjectTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ProjectTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(ProjectTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(ProjectTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ProjectTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ProjectTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ProjectTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query by a related \DB\ProjectRole object
+     *
+     * @param \DB\ProjectRole|ObjectCollection $projectRole the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByProjectRole($projectRole, ?string $comparison = null)
+    {
+        if ($projectRole instanceof \DB\ProjectRole) {
+            $this
+                ->addUsingAlias(ProjectTableMap::COL_ID, $projectRole->getProjectId(), $comparison);
+
+            return $this;
+        } elseif ($projectRole instanceof ObjectCollection) {
+            $this
+                ->useProjectRoleQuery()
+                ->filterByPrimaryKeys($projectRole->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByProjectRole() only accepts arguments of type \DB\ProjectRole or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProjectRole relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinProjectRole(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProjectRole');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProjectRole');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProjectRole relation ProjectRole object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ProjectRoleQuery A secondary query class using the current class as primary query
+     */
+    public function useProjectRoleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinProjectRole($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProjectRole', '\DB\ProjectRoleQuery');
+    }
+
+    /**
+     * Use the ProjectRole relation ProjectRole object
+     *
+     * @param callable(\DB\ProjectRoleQuery):\DB\ProjectRoleQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withProjectRoleQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useProjectRoleQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ProjectRole table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ProjectRoleQuery The inner query object of the EXISTS statement
+     */
+    public function useProjectRoleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ProjectRole table for a NOT EXISTS query.
+     *
+     * @see useProjectRoleExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ProjectRoleQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useProjectRoleNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ProjectVersion object
+     *
+     * @param \DB\ProjectVersion|ObjectCollection $projectVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByProjectVersion($projectVersion, ?string $comparison = null)
+    {
+        if ($projectVersion instanceof \DB\ProjectVersion) {
+            $this
+                ->addUsingAlias(ProjectTableMap::COL_ID, $projectVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($projectVersion instanceof ObjectCollection) {
+            $this
+                ->useProjectVersionQuery()
+                ->filterByPrimaryKeys($projectVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByProjectVersion() only accepts arguments of type \DB\ProjectVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProjectVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinProjectVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProjectVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProjectVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProjectVersion relation ProjectVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ProjectVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useProjectVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinProjectVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProjectVersion', '\DB\ProjectVersionQuery');
+    }
+
+    /**
+     * Use the ProjectVersion relation ProjectVersion object
+     *
+     * @param callable(\DB\ProjectVersionQuery):\DB\ProjectVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withProjectVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useProjectVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ProjectVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ProjectVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useProjectVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ProjectVersion table for a NOT EXISTS query.
+     *
+     * @see useProjectVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ProjectVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useProjectVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \DB\Subproject object
      *
      * @param \DB\Subproject|ObjectCollection $subproject the related object to use as filter
@@ -433,7 +885,7 @@ abstract class ProjectQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinSubproject(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinSubproject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Subproject');
@@ -468,7 +920,7 @@ abstract class ProjectQuery extends ModelCriteria
      *
      * @return \DB\SubprojectQuery A secondary query class using the current class as primary query
      */
-    public function useSubprojectQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useSubprojectQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinSubproject($relationAlias, $joinType)
@@ -489,7 +941,7 @@ abstract class ProjectQuery extends ModelCriteria
     public function withSubprojectQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::LEFT_JOIN
+        ?string $joinType = Criteria::INNER_JOIN
     ) {
         $relatedQuery = $this->useSubprojectQuery(
             $relationAlias,

@@ -2,6 +2,7 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\House as ChildHouse;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'house_version' table.
@@ -79,7 +81,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * The value for the status field.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * Note: this column has a database default value of: 'in_process'
      * @var        string
      */
@@ -87,7 +89,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -95,7 +97,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * The value for the group_id field.
-     * ID группы
+     * Id группы
      * @var        int
      */
     protected $group_id;
@@ -109,6 +111,27 @@ abstract class HouseVersion implements ActiveRecordInterface
     protected $version;
 
     /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * The value for the group_id_version field.
      *
      * Note: this column has a database default value of: 0
@@ -119,30 +142,16 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * The value for the stage_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $stage_ids;
 
     /**
-     * The unserialized $stage_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_ids_unserialized;
-
-    /**
      * The value for the stage_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $stage_versions;
-
-    /**
-     * The unserialized $stage_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_versions_unserialized;
 
     /**
      * @var        ChildHouse
@@ -421,7 +430,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Get the [status] column value.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * @return string
      */
     public function getStatus()
@@ -431,7 +440,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -441,7 +450,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function isAvailable()
@@ -451,7 +460,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Get the [group_id] column value.
-     * ID группы
+     * Id группы
      * @return int
      */
     public function getGroupId()
@@ -470,6 +479,48 @@ abstract class HouseVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
+    }
+
+    /**
      * Get the [group_id_version] column value.
      *
      * @return int|null
@@ -482,59 +533,21 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * Get the [stage_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getStageIds()
     {
-        if (null === $this->stage_ids_unserialized) {
-            $this->stage_ids_unserialized = [];
-        }
-        if (!$this->stage_ids_unserialized && null !== $this->stage_ids) {
-            $stage_ids_unserialized = substr($this->stage_ids, 2, -2);
-            $this->stage_ids_unserialized = '' !== $stage_ids_unserialized ? explode(' | ', $stage_ids_unserialized) : array();
-        }
-
-        return $this->stage_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [stage_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasStageId($value): bool
-    {
-        return in_array($value, $this->getStageIds());
+        return $this->stage_ids;
     }
 
     /**
      * Get the [stage_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getStageVersions()
     {
-        if (null === $this->stage_versions_unserialized) {
-            $this->stage_versions_unserialized = [];
-        }
-        if (!$this->stage_versions_unserialized && null !== $this->stage_versions) {
-            $stage_versions_unserialized = substr($this->stage_versions, 2, -2);
-            $this->stage_versions_unserialized = '' !== $stage_versions_unserialized ? explode(' | ', $stage_versions_unserialized) : array();
-        }
-
-        return $this->stage_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [stage_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasStageVersion($value): bool
-    {
-        return in_array($value, $this->getStageVersions());
+        return $this->stage_versions;
     }
 
     /**
@@ -583,7 +596,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Set the value of [status] column.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -607,7 +620,7 @@ abstract class HouseVersion implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -631,7 +644,7 @@ abstract class HouseVersion implements ActiveRecordInterface
 
     /**
      * Set the value of [group_id] column.
-     * ID группы
+     * Id группы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -670,6 +683,66 @@ abstract class HouseVersion implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[HouseVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[HouseVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[HouseVersionTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [group_id_version] column.
      *
      * @param int|null $v New value
@@ -692,14 +765,17 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * Set the value of [stage_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageIds($v)
     {
-        if ($this->stage_ids_unserialized !== $v) {
-            $this->stage_ids_unserialized = $v;
-            $this->stage_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->stage_ids !== $v) {
+            $this->stage_ids = $v;
             $this->modifiedColumns[HouseVersionTableMap::COL_STAGE_IDS] = true;
         }
 
@@ -707,86 +783,21 @@ abstract class HouseVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [stage_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageId($value)
-    {
-        $currentArray = $this->getStageIds();
-        $currentArray []= $value;
-        $this->setStageIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setStageIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [stage_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageVersions($v)
     {
-        if ($this->stage_versions_unserialized !== $v) {
-            $this->stage_versions_unserialized = $v;
-            $this->stage_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->stage_versions !== $v) {
+            $this->stage_versions = $v;
             $this->modifiedColumns[HouseVersionTableMap::COL_STAGE_VERSIONS] = true;
         }
-
-        return $this;
-    }
-
-    /**
-     * Adds a value to the [stage_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageVersion($value)
-    {
-        $currentArray = $this->getStageVersions();
-        $currentArray []= $value;
-        $this->setStageVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setStageVersions($targetArray);
 
         return $this;
     }
@@ -861,16 +872,26 @@ abstract class HouseVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : HouseVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : HouseVersionTableMap::translateFieldName('GroupIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : HouseVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : HouseVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : HouseVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : HouseVersionTableMap::translateFieldName('GroupIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
             $this->group_id_version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : HouseVersionTableMap::translateFieldName('StageIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_ids = $col;
-            $this->stage_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : HouseVersionTableMap::translateFieldName('StageIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_ids = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : HouseVersionTableMap::translateFieldName('StageVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_versions = $col;
-            $this->stage_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : HouseVersionTableMap::translateFieldName('StageVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_versions = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -879,7 +900,7 @@ abstract class HouseVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = HouseVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = HouseVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\HouseVersion'), 0, $e);
@@ -1111,6 +1132,15 @@ abstract class HouseVersion implements ActiveRecordInterface
         if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        }
         if ($this->isColumnModified(HouseVersionTableMap::COL_GROUP_ID_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'group_id_version';
         }
@@ -1148,6 +1178,15 @@ abstract class HouseVersion implements ActiveRecordInterface
                         break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                     case 'group_id_version':
                         $stmt->bindValue($identifier, $this->group_id_version, PDO::PARAM_INT);
@@ -1232,12 +1271,21 @@ abstract class HouseVersion implements ActiveRecordInterface
                 return $this->getVersion();
 
             case 6:
-                return $this->getGroupIdVersion();
+                return $this->getVersionCreatedAt();
 
             case 7:
-                return $this->getStageIds();
+                return $this->getVersionCreatedBy();
 
             case 8:
+                return $this->getVersionComment();
+
+            case 9:
+                return $this->getGroupIdVersion();
+
+            case 10:
+                return $this->getStageIds();
+
+            case 11:
                 return $this->getStageVersions();
 
             default:
@@ -1274,10 +1322,17 @@ abstract class HouseVersion implements ActiveRecordInterface
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getGroupId(),
             $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getGroupIdVersion(),
-            $keys[7] => $this->getStageIds(),
-            $keys[8] => $this->getStageVersions(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
+            $keys[9] => $this->getGroupIdVersion(),
+            $keys[10] => $this->getStageIds(),
+            $keys[11] => $this->getStageVersions(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1354,20 +1409,21 @@ abstract class HouseVersion implements ActiveRecordInterface
                 $this->setVersion($value);
                 break;
             case 6:
-                $this->setGroupIdVersion($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 7:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setStageIds($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 8:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
+                $this->setVersionComment($value);
+                break;
+            case 9:
+                $this->setGroupIdVersion($value);
+                break;
+            case 10:
+                $this->setStageIds($value);
+                break;
+            case 11:
                 $this->setStageVersions($value);
                 break;
         } // switch()
@@ -1415,13 +1471,22 @@ abstract class HouseVersion implements ActiveRecordInterface
             $this->setVersion($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setGroupIdVersion($arr[$keys[6]]);
+            $this->setVersionCreatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setStageIds($arr[$keys[7]]);
+            $this->setVersionCreatedBy($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setStageVersions($arr[$keys[8]]);
+            $this->setVersionComment($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setGroupIdVersion($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setStageIds($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setStageVersions($arr[$keys[11]]);
         }
 
         return $this;
@@ -1483,6 +1548,15 @@ abstract class HouseVersion implements ActiveRecordInterface
         }
         if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION)) {
             $criteria->add(HouseVersionTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(HouseVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(HouseVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(HouseVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(HouseVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
         if ($this->isColumnModified(HouseVersionTableMap::COL_GROUP_ID_VERSION)) {
             $criteria->add(HouseVersionTableMap::COL_GROUP_ID_VERSION, $this->group_id_version);
@@ -1602,6 +1676,9 @@ abstract class HouseVersion implements ActiveRecordInterface
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setGroupId($this->getGroupId());
         $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setGroupIdVersion($this->getGroupIdVersion());
         $copyObj->setStageIds($this->getStageIds());
         $copyObj->setStageVersions($this->getStageVersions());
@@ -1701,11 +1778,12 @@ abstract class HouseVersion implements ActiveRecordInterface
         $this->is_available = null;
         $this->group_id = null;
         $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->group_id_version = null;
         $this->stage_ids = null;
-        $this->stage_ids_unserialized = null;
         $this->stage_versions = null;
-        $this->stage_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

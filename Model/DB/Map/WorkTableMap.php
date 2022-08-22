@@ -46,6 +46,11 @@ class WorkTableMap extends TableMap
     public const TABLE_NAME = 'work';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Work';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Work';
@@ -58,7 +63,7 @@ class WorkTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class WorkTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -86,6 +91,11 @@ class WorkTableMap extends TableMap
     public const COL_PRICE = 'work.price';
 
     /**
+     * the column name for the amount field
+     */
+    public const COL_AMOUNT = 'work.amount';
+
+    /**
      * the column name for the is_available field
      */
     public const COL_IS_AVAILABLE = 'work.is_available';
@@ -94,6 +104,26 @@ class WorkTableMap extends TableMap
      * the column name for the unit_id field
      */
     public const COL_UNIT_ID = 'work.unit_id';
+
+    /**
+     * the column name for the version field
+     */
+    public const COL_VERSION = 'work.version';
+
+    /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'work.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'work.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'work.version_comment';
 
     /**
      * The default string format for model objects of the related table
@@ -109,11 +139,11 @@ class WorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', ],
-        self::TYPE_COLNAME       => [WorkTableMap::COL_ID, WorkTableMap::COL_NAME, WorkTableMap::COL_PRICE, WorkTableMap::COL_IS_AVAILABLE, WorkTableMap::COL_UNIT_ID, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'Amount', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'amount', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [WorkTableMap::COL_ID, WorkTableMap::COL_NAME, WorkTableMap::COL_PRICE, WorkTableMap::COL_AMOUNT, WorkTableMap::COL_IS_AVAILABLE, WorkTableMap::COL_UNIT_ID, WorkTableMap::COL_VERSION, WorkTableMap::COL_VERSION_CREATED_AT, WorkTableMap::COL_VERSION_CREATED_BY, WorkTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'amount', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -125,11 +155,11 @@ class WorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, ],
-        self::TYPE_COLNAME       => [WorkTableMap::COL_ID => 0, WorkTableMap::COL_NAME => 1, WorkTableMap::COL_PRICE => 2, WorkTableMap::COL_IS_AVAILABLE => 3, WorkTableMap::COL_UNIT_ID => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'Amount' => 3, 'IsAvailable' => 4, 'UnitId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'amount' => 3, 'isAvailable' => 4, 'unitId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, ],
+        self::TYPE_COLNAME       => [WorkTableMap::COL_ID => 0, WorkTableMap::COL_NAME => 1, WorkTableMap::COL_PRICE => 2, WorkTableMap::COL_AMOUNT => 3, WorkTableMap::COL_IS_AVAILABLE => 4, WorkTableMap::COL_UNIT_ID => 5, WorkTableMap::COL_VERSION => 6, WorkTableMap::COL_VERSION_CREATED_AT => 7, WorkTableMap::COL_VERSION_CREATED_BY => 8, WorkTableMap::COL_VERSION_COMMENT => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'amount' => 3, 'is_available' => 4, 'unit_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -156,6 +186,12 @@ class WorkTableMap extends TableMap
         'work.price' => 'PRICE',
         'WorkTableMap::COL_PRICE' => 'PRICE',
         'COL_PRICE' => 'PRICE',
+        'Amount' => 'AMOUNT',
+        'Work.Amount' => 'AMOUNT',
+        'amount' => 'AMOUNT',
+        'work.amount' => 'AMOUNT',
+        'WorkTableMap::COL_AMOUNT' => 'AMOUNT',
+        'COL_AMOUNT' => 'AMOUNT',
         'IsAvailable' => 'IS_AVAILABLE',
         'Work.IsAvailable' => 'IS_AVAILABLE',
         'isAvailable' => 'IS_AVAILABLE',
@@ -172,6 +208,36 @@ class WorkTableMap extends TableMap
         'COL_UNIT_ID' => 'UNIT_ID',
         'unit_id' => 'UNIT_ID',
         'work.unit_id' => 'UNIT_ID',
+        'Version' => 'VERSION',
+        'Work.Version' => 'VERSION',
+        'version' => 'VERSION',
+        'work.version' => 'VERSION',
+        'WorkTableMap::COL_VERSION' => 'VERSION',
+        'COL_VERSION' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'Work.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'work.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'WorkTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'work.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'Work.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'work.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'WorkTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'work.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'Work.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'work.versionComment' => 'VERSION_COMMENT',
+        'WorkTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'work.version_comment' => 'VERSION_COMMENT',
     ];
 
     /**
@@ -189,13 +255,18 @@ class WorkTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\DB\\Work');
         $this->setPackage('DB');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
+        $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addForeignKey('unit_id', 'UnitId', 'INTEGER', 'unit', 'id', true, null, null);
+        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
     /**
@@ -211,14 +282,7 @@ class WorkTableMap extends TableMap
     0 => ':unit_id',
     1 => ':id',
   ),
-), 'RESTRICT', 'RESTRICT', null, false);
-        $this->addRelation('StageWork', '\\DB\\StageWork', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':work_id',
-    1 => ':id',
-  ),
-), null, null, 'StageWorks', false);
+), null, null, null, false);
         $this->addRelation('WorkMaterial', '\\DB\\WorkMaterial', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -233,6 +297,23 @@ class WorkTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'WorkTechnics', false);
+        $this->addRelation('WorkVersion', '\\DB\\WorkVersion', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'WorkVersions', false);
+    }
+
+    /**
+     * Method to invalidate the instance pool of all tables related to work     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool(): void
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        WorkVersionTableMap::clearInstancePool();
     }
 
     /**
@@ -380,14 +461,24 @@ class WorkTableMap extends TableMap
             $criteria->addSelectColumn(WorkTableMap::COL_ID);
             $criteria->addSelectColumn(WorkTableMap::COL_NAME);
             $criteria->addSelectColumn(WorkTableMap::COL_PRICE);
+            $criteria->addSelectColumn(WorkTableMap::COL_AMOUNT);
             $criteria->addSelectColumn(WorkTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(WorkTableMap::COL_UNIT_ID);
+            $criteria->addSelectColumn(WorkTableMap::COL_VERSION);
+            $criteria->addSelectColumn(WorkTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(WorkTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(WorkTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.price');
+            $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
+            $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -409,14 +500,24 @@ class WorkTableMap extends TableMap
             $criteria->removeSelectColumn(WorkTableMap::COL_ID);
             $criteria->removeSelectColumn(WorkTableMap::COL_NAME);
             $criteria->removeSelectColumn(WorkTableMap::COL_PRICE);
+            $criteria->removeSelectColumn(WorkTableMap::COL_AMOUNT);
             $criteria->removeSelectColumn(WorkTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(WorkTableMap::COL_UNIT_ID);
+            $criteria->removeSelectColumn(WorkTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(WorkTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(WorkTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(WorkTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.price');
+            $criteria->removeSelectColumn($alias . '.amount');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
+            $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -503,6 +604,10 @@ class WorkTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Work object
+        }
+
+        if ($criteria->containsKey(WorkTableMap::COL_ID) && $criteria->keyContainsValue(WorkTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.WorkTableMap::COL_ID.')');
         }
 
 

@@ -46,6 +46,11 @@ class MaterialVersionTableMap extends TableMap
     public const TABLE_NAME = 'material_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'MaterialVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\MaterialVersion';
@@ -58,7 +63,7 @@ class MaterialVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 11;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class MaterialVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 11;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -101,9 +106,19 @@ class MaterialVersionTableMap extends TableMap
     public const COL_VERSION = 'material_version.version';
 
     /**
-     * the column name for the unit_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_UNIT_ID_VERSION = 'material_version.unit_id_version';
+    public const COL_VERSION_CREATED_AT = 'material_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'material_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'material_version.version_comment';
 
     /**
      * the column name for the stage_material_ids field
@@ -139,11 +154,11 @@ class MaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'UnitIdVersion', 'StageMaterialIds', 'StageMaterialVersions', 'WorkMaterialIds', 'WorkMaterialVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'unitIdVersion', 'stageMaterialIds', 'stageMaterialVersions', 'workMaterialIds', 'workMaterialVersions', ],
-        self::TYPE_COLNAME       => [MaterialVersionTableMap::COL_ID, MaterialVersionTableMap::COL_NAME, MaterialVersionTableMap::COL_PRICE, MaterialVersionTableMap::COL_IS_AVAILABLE, MaterialVersionTableMap::COL_UNIT_ID, MaterialVersionTableMap::COL_VERSION, MaterialVersionTableMap::COL_UNIT_ID_VERSION, MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS, MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS, MaterialVersionTableMap::COL_WORK_MATERIAL_IDS, MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'unit_id_version', 'stage_material_ids', 'stage_material_versions', 'work_material_ids', 'work_material_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'StageMaterialIds', 'StageMaterialVersions', 'WorkMaterialIds', 'WorkMaterialVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'stageMaterialIds', 'stageMaterialVersions', 'workMaterialIds', 'workMaterialVersions', ],
+        self::TYPE_COLNAME       => [MaterialVersionTableMap::COL_ID, MaterialVersionTableMap::COL_NAME, MaterialVersionTableMap::COL_PRICE, MaterialVersionTableMap::COL_IS_AVAILABLE, MaterialVersionTableMap::COL_UNIT_ID, MaterialVersionTableMap::COL_VERSION, MaterialVersionTableMap::COL_VERSION_CREATED_AT, MaterialVersionTableMap::COL_VERSION_CREATED_BY, MaterialVersionTableMap::COL_VERSION_COMMENT, MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS, MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS, MaterialVersionTableMap::COL_WORK_MATERIAL_IDS, MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'stage_material_ids', 'stage_material_versions', 'work_material_ids', 'work_material_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -155,11 +170,11 @@ class MaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'UnitIdVersion' => 6, 'StageMaterialIds' => 7, 'StageMaterialVersions' => 8, 'WorkMaterialIds' => 9, 'WorkMaterialVersions' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'unitIdVersion' => 6, 'stageMaterialIds' => 7, 'stageMaterialVersions' => 8, 'workMaterialIds' => 9, 'workMaterialVersions' => 10, ],
-        self::TYPE_COLNAME       => [MaterialVersionTableMap::COL_ID => 0, MaterialVersionTableMap::COL_NAME => 1, MaterialVersionTableMap::COL_PRICE => 2, MaterialVersionTableMap::COL_IS_AVAILABLE => 3, MaterialVersionTableMap::COL_UNIT_ID => 4, MaterialVersionTableMap::COL_VERSION => 5, MaterialVersionTableMap::COL_UNIT_ID_VERSION => 6, MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS => 7, MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS => 8, MaterialVersionTableMap::COL_WORK_MATERIAL_IDS => 9, MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'unit_id_version' => 6, 'stage_material_ids' => 7, 'stage_material_versions' => 8, 'work_material_ids' => 9, 'work_material_versions' => 10, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'StageMaterialIds' => 9, 'StageMaterialVersions' => 10, 'WorkMaterialIds' => 11, 'WorkMaterialVersions' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'stageMaterialIds' => 9, 'stageMaterialVersions' => 10, 'workMaterialIds' => 11, 'workMaterialVersions' => 12, ],
+        self::TYPE_COLNAME       => [MaterialVersionTableMap::COL_ID => 0, MaterialVersionTableMap::COL_NAME => 1, MaterialVersionTableMap::COL_PRICE => 2, MaterialVersionTableMap::COL_IS_AVAILABLE => 3, MaterialVersionTableMap::COL_UNIT_ID => 4, MaterialVersionTableMap::COL_VERSION => 5, MaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, MaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, MaterialVersionTableMap::COL_VERSION_COMMENT => 8, MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS => 9, MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS => 10, MaterialVersionTableMap::COL_WORK_MATERIAL_IDS => 11, MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'stage_material_ids' => 9, 'stage_material_versions' => 10, 'work_material_ids' => 11, 'work_material_versions' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -212,14 +227,30 @@ class MaterialVersionTableMap extends TableMap
         'MaterialVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'material_version.version' => 'VERSION',
-        'UnitIdVersion' => 'UNIT_ID_VERSION',
-        'MaterialVersion.UnitIdVersion' => 'UNIT_ID_VERSION',
-        'unitIdVersion' => 'UNIT_ID_VERSION',
-        'materialVersion.unitIdVersion' => 'UNIT_ID_VERSION',
-        'MaterialVersionTableMap::COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'unit_id_version' => 'UNIT_ID_VERSION',
-        'material_version.unit_id_version' => 'UNIT_ID_VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'MaterialVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'materialVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'MaterialVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'material_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'MaterialVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'materialVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'MaterialVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'material_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'MaterialVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'materialVersion.versionComment' => 'VERSION_COMMENT',
+        'MaterialVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'material_version.version_comment' => 'VERSION_COMMENT',
         'StageMaterialIds' => 'STAGE_MATERIAL_IDS',
         'MaterialVersion.StageMaterialIds' => 'STAGE_MATERIAL_IDS',
         'stageMaterialIds' => 'STAGE_MATERIAL_IDS',
@@ -277,11 +308,13 @@ class MaterialVersionTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('unit_id', 'UnitId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('unit_id_version', 'UnitIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_material_ids', 'StageMaterialIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_material_versions', 'StageMaterialVersions', 'ARRAY', false, null, null);
-        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'ARRAY', false, null, null);
-        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'ARRAY', false, null, null);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
+        $this->addColumn('stage_material_ids', 'StageMaterialIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_material_versions', 'StageMaterialVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'LONGVARCHAR', false, null, null);
     }
 
     /**
@@ -514,7 +547,9 @@ class MaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_UNIT_ID);
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(MaterialVersionTableMap::COL_UNIT_ID_VERSION);
+            $criteria->addSelectColumn(MaterialVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(MaterialVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(MaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS);
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
             $criteria->addSelectColumn(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS);
@@ -526,7 +561,9 @@ class MaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.unit_id_version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.stage_material_ids');
             $criteria->addSelectColumn($alias . '.stage_material_versions');
             $criteria->addSelectColumn($alias . '.work_material_ids');
@@ -555,7 +592,9 @@ class MaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_UNIT_ID);
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(MaterialVersionTableMap::COL_UNIT_ID_VERSION);
+            $criteria->removeSelectColumn(MaterialVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(MaterialVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(MaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS);
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
             $criteria->removeSelectColumn(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS);
@@ -567,7 +606,9 @@ class MaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.unit_id_version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.stage_material_ids');
             $criteria->removeSelectColumn($alias . '.stage_material_versions');
             $criteria->removeSelectColumn($alias . '.work_material_ids');

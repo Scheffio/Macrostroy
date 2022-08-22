@@ -2,6 +2,7 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Work as ChildWork;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'work_version' table.
@@ -65,7 +67,7 @@ abstract class WorkVersion implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     *
+     * ID работы
      * @var        int
      */
     protected $id;
@@ -85,6 +87,13 @@ abstract class WorkVersion implements ActiveRecordInterface
     protected $price;
 
     /**
+     * The value for the amount field.
+     * Кол-во
+     * @var        string
+     */
+    protected $amount;
+
+    /**
      * The value for the is_available field.
      * Доступ (доступный, удаленный)
      * Note: this column has a database default value of: true
@@ -94,7 +103,7 @@ abstract class WorkVersion implements ActiveRecordInterface
 
     /**
      * The value for the unit_id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $unit_id;
@@ -108,96 +117,53 @@ abstract class WorkVersion implements ActiveRecordInterface
     protected $version;
 
     /**
-     * The value for the unit_id_version field.
+     * The value for the version_created_at field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
+     * @var        DateTime|null
      */
-    protected $unit_id_version;
+    protected $version_created_at;
 
     /**
-     * The value for the stage_work_ids field.
+     * The value for the version_created_by field.
      *
-     * @var        array|null
+     * @var        string|null
      */
-    protected $stage_work_ids;
+    protected $version_created_by;
 
     /**
-     * The unserialized $stage_work_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_work_ids_unserialized;
-
-    /**
-     * The value for the stage_work_versions field.
+     * The value for the version_comment field.
      *
-     * @var        array|null
+     * @var        string|null
      */
-    protected $stage_work_versions;
-
-    /**
-     * The unserialized $stage_work_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_work_versions_unserialized;
+    protected $version_comment;
 
     /**
      * The value for the work_material_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_material_ids;
 
     /**
-     * The unserialized $work_material_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_material_ids_unserialized;
-
-    /**
      * The value for the work_material_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_material_versions;
 
     /**
-     * The unserialized $work_material_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_material_versions_unserialized;
-
-    /**
      * The value for the work_technic_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_technic_ids;
 
     /**
-     * The unserialized $work_technic_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_technic_ids_unserialized;
-
-    /**
      * The value for the work_technic_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_technic_versions;
-
-    /**
-     * The unserialized $work_technic_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_technic_versions_unserialized;
 
     /**
      * @var        ChildWork
@@ -222,7 +188,6 @@ abstract class WorkVersion implements ActiveRecordInterface
     {
         $this->is_available = true;
         $this->version = 0;
-        $this->unit_id_version = 0;
     }
 
     /**
@@ -455,7 +420,7 @@ abstract class WorkVersion implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     *
+     * ID работы
      * @return int
      */
     public function getId()
@@ -484,6 +449,16 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [amount] column value.
+     * Кол-во
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
      * Get the [is_available] column value.
      * Доступ (доступный, удаленный)
      * @return boolean
@@ -505,7 +480,7 @@ abstract class WorkVersion implements ActiveRecordInterface
 
     /**
      * Get the [unit_id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getUnitId()
@@ -524,192 +499,90 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [unit_id_version] column value.
+     * Get the [optionally formatted] temporal [version_created_at] column value.
      *
-     * @return int|null
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
      */
-    public function getUnitIdVersion()
+    public function getVersionCreatedAt($format = null)
     {
-        return $this->unit_id_version;
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
     }
 
     /**
-     * Get the [stage_work_ids] column value.
+     * Get the [version_created_by] column value.
      *
-     * @return array|null
+     * @return string|null
      */
-    public function getStageWorkIds()
+    public function getVersionCreatedBy()
     {
-        if (null === $this->stage_work_ids_unserialized) {
-            $this->stage_work_ids_unserialized = [];
-        }
-        if (!$this->stage_work_ids_unserialized && null !== $this->stage_work_ids) {
-            $stage_work_ids_unserialized = substr($this->stage_work_ids, 2, -2);
-            $this->stage_work_ids_unserialized = '' !== $stage_work_ids_unserialized ? explode(' | ', $stage_work_ids_unserialized) : array();
-        }
-
-        return $this->stage_work_ids_unserialized;
+        return $this->version_created_by;
     }
 
     /**
-     * Test the presence of a value in the [stage_work_ids] array column value.
-     * @param mixed $value
+     * Get the [version_comment] column value.
      *
-     * @return bool
+     * @return string|null
      */
-    public function hasStageWorkId($value): bool
+    public function getVersionComment()
     {
-        return in_array($value, $this->getStageWorkIds());
-    }
-
-    /**
-     * Get the [stage_work_versions] column value.
-     *
-     * @return array|null
-     */
-    public function getStageWorkVersions()
-    {
-        if (null === $this->stage_work_versions_unserialized) {
-            $this->stage_work_versions_unserialized = [];
-        }
-        if (!$this->stage_work_versions_unserialized && null !== $this->stage_work_versions) {
-            $stage_work_versions_unserialized = substr($this->stage_work_versions, 2, -2);
-            $this->stage_work_versions_unserialized = '' !== $stage_work_versions_unserialized ? explode(' | ', $stage_work_versions_unserialized) : array();
-        }
-
-        return $this->stage_work_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [stage_work_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasStageWorkVersion($value): bool
-    {
-        return in_array($value, $this->getStageWorkVersions());
+        return $this->version_comment;
     }
 
     /**
      * Get the [work_material_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkMaterialIds()
     {
-        if (null === $this->work_material_ids_unserialized) {
-            $this->work_material_ids_unserialized = [];
-        }
-        if (!$this->work_material_ids_unserialized && null !== $this->work_material_ids) {
-            $work_material_ids_unserialized = substr($this->work_material_ids, 2, -2);
-            $this->work_material_ids_unserialized = '' !== $work_material_ids_unserialized ? explode(' | ', $work_material_ids_unserialized) : array();
-        }
-
-        return $this->work_material_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_material_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkMaterialId($value): bool
-    {
-        return in_array($value, $this->getWorkMaterialIds());
+        return $this->work_material_ids;
     }
 
     /**
      * Get the [work_material_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkMaterialVersions()
     {
-        if (null === $this->work_material_versions_unserialized) {
-            $this->work_material_versions_unserialized = [];
-        }
-        if (!$this->work_material_versions_unserialized && null !== $this->work_material_versions) {
-            $work_material_versions_unserialized = substr($this->work_material_versions, 2, -2);
-            $this->work_material_versions_unserialized = '' !== $work_material_versions_unserialized ? explode(' | ', $work_material_versions_unserialized) : array();
-        }
-
-        return $this->work_material_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_material_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkMaterialVersion($value): bool
-    {
-        return in_array($value, $this->getWorkMaterialVersions());
+        return $this->work_material_versions;
     }
 
     /**
      * Get the [work_technic_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkTechnicIds()
     {
-        if (null === $this->work_technic_ids_unserialized) {
-            $this->work_technic_ids_unserialized = [];
-        }
-        if (!$this->work_technic_ids_unserialized && null !== $this->work_technic_ids) {
-            $work_technic_ids_unserialized = substr($this->work_technic_ids, 2, -2);
-            $this->work_technic_ids_unserialized = '' !== $work_technic_ids_unserialized ? explode(' | ', $work_technic_ids_unserialized) : array();
-        }
-
-        return $this->work_technic_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkTechnicId($value): bool
-    {
-        return in_array($value, $this->getWorkTechnicIds());
+        return $this->work_technic_ids;
     }
 
     /**
      * Get the [work_technic_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkTechnicVersions()
     {
-        if (null === $this->work_technic_versions_unserialized) {
-            $this->work_technic_versions_unserialized = [];
-        }
-        if (!$this->work_technic_versions_unserialized && null !== $this->work_technic_versions) {
-            $work_technic_versions_unserialized = substr($this->work_technic_versions, 2, -2);
-            $this->work_technic_versions_unserialized = '' !== $work_technic_versions_unserialized ? explode(' | ', $work_technic_versions_unserialized) : array();
-        }
-
-        return $this->work_technic_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkTechnicVersion($value): bool
-    {
-        return in_array($value, $this->getWorkTechnicVersions());
+        return $this->work_technic_versions;
     }
 
     /**
      * Set the value of [id] column.
-     *
+     * ID работы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -772,6 +645,26 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [amount] column.
+     * Кол-во
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setAmount($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->amount !== $v) {
+            $this->amount = $v;
+            $this->modifiedColumns[WorkVersionTableMap::COL_AMOUNT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets the value of the [is_available] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
@@ -801,7 +694,7 @@ abstract class WorkVersion implements ActiveRecordInterface
 
     /**
      * Set the value of [unit_id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -840,123 +733,61 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [unit_id_version] column.
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
      *
-     * @param int|null $v New value
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this The current object (for fluent API support)
      */
-    public function setUnitIdVersion($v)
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[WorkVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->unit_id_version !== $v) {
-            $this->unit_id_version = $v;
-            $this->modifiedColumns[WorkVersionTableMap::COL_UNIT_ID_VERSION] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [stage_work_ids] column.
-     *
-     * @param array|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageWorkIds($v)
-    {
-        if ($this->stage_work_ids_unserialized !== $v) {
-            $this->stage_work_ids_unserialized = $v;
-            $this->stage_work_ids = '| ' . implode(' | ', $v) . ' |';
-            $this->modifiedColumns[WorkVersionTableMap::COL_STAGE_WORK_IDS] = true;
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[WorkVersionTableMap::COL_VERSION_CREATED_BY] = true;
         }
 
         return $this;
     }
 
     /**
-     * Adds a value to the [stage_work_ids] array column value.
-     * @param mixed $value
+     * Set the value of [version_comment] column.
      *
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function addStageWorkId($value)
+    public function setVersionComment($v)
     {
-        $currentArray = $this->getStageWorkIds();
-        $currentArray []= $value;
-        $this->setStageWorkIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_work_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageWorkId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageWorkIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setStageWorkIds($targetArray);
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [stage_work_versions] column.
-     *
-     * @param array|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageWorkVersions($v)
-    {
-        if ($this->stage_work_versions_unserialized !== $v) {
-            $this->stage_work_versions_unserialized = $v;
-            $this->stage_work_versions = '| ' . implode(' | ', $v) . ' |';
-            $this->modifiedColumns[WorkVersionTableMap::COL_STAGE_WORK_VERSIONS] = true;
+        if ($v !== null) {
+            $v = (string) $v;
         }
 
-        return $this;
-    }
-
-    /**
-     * Adds a value to the [stage_work_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageWorkVersion($value)
-    {
-        $currentArray = $this->getStageWorkVersions();
-        $currentArray []= $value;
-        $this->setStageWorkVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_work_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageWorkVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageWorkVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[WorkVersionTableMap::COL_VERSION_COMMENT] = true;
         }
-        $this->setStageWorkVersions($targetArray);
 
         return $this;
     }
@@ -964,14 +795,17 @@ abstract class WorkVersion implements ActiveRecordInterface
     /**
      * Set the value of [work_material_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkMaterialIds($v)
     {
-        if ($this->work_material_ids_unserialized !== $v) {
-            $this->work_material_ids_unserialized = $v;
-            $this->work_material_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_material_ids !== $v) {
+            $this->work_material_ids = $v;
             $this->modifiedColumns[WorkVersionTableMap::COL_WORK_MATERIAL_IDS] = true;
         }
 
@@ -979,50 +813,19 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [work_material_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkMaterialId($value)
-    {
-        $currentArray = $this->getWorkMaterialIds();
-        $currentArray []= $value;
-        $this->setWorkMaterialIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_material_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkMaterialId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkMaterialIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkMaterialIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_material_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkMaterialVersions($v)
     {
-        if ($this->work_material_versions_unserialized !== $v) {
-            $this->work_material_versions_unserialized = $v;
-            $this->work_material_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_material_versions !== $v) {
+            $this->work_material_versions = $v;
             $this->modifiedColumns[WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS] = true;
         }
 
@@ -1030,50 +833,19 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [work_material_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkMaterialVersion($value)
-    {
-        $currentArray = $this->getWorkMaterialVersions();
-        $currentArray []= $value;
-        $this->setWorkMaterialVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_material_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkMaterialVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkMaterialVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkMaterialVersions($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_technic_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkTechnicIds($v)
     {
-        if ($this->work_technic_ids_unserialized !== $v) {
-            $this->work_technic_ids_unserialized = $v;
-            $this->work_technic_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_technic_ids !== $v) {
+            $this->work_technic_ids = $v;
             $this->modifiedColumns[WorkVersionTableMap::COL_WORK_TECHNIC_IDS] = true;
         }
 
@@ -1081,86 +853,21 @@ abstract class WorkVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkTechnicId($value)
-    {
-        $currentArray = $this->getWorkTechnicIds();
-        $currentArray []= $value;
-        $this->setWorkTechnicIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkTechnicId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkTechnicIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkTechnicIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_technic_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkTechnicVersions($v)
     {
-        if ($this->work_technic_versions_unserialized !== $v) {
-            $this->work_technic_versions_unserialized = $v;
-            $this->work_technic_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_technic_versions !== $v) {
+            $this->work_technic_versions = $v;
             $this->modifiedColumns[WorkVersionTableMap::COL_WORK_TECHNIC_VERSIONS] = true;
         }
-
-        return $this;
-    }
-
-    /**
-     * Adds a value to the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkTechnicVersion($value)
-    {
-        $currentArray = $this->getWorkTechnicVersions();
-        $currentArray []= $value;
-        $this->setWorkTechnicVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkTechnicVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkTechnicVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkTechnicVersions($targetArray);
 
         return $this;
     }
@@ -1180,10 +887,6 @@ abstract class WorkVersion implements ActiveRecordInterface
             }
 
             if ($this->version !== 0) {
-                return false;
-            }
-
-            if ($this->unit_id_version !== 0) {
                 return false;
             }
 
@@ -1222,41 +925,41 @@ abstract class WorkVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkVersionTableMap::translateFieldName('Price', TableMap::TYPE_PHPNAME, $indexType)];
             $this->price = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkVersionTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkVersionTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->amount = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkVersionTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_available = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkVersionTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkVersionTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkVersionTableMap::translateFieldName('UnitIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->unit_id_version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkVersionTableMap::translateFieldName('StageWorkIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_work_ids = $col;
-            $this->stage_work_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : WorkVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : WorkVersionTableMap::translateFieldName('StageWorkVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_work_versions = $col;
-            $this->stage_work_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : WorkVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : WorkVersionTableMap::translateFieldName('WorkMaterialIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_material_ids = $col;
-            $this->work_material_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : WorkVersionTableMap::translateFieldName('WorkMaterialIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_material_ids = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : WorkVersionTableMap::translateFieldName('WorkMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_material_versions = $col;
-            $this->work_material_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : WorkVersionTableMap::translateFieldName('WorkMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_material_versions = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : WorkVersionTableMap::translateFieldName('WorkTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_technic_ids = $col;
-            $this->work_technic_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : WorkVersionTableMap::translateFieldName('WorkTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_technic_ids = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : WorkVersionTableMap::translateFieldName('WorkTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_technic_versions = $col;
-            $this->work_technic_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : WorkVersionTableMap::translateFieldName('WorkTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_technic_versions = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1265,7 +968,7 @@ abstract class WorkVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 13; // 13 = WorkVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = WorkVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\WorkVersion'), 0, $e);
@@ -1488,6 +1191,9 @@ abstract class WorkVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkVersionTableMap::COL_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'price';
         }
+        if ($this->isColumnModified(WorkVersionTableMap::COL_AMOUNT)) {
+            $modifiedColumns[':p' . $index++]  = 'amount';
+        }
         if ($this->isColumnModified(WorkVersionTableMap::COL_IS_AVAILABLE)) {
             $modifiedColumns[':p' . $index++]  = 'is_available';
         }
@@ -1497,14 +1203,14 @@ abstract class WorkVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_UNIT_ID_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'unit_id_version';
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_STAGE_WORK_IDS)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_work_ids';
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_STAGE_WORK_VERSIONS)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_work_versions';
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
         if ($this->isColumnModified(WorkVersionTableMap::COL_WORK_MATERIAL_IDS)) {
             $modifiedColumns[':p' . $index++]  = 'work_material_ids';
@@ -1538,6 +1244,9 @@ abstract class WorkVersion implements ActiveRecordInterface
                     case 'price':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_STR);
                         break;
+                    case 'amount':
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
+                        break;
                     case 'is_available':
                         $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
                         break;
@@ -1547,14 +1256,14 @@ abstract class WorkVersion implements ActiveRecordInterface
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
-                    case 'unit_id_version':
-                        $stmt->bindValue($identifier, $this->unit_id_version, PDO::PARAM_INT);
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
-                    case 'stage_work_ids':
-                        $stmt->bindValue($identifier, $this->stage_work_ids, PDO::PARAM_STR);
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
-                    case 'stage_work_versions':
-                        $stmt->bindValue($identifier, $this->stage_work_versions, PDO::PARAM_STR);
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                     case 'work_material_ids':
                         $stmt->bindValue($identifier, $this->work_material_ids, PDO::PARAM_STR);
@@ -1633,33 +1342,36 @@ abstract class WorkVersion implements ActiveRecordInterface
                 return $this->getPrice();
 
             case 3:
-                return $this->getIsAvailable();
+                return $this->getAmount();
 
             case 4:
-                return $this->getUnitId();
+                return $this->getIsAvailable();
 
             case 5:
-                return $this->getVersion();
+                return $this->getUnitId();
 
             case 6:
-                return $this->getUnitIdVersion();
+                return $this->getVersion();
 
             case 7:
-                return $this->getStageWorkIds();
+                return $this->getVersionCreatedAt();
 
             case 8:
-                return $this->getStageWorkVersions();
+                return $this->getVersionCreatedBy();
 
             case 9:
-                return $this->getWorkMaterialIds();
+                return $this->getVersionComment();
 
             case 10:
-                return $this->getWorkMaterialVersions();
+                return $this->getWorkMaterialIds();
 
             case 11:
-                return $this->getWorkTechnicIds();
+                return $this->getWorkMaterialVersions();
 
             case 12:
+                return $this->getWorkTechnicIds();
+
+            case 13:
                 return $this->getWorkTechnicVersions();
 
             default:
@@ -1693,17 +1405,22 @@ abstract class WorkVersion implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getPrice(),
-            $keys[3] => $this->getIsAvailable(),
-            $keys[4] => $this->getUnitId(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getUnitIdVersion(),
-            $keys[7] => $this->getStageWorkIds(),
-            $keys[8] => $this->getStageWorkVersions(),
-            $keys[9] => $this->getWorkMaterialIds(),
-            $keys[10] => $this->getWorkMaterialVersions(),
-            $keys[11] => $this->getWorkTechnicIds(),
-            $keys[12] => $this->getWorkTechnicVersions(),
+            $keys[3] => $this->getAmount(),
+            $keys[4] => $this->getIsAvailable(),
+            $keys[5] => $this->getUnitId(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
+            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[9] => $this->getVersionComment(),
+            $keys[10] => $this->getWorkMaterialIds(),
+            $keys[11] => $this->getWorkMaterialVersions(),
+            $keys[12] => $this->getWorkTechnicIds(),
+            $keys[13] => $this->getWorkTechnicVersions(),
         ];
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1771,57 +1488,36 @@ abstract class WorkVersion implements ActiveRecordInterface
                 $this->setPrice($value);
                 break;
             case 3:
-                $this->setIsAvailable($value);
+                $this->setAmount($value);
                 break;
             case 4:
-                $this->setUnitId($value);
+                $this->setIsAvailable($value);
                 break;
             case 5:
-                $this->setVersion($value);
+                $this->setUnitId($value);
                 break;
             case 6:
-                $this->setUnitIdVersion($value);
+                $this->setVersion($value);
                 break;
             case 7:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setStageWorkIds($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 8:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setStageWorkVersions($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 9:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setWorkMaterialIds($value);
+                $this->setVersionComment($value);
                 break;
             case 10:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setWorkMaterialVersions($value);
+                $this->setWorkMaterialIds($value);
                 break;
             case 11:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setWorkTechnicIds($value);
+                $this->setWorkMaterialVersions($value);
                 break;
             case 12:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
+                $this->setWorkTechnicIds($value);
+                break;
+            case 13:
                 $this->setWorkTechnicVersions($value);
                 break;
         } // switch()
@@ -1860,34 +1556,37 @@ abstract class WorkVersion implements ActiveRecordInterface
             $this->setPrice($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setIsAvailable($arr[$keys[3]]);
+            $this->setAmount($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUnitId($arr[$keys[4]]);
+            $this->setIsAvailable($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setVersion($arr[$keys[5]]);
+            $this->setUnitId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUnitIdVersion($arr[$keys[6]]);
+            $this->setVersion($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setStageWorkIds($arr[$keys[7]]);
+            $this->setVersionCreatedAt($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setStageWorkVersions($arr[$keys[8]]);
+            $this->setVersionCreatedBy($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setWorkMaterialIds($arr[$keys[9]]);
+            $this->setVersionComment($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setWorkMaterialVersions($arr[$keys[10]]);
+            $this->setWorkMaterialIds($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setWorkTechnicIds($arr[$keys[11]]);
+            $this->setWorkMaterialVersions($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setWorkTechnicVersions($arr[$keys[12]]);
+            $this->setWorkTechnicIds($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setWorkTechnicVersions($arr[$keys[13]]);
         }
 
         return $this;
@@ -1941,6 +1640,9 @@ abstract class WorkVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkVersionTableMap::COL_PRICE)) {
             $criteria->add(WorkVersionTableMap::COL_PRICE, $this->price);
         }
+        if ($this->isColumnModified(WorkVersionTableMap::COL_AMOUNT)) {
+            $criteria->add(WorkVersionTableMap::COL_AMOUNT, $this->amount);
+        }
         if ($this->isColumnModified(WorkVersionTableMap::COL_IS_AVAILABLE)) {
             $criteria->add(WorkVersionTableMap::COL_IS_AVAILABLE, $this->is_available);
         }
@@ -1950,14 +1652,14 @@ abstract class WorkVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION)) {
             $criteria->add(WorkVersionTableMap::COL_VERSION, $this->version);
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_UNIT_ID_VERSION)) {
-            $criteria->add(WorkVersionTableMap::COL_UNIT_ID_VERSION, $this->unit_id_version);
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(WorkVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_STAGE_WORK_IDS)) {
-            $criteria->add(WorkVersionTableMap::COL_STAGE_WORK_IDS, $this->stage_work_ids);
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(WorkVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
         }
-        if ($this->isColumnModified(WorkVersionTableMap::COL_STAGE_WORK_VERSIONS)) {
-            $criteria->add(WorkVersionTableMap::COL_STAGE_WORK_VERSIONS, $this->stage_work_versions);
+        if ($this->isColumnModified(WorkVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(WorkVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
         if ($this->isColumnModified(WorkVersionTableMap::COL_WORK_MATERIAL_IDS)) {
             $criteria->add(WorkVersionTableMap::COL_WORK_MATERIAL_IDS, $this->work_material_ids);
@@ -2077,12 +1779,13 @@ abstract class WorkVersion implements ActiveRecordInterface
         $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
         $copyObj->setPrice($this->getPrice());
+        $copyObj->setAmount($this->getAmount());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setUnitId($this->getUnitId());
         $copyObj->setVersion($this->getVersion());
-        $copyObj->setUnitIdVersion($this->getUnitIdVersion());
-        $copyObj->setStageWorkIds($this->getStageWorkIds());
-        $copyObj->setStageWorkVersions($this->getStageWorkVersions());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setWorkMaterialIds($this->getWorkMaterialIds());
         $copyObj->setWorkMaterialVersions($this->getWorkMaterialVersions());
         $copyObj->setWorkTechnicIds($this->getWorkTechnicIds());
@@ -2180,22 +1883,17 @@ abstract class WorkVersion implements ActiveRecordInterface
         $this->id = null;
         $this->name = null;
         $this->price = null;
+        $this->amount = null;
         $this->is_available = null;
         $this->unit_id = null;
         $this->version = null;
-        $this->unit_id_version = null;
-        $this->stage_work_ids = null;
-        $this->stage_work_ids_unserialized = null;
-        $this->stage_work_versions = null;
-        $this->stage_work_versions_unserialized = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->work_material_ids = null;
-        $this->work_material_ids_unserialized = null;
         $this->work_material_versions = null;
-        $this->work_material_versions_unserialized = null;
         $this->work_technic_ids = null;
-        $this->work_technic_ids_unserialized = null;
         $this->work_technic_versions = null;
-        $this->work_technic_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

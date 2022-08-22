@@ -26,12 +26,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method     ChildGroupsQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildGroupsQuery orderBySubprojectId($order = Criteria::ASC) Order by the subproject_id column
+ * @method     ChildGroupsQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildGroupsQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildGroupsQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildGroupsQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildGroupsQuery groupById() Group by the id column
  * @method     ChildGroupsQuery groupByName() Group by the name column
  * @method     ChildGroupsQuery groupByStatus() Group by the status column
  * @method     ChildGroupsQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildGroupsQuery groupBySubprojectId() Group by the subproject_id column
+ * @method     ChildGroupsQuery groupByVersion() Group by the version column
+ * @method     ChildGroupsQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildGroupsQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildGroupsQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildGroupsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildGroupsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,6 +59,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery rightJoinWithSubproject() Adds a RIGHT JOIN clause and with to the query using the Subproject relation
  * @method     ChildGroupsQuery innerJoinWithSubproject() Adds a INNER JOIN clause and with to the query using the Subproject relation
  *
+ * @method     ChildGroupsQuery leftJoinGroupsVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery rightJoinGroupsVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery innerJoinGroupsVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupsVersion relation
+ *
+ * @method     ChildGroupsQuery joinWithGroupsVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the GroupsVersion relation
+ *
+ * @method     ChildGroupsQuery leftJoinWithGroupsVersion() Adds a LEFT JOIN clause and with to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery rightJoinWithGroupsVersion() Adds a RIGHT JOIN clause and with to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery innerJoinWithGroupsVersion() Adds a INNER JOIN clause and with to the query using the GroupsVersion relation
+ *
  * @method     ChildGroupsQuery leftJoinHouse($relationAlias = null) Adds a LEFT JOIN clause to the query using the House relation
  * @method     ChildGroupsQuery rightJoinHouse($relationAlias = null) Adds a RIGHT JOIN clause to the query using the House relation
  * @method     ChildGroupsQuery innerJoinHouse($relationAlias = null) Adds a INNER JOIN clause to the query using the House relation
@@ -61,7 +79,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery rightJoinWithHouse() Adds a RIGHT JOIN clause and with to the query using the House relation
  * @method     ChildGroupsQuery innerJoinWithHouse() Adds a INNER JOIN clause and with to the query using the House relation
  *
- * @method     \DB\SubprojectQuery|\DB\HouseQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\SubprojectQuery|\DB\GroupsVersionQuery|\DB\HouseQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGroups|null findOne(?ConnectionInterface $con = null) Return the first ChildGroups matching the query
  * @method     ChildGroups findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildGroups matching the query, or a new ChildGroups object populated from the query conditions when no match is found
@@ -70,7 +88,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroups|null findOneByName(string $name) Return the first ChildGroups filtered by the name column
  * @method     ChildGroups|null findOneByStatus(string $status) Return the first ChildGroups filtered by the status column
  * @method     ChildGroups|null findOneByIsAvailable(boolean $is_available) Return the first ChildGroups filtered by the is_available column
- * @method     ChildGroups|null findOneBySubprojectId(int $subproject_id) Return the first ChildGroups filtered by the subproject_id column *
+ * @method     ChildGroups|null findOneBySubprojectId(int $subproject_id) Return the first ChildGroups filtered by the subproject_id column
+ * @method     ChildGroups|null findOneByVersion(int $version) Return the first ChildGroups filtered by the version column
+ * @method     ChildGroups|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildGroups filtered by the version_created_at column
+ * @method     ChildGroups|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildGroups filtered by the version_created_by column
+ * @method     ChildGroups|null findOneByVersionComment(string $version_comment) Return the first ChildGroups filtered by the version_comment column *
 
  * @method     ChildGroups requirePk($key, ?ConnectionInterface $con = null) Return the ChildGroups by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOne(?ConnectionInterface $con = null) Return the first ChildGroups matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -80,6 +102,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroups requireOneByStatus(string $status) Return the first ChildGroups filtered by the status column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOneByIsAvailable(boolean $is_available) Return the first ChildGroups filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOneBySubprojectId(int $subproject_id) Return the first ChildGroups filtered by the subproject_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroups requireOneByVersion(int $version) Return the first ChildGroups filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroups requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildGroups filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroups requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildGroups filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroups requireOneByVersionComment(string $version_comment) Return the first ChildGroups filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGroups[]|Collection find(?ConnectionInterface $con = null) Return ChildGroups objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildGroups> find(?ConnectionInterface $con = null) Return ChildGroups objects based on current ModelCriteria
@@ -93,6 +119,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildGroups> findByIsAvailable(boolean $is_available) Return ChildGroups objects filtered by the is_available column
  * @method     ChildGroups[]|Collection findBySubprojectId(int $subproject_id) Return ChildGroups objects filtered by the subproject_id column
  * @psalm-method Collection&\Traversable<ChildGroups> findBySubprojectId(int $subproject_id) Return ChildGroups objects filtered by the subproject_id column
+ * @method     ChildGroups[]|Collection findByVersion(int $version) Return ChildGroups objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildGroups> findByVersion(int $version) Return ChildGroups objects filtered by the version column
+ * @method     ChildGroups[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildGroups objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildGroups> findByVersionCreatedAt(string $version_created_at) Return ChildGroups objects filtered by the version_created_at column
+ * @method     ChildGroups[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildGroups objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildGroups> findByVersionCreatedBy(string $version_created_by) Return ChildGroups objects filtered by the version_created_by column
+ * @method     ChildGroups[]|Collection findByVersionComment(string $version_comment) Return ChildGroups objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildGroups> findByVersionComment(string $version_comment) Return ChildGroups objects filtered by the version_comment column
  * @method     ChildGroups[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildGroups> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -192,7 +226,7 @@ abstract class GroupsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available, subproject_id FROM groups WHERE id = :p0';
+        $sql = 'SELECT id, name, status, is_available, subproject_id, version, version_created_at, version_created_by, version_comment FROM groups WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -460,6 +494,150 @@ abstract class GroupsQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, ?string $comparison = null)
+    {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(GroupsTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(GroupsTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(GroupsTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(GroupsTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query by a related \DB\Subproject object
      *
      * @param \DB\Subproject|ObjectCollection $subproject The related object(s) to use as filter
@@ -592,6 +770,138 @@ abstract class GroupsQuery extends ModelCriteria
     public function useSubprojectNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Subproject', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\GroupsVersion object
+     *
+     * @param \DB\GroupsVersion|ObjectCollection $groupsVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByGroupsVersion($groupsVersion, ?string $comparison = null)
+    {
+        if ($groupsVersion instanceof \DB\GroupsVersion) {
+            $this
+                ->addUsingAlias(GroupsTableMap::COL_ID, $groupsVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($groupsVersion instanceof ObjectCollection) {
+            $this
+                ->useGroupsVersionQuery()
+                ->filterByPrimaryKeys($groupsVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByGroupsVersion() only accepts arguments of type \DB\GroupsVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the GroupsVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinGroupsVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('GroupsVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'GroupsVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the GroupsVersion relation GroupsVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\GroupsVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useGroupsVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinGroupsVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'GroupsVersion', '\DB\GroupsVersionQuery');
+    }
+
+    /**
+     * Use the GroupsVersion relation GroupsVersion object
+     *
+     * @param callable(\DB\GroupsVersionQuery):\DB\GroupsVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withGroupsVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useGroupsVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to GroupsVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\GroupsVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useGroupsVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to GroupsVersion table for a NOT EXISTS query.
+     *
+     * @see useGroupsVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\GroupsVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useGroupsVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \DB\House object

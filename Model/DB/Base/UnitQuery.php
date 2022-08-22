@@ -47,16 +47,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnitQuery rightJoinWithMaterial() Adds a RIGHT JOIN clause and with to the query using the Material relation
  * @method     ChildUnitQuery innerJoinWithMaterial() Adds a INNER JOIN clause and with to the query using the Material relation
  *
- * @method     ChildUnitQuery leftJoinTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the Technic relation
- * @method     ChildUnitQuery rightJoinTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Technic relation
- * @method     ChildUnitQuery innerJoinTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the Technic relation
- *
- * @method     ChildUnitQuery joinWithTechnic($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Technic relation
- *
- * @method     ChildUnitQuery leftJoinWithTechnic() Adds a LEFT JOIN clause and with to the query using the Technic relation
- * @method     ChildUnitQuery rightJoinWithTechnic() Adds a RIGHT JOIN clause and with to the query using the Technic relation
- * @method     ChildUnitQuery innerJoinWithTechnic() Adds a INNER JOIN clause and with to the query using the Technic relation
- *
  * @method     ChildUnitQuery leftJoinWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the Work relation
  * @method     ChildUnitQuery rightJoinWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Work relation
  * @method     ChildUnitQuery innerJoinWork($relationAlias = null) Adds a INNER JOIN clause to the query using the Work relation
@@ -67,7 +57,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnitQuery rightJoinWithWork() Adds a RIGHT JOIN clause and with to the query using the Work relation
  * @method     ChildUnitQuery innerJoinWithWork() Adds a INNER JOIN clause and with to the query using the Work relation
  *
- * @method     \DB\MaterialQuery|\DB\TechnicQuery|\DB\WorkQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\MaterialQuery|\DB\WorkQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUnit|null findOne(?ConnectionInterface $con = null) Return the first ChildUnit matching the query
  * @method     ChildUnit findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUnit matching the query, or a new ChildUnit object populated from the query conditions when no match is found
@@ -515,138 +505,6 @@ abstract class UnitQuery extends ModelCriteria
     public function useMaterialNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Material', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
-     * Filter the query by a related \DB\Technic object
-     *
-     * @param \DB\Technic|ObjectCollection $technic the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByTechnic($technic, ?string $comparison = null)
-    {
-        if ($technic instanceof \DB\Technic) {
-            $this
-                ->addUsingAlias(UnitTableMap::COL_ID, $technic->getUnitId(), $comparison);
-
-            return $this;
-        } elseif ($technic instanceof ObjectCollection) {
-            $this
-                ->useTechnicQuery()
-                ->filterByPrimaryKeys($technic->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByTechnic() only accepts arguments of type \DB\Technic or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Technic relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinTechnic(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Technic');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Technic');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Technic relation Technic object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\TechnicQuery A secondary query class using the current class as primary query
-     */
-    public function useTechnicQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinTechnic($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Technic', '\DB\TechnicQuery');
-    }
-
-    /**
-     * Use the Technic relation Technic object
-     *
-     * @param callable(\DB\TechnicQuery):\DB\TechnicQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withTechnicQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useTechnicQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to Technic table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\TechnicQuery The inner query object of the EXISTS statement
-     */
-    public function useTechnicExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('Technic', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to Technic table for a NOT EXISTS query.
-     *
-     * @see useTechnicExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\TechnicQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('Technic', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \DB\Work object

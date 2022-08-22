@@ -46,6 +46,11 @@ class UnitTableMap extends TableMap
     public const TABLE_NAME = 'unit';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Unit';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Unit';
@@ -185,21 +190,14 @@ class UnitTableMap extends TableMap
     0 => ':unit_id',
     1 => ':id',
   ),
-), 'RESTRICT', 'RESTRICT', 'Materials', false);
-        $this->addRelation('Technic', '\\DB\\Technic', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':unit_id',
-    1 => ':id',
-  ),
-), 'RESTRICT', 'RESTRICT', 'Technics', false);
+), null, null, 'Materials', false);
         $this->addRelation('Work', '\\DB\\Work', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':unit_id',
     1 => ':id',
   ),
-), 'RESTRICT', 'RESTRICT', 'Works', false);
+), null, null, 'Works', false);
     }
 
     /**

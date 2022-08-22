@@ -46,6 +46,11 @@ class StageTableMap extends TableMap
     public const TABLE_NAME = 'stage';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Stage';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Stage';
@@ -58,7 +63,7 @@ class StageTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class StageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -96,6 +101,26 @@ class StageTableMap extends TableMap
     public const COL_HOUSE_ID = 'stage.house_id';
 
     /**
+     * the column name for the version field
+     */
+    public const COL_VERSION = 'stage.version';
+
+    /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'stage.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'stage.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'stage.version_comment';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -109,11 +134,11 @@ class StageTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'HouseId', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'houseId', ],
-        self::TYPE_COLNAME       => [StageTableMap::COL_ID, StageTableMap::COL_NAME, StageTableMap::COL_STATUS, StageTableMap::COL_IS_AVAILABLE, StageTableMap::COL_HOUSE_ID, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'house_id', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'HouseId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'houseId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [StageTableMap::COL_ID, StageTableMap::COL_NAME, StageTableMap::COL_STATUS, StageTableMap::COL_IS_AVAILABLE, StageTableMap::COL_HOUSE_ID, StageTableMap::COL_VERSION, StageTableMap::COL_VERSION_CREATED_AT, StageTableMap::COL_VERSION_CREATED_BY, StageTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'house_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -125,11 +150,11 @@ class StageTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'HouseId' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'houseId' => 4, ],
-        self::TYPE_COLNAME       => [StageTableMap::COL_ID => 0, StageTableMap::COL_NAME => 1, StageTableMap::COL_STATUS => 2, StageTableMap::COL_IS_AVAILABLE => 3, StageTableMap::COL_HOUSE_ID => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'house_id' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'HouseId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'houseId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
+        self::TYPE_COLNAME       => [StageTableMap::COL_ID => 0, StageTableMap::COL_NAME => 1, StageTableMap::COL_STATUS => 2, StageTableMap::COL_IS_AVAILABLE => 3, StageTableMap::COL_HOUSE_ID => 4, StageTableMap::COL_VERSION => 5, StageTableMap::COL_VERSION_CREATED_AT => 6, StageTableMap::COL_VERSION_CREATED_BY => 7, StageTableMap::COL_VERSION_COMMENT => 8, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'house_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -172,6 +197,36 @@ class StageTableMap extends TableMap
         'COL_HOUSE_ID' => 'HOUSE_ID',
         'house_id' => 'HOUSE_ID',
         'stage.house_id' => 'HOUSE_ID',
+        'Version' => 'VERSION',
+        'Stage.Version' => 'VERSION',
+        'version' => 'VERSION',
+        'stage.version' => 'VERSION',
+        'StageTableMap::COL_VERSION' => 'VERSION',
+        'COL_VERSION' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'Stage.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'stage.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'StageTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'stage.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'Stage.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'stage.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'StageTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'stage.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'Stage.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'stage.versionComment' => 'VERSION_COMMENT',
+        'StageTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'stage.version_comment' => 'VERSION_COMMENT',
     ];
 
     /**
@@ -189,13 +244,17 @@ class StageTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\DB\\Stage');
         $this->setPackage('DB');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('status', 'Status', 'CHAR', true, null, 'in_process');
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
-        $this->addForeignKey('house_id', 'HouseId', 'INTEGER', 'house', 'id', false, null, null);
+        $this->addForeignKey('house_id', 'HouseId', 'INTEGER', 'house', 'id', true, null, null);
+        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
     /**
@@ -211,28 +270,24 @@ class StageTableMap extends TableMap
     0 => ':house_id',
     1 => ':id',
   ),
-), 'CASCADE', null, null, false);
-        $this->addRelation('StageMaterial', '\\DB\\StageMaterial', RelationMap::ONE_TO_MANY, array (
+), null, null, null, false);
+        $this->addRelation('StageVersion', '\\DB\\StageVersion', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':stage_id',
+    0 => ':id',
     1 => ':id',
   ),
-), null, null, 'StageMaterials', false);
-        $this->addRelation('StageTechnic', '\\DB\\StageTechnic', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':stage_id',
-    1 => ':id',
-  ),
-), null, null, 'StageTechnics', false);
-        $this->addRelation('StageWork', '\\DB\\StageWork', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':stage_id',
-    1 => ':id',
-  ),
-), null, null, 'StageWorks', false);
+), 'CASCADE', null, 'StageVersions', false);
+    }
+
+    /**
+     * Method to invalidate the instance pool of all tables related to stage     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool(): void
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        StageVersionTableMap::clearInstancePool();
     }
 
     /**
@@ -382,12 +437,20 @@ class StageTableMap extends TableMap
             $criteria->addSelectColumn(StageTableMap::COL_STATUS);
             $criteria->addSelectColumn(StageTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(StageTableMap::COL_HOUSE_ID);
+            $criteria->addSelectColumn(StageTableMap::COL_VERSION);
+            $criteria->addSelectColumn(StageTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(StageTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(StageTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.status');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.house_id');
+            $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -411,12 +474,20 @@ class StageTableMap extends TableMap
             $criteria->removeSelectColumn(StageTableMap::COL_STATUS);
             $criteria->removeSelectColumn(StageTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(StageTableMap::COL_HOUSE_ID);
+            $criteria->removeSelectColumn(StageTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(StageTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(StageTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(StageTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.status');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.house_id');
+            $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -503,6 +574,10 @@ class StageTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Stage object
+        }
+
+        if ($criteria->containsKey(StageTableMap::COL_ID) && $criteria->keyContainsValue(StageTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.StageTableMap::COL_ID.')');
         }
 
 

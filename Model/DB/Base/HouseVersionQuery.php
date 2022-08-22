@@ -27,6 +27,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildHouseVersionQuery orderByGroupId($order = Criteria::ASC) Order by the group_id column
  * @method     ChildHouseVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildHouseVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildHouseVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildHouseVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildHouseVersionQuery orderByGroupIdVersion($order = Criteria::ASC) Order by the group_id_version column
  * @method     ChildHouseVersionQuery orderByStageIds($order = Criteria::ASC) Order by the stage_ids column
  * @method     ChildHouseVersionQuery orderByStageVersions($order = Criteria::ASC) Order by the stage_versions column
@@ -37,6 +40,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildHouseVersionQuery groupByGroupId() Group by the group_id column
  * @method     ChildHouseVersionQuery groupByVersion() Group by the version column
+ * @method     ChildHouseVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildHouseVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildHouseVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildHouseVersionQuery groupByGroupIdVersion() Group by the group_id_version column
  * @method     ChildHouseVersionQuery groupByStageIds() Group by the stage_ids column
  * @method     ChildHouseVersionQuery groupByStageVersions() Group by the stage_versions column
@@ -70,9 +76,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildHouseVersion filtered by the is_available column
  * @method     ChildHouseVersion|null findOneByGroupId(int $group_id) Return the first ChildHouseVersion filtered by the group_id column
  * @method     ChildHouseVersion|null findOneByVersion(int $version) Return the first ChildHouseVersion filtered by the version column
+ * @method     ChildHouseVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildHouseVersion filtered by the version_created_at column
+ * @method     ChildHouseVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildHouseVersion filtered by the version_created_by column
+ * @method     ChildHouseVersion|null findOneByVersionComment(string $version_comment) Return the first ChildHouseVersion filtered by the version_comment column
  * @method     ChildHouseVersion|null findOneByGroupIdVersion(int $group_id_version) Return the first ChildHouseVersion filtered by the group_id_version column
- * @method     ChildHouseVersion|null findOneByStageIds(array $stage_ids) Return the first ChildHouseVersion filtered by the stage_ids column
- * @method     ChildHouseVersion|null findOneByStageVersions(array $stage_versions) Return the first ChildHouseVersion filtered by the stage_versions column *
+ * @method     ChildHouseVersion|null findOneByStageIds(string $stage_ids) Return the first ChildHouseVersion filtered by the stage_ids column
+ * @method     ChildHouseVersion|null findOneByStageVersions(string $stage_versions) Return the first ChildHouseVersion filtered by the stage_versions column *
 
  * @method     ChildHouseVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildHouseVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouseVersion requireOne(?ConnectionInterface $con = null) Return the first ChildHouseVersion matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -83,9 +92,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildHouseVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouseVersion requireOneByGroupId(int $group_id) Return the first ChildHouseVersion filtered by the group_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouseVersion requireOneByVersion(int $version) Return the first ChildHouseVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouseVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildHouseVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouseVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildHouseVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouseVersion requireOneByVersionComment(string $version_comment) Return the first ChildHouseVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouseVersion requireOneByGroupIdVersion(int $group_id_version) Return the first ChildHouseVersion filtered by the group_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildHouseVersion requireOneByStageIds(array $stage_ids) Return the first ChildHouseVersion filtered by the stage_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildHouseVersion requireOneByStageVersions(array $stage_versions) Return the first ChildHouseVersion filtered by the stage_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouseVersion requireOneByStageIds(string $stage_ids) Return the first ChildHouseVersion filtered by the stage_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouseVersion requireOneByStageVersions(string $stage_versions) Return the first ChildHouseVersion filtered by the stage_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHouseVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildHouseVersion objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildHouseVersion> find(?ConnectionInterface $con = null) Return ChildHouseVersion objects based on current ModelCriteria
@@ -101,12 +113,18 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildHouseVersion> findByGroupId(int $group_id) Return ChildHouseVersion objects filtered by the group_id column
  * @method     ChildHouseVersion[]|Collection findByVersion(int $version) Return ChildHouseVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildHouseVersion> findByVersion(int $version) Return ChildHouseVersion objects filtered by the version column
+ * @method     ChildHouseVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildHouseVersion objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildHouseVersion> findByVersionCreatedAt(string $version_created_at) Return ChildHouseVersion objects filtered by the version_created_at column
+ * @method     ChildHouseVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildHouseVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildHouseVersion> findByVersionCreatedBy(string $version_created_by) Return ChildHouseVersion objects filtered by the version_created_by column
+ * @method     ChildHouseVersion[]|Collection findByVersionComment(string $version_comment) Return ChildHouseVersion objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildHouseVersion> findByVersionComment(string $version_comment) Return ChildHouseVersion objects filtered by the version_comment column
  * @method     ChildHouseVersion[]|Collection findByGroupIdVersion(int $group_id_version) Return ChildHouseVersion objects filtered by the group_id_version column
  * @psalm-method Collection&\Traversable<ChildHouseVersion> findByGroupIdVersion(int $group_id_version) Return ChildHouseVersion objects filtered by the group_id_version column
- * @method     ChildHouseVersion[]|Collection findByStageIds(array $stage_ids) Return ChildHouseVersion objects filtered by the stage_ids column
- * @psalm-method Collection&\Traversable<ChildHouseVersion> findByStageIds(array $stage_ids) Return ChildHouseVersion objects filtered by the stage_ids column
- * @method     ChildHouseVersion[]|Collection findByStageVersions(array $stage_versions) Return ChildHouseVersion objects filtered by the stage_versions column
- * @psalm-method Collection&\Traversable<ChildHouseVersion> findByStageVersions(array $stage_versions) Return ChildHouseVersion objects filtered by the stage_versions column
+ * @method     ChildHouseVersion[]|Collection findByStageIds(string $stage_ids) Return ChildHouseVersion objects filtered by the stage_ids column
+ * @psalm-method Collection&\Traversable<ChildHouseVersion> findByStageIds(string $stage_ids) Return ChildHouseVersion objects filtered by the stage_ids column
+ * @method     ChildHouseVersion[]|Collection findByStageVersions(string $stage_versions) Return ChildHouseVersion objects filtered by the stage_versions column
+ * @psalm-method Collection&\Traversable<ChildHouseVersion> findByStageVersions(string $stage_versions) Return ChildHouseVersion objects filtered by the stage_versions column
  * @method     ChildHouseVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildHouseVersion> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -206,7 +224,7 @@ abstract class HouseVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available, group_id, version, group_id_version, stage_ids, stage_versions FROM house_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, status, is_available, group_id, version, version_created_at, version_created_by, version_comment, group_id_version, stage_ids, stage_versions FROM house_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -527,6 +545,107 @@ abstract class HouseVersionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(HouseVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(HouseVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseVersionTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the group_id_version column
      *
      * Example usage:
@@ -572,81 +691,24 @@ abstract class HouseVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_ids column
      *
-     * @param array $stageIds The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByStageIds('fooValue');   // WHERE stage_ids = 'fooValue'
+     * $query->filterByStageIds('%fooValue%', Criteria::LIKE); // WHERE stage_ids LIKE '%fooValue%'
+     * $query->filterByStageIds(['foo', 'bar']); // WHERE stage_ids IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $stageIds The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageIds($stageIds = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(HouseVersionTableMap::COL_STAGE_IDS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($stageIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($stageIds)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($stageIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($stageIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(HouseVersionTableMap::COL_STAGE_IDS, $stageIds, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the stage_ids column
-     * @param mixed $stageIds The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageId($stageIds = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($stageIds)) {
-                $stageIds = '%| ' . $stageIds . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $stageIds = '%| ' . $stageIds . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(HouseVersionTableMap::COL_STAGE_IDS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $stageIds, $comparison);
-            } else {
-                $this->addAnd($key, $stageIds, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(HouseVersionTableMap::COL_STAGE_IDS, $stageIds, $comparison);
@@ -657,81 +719,24 @@ abstract class HouseVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_versions column
      *
-     * @param array $stageVersions The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByStageVersions('fooValue');   // WHERE stage_versions = 'fooValue'
+     * $query->filterByStageVersions('%fooValue%', Criteria::LIKE); // WHERE stage_versions LIKE '%fooValue%'
+     * $query->filterByStageVersions(['foo', 'bar']); // WHERE stage_versions IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $stageVersions The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageVersions($stageVersions = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(HouseVersionTableMap::COL_STAGE_VERSIONS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($stageVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($stageVersions)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($stageVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($stageVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(HouseVersionTableMap::COL_STAGE_VERSIONS, $stageVersions, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the stage_versions column
-     * @param mixed $stageVersions The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageVersion($stageVersions = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($stageVersions)) {
-                $stageVersions = '%| ' . $stageVersions . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $stageVersions = '%| ' . $stageVersions . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(HouseVersionTableMap::COL_STAGE_VERSIONS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $stageVersions, $comparison);
-            } else {
-                $this->addAnd($key, $stageVersions, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(HouseVersionTableMap::COL_STAGE_VERSIONS, $stageVersions, $comparison);

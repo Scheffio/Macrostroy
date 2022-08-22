@@ -2,6 +2,7 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Technic as ChildTechnic;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'technic_version' table.
@@ -94,7 +96,7 @@ abstract class TechnicVersion implements ActiveRecordInterface
 
     /**
      * The value for the unit_id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $unit_id;
@@ -108,68 +110,53 @@ abstract class TechnicVersion implements ActiveRecordInterface
     protected $version;
 
     /**
-     * The value for the unit_id_version field.
+     * The value for the version_created_at field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
+     * @var        DateTime|null
      */
-    protected $unit_id_version;
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
 
     /**
      * The value for the stage_technic_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $stage_technic_ids;
 
     /**
-     * The unserialized $stage_technic_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_technic_ids_unserialized;
-
-    /**
      * The value for the stage_technic_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $stage_technic_versions;
 
     /**
-     * The unserialized $stage_technic_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $stage_technic_versions_unserialized;
-
-    /**
      * The value for the work_technic_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_technic_ids;
 
     /**
-     * The unserialized $work_technic_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_technic_ids_unserialized;
-
-    /**
      * The value for the work_technic_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $work_technic_versions;
-
-    /**
-     * The unserialized $work_technic_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $work_technic_versions_unserialized;
 
     /**
      * @var        ChildTechnic
@@ -194,7 +181,6 @@ abstract class TechnicVersion implements ActiveRecordInterface
     {
         $this->is_available = true;
         $this->version = 0;
-        $this->unit_id_version = 0;
     }
 
     /**
@@ -477,7 +463,7 @@ abstract class TechnicVersion implements ActiveRecordInterface
 
     /**
      * Get the [unit_id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getUnitId()
@@ -496,129 +482,85 @@ abstract class TechnicVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [unit_id_version] column value.
+     * Get the [optionally formatted] temporal [version_created_at] column value.
      *
-     * @return int|null
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
      */
-    public function getUnitIdVersion()
+    public function getVersionCreatedAt($format = null)
     {
-        return $this->unit_id_version;
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
      * Get the [stage_technic_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getStageTechnicIds()
     {
-        if (null === $this->stage_technic_ids_unserialized) {
-            $this->stage_technic_ids_unserialized = [];
-        }
-        if (!$this->stage_technic_ids_unserialized && null !== $this->stage_technic_ids) {
-            $stage_technic_ids_unserialized = substr($this->stage_technic_ids, 2, -2);
-            $this->stage_technic_ids_unserialized = '' !== $stage_technic_ids_unserialized ? explode(' | ', $stage_technic_ids_unserialized) : array();
-        }
-
-        return $this->stage_technic_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [stage_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasStageTechnicId($value): bool
-    {
-        return in_array($value, $this->getStageTechnicIds());
+        return $this->stage_technic_ids;
     }
 
     /**
      * Get the [stage_technic_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getStageTechnicVersions()
     {
-        if (null === $this->stage_technic_versions_unserialized) {
-            $this->stage_technic_versions_unserialized = [];
-        }
-        if (!$this->stage_technic_versions_unserialized && null !== $this->stage_technic_versions) {
-            $stage_technic_versions_unserialized = substr($this->stage_technic_versions, 2, -2);
-            $this->stage_technic_versions_unserialized = '' !== $stage_technic_versions_unserialized ? explode(' | ', $stage_technic_versions_unserialized) : array();
-        }
-
-        return $this->stage_technic_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [stage_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasStageTechnicVersion($value): bool
-    {
-        return in_array($value, $this->getStageTechnicVersions());
+        return $this->stage_technic_versions;
     }
 
     /**
      * Get the [work_technic_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkTechnicIds()
     {
-        if (null === $this->work_technic_ids_unserialized) {
-            $this->work_technic_ids_unserialized = [];
-        }
-        if (!$this->work_technic_ids_unserialized && null !== $this->work_technic_ids) {
-            $work_technic_ids_unserialized = substr($this->work_technic_ids, 2, -2);
-            $this->work_technic_ids_unserialized = '' !== $work_technic_ids_unserialized ? explode(' | ', $work_technic_ids_unserialized) : array();
-        }
-
-        return $this->work_technic_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkTechnicId($value): bool
-    {
-        return in_array($value, $this->getWorkTechnicIds());
+        return $this->work_technic_ids;
     }
 
     /**
      * Get the [work_technic_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getWorkTechnicVersions()
     {
-        if (null === $this->work_technic_versions_unserialized) {
-            $this->work_technic_versions_unserialized = [];
-        }
-        if (!$this->work_technic_versions_unserialized && null !== $this->work_technic_versions) {
-            $work_technic_versions_unserialized = substr($this->work_technic_versions, 2, -2);
-            $this->work_technic_versions_unserialized = '' !== $work_technic_versions_unserialized ? explode(' | ', $work_technic_versions_unserialized) : array();
-        }
-
-        return $this->work_technic_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasWorkTechnicVersion($value): bool
-    {
-        return in_array($value, $this->getWorkTechnicVersions());
+        return $this->work_technic_versions;
     }
 
     /**
@@ -715,7 +657,7 @@ abstract class TechnicVersion implements ActiveRecordInterface
 
     /**
      * Set the value of [unit_id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -754,20 +696,60 @@ abstract class TechnicVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [unit_id_version] column.
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
      *
-     * @param int|null $v New value
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this The current object (for fluent API support)
      */
-    public function setUnitIdVersion($v)
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[TechnicVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->unit_id_version !== $v) {
-            $this->unit_id_version = $v;
-            $this->modifiedColumns[TechnicVersionTableMap::COL_UNIT_ID_VERSION] = true;
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[TechnicVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[TechnicVersionTableMap::COL_VERSION_COMMENT] = true;
         }
 
         return $this;
@@ -776,14 +758,17 @@ abstract class TechnicVersion implements ActiveRecordInterface
     /**
      * Set the value of [stage_technic_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageTechnicIds($v)
     {
-        if ($this->stage_technic_ids_unserialized !== $v) {
-            $this->stage_technic_ids_unserialized = $v;
-            $this->stage_technic_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->stage_technic_ids !== $v) {
+            $this->stage_technic_ids = $v;
             $this->modifiedColumns[TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS] = true;
         }
 
@@ -791,50 +776,19 @@ abstract class TechnicVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [stage_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageTechnicId($value)
-    {
-        $currentArray = $this->getStageTechnicIds();
-        $currentArray []= $value;
-        $this->setStageTechnicIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageTechnicId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageTechnicIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setStageTechnicIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [stage_technic_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageTechnicVersions($v)
     {
-        if ($this->stage_technic_versions_unserialized !== $v) {
-            $this->stage_technic_versions_unserialized = $v;
-            $this->stage_technic_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->stage_technic_versions !== $v) {
+            $this->stage_technic_versions = $v;
             $this->modifiedColumns[TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS] = true;
         }
 
@@ -842,50 +796,19 @@ abstract class TechnicVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [stage_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageTechnicVersion($value)
-    {
-        $currentArray = $this->getStageTechnicVersions();
-        $currentArray []= $value;
-        $this->setStageTechnicVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [stage_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageTechnicVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getStageTechnicVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setStageTechnicVersions($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_technic_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkTechnicIds($v)
     {
-        if ($this->work_technic_ids_unserialized !== $v) {
-            $this->work_technic_ids_unserialized = $v;
-            $this->work_technic_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_technic_ids !== $v) {
+            $this->work_technic_ids = $v;
             $this->modifiedColumns[TechnicVersionTableMap::COL_WORK_TECHNIC_IDS] = true;
         }
 
@@ -893,86 +816,21 @@ abstract class TechnicVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkTechnicId($value)
-    {
-        $currentArray = $this->getWorkTechnicIds();
-        $currentArray []= $value;
-        $this->setWorkTechnicIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_technic_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkTechnicId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkTechnicIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkTechnicIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_technic_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkTechnicVersions($v)
     {
-        if ($this->work_technic_versions_unserialized !== $v) {
-            $this->work_technic_versions_unserialized = $v;
-            $this->work_technic_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->work_technic_versions !== $v) {
+            $this->work_technic_versions = $v;
             $this->modifiedColumns[TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS] = true;
         }
-
-        return $this;
-    }
-
-    /**
-     * Adds a value to the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWorkTechnicVersion($value)
-    {
-        $currentArray = $this->getWorkTechnicVersions();
-        $currentArray []= $value;
-        $this->setWorkTechnicVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [work_technic_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWorkTechnicVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getWorkTechnicVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setWorkTechnicVersions($targetArray);
 
         return $this;
     }
@@ -992,10 +850,6 @@ abstract class TechnicVersion implements ActiveRecordInterface
             }
 
             if ($this->version !== 0) {
-                return false;
-            }
-
-            if ($this->unit_id_version !== 0) {
                 return false;
             }
 
@@ -1043,24 +897,29 @@ abstract class TechnicVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : TechnicVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : TechnicVersionTableMap::translateFieldName('UnitIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->unit_id_version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : TechnicVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TechnicVersionTableMap::translateFieldName('StageTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_technic_ids = $col;
-            $this->stage_technic_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TechnicVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : TechnicVersionTableMap::translateFieldName('StageTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_technic_versions = $col;
-            $this->stage_technic_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : TechnicVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : TechnicVersionTableMap::translateFieldName('WorkTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_technic_ids = $col;
-            $this->work_technic_ids_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : TechnicVersionTableMap::translateFieldName('StageTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_technic_ids = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : TechnicVersionTableMap::translateFieldName('WorkTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_technic_versions = $col;
-            $this->work_technic_versions_unserialized = null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : TechnicVersionTableMap::translateFieldName('StageTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_technic_versions = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : TechnicVersionTableMap::translateFieldName('WorkTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_technic_ids = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : TechnicVersionTableMap::translateFieldName('WorkTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->work_technic_versions = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1069,7 +928,7 @@ abstract class TechnicVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = TechnicVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = TechnicVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\TechnicVersion'), 0, $e);
@@ -1301,8 +1160,14 @@ abstract class TechnicVersion implements ActiveRecordInterface
         if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
-        if ($this->isColumnModified(TechnicVersionTableMap::COL_UNIT_ID_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'unit_id_version';
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
         if ($this->isColumnModified(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS)) {
             $modifiedColumns[':p' . $index++]  = 'stage_technic_ids';
@@ -1345,8 +1210,14 @@ abstract class TechnicVersion implements ActiveRecordInterface
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
-                    case 'unit_id_version':
-                        $stmt->bindValue($identifier, $this->unit_id_version, PDO::PARAM_INT);
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                     case 'stage_technic_ids':
                         $stmt->bindValue($identifier, $this->stage_technic_ids, PDO::PARAM_STR);
@@ -1434,18 +1305,24 @@ abstract class TechnicVersion implements ActiveRecordInterface
                 return $this->getVersion();
 
             case 6:
-                return $this->getUnitIdVersion();
+                return $this->getVersionCreatedAt();
 
             case 7:
-                return $this->getStageTechnicIds();
+                return $this->getVersionCreatedBy();
 
             case 8:
-                return $this->getStageTechnicVersions();
+                return $this->getVersionComment();
 
             case 9:
-                return $this->getWorkTechnicIds();
+                return $this->getStageTechnicIds();
 
             case 10:
+                return $this->getStageTechnicVersions();
+
+            case 11:
+                return $this->getWorkTechnicIds();
+
+            case 12:
                 return $this->getWorkTechnicVersions();
 
             default:
@@ -1482,12 +1359,18 @@ abstract class TechnicVersion implements ActiveRecordInterface
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getUnitId(),
             $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getUnitIdVersion(),
-            $keys[7] => $this->getStageTechnicIds(),
-            $keys[8] => $this->getStageTechnicVersions(),
-            $keys[9] => $this->getWorkTechnicIds(),
-            $keys[10] => $this->getWorkTechnicVersions(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
+            $keys[9] => $this->getStageTechnicIds(),
+            $keys[10] => $this->getStageTechnicVersions(),
+            $keys[11] => $this->getWorkTechnicIds(),
+            $keys[12] => $this->getWorkTechnicVersions(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1564,34 +1447,24 @@ abstract class TechnicVersion implements ActiveRecordInterface
                 $this->setVersion($value);
                 break;
             case 6:
-                $this->setUnitIdVersion($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 7:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setStageTechnicIds($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 8:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setStageTechnicVersions($value);
+                $this->setVersionComment($value);
                 break;
             case 9:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
-                $this->setWorkTechnicIds($value);
+                $this->setStageTechnicIds($value);
                 break;
             case 10:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
+                $this->setStageTechnicVersions($value);
+                break;
+            case 11:
+                $this->setWorkTechnicIds($value);
+                break;
+            case 12:
                 $this->setWorkTechnicVersions($value);
                 break;
         } // switch()
@@ -1639,19 +1512,25 @@ abstract class TechnicVersion implements ActiveRecordInterface
             $this->setVersion($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUnitIdVersion($arr[$keys[6]]);
+            $this->setVersionCreatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setStageTechnicIds($arr[$keys[7]]);
+            $this->setVersionCreatedBy($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setStageTechnicVersions($arr[$keys[8]]);
+            $this->setVersionComment($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setWorkTechnicIds($arr[$keys[9]]);
+            $this->setStageTechnicIds($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setWorkTechnicVersions($arr[$keys[10]]);
+            $this->setStageTechnicVersions($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setWorkTechnicIds($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setWorkTechnicVersions($arr[$keys[12]]);
         }
 
         return $this;
@@ -1714,8 +1593,14 @@ abstract class TechnicVersion implements ActiveRecordInterface
         if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION)) {
             $criteria->add(TechnicVersionTableMap::COL_VERSION, $this->version);
         }
-        if ($this->isColumnModified(TechnicVersionTableMap::COL_UNIT_ID_VERSION)) {
-            $criteria->add(TechnicVersionTableMap::COL_UNIT_ID_VERSION, $this->unit_id_version);
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(TechnicVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(TechnicVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(TechnicVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(TechnicVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
         if ($this->isColumnModified(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS)) {
             $criteria->add(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS, $this->stage_technic_ids);
@@ -1838,7 +1723,9 @@ abstract class TechnicVersion implements ActiveRecordInterface
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setUnitId($this->getUnitId());
         $copyObj->setVersion($this->getVersion());
-        $copyObj->setUnitIdVersion($this->getUnitIdVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setStageTechnicIds($this->getStageTechnicIds());
         $copyObj->setStageTechnicVersions($this->getStageTechnicVersions());
         $copyObj->setWorkTechnicIds($this->getWorkTechnicIds());
@@ -1939,15 +1826,13 @@ abstract class TechnicVersion implements ActiveRecordInterface
         $this->is_available = null;
         $this->unit_id = null;
         $this->version = null;
-        $this->unit_id_version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->stage_technic_ids = null;
-        $this->stage_technic_ids_unserialized = null;
         $this->stage_technic_versions = null;
-        $this->stage_technic_versions_unserialized = null;
         $this->work_technic_ids = null;
-        $this->work_technic_ids_unserialized = null;
         $this->work_technic_versions = null;
-        $this->work_technic_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

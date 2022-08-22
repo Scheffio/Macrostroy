@@ -46,6 +46,11 @@ class TechnicTableMap extends TableMap
     public const TABLE_NAME = 'technic';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Technic';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Technic';
@@ -58,7 +63,7 @@ class TechnicTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class TechnicTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -96,6 +101,26 @@ class TechnicTableMap extends TableMap
     public const COL_UNIT_ID = 'technic.unit_id';
 
     /**
+     * the column name for the version field
+     */
+    public const COL_VERSION = 'technic.version';
+
+    /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'technic.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'technic.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'technic.version_comment';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -109,11 +134,11 @@ class TechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', ],
-        self::TYPE_COLNAME       => [TechnicTableMap::COL_ID, TechnicTableMap::COL_NAME, TechnicTableMap::COL_PRICE, TechnicTableMap::COL_IS_AVAILABLE, TechnicTableMap::COL_UNIT_ID, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [TechnicTableMap::COL_ID, TechnicTableMap::COL_NAME, TechnicTableMap::COL_PRICE, TechnicTableMap::COL_IS_AVAILABLE, TechnicTableMap::COL_UNIT_ID, TechnicTableMap::COL_VERSION, TechnicTableMap::COL_VERSION_CREATED_AT, TechnicTableMap::COL_VERSION_CREATED_BY, TechnicTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -125,11 +150,11 @@ class TechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, ],
-        self::TYPE_COLNAME       => [TechnicTableMap::COL_ID => 0, TechnicTableMap::COL_NAME => 1, TechnicTableMap::COL_PRICE => 2, TechnicTableMap::COL_IS_AVAILABLE => 3, TechnicTableMap::COL_UNIT_ID => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
+        self::TYPE_COLNAME       => [TechnicTableMap::COL_ID => 0, TechnicTableMap::COL_NAME => 1, TechnicTableMap::COL_PRICE => 2, TechnicTableMap::COL_IS_AVAILABLE => 3, TechnicTableMap::COL_UNIT_ID => 4, TechnicTableMap::COL_VERSION => 5, TechnicTableMap::COL_VERSION_CREATED_AT => 6, TechnicTableMap::COL_VERSION_CREATED_BY => 7, TechnicTableMap::COL_VERSION_COMMENT => 8, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -172,6 +197,36 @@ class TechnicTableMap extends TableMap
         'COL_UNIT_ID' => 'UNIT_ID',
         'unit_id' => 'UNIT_ID',
         'technic.unit_id' => 'UNIT_ID',
+        'Version' => 'VERSION',
+        'Technic.Version' => 'VERSION',
+        'version' => 'VERSION',
+        'technic.version' => 'VERSION',
+        'TechnicTableMap::COL_VERSION' => 'VERSION',
+        'COL_VERSION' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'Technic.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'technic.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'TechnicTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'technic.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'Technic.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'technic.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'TechnicTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'technic.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'Technic.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'technic.versionComment' => 'VERSION_COMMENT',
+        'TechnicTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'technic.version_comment' => 'VERSION_COMMENT',
     ];
 
     /**
@@ -195,7 +250,11 @@ class TechnicTableMap extends TableMap
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
-        $this->addForeignKey('unit_id', 'UnitId', 'INTEGER', 'unit', 'id', true, null, null);
+        $this->addColumn('unit_id', 'UnitId', 'INTEGER', true, null, null);
+        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
     /**
@@ -205,13 +264,6 @@ class TechnicTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Unit', '\\DB\\Unit', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':unit_id',
-    1 => ':id',
-  ),
-), 'RESTRICT', 'RESTRICT', null, false);
         $this->addRelation('StageTechnic', '\\DB\\StageTechnic', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -219,6 +271,13 @@ class TechnicTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'StageTechnics', false);
+        $this->addRelation('TechnicVersion', '\\DB\\TechnicVersion', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'TechnicVersions', false);
         $this->addRelation('WorkTechnic', '\\DB\\WorkTechnic', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -226,6 +285,16 @@ class TechnicTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'WorkTechnics', false);
+    }
+
+    /**
+     * Method to invalidate the instance pool of all tables related to technic     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool(): void
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        TechnicVersionTableMap::clearInstancePool();
     }
 
     /**
@@ -375,12 +444,20 @@ class TechnicTableMap extends TableMap
             $criteria->addSelectColumn(TechnicTableMap::COL_PRICE);
             $criteria->addSelectColumn(TechnicTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(TechnicTableMap::COL_UNIT_ID);
+            $criteria->addSelectColumn(TechnicTableMap::COL_VERSION);
+            $criteria->addSelectColumn(TechnicTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(TechnicTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(TechnicTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.price');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
+            $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -404,12 +481,20 @@ class TechnicTableMap extends TableMap
             $criteria->removeSelectColumn(TechnicTableMap::COL_PRICE);
             $criteria->removeSelectColumn(TechnicTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(TechnicTableMap::COL_UNIT_ID);
+            $criteria->removeSelectColumn(TechnicTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(TechnicTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(TechnicTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(TechnicTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.price');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
+            $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }
 

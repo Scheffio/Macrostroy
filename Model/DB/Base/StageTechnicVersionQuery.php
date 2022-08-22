@@ -24,19 +24,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageTechnicVersionQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildStageTechnicVersionQuery orderByPrice($order = Criteria::ASC) Order by the price column
  * @method     ChildStageTechnicVersionQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildStageTechnicVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildStageTechnicVersionQuery orderByTechnicId($order = Criteria::ASC) Order by the technic_id column
- * @method     ChildStageTechnicVersionQuery orderByStageId($order = Criteria::ASC) Order by the stage_id column
+ * @method     ChildStageTechnicVersionQuery orderByStageWorkId($order = Criteria::ASC) Order by the stage_work_id column
  * @method     ChildStageTechnicVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
- * @method     ChildStageTechnicVersionQuery orderByStageIdVersion($order = Criteria::ASC) Order by the stage_id_version column
+ * @method     ChildStageTechnicVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildStageTechnicVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildStageTechnicVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
+ * @method     ChildStageTechnicVersionQuery orderByStageWorkIdVersion($order = Criteria::ASC) Order by the stage_work_id_version column
  * @method     ChildStageTechnicVersionQuery orderByTechnicIdVersion($order = Criteria::ASC) Order by the technic_id_version column
  *
  * @method     ChildStageTechnicVersionQuery groupById() Group by the id column
  * @method     ChildStageTechnicVersionQuery groupByPrice() Group by the price column
  * @method     ChildStageTechnicVersionQuery groupByAmount() Group by the amount column
+ * @method     ChildStageTechnicVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildStageTechnicVersionQuery groupByTechnicId() Group by the technic_id column
- * @method     ChildStageTechnicVersionQuery groupByStageId() Group by the stage_id column
+ * @method     ChildStageTechnicVersionQuery groupByStageWorkId() Group by the stage_work_id column
  * @method     ChildStageTechnicVersionQuery groupByVersion() Group by the version column
- * @method     ChildStageTechnicVersionQuery groupByStageIdVersion() Group by the stage_id_version column
+ * @method     ChildStageTechnicVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildStageTechnicVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildStageTechnicVersionQuery groupByVersionComment() Group by the version_comment column
+ * @method     ChildStageTechnicVersionQuery groupByStageWorkIdVersion() Group by the stage_work_id_version column
  * @method     ChildStageTechnicVersionQuery groupByTechnicIdVersion() Group by the technic_id_version column
  *
  * @method     ChildStageTechnicVersionQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -65,10 +73,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageTechnicVersion|null findOneById(int $id) Return the first ChildStageTechnicVersion filtered by the id column
  * @method     ChildStageTechnicVersion|null findOneByPrice(string $price) Return the first ChildStageTechnicVersion filtered by the price column
  * @method     ChildStageTechnicVersion|null findOneByAmount(string $amount) Return the first ChildStageTechnicVersion filtered by the amount column
+ * @method     ChildStageTechnicVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildStageTechnicVersion filtered by the is_available column
  * @method     ChildStageTechnicVersion|null findOneByTechnicId(int $technic_id) Return the first ChildStageTechnicVersion filtered by the technic_id column
- * @method     ChildStageTechnicVersion|null findOneByStageId(int $stage_id) Return the first ChildStageTechnicVersion filtered by the stage_id column
+ * @method     ChildStageTechnicVersion|null findOneByStageWorkId(int $stage_work_id) Return the first ChildStageTechnicVersion filtered by the stage_work_id column
  * @method     ChildStageTechnicVersion|null findOneByVersion(int $version) Return the first ChildStageTechnicVersion filtered by the version column
- * @method     ChildStageTechnicVersion|null findOneByStageIdVersion(int $stage_id_version) Return the first ChildStageTechnicVersion filtered by the stage_id_version column
+ * @method     ChildStageTechnicVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildStageTechnicVersion filtered by the version_created_at column
+ * @method     ChildStageTechnicVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildStageTechnicVersion filtered by the version_created_by column
+ * @method     ChildStageTechnicVersion|null findOneByVersionComment(string $version_comment) Return the first ChildStageTechnicVersion filtered by the version_comment column
+ * @method     ChildStageTechnicVersion|null findOneByStageWorkIdVersion(int $stage_work_id_version) Return the first ChildStageTechnicVersion filtered by the stage_work_id_version column
  * @method     ChildStageTechnicVersion|null findOneByTechnicIdVersion(int $technic_id_version) Return the first ChildStageTechnicVersion filtered by the technic_id_version column *
 
  * @method     ChildStageTechnicVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildStageTechnicVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -77,10 +89,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageTechnicVersion requireOneById(int $id) Return the first ChildStageTechnicVersion filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageTechnicVersion requireOneByPrice(string $price) Return the first ChildStageTechnicVersion filtered by the price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageTechnicVersion requireOneByAmount(string $amount) Return the first ChildStageTechnicVersion filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildStageTechnicVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageTechnicVersion requireOneByTechnicId(int $technic_id) Return the first ChildStageTechnicVersion filtered by the technic_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildStageTechnicVersion requireOneByStageId(int $stage_id) Return the first ChildStageTechnicVersion filtered by the stage_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByStageWorkId(int $stage_work_id) Return the first ChildStageTechnicVersion filtered by the stage_work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageTechnicVersion requireOneByVersion(int $version) Return the first ChildStageTechnicVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildStageTechnicVersion requireOneByStageIdVersion(int $stage_id_version) Return the first ChildStageTechnicVersion filtered by the stage_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildStageTechnicVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildStageTechnicVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByVersionComment(string $version_comment) Return the first ChildStageTechnicVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageTechnicVersion requireOneByStageWorkIdVersion(int $stage_work_id_version) Return the first ChildStageTechnicVersion filtered by the stage_work_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageTechnicVersion requireOneByTechnicIdVersion(int $technic_id_version) Return the first ChildStageTechnicVersion filtered by the technic_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildStageTechnicVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildStageTechnicVersion objects based on current ModelCriteria
@@ -91,14 +107,22 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByPrice(string $price) Return ChildStageTechnicVersion objects filtered by the price column
  * @method     ChildStageTechnicVersion[]|Collection findByAmount(string $amount) Return ChildStageTechnicVersion objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByAmount(string $amount) Return ChildStageTechnicVersion objects filtered by the amount column
+ * @method     ChildStageTechnicVersion[]|Collection findByIsAvailable(boolean $is_available) Return ChildStageTechnicVersion objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByIsAvailable(boolean $is_available) Return ChildStageTechnicVersion objects filtered by the is_available column
  * @method     ChildStageTechnicVersion[]|Collection findByTechnicId(int $technic_id) Return ChildStageTechnicVersion objects filtered by the technic_id column
  * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByTechnicId(int $technic_id) Return ChildStageTechnicVersion objects filtered by the technic_id column
- * @method     ChildStageTechnicVersion[]|Collection findByStageId(int $stage_id) Return ChildStageTechnicVersion objects filtered by the stage_id column
- * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByStageId(int $stage_id) Return ChildStageTechnicVersion objects filtered by the stage_id column
+ * @method     ChildStageTechnicVersion[]|Collection findByStageWorkId(int $stage_work_id) Return ChildStageTechnicVersion objects filtered by the stage_work_id column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByStageWorkId(int $stage_work_id) Return ChildStageTechnicVersion objects filtered by the stage_work_id column
  * @method     ChildStageTechnicVersion[]|Collection findByVersion(int $version) Return ChildStageTechnicVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByVersion(int $version) Return ChildStageTechnicVersion objects filtered by the version column
- * @method     ChildStageTechnicVersion[]|Collection findByStageIdVersion(int $stage_id_version) Return ChildStageTechnicVersion objects filtered by the stage_id_version column
- * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByStageIdVersion(int $stage_id_version) Return ChildStageTechnicVersion objects filtered by the stage_id_version column
+ * @method     ChildStageTechnicVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildStageTechnicVersion objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByVersionCreatedAt(string $version_created_at) Return ChildStageTechnicVersion objects filtered by the version_created_at column
+ * @method     ChildStageTechnicVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildStageTechnicVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByVersionCreatedBy(string $version_created_by) Return ChildStageTechnicVersion objects filtered by the version_created_by column
+ * @method     ChildStageTechnicVersion[]|Collection findByVersionComment(string $version_comment) Return ChildStageTechnicVersion objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByVersionComment(string $version_comment) Return ChildStageTechnicVersion objects filtered by the version_comment column
+ * @method     ChildStageTechnicVersion[]|Collection findByStageWorkIdVersion(int $stage_work_id_version) Return ChildStageTechnicVersion objects filtered by the stage_work_id_version column
+ * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByStageWorkIdVersion(int $stage_work_id_version) Return ChildStageTechnicVersion objects filtered by the stage_work_id_version column
  * @method     ChildStageTechnicVersion[]|Collection findByTechnicIdVersion(int $technic_id_version) Return ChildStageTechnicVersion objects filtered by the technic_id_version column
  * @psalm-method Collection&\Traversable<ChildStageTechnicVersion> findByTechnicIdVersion(int $technic_id_version) Return ChildStageTechnicVersion objects filtered by the technic_id_version column
  * @method     ChildStageTechnicVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -200,7 +224,7 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, price, amount, technic_id, stage_id, version, stage_id_version, technic_id_version FROM stage_technic_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, price, amount, is_available, technic_id, stage_work_id, version, version_created_at, version_created_by, version_comment, stage_work_id_version, technic_id_version FROM stage_technic_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -436,6 +460,35 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the technic_id column
      *
      * Example usage:
@@ -479,16 +532,16 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the stage_id column
+     * Filter the query on the stage_work_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByStageId(1234); // WHERE stage_id = 1234
-     * $query->filterByStageId(array(12, 34)); // WHERE stage_id IN (12, 34)
-     * $query->filterByStageId(array('min' => 12)); // WHERE stage_id > 12
+     * $query->filterByStageWorkId(1234); // WHERE stage_work_id = 1234
+     * $query->filterByStageWorkId(array(12, 34)); // WHERE stage_work_id IN (12, 34)
+     * $query->filterByStageWorkId(array('min' => 12)); // WHERE stage_work_id > 12
      * </code>
      *
-     * @param mixed $stageId The value to use as filter.
+     * @param mixed $stageWorkId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -496,16 +549,16 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStageId($stageId = null, ?string $comparison = null)
+    public function filterByStageWorkId($stageWorkId = null, ?string $comparison = null)
     {
-        if (is_array($stageId)) {
+        if (is_array($stageWorkId)) {
             $useMinMax = false;
-            if (isset($stageId['min'])) {
-                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID, $stageId['min'], Criteria::GREATER_EQUAL);
+            if (isset($stageWorkId['min'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID, $stageWorkId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($stageId['max'])) {
-                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID, $stageId['max'], Criteria::LESS_EQUAL);
+            if (isset($stageWorkId['max'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID, $stageWorkId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -516,7 +569,7 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID, $stageId, $comparison);
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID, $stageWorkId, $comparison);
 
         return $this;
     }
@@ -565,16 +618,18 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the stage_id_version column
+     * Filter the query on the version_created_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByStageIdVersion(1234); // WHERE stage_id_version = 1234
-     * $query->filterByStageIdVersion(array(12, 34)); // WHERE stage_id_version IN (12, 34)
-     * $query->filterByStageIdVersion(array('min' => 12)); // WHERE stage_id_version > 12
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
      * </code>
      *
-     * @param mixed $stageIdVersion The value to use as filter.
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -582,16 +637,16 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStageIdVersion($stageIdVersion = null, ?string $comparison = null)
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
     {
-        if (is_array($stageIdVersion)) {
+        if (is_array($versionCreatedAt)) {
             $useMinMax = false;
-            if (isset($stageIdVersion['min'])) {
-                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID_VERSION, $stageIdVersion['min'], Criteria::GREATER_EQUAL);
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($stageIdVersion['max'])) {
-                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID_VERSION, $stageIdVersion['max'], Criteria::LESS_EQUAL);
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -602,7 +657,106 @@ abstract class StageTechnicVersionQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_ID_VERSION, $stageIdVersion, $comparison);
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the stage_work_id_version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStageWorkIdVersion(1234); // WHERE stage_work_id_version = 1234
+     * $query->filterByStageWorkIdVersion(array(12, 34)); // WHERE stage_work_id_version IN (12, 34)
+     * $query->filterByStageWorkIdVersion(array('min' => 12)); // WHERE stage_work_id_version > 12
+     * </code>
+     *
+     * @param mixed $stageWorkIdVersion The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByStageWorkIdVersion($stageWorkIdVersion = null, ?string $comparison = null)
+    {
+        if (is_array($stageWorkIdVersion)) {
+            $useMinMax = false;
+            if (isset($stageWorkIdVersion['min'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION, $stageWorkIdVersion['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($stageWorkIdVersion['max'])) {
+                $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION, $stageWorkIdVersion['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION, $stageWorkIdVersion, $comparison);
 
         return $this;
     }

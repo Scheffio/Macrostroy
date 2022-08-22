@@ -46,6 +46,11 @@ class StageVersionTableMap extends TableMap
     public const TABLE_NAME = 'stage_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'StageVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\StageVersion';
@@ -58,7 +63,7 @@ class StageVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 13;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class StageVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 13;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -101,39 +106,24 @@ class StageVersionTableMap extends TableMap
     public const COL_VERSION = 'stage_version.version';
 
     /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'stage_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'stage_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'stage_version.version_comment';
+
+    /**
      * the column name for the house_id_version field
      */
     public const COL_HOUSE_ID_VERSION = 'stage_version.house_id_version';
-
-    /**
-     * the column name for the stage_material_ids field
-     */
-    public const COL_STAGE_MATERIAL_IDS = 'stage_version.stage_material_ids';
-
-    /**
-     * the column name for the stage_material_versions field
-     */
-    public const COL_STAGE_MATERIAL_VERSIONS = 'stage_version.stage_material_versions';
-
-    /**
-     * the column name for the stage_technic_ids field
-     */
-    public const COL_STAGE_TECHNIC_IDS = 'stage_version.stage_technic_ids';
-
-    /**
-     * the column name for the stage_technic_versions field
-     */
-    public const COL_STAGE_TECHNIC_VERSIONS = 'stage_version.stage_technic_versions';
-
-    /**
-     * the column name for the stage_work_ids field
-     */
-    public const COL_STAGE_WORK_IDS = 'stage_version.stage_work_ids';
-
-    /**
-     * the column name for the stage_work_versions field
-     */
-    public const COL_STAGE_WORK_VERSIONS = 'stage_version.stage_work_versions';
 
     /**
      * The default string format for model objects of the related table
@@ -149,11 +139,11 @@ class StageVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'HouseId', 'Version', 'HouseIdVersion', 'StageMaterialIds', 'StageMaterialVersions', 'StageTechnicIds', 'StageTechnicVersions', 'StageWorkIds', 'StageWorkVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'houseId', 'version', 'houseIdVersion', 'stageMaterialIds', 'stageMaterialVersions', 'stageTechnicIds', 'stageTechnicVersions', 'stageWorkIds', 'stageWorkVersions', ],
-        self::TYPE_COLNAME       => [StageVersionTableMap::COL_ID, StageVersionTableMap::COL_NAME, StageVersionTableMap::COL_STATUS, StageVersionTableMap::COL_IS_AVAILABLE, StageVersionTableMap::COL_HOUSE_ID, StageVersionTableMap::COL_VERSION, StageVersionTableMap::COL_HOUSE_ID_VERSION, StageVersionTableMap::COL_STAGE_MATERIAL_IDS, StageVersionTableMap::COL_STAGE_MATERIAL_VERSIONS, StageVersionTableMap::COL_STAGE_TECHNIC_IDS, StageVersionTableMap::COL_STAGE_TECHNIC_VERSIONS, StageVersionTableMap::COL_STAGE_WORK_IDS, StageVersionTableMap::COL_STAGE_WORK_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'house_id', 'version', 'house_id_version', 'stage_material_ids', 'stage_material_versions', 'stage_technic_ids', 'stage_technic_versions', 'stage_work_ids', 'stage_work_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'HouseId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'HouseIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'houseId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'houseIdVersion', ],
+        self::TYPE_COLNAME       => [StageVersionTableMap::COL_ID, StageVersionTableMap::COL_NAME, StageVersionTableMap::COL_STATUS, StageVersionTableMap::COL_IS_AVAILABLE, StageVersionTableMap::COL_HOUSE_ID, StageVersionTableMap::COL_VERSION, StageVersionTableMap::COL_VERSION_CREATED_AT, StageVersionTableMap::COL_VERSION_CREATED_BY, StageVersionTableMap::COL_VERSION_COMMENT, StageVersionTableMap::COL_HOUSE_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'house_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'house_id_version', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -165,11 +155,11 @@ class StageVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'HouseId' => 4, 'Version' => 5, 'HouseIdVersion' => 6, 'StageMaterialIds' => 7, 'StageMaterialVersions' => 8, 'StageTechnicIds' => 9, 'StageTechnicVersions' => 10, 'StageWorkIds' => 11, 'StageWorkVersions' => 12, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'houseId' => 4, 'version' => 5, 'houseIdVersion' => 6, 'stageMaterialIds' => 7, 'stageMaterialVersions' => 8, 'stageTechnicIds' => 9, 'stageTechnicVersions' => 10, 'stageWorkIds' => 11, 'stageWorkVersions' => 12, ],
-        self::TYPE_COLNAME       => [StageVersionTableMap::COL_ID => 0, StageVersionTableMap::COL_NAME => 1, StageVersionTableMap::COL_STATUS => 2, StageVersionTableMap::COL_IS_AVAILABLE => 3, StageVersionTableMap::COL_HOUSE_ID => 4, StageVersionTableMap::COL_VERSION => 5, StageVersionTableMap::COL_HOUSE_ID_VERSION => 6, StageVersionTableMap::COL_STAGE_MATERIAL_IDS => 7, StageVersionTableMap::COL_STAGE_MATERIAL_VERSIONS => 8, StageVersionTableMap::COL_STAGE_TECHNIC_IDS => 9, StageVersionTableMap::COL_STAGE_TECHNIC_VERSIONS => 10, StageVersionTableMap::COL_STAGE_WORK_IDS => 11, StageVersionTableMap::COL_STAGE_WORK_VERSIONS => 12, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'house_id' => 4, 'version' => 5, 'house_id_version' => 6, 'stage_material_ids' => 7, 'stage_material_versions' => 8, 'stage_technic_ids' => 9, 'stage_technic_versions' => 10, 'stage_work_ids' => 11, 'stage_work_versions' => 12, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'HouseId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'HouseIdVersion' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'houseId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'houseIdVersion' => 9, ],
+        self::TYPE_COLNAME       => [StageVersionTableMap::COL_ID => 0, StageVersionTableMap::COL_NAME => 1, StageVersionTableMap::COL_STATUS => 2, StageVersionTableMap::COL_IS_AVAILABLE => 3, StageVersionTableMap::COL_HOUSE_ID => 4, StageVersionTableMap::COL_VERSION => 5, StageVersionTableMap::COL_VERSION_CREATED_AT => 6, StageVersionTableMap::COL_VERSION_CREATED_BY => 7, StageVersionTableMap::COL_VERSION_COMMENT => 8, StageVersionTableMap::COL_HOUSE_ID_VERSION => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'house_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'house_id_version' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -222,6 +212,30 @@ class StageVersionTableMap extends TableMap
         'StageVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'stage_version.version' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'StageVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'stageVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'StageVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'stage_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'StageVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'stageVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'StageVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'stage_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'StageVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'stageVersion.versionComment' => 'VERSION_COMMENT',
+        'StageVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'stage_version.version_comment' => 'VERSION_COMMENT',
         'HouseIdVersion' => 'HOUSE_ID_VERSION',
         'StageVersion.HouseIdVersion' => 'HOUSE_ID_VERSION',
         'houseIdVersion' => 'HOUSE_ID_VERSION',
@@ -230,54 +244,6 @@ class StageVersionTableMap extends TableMap
         'COL_HOUSE_ID_VERSION' => 'HOUSE_ID_VERSION',
         'house_id_version' => 'HOUSE_ID_VERSION',
         'stage_version.house_id_version' => 'HOUSE_ID_VERSION',
-        'StageMaterialIds' => 'STAGE_MATERIAL_IDS',
-        'StageVersion.StageMaterialIds' => 'STAGE_MATERIAL_IDS',
-        'stageMaterialIds' => 'STAGE_MATERIAL_IDS',
-        'stageVersion.stageMaterialIds' => 'STAGE_MATERIAL_IDS',
-        'StageVersionTableMap::COL_STAGE_MATERIAL_IDS' => 'STAGE_MATERIAL_IDS',
-        'COL_STAGE_MATERIAL_IDS' => 'STAGE_MATERIAL_IDS',
-        'stage_material_ids' => 'STAGE_MATERIAL_IDS',
-        'stage_version.stage_material_ids' => 'STAGE_MATERIAL_IDS',
-        'StageMaterialVersions' => 'STAGE_MATERIAL_VERSIONS',
-        'StageVersion.StageMaterialVersions' => 'STAGE_MATERIAL_VERSIONS',
-        'stageMaterialVersions' => 'STAGE_MATERIAL_VERSIONS',
-        'stageVersion.stageMaterialVersions' => 'STAGE_MATERIAL_VERSIONS',
-        'StageVersionTableMap::COL_STAGE_MATERIAL_VERSIONS' => 'STAGE_MATERIAL_VERSIONS',
-        'COL_STAGE_MATERIAL_VERSIONS' => 'STAGE_MATERIAL_VERSIONS',
-        'stage_material_versions' => 'STAGE_MATERIAL_VERSIONS',
-        'stage_version.stage_material_versions' => 'STAGE_MATERIAL_VERSIONS',
-        'StageTechnicIds' => 'STAGE_TECHNIC_IDS',
-        'StageVersion.StageTechnicIds' => 'STAGE_TECHNIC_IDS',
-        'stageTechnicIds' => 'STAGE_TECHNIC_IDS',
-        'stageVersion.stageTechnicIds' => 'STAGE_TECHNIC_IDS',
-        'StageVersionTableMap::COL_STAGE_TECHNIC_IDS' => 'STAGE_TECHNIC_IDS',
-        'COL_STAGE_TECHNIC_IDS' => 'STAGE_TECHNIC_IDS',
-        'stage_technic_ids' => 'STAGE_TECHNIC_IDS',
-        'stage_version.stage_technic_ids' => 'STAGE_TECHNIC_IDS',
-        'StageTechnicVersions' => 'STAGE_TECHNIC_VERSIONS',
-        'StageVersion.StageTechnicVersions' => 'STAGE_TECHNIC_VERSIONS',
-        'stageTechnicVersions' => 'STAGE_TECHNIC_VERSIONS',
-        'stageVersion.stageTechnicVersions' => 'STAGE_TECHNIC_VERSIONS',
-        'StageVersionTableMap::COL_STAGE_TECHNIC_VERSIONS' => 'STAGE_TECHNIC_VERSIONS',
-        'COL_STAGE_TECHNIC_VERSIONS' => 'STAGE_TECHNIC_VERSIONS',
-        'stage_technic_versions' => 'STAGE_TECHNIC_VERSIONS',
-        'stage_version.stage_technic_versions' => 'STAGE_TECHNIC_VERSIONS',
-        'StageWorkIds' => 'STAGE_WORK_IDS',
-        'StageVersion.StageWorkIds' => 'STAGE_WORK_IDS',
-        'stageWorkIds' => 'STAGE_WORK_IDS',
-        'stageVersion.stageWorkIds' => 'STAGE_WORK_IDS',
-        'StageVersionTableMap::COL_STAGE_WORK_IDS' => 'STAGE_WORK_IDS',
-        'COL_STAGE_WORK_IDS' => 'STAGE_WORK_IDS',
-        'stage_work_ids' => 'STAGE_WORK_IDS',
-        'stage_version.stage_work_ids' => 'STAGE_WORK_IDS',
-        'StageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'StageVersion.StageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'stageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'stageVersion.stageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'StageVersionTableMap::COL_STAGE_WORK_VERSIONS' => 'STAGE_WORK_VERSIONS',
-        'COL_STAGE_WORK_VERSIONS' => 'STAGE_WORK_VERSIONS',
-        'stage_work_versions' => 'STAGE_WORK_VERSIONS',
-        'stage_version.stage_work_versions' => 'STAGE_WORK_VERSIONS',
     ];
 
     /**
@@ -301,15 +267,12 @@ class StageVersionTableMap extends TableMap
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('status', 'Status', 'CHAR', true, null, 'in_process');
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
-        $this->addColumn('house_id', 'HouseId', 'INTEGER', false, null, null);
+        $this->addColumn('house_id', 'HouseId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('house_id_version', 'HouseIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_material_ids', 'StageMaterialIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_material_versions', 'StageMaterialVersions', 'ARRAY', false, null, null);
-        $this->addColumn('stage_technic_ids', 'StageTechnicIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_technic_versions', 'StageTechnicVersions', 'ARRAY', false, null, null);
-        $this->addColumn('stage_work_ids', 'StageWorkIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_work_versions', 'StageWorkVersions', 'ARRAY', false, null, null);
     }
 
     /**
@@ -542,13 +505,10 @@ class StageVersionTableMap extends TableMap
             $criteria->addSelectColumn(StageVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(StageVersionTableMap::COL_HOUSE_ID);
             $criteria->addSelectColumn(StageVersionTableMap::COL_VERSION);
+            $criteria->addSelectColumn(StageVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(StageVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(StageVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(StageVersionTableMap::COL_HOUSE_ID_VERSION);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_MATERIAL_IDS);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_TECHNIC_IDS);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_WORK_IDS);
-            $criteria->addSelectColumn(StageVersionTableMap::COL_STAGE_WORK_VERSIONS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -556,13 +516,10 @@ class StageVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.house_id');
             $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.house_id_version');
-            $criteria->addSelectColumn($alias . '.stage_material_ids');
-            $criteria->addSelectColumn($alias . '.stage_material_versions');
-            $criteria->addSelectColumn($alias . '.stage_technic_ids');
-            $criteria->addSelectColumn($alias . '.stage_technic_versions');
-            $criteria->addSelectColumn($alias . '.stage_work_ids');
-            $criteria->addSelectColumn($alias . '.stage_work_versions');
         }
     }
 
@@ -587,13 +544,10 @@ class StageVersionTableMap extends TableMap
             $criteria->removeSelectColumn(StageVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(StageVersionTableMap::COL_HOUSE_ID);
             $criteria->removeSelectColumn(StageVersionTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(StageVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(StageVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(StageVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(StageVersionTableMap::COL_HOUSE_ID_VERSION);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_MATERIAL_IDS);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_TECHNIC_IDS);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_WORK_IDS);
-            $criteria->removeSelectColumn(StageVersionTableMap::COL_STAGE_WORK_VERSIONS);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
@@ -601,13 +555,10 @@ class StageVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.house_id');
             $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.house_id_version');
-            $criteria->removeSelectColumn($alias . '.stage_material_ids');
-            $criteria->removeSelectColumn($alias . '.stage_material_versions');
-            $criteria->removeSelectColumn($alias . '.stage_technic_ids');
-            $criteria->removeSelectColumn($alias . '.stage_technic_versions');
-            $criteria->removeSelectColumn($alias . '.stage_work_ids');
-            $criteria->removeSelectColumn($alias . '.stage_work_versions');
         }
     }
 

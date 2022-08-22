@@ -1,0 +1,25 @@
+<behavior name="versionable">
+    <parameter name="log_created_at" value="true"/>
+    <parameter name="log_user_id" value="true"/>
+    <parameter name="log_val_old" value="true"/>
+    <parameter name="log_val_new" value="true"/>
+</behavior>
+
+<column name="do_create" type="DATETIME" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+
+
+<behavior name="versionable">
+    <parameter name="do_create" value="true"/>
+    <parameter name="user_id" value="true"/>
+</behavior>
+
+<column name="do_create" type="DATETIME" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+<column name="user_id" type="INTEGER" sqlType="int unsigned" required="true"/>
+
+<foreign-key foreignTable="users" name="users_ibfk_unit_1" onDelete="RESTRICT" onUpdate="RESTRICT">
+<reference local="user_id" foreign="id"/>
+</foreign-key>
+
+<column name="id" required="true" primaryKey="true" type="integer" />
+<column name="title" type="varchar" required="true" primaryString="true" />
+<column name="archived_at" type="timestamp" />

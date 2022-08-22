@@ -4,7 +4,6 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
-use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Project as ChildProject;
 use DB\ProjectQuery as ChildProjectQuery;
@@ -12,7 +11,6 @@ use DB\ProjectRole as ChildProjectRole;
 use DB\ProjectRoleQuery as ChildProjectRoleQuery;
 use DB\ProjectRoleVersion as ChildProjectRoleVersion;
 use DB\ProjectRoleVersionQuery as ChildProjectRoleVersionQuery;
-use DB\ProjectVersionQuery as ChildProjectVersionQuery;
 use DB\Role as ChildRole;
 use DB\RoleQuery as ChildRoleQuery;
 use DB\Users as ChildUsers;
@@ -182,14 +180,6 @@ abstract class ProjectRole implements ActiveRecordInterface
      * @var bool
      */
     protected $alreadyInSave = false;
-
-    // versionable behavior
-
-
-    /**
-     * @var bool
-     */
-    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -996,14 +986,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
-            // versionable behavior
-            if ($this->isVersioningNecessary()) {
-                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
-                if (!$this->isColumnModified(ProjectRoleTableMap::COL_VERSION_CREATED_AT)) {
-                    $this->setVersionCreatedAt(time());
-                }
-                $createVersion = true; // for postSave hook
-            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -1017,10 +999,6 @@ abstract class ProjectRole implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                // versionable behavior
-                if (isset($createVersion)) {
-                    $this->addVersion($con);
-                }
                 ProjectRoleTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2033,7 +2011,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function setProjectRoleVersions(Collection $projectRoleVersions, ?ConnectionInterface $con = null)
     {
-        /** @var null|ChildProjectRoleVersion[] $projectRoleVersionsToDelete */
+        /** @var ChildProjectRoleVersion[] $projectRoleVersionsToDelete */
         $projectRoleVersionsToDelete = $this->getProjectRoleVersions(new Criteria(), $con)->diff($projectRoleVersions);
 
 
@@ -2219,318 +2197,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         return (string) $this->exportTo(ProjectRoleTableMap::DEFAULT_STRING_FORMAT);
     }
 
-    // versionable behavior
-
-    /**
-     * Enforce a new Version of this object upon next save.
-     *
-     * @return $this
-     */
-    public function enforceVersioning()
-    {
-        $this->enforceVersion = true;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether the current state must be recorded as a version
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @return bool
-     */
-    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
-    {
-        if ($this->alreadyInSave) {
-            return false;
-        }
-
-        if ($this->enforceVersion) {
-            return true;
-        }
-
-        if (ChildProjectRoleQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
-            return true;
-        }
-        if (null !== ($object = $this->getProject($con)) && $object->isVersioningNecessary($con)) {
-            return true;
-        }
-
-
-        return false;
-    }
-
-    /**
-     * Creates a version of the current object and saves it.
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ChildProjectRoleVersion A version object
-     */
-    public function addVersion(?ConnectionInterface $con = null)
-    {
-        $this->enforceVersion = false;
-
-        $version = new ChildProjectRoleVersion();
-        $version->setId($this->getId());
-        $version->setLvl($this->getLvl());
-        $version->setRoleId($this->getRoleId());
-        $version->setProjectId($this->getProjectId());
-        $version->setObjectId($this->getObjectId());
-        $version->setUserId($this->getUserId());
-        $version->setVersion($this->getVersion());
-        $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
-        $version->setVersionComment($this->getVersionComment());
-        $version->setProjectRole($this);
-        if (($related = $this->getProject(null, $con)) && $related->getVersion()) {
-            $version->setProjectIdVersion($related->getVersion());
-        }
-        $version->save($con);
-
-        return $version;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
-    {
-        $version = $this->getOneVersion($versionNumber, $con);
-        if (!$version) {
-            throw new PropelException(sprintf('No ChildProjectRole object found with version %d', $version));
-        }
-        $this->populateFromVersion($version, $con);
-
-        return $this;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param ChildProjectRoleVersion $version The version object to use
-     * @param ConnectionInterface $con the connection to use
-     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
-    {
-        $loadedObjects['ChildProjectRole'][$version->getId()][$version->getVersion()] = $this;
-        $this->setId($version->getId());
-        $this->setLvl($version->getLvl());
-        $this->setRoleId($version->getRoleId());
-        $this->setProjectId($version->getProjectId());
-        $this->setObjectId($version->getObjectId());
-        $this->setUserId($version->getUserId());
-        $this->setVersion($version->getVersion());
-        $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
-        $this->setVersionComment($version->getVersionComment());
-        if ($fkValue = $version->getProjectId()) {
-            if (isset($loadedObjects['ChildProject']) && isset($loadedObjects['ChildProject'][$fkValue]) && isset($loadedObjects['ChildProject'][$fkValue][$version->getProjectIdVersion()])) {
-                $related = $loadedObjects['ChildProject'][$fkValue][$version->getProjectIdVersion()];
-            } else {
-                $related = new ChildProject();
-                $relatedVersion = ChildProjectVersionQuery::create()
-                    ->filterById($fkValue)
-                    ->filterByVersionComment($version->getProjectIdVersion())
-                    ->findOne($con);
-                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                $related->setNew(false);
-            }
-            $this->setProject($related);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets the latest persisted version number for the current object
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return int
-     */
-    public function getLastVersionNumber(?ConnectionInterface $con = null): int
-    {
-        $v = ChildProjectRoleVersionQuery::create()
-            ->filterByProjectRole($this)
-            ->orderByVersion('desc')
-            ->findOne($con);
-        if (!$v) {
-            return 0;
-        }
-
-        return $v->getVersion();
-    }
-
-    /**
-     * Checks whether the current object is the latest one
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return bool
-     */
-    public function isLastVersion(?ConnectionInterface $con = null)
-    {
-        return $this->getLastVersionNumber($con) == $this->getVersion();
-    }
-
-    /**
-     * Retrieves a version object for this entity and a version number
-     *
-     * @param int $versionNumber The version number to read
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     *
-     * @return ChildProjectRoleVersion A version object
-     */
-    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
-    {
-        return ChildProjectRoleVersionQuery::create()
-            ->filterByProjectRole($this)
-            ->filterByVersion($versionNumber)
-            ->findOne($con);
-    }
-
-    /**
-     * Gets all the versions of this object, in incremental order
-     *
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return ObjectCollection|ChildProjectRoleVersion[] A list of ChildProjectRoleVersion objects
-     */
-    public function getAllVersions(?ConnectionInterface $con = null)
-    {
-        $criteria = new Criteria();
-        $criteria->addAscendingOrderByColumn(ProjectRoleVersionTableMap::COL_VERSION);
-
-        return $this->getProjectRoleVersions($criteria, $con);
-    }
-
-    /**
-     * Compares the current object with another of its version.
-     * <code>
-     * print_r($book->compareVersion(1));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $versionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->toArray();
-        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Compares two versions of the current object.
-     * <code>
-     * print_r($book->compareVersions(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param int $fromVersionNumber
-     * @param int $toVersionNumber
-     * @param string $keys Main key used for the result diff (versions|columns)
-     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
-    {
-        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
-        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Computes the diff between two versions.
-     * <code>
-     * print_r($book->computeDiff(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param array $fromVersion     An array representing the original version.
-     * @param array $toVersion       An array representing the destination version.
-     * @param string $keys            Main key used for the result diff (versions|columns).
-     * @param array $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return array A list of differences
-     */
-    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
-    {
-        $fromVersionNumber = $fromVersion['Version'];
-        $toVersionNumber = $toVersion['Version'];
-        $ignoredColumns = array_merge(array(
-            'Version',
-            'VersionCreatedAt',
-            'VersionCreatedBy',
-            'VersionComment',
-        ), $ignoredColumns);
-        $diff = [];
-        foreach ($fromVersion as $key => $value) {
-            if (in_array($key, $ignoredColumns)) {
-                continue;
-            }
-            if ($toVersion[$key] != $value) {
-                switch ($keys) {
-                    case 'versions':
-                        $diff[$fromVersionNumber][$key] = $value;
-                        $diff[$toVersionNumber][$key] = $toVersion[$key];
-                        break;
-                    default:
-                        $diff[$key] = [
-                            $fromVersionNumber => $value,
-                            $toVersionNumber => $toVersion[$key],
-                        ];
-                        break;
-                }
-            }
-        }
-
-        return $diff;
-    }
-    /**
-     * retrieve the last $number versions.
-     *
-     * @param Integer $number The number of record to return.
-     * @param Criteria $criteria The Criteria object containing modified values.
-     * @param ConnectionInterface $con The ConnectionInterface connection to use.
-     *
-     * @return PropelCollection|\DB\ProjectRoleVersion[] List of \DB\ProjectRoleVersion objects
-     */
-    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $criteria = ChildProjectRoleVersionQuery::create(null, $criteria);
-        $criteria->addDescendingOrderByColumn(ProjectRoleVersionTableMap::COL_VERSION);
-        $criteria->limit($number);
-
-        return $this->getProjectRoleVersions($criteria, $con);
-    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2557,9 +2223,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        $this->setVersionCreatedBy( Auth::getUser()->id() );
-        $this->setVersionComment('insert');
-        return true;
+                return true;
     }
 
     /**
@@ -2569,7 +2233,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before updating the object in database

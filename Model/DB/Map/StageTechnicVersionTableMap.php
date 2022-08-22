@@ -46,6 +46,11 @@ class StageTechnicVersionTableMap extends TableMap
     public const TABLE_NAME = 'stage_technic_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'StageTechnicVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\StageTechnicVersion';
@@ -58,7 +63,7 @@ class StageTechnicVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 8;
+    public const NUM_COLUMNS = 12;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class StageTechnicVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 8;
+    public const NUM_HYDRATE_COLUMNS = 12;
 
     /**
      * the column name for the id field
@@ -86,14 +91,19 @@ class StageTechnicVersionTableMap extends TableMap
     public const COL_AMOUNT = 'stage_technic_version.amount';
 
     /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'stage_technic_version.is_available';
+
+    /**
      * the column name for the technic_id field
      */
     public const COL_TECHNIC_ID = 'stage_technic_version.technic_id';
 
     /**
-     * the column name for the stage_id field
+     * the column name for the stage_work_id field
      */
-    public const COL_STAGE_ID = 'stage_technic_version.stage_id';
+    public const COL_STAGE_WORK_ID = 'stage_technic_version.stage_work_id';
 
     /**
      * the column name for the version field
@@ -101,9 +111,24 @@ class StageTechnicVersionTableMap extends TableMap
     public const COL_VERSION = 'stage_technic_version.version';
 
     /**
-     * the column name for the stage_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_STAGE_ID_VERSION = 'stage_technic_version.stage_id_version';
+    public const COL_VERSION_CREATED_AT = 'stage_technic_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'stage_technic_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'stage_technic_version.version_comment';
+
+    /**
+     * the column name for the stage_work_id_version field
+     */
+    public const COL_STAGE_WORK_ID_VERSION = 'stage_technic_version.stage_work_id_version';
 
     /**
      * the column name for the technic_id_version field
@@ -124,11 +149,11 @@ class StageTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'TechnicId', 'StageId', 'Version', 'StageIdVersion', 'TechnicIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'technicId', 'stageId', 'version', 'stageIdVersion', 'technicIdVersion', ],
-        self::TYPE_COLNAME       => [StageTechnicVersionTableMap::COL_ID, StageTechnicVersionTableMap::COL_PRICE, StageTechnicVersionTableMap::COL_AMOUNT, StageTechnicVersionTableMap::COL_TECHNIC_ID, StageTechnicVersionTableMap::COL_STAGE_ID, StageTechnicVersionTableMap::COL_VERSION, StageTechnicVersionTableMap::COL_STAGE_ID_VERSION, StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'technic_id', 'stage_id', 'version', 'stage_id_version', 'technic_id_version', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'IsAvailable', 'TechnicId', 'StageWorkId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'StageWorkIdVersion', 'TechnicIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'isAvailable', 'technicId', 'stageWorkId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'stageWorkIdVersion', 'technicIdVersion', ],
+        self::TYPE_COLNAME       => [StageTechnicVersionTableMap::COL_ID, StageTechnicVersionTableMap::COL_PRICE, StageTechnicVersionTableMap::COL_AMOUNT, StageTechnicVersionTableMap::COL_IS_AVAILABLE, StageTechnicVersionTableMap::COL_TECHNIC_ID, StageTechnicVersionTableMap::COL_STAGE_WORK_ID, StageTechnicVersionTableMap::COL_VERSION, StageTechnicVersionTableMap::COL_VERSION_CREATED_AT, StageTechnicVersionTableMap::COL_VERSION_CREATED_BY, StageTechnicVersionTableMap::COL_VERSION_COMMENT, StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION, StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'is_available', 'technic_id', 'stage_work_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'stage_work_id_version', 'technic_id_version', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
     /**
@@ -140,11 +165,11 @@ class StageTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'TechnicId' => 3, 'StageId' => 4, 'Version' => 5, 'StageIdVersion' => 6, 'TechnicIdVersion' => 7, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'technicId' => 3, 'stageId' => 4, 'version' => 5, 'stageIdVersion' => 6, 'technicIdVersion' => 7, ],
-        self::TYPE_COLNAME       => [StageTechnicVersionTableMap::COL_ID => 0, StageTechnicVersionTableMap::COL_PRICE => 1, StageTechnicVersionTableMap::COL_AMOUNT => 2, StageTechnicVersionTableMap::COL_TECHNIC_ID => 3, StageTechnicVersionTableMap::COL_STAGE_ID => 4, StageTechnicVersionTableMap::COL_VERSION => 5, StageTechnicVersionTableMap::COL_STAGE_ID_VERSION => 6, StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION => 7, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'technic_id' => 3, 'stage_id' => 4, 'version' => 5, 'stage_id_version' => 6, 'technic_id_version' => 7, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'IsAvailable' => 3, 'TechnicId' => 4, 'StageWorkId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, 'StageWorkIdVersion' => 10, 'TechnicIdVersion' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'isAvailable' => 3, 'technicId' => 4, 'stageWorkId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, 'stageWorkIdVersion' => 10, 'technicIdVersion' => 11, ],
+        self::TYPE_COLNAME       => [StageTechnicVersionTableMap::COL_ID => 0, StageTechnicVersionTableMap::COL_PRICE => 1, StageTechnicVersionTableMap::COL_AMOUNT => 2, StageTechnicVersionTableMap::COL_IS_AVAILABLE => 3, StageTechnicVersionTableMap::COL_TECHNIC_ID => 4, StageTechnicVersionTableMap::COL_STAGE_WORK_ID => 5, StageTechnicVersionTableMap::COL_VERSION => 6, StageTechnicVersionTableMap::COL_VERSION_CREATED_AT => 7, StageTechnicVersionTableMap::COL_VERSION_CREATED_BY => 8, StageTechnicVersionTableMap::COL_VERSION_COMMENT => 9, StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION => 10, StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION => 11, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'is_available' => 3, 'technic_id' => 4, 'stage_work_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, 'stage_work_id_version' => 10, 'technic_id_version' => 11, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
     /**
@@ -174,6 +199,14 @@ class StageTechnicVersionTableMap extends TableMap
         'StageTechnicVersionTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'stage_technic_version.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'StageTechnicVersion.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'stageTechnicVersion.isAvailable' => 'IS_AVAILABLE',
+        'StageTechnicVersionTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'stage_technic_version.is_available' => 'IS_AVAILABLE',
         'TechnicId' => 'TECHNIC_ID',
         'StageTechnicVersion.TechnicId' => 'TECHNIC_ID',
         'technicId' => 'TECHNIC_ID',
@@ -182,14 +215,14 @@ class StageTechnicVersionTableMap extends TableMap
         'COL_TECHNIC_ID' => 'TECHNIC_ID',
         'technic_id' => 'TECHNIC_ID',
         'stage_technic_version.technic_id' => 'TECHNIC_ID',
-        'StageId' => 'STAGE_ID',
-        'StageTechnicVersion.StageId' => 'STAGE_ID',
-        'stageId' => 'STAGE_ID',
-        'stageTechnicVersion.stageId' => 'STAGE_ID',
-        'StageTechnicVersionTableMap::COL_STAGE_ID' => 'STAGE_ID',
-        'COL_STAGE_ID' => 'STAGE_ID',
-        'stage_id' => 'STAGE_ID',
-        'stage_technic_version.stage_id' => 'STAGE_ID',
+        'StageWorkId' => 'STAGE_WORK_ID',
+        'StageTechnicVersion.StageWorkId' => 'STAGE_WORK_ID',
+        'stageWorkId' => 'STAGE_WORK_ID',
+        'stageTechnicVersion.stageWorkId' => 'STAGE_WORK_ID',
+        'StageTechnicVersionTableMap::COL_STAGE_WORK_ID' => 'STAGE_WORK_ID',
+        'COL_STAGE_WORK_ID' => 'STAGE_WORK_ID',
+        'stage_work_id' => 'STAGE_WORK_ID',
+        'stage_technic_version.stage_work_id' => 'STAGE_WORK_ID',
         'Version' => 'VERSION',
         'StageTechnicVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -197,14 +230,38 @@ class StageTechnicVersionTableMap extends TableMap
         'StageTechnicVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'stage_technic_version.version' => 'VERSION',
-        'StageIdVersion' => 'STAGE_ID_VERSION',
-        'StageTechnicVersion.StageIdVersion' => 'STAGE_ID_VERSION',
-        'stageIdVersion' => 'STAGE_ID_VERSION',
-        'stageTechnicVersion.stageIdVersion' => 'STAGE_ID_VERSION',
-        'StageTechnicVersionTableMap::COL_STAGE_ID_VERSION' => 'STAGE_ID_VERSION',
-        'COL_STAGE_ID_VERSION' => 'STAGE_ID_VERSION',
-        'stage_id_version' => 'STAGE_ID_VERSION',
-        'stage_technic_version.stage_id_version' => 'STAGE_ID_VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'StageTechnicVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'stageTechnicVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'StageTechnicVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'stage_technic_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'StageTechnicVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'stageTechnicVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'StageTechnicVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'stage_technic_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'StageTechnicVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'stageTechnicVersion.versionComment' => 'VERSION_COMMENT',
+        'StageTechnicVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'stage_technic_version.version_comment' => 'VERSION_COMMENT',
+        'StageWorkIdVersion' => 'STAGE_WORK_ID_VERSION',
+        'StageTechnicVersion.StageWorkIdVersion' => 'STAGE_WORK_ID_VERSION',
+        'stageWorkIdVersion' => 'STAGE_WORK_ID_VERSION',
+        'stageTechnicVersion.stageWorkIdVersion' => 'STAGE_WORK_ID_VERSION',
+        'StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION' => 'STAGE_WORK_ID_VERSION',
+        'COL_STAGE_WORK_ID_VERSION' => 'STAGE_WORK_ID_VERSION',
+        'stage_work_id_version' => 'STAGE_WORK_ID_VERSION',
+        'stage_technic_version.stage_work_id_version' => 'STAGE_WORK_ID_VERSION',
         'TechnicIdVersion' => 'TECHNIC_ID_VERSION',
         'StageTechnicVersion.TechnicIdVersion' => 'TECHNIC_ID_VERSION',
         'technicIdVersion' => 'TECHNIC_ID_VERSION',
@@ -235,10 +292,14 @@ class StageTechnicVersionTableMap extends TableMap
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'stage_technic', 'id', true, null, null);
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('technic_id', 'TechnicId', 'INTEGER', true, null, null);
-        $this->addColumn('stage_id', 'StageId', 'INTEGER', true, null, null);
+        $this->addColumn('stage_work_id', 'StageWorkId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('stage_id_version', 'StageIdVersion', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
+        $this->addColumn('stage_work_id_version', 'StageWorkIdVersion', 'INTEGER', false, null, 0);
         $this->addColumn('technic_id_version', 'TechnicIdVersion', 'INTEGER', false, null, 0);
     }
 
@@ -331,11 +392,11 @@ class StageTechnicVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -361,7 +422,7 @@ class StageTechnicVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 5 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -469,19 +530,27 @@ class StageTechnicVersionTableMap extends TableMap
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_ID);
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_PRICE);
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_TECHNIC_ID);
-            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_STAGE_ID);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_STAGE_WORK_ID);
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_STAGE_ID_VERSION);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_VERSION_COMMENT);
+            $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION);
             $criteria->addSelectColumn(StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.price');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.technic_id');
-            $criteria->addSelectColumn($alias . '.stage_id');
+            $criteria->addSelectColumn($alias . '.stage_work_id');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.stage_id_version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
+            $criteria->addSelectColumn($alias . '.stage_work_id_version');
             $criteria->addSelectColumn($alias . '.technic_id_version');
         }
     }
@@ -504,19 +573,27 @@ class StageTechnicVersionTableMap extends TableMap
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_ID);
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_PRICE);
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_TECHNIC_ID);
-            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_STAGE_ID);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_STAGE_WORK_ID);
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_STAGE_ID_VERSION);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_VERSION_COMMENT);
+            $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_STAGE_WORK_ID_VERSION);
             $criteria->removeSelectColumn(StageTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.price');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.technic_id');
-            $criteria->removeSelectColumn($alias . '.stage_id');
+            $criteria->removeSelectColumn($alias . '.stage_work_id');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.stage_id_version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
+            $criteria->removeSelectColumn($alias . '.stage_work_id_version');
             $criteria->removeSelectColumn($alias . '.technic_id_version');
         }
     }

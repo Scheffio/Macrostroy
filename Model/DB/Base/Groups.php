@@ -2,15 +2,19 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Groups as ChildGroups;
 use DB\GroupsQuery as ChildGroupsQuery;
+use DB\GroupsVersion as ChildGroupsVersion;
+use DB\GroupsVersionQuery as ChildGroupsVersionQuery;
 use DB\House as ChildHouse;
 use DB\HouseQuery as ChildHouseQuery;
 use DB\Subproject as ChildSubproject;
 use DB\SubprojectQuery as ChildSubprojectQuery;
 use DB\Map\GroupsTableMap;
+use DB\Map\GroupsVersionTableMap;
 use DB\Map\HouseTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -24,6 +28,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'groups' table.
@@ -92,7 +97,7 @@ abstract class Groups implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -106,9 +111,45 @@ abstract class Groups implements ActiveRecordInterface
     protected $subproject_id;
 
     /**
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * @var        ChildSubproject
      */
     protected $aSubproject;
+
+    /**
+     * @var        ObjectCollection|ChildGroupsVersion[] Collection to store aggregation of ChildGroupsVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion> Collection to store aggregation of ChildGroupsVersion objects.
+     */
+    protected $collGroupsVersions;
+    protected $collGroupsVersionsPartial;
 
     /**
      * @var        ObjectCollection|ChildHouse[] Collection to store aggregation of ChildHouse objects.
@@ -127,6 +168,13 @@ abstract class Groups implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGroupsVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion>
+     */
+    protected $groupsVersionsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildHouse[]
      * @phpstan-var ObjectCollection&\Traversable<ChildHouse>
      */
@@ -142,6 +190,7 @@ abstract class Groups implements ActiveRecordInterface
     {
         $this->status = 'in_process';
         $this->is_available = true;
+        $this->version = 0;
     }
 
     /**
@@ -404,7 +453,7 @@ abstract class Groups implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -414,7 +463,7 @@ abstract class Groups implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function isAvailable()
@@ -430,6 +479,58 @@ abstract class Groups implements ActiveRecordInterface
     public function getSubprojectId()
     {
         return $this->subproject_id;
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -498,7 +599,7 @@ abstract class Groups implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -545,6 +646,86 @@ abstract class Groups implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[GroupsTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[GroupsTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[GroupsTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[GroupsTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -559,6 +740,10 @@ abstract class Groups implements ActiveRecordInterface
             }
 
             if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
                 return false;
             }
 
@@ -602,6 +787,21 @@ abstract class Groups implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GroupsTableMap::translateFieldName('SubprojectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->subproject_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GroupsTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupsTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupsTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupsTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -610,7 +810,7 @@ abstract class Groups implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = GroupsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = GroupsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Groups'), 0, $e);
@@ -676,6 +876,8 @@ abstract class Groups implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aSubproject = null;
+            $this->collGroupsVersions = null;
+
             $this->collHouses = null;
 
         } // if (deep)
@@ -804,6 +1006,23 @@ abstract class Groups implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->groupsVersionsScheduledForDeletion !== null) {
+                if (!$this->groupsVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\GroupsVersionQuery::create()
+                        ->filterByPrimaryKeys($this->groupsVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->groupsVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collGroupsVersions !== null) {
+                foreach ($this->collGroupsVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->housesScheduledForDeletion !== null) {
                 if (!$this->housesScheduledForDeletion->isEmpty()) {
                     \DB\HouseQuery::create()
@@ -841,6 +1060,10 @@ abstract class Groups implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
+        $this->modifiedColumns[GroupsTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . GroupsTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(GroupsTableMap::COL_ID)) {
@@ -857,6 +1080,18 @@ abstract class Groups implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GroupsTableMap::COL_SUBPROJECT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'subproject_id';
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -884,6 +1119,18 @@ abstract class Groups implements ActiveRecordInterface
                     case 'subproject_id':
                         $stmt->bindValue($identifier, $this->subproject_id, PDO::PARAM_INT);
                         break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
+                        break;
                 }
             }
             $stmt->execute();
@@ -891,6 +1138,13 @@ abstract class Groups implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -954,6 +1208,18 @@ abstract class Groups implements ActiveRecordInterface
             case 4:
                 return $this->getSubprojectId();
 
+            case 5:
+                return $this->getVersion();
+
+            case 6:
+                return $this->getVersionCreatedAt();
+
+            case 7:
+                return $this->getVersionCreatedBy();
+
+            case 8:
+                return $this->getVersionComment();
+
             default:
                 return null;
         } // switch()
@@ -987,7 +1253,15 @@ abstract class Groups implements ActiveRecordInterface
             $keys[2] => $this->getStatus(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getSubprojectId(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1008,6 +1282,21 @@ abstract class Groups implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aSubproject->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collGroupsVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groupsVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groups_versions';
+                        break;
+                    default:
+                        $key = 'GroupsVersions';
+                }
+
+                $result[$key] = $this->collGroupsVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collHouses) {
 
@@ -1075,6 +1364,18 @@ abstract class Groups implements ActiveRecordInterface
             case 4:
                 $this->setSubprojectId($value);
                 break;
+            case 5:
+                $this->setVersion($value);
+                break;
+            case 6:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 7:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 8:
+                $this->setVersionComment($value);
+                break;
         } // switch()
 
         return $this;
@@ -1115,6 +1416,18 @@ abstract class Groups implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setSubprojectId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersion($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1173,6 +1486,18 @@ abstract class Groups implements ActiveRecordInterface
         }
         if ($this->isColumnModified(GroupsTableMap::COL_SUBPROJECT_ID)) {
             $criteria->add(GroupsTableMap::COL_SUBPROJECT_ID, $this->subproject_id);
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION)) {
+            $criteria->add(GroupsTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(GroupsTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(GroupsTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(GroupsTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(GroupsTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1262,16 +1587,25 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
         $copyObj->setStatus($this->getStatus());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setSubprojectId($this->getSubprojectId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
+
+            foreach ($this->getGroupsVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addGroupsVersion($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getHouses() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1283,6 +1617,7 @@ abstract class Groups implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1370,10 +1705,256 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
+        if ('GroupsVersion' === $relationName) {
+            $this->initGroupsVersions();
+            return;
+        }
         if ('House' === $relationName) {
             $this->initHouses();
             return;
         }
+    }
+
+    /**
+     * Clears out the collGroupsVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addGroupsVersions()
+     */
+    public function clearGroupsVersions()
+    {
+        $this->collGroupsVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collGroupsVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialGroupsVersions($v = true): void
+    {
+        $this->collGroupsVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collGroupsVersions collection.
+     *
+     * By default this just sets the collGroupsVersions collection to an empty array (like clearcollGroupsVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initGroupsVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collGroupsVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = GroupsVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collGroupsVersions = new $collectionClassName;
+        $this->collGroupsVersions->setModel('\DB\GroupsVersion');
+    }
+
+    /**
+     * Gets an array of ChildGroupsVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGroupsVersion[] List of ChildGroupsVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildGroupsVersion> List of ChildGroupsVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getGroupsVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupsVersionsPartial && !$this->isNew();
+        if (null === $this->collGroupsVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collGroupsVersions) {
+                    $this->initGroupsVersions();
+                } else {
+                    $collectionClassName = GroupsVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collGroupsVersions = new $collectionClassName;
+                    $collGroupsVersions->setModel('\DB\GroupsVersion');
+
+                    return $collGroupsVersions;
+                }
+            } else {
+                $collGroupsVersions = ChildGroupsVersionQuery::create(null, $criteria)
+                    ->filterByGroups($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collGroupsVersionsPartial && count($collGroupsVersions)) {
+                        $this->initGroupsVersions(false);
+
+                        foreach ($collGroupsVersions as $obj) {
+                            if (false == $this->collGroupsVersions->contains($obj)) {
+                                $this->collGroupsVersions->append($obj);
+                            }
+                        }
+
+                        $this->collGroupsVersionsPartial = true;
+                    }
+
+                    return $collGroupsVersions;
+                }
+
+                if ($partial && $this->collGroupsVersions) {
+                    foreach ($this->collGroupsVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collGroupsVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGroupsVersions = $collGroupsVersions;
+                $this->collGroupsVersionsPartial = false;
+            }
+        }
+
+        return $this->collGroupsVersions;
+    }
+
+    /**
+     * Sets a collection of ChildGroupsVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $groupsVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setGroupsVersions(Collection $groupsVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildGroupsVersion[] $groupsVersionsToDelete */
+        $groupsVersionsToDelete = $this->getGroupsVersions(new Criteria(), $con)->diff($groupsVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->groupsVersionsScheduledForDeletion = clone $groupsVersionsToDelete;
+
+        foreach ($groupsVersionsToDelete as $groupsVersionRemoved) {
+            $groupsVersionRemoved->setGroups(null);
+        }
+
+        $this->collGroupsVersions = null;
+        foreach ($groupsVersions as $groupsVersion) {
+            $this->addGroupsVersion($groupsVersion);
+        }
+
+        $this->collGroupsVersions = $groupsVersions;
+        $this->collGroupsVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related GroupsVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related GroupsVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countGroupsVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collGroupsVersionsPartial && !$this->isNew();
+        if (null === $this->collGroupsVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGroupsVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getGroupsVersions());
+            }
+
+            $query = ChildGroupsVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroups($this)
+                ->count($con);
+        }
+
+        return count($this->collGroupsVersions);
+    }
+
+    /**
+     * Method called to associate a ChildGroupsVersion object to this object
+     * through the ChildGroupsVersion foreign key attribute.
+     *
+     * @param ChildGroupsVersion $l ChildGroupsVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addGroupsVersion(ChildGroupsVersion $l)
+    {
+        if ($this->collGroupsVersions === null) {
+            $this->initGroupsVersions();
+            $this->collGroupsVersionsPartial = true;
+        }
+
+        if (!$this->collGroupsVersions->contains($l)) {
+            $this->doAddGroupsVersion($l);
+
+            if ($this->groupsVersionsScheduledForDeletion and $this->groupsVersionsScheduledForDeletion->contains($l)) {
+                $this->groupsVersionsScheduledForDeletion->remove($this->groupsVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGroupsVersion $groupsVersion The ChildGroupsVersion object to add.
+     */
+    protected function doAddGroupsVersion(ChildGroupsVersion $groupsVersion): void
+    {
+        $this->collGroupsVersions[]= $groupsVersion;
+        $groupsVersion->setGroups($this);
+    }
+
+    /**
+     * @param ChildGroupsVersion $groupsVersion The ChildGroupsVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeGroupsVersion(ChildGroupsVersion $groupsVersion)
+    {
+        if ($this->getGroupsVersions()->contains($groupsVersion)) {
+            $pos = $this->collGroupsVersions->search($groupsVersion);
+            $this->collGroupsVersions->remove($pos);
+            if (null === $this->groupsVersionsScheduledForDeletion) {
+                $this->groupsVersionsScheduledForDeletion = clone $this->collGroupsVersions;
+                $this->groupsVersionsScheduledForDeletion->clear();
+            }
+            $this->groupsVersionsScheduledForDeletion[]= clone $groupsVersion;
+            $groupsVersion->setGroups(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1632,6 +2213,10 @@ abstract class Groups implements ActiveRecordInterface
         $this->status = null;
         $this->is_available = null;
         $this->subproject_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1654,6 +2239,11 @@ abstract class Groups implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collGroupsVersions) {
+                foreach ($this->collGroupsVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collHouses) {
                 foreach ($this->collHouses as $o) {
                     $o->clearAllReferences($deep);
@@ -1661,6 +2251,7 @@ abstract class Groups implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collGroupsVersions = null;
         $this->collHouses = null;
         $this->aSubproject = null;
         return $this;

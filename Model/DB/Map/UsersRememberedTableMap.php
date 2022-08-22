@@ -46,6 +46,11 @@ class UsersRememberedTableMap extends TableMap
     public const TABLE_NAME = 'users_remembered';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'UsersRemembered';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\UsersRemembered';

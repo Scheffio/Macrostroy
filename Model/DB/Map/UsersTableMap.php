@@ -46,6 +46,11 @@ class UsersTableMap extends TableMap
     public const TABLE_NAME = 'users';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Users';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\Users';
@@ -58,7 +63,7 @@ class UsersTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 12;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class UsersTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 12;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -79,6 +84,11 @@ class UsersTableMap extends TableMap
      * the column name for the email field
      */
     public const COL_EMAIL = 'users.email';
+
+    /**
+     * the column name for the phone field
+     */
+    public const COL_PHONE = 'users.phone';
 
     /**
      * the column name for the password field
@@ -94,6 +104,11 @@ class UsersTableMap extends TableMap
      * the column name for the status field
      */
     public const COL_STATUS = 'users.status';
+
+    /**
+     * the column name for the role_id field
+     */
+    public const COL_ROLE_ID = 'users.role_id';
 
     /**
      * the column name for the verified field
@@ -126,11 +141,6 @@ class UsersTableMap extends TableMap
     public const COL_FORCE_LOGOUT = 'users.force_logout';
 
     /**
-     * the column name for the is_available field
-     */
-    public const COL_IS_AVAILABLE = 'users.is_available';
-
-    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -144,11 +154,11 @@ class UsersTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Email', 'Password', 'Username', 'Status', 'Verified', 'Resettable', 'RolesMask', 'Registered', 'LastLogin', 'ForceLogout', 'IsAvailable', ],
-        self::TYPE_CAMELNAME     => ['id', 'email', 'password', 'username', 'status', 'verified', 'resettable', 'rolesMask', 'registered', 'lastLogin', 'forceLogout', 'isAvailable', ],
-        self::TYPE_COLNAME       => [UsersTableMap::COL_ID, UsersTableMap::COL_EMAIL, UsersTableMap::COL_PASSWORD, UsersTableMap::COL_USERNAME, UsersTableMap::COL_STATUS, UsersTableMap::COL_VERIFIED, UsersTableMap::COL_RESETTABLE, UsersTableMap::COL_ROLES_MASK, UsersTableMap::COL_REGISTERED, UsersTableMap::COL_LAST_LOGIN, UsersTableMap::COL_FORCE_LOGOUT, UsersTableMap::COL_IS_AVAILABLE, ],
-        self::TYPE_FIELDNAME     => ['id', 'email', 'password', 'username', 'status', 'verified', 'resettable', 'roles_mask', 'registered', 'last_login', 'force_logout', 'is_available', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+        self::TYPE_PHPNAME       => ['Id', 'Email', 'Phone', 'Password', 'Username', 'Status', 'RoleId', 'Verified', 'Resettable', 'RolesMask', 'Registered', 'LastLogin', 'ForceLogout', ],
+        self::TYPE_CAMELNAME     => ['id', 'email', 'phone', 'password', 'username', 'status', 'roleId', 'verified', 'resettable', 'rolesMask', 'registered', 'lastLogin', 'forceLogout', ],
+        self::TYPE_COLNAME       => [UsersTableMap::COL_ID, UsersTableMap::COL_EMAIL, UsersTableMap::COL_PHONE, UsersTableMap::COL_PASSWORD, UsersTableMap::COL_USERNAME, UsersTableMap::COL_STATUS, UsersTableMap::COL_ROLE_ID, UsersTableMap::COL_VERIFIED, UsersTableMap::COL_RESETTABLE, UsersTableMap::COL_ROLES_MASK, UsersTableMap::COL_REGISTERED, UsersTableMap::COL_LAST_LOGIN, UsersTableMap::COL_FORCE_LOGOUT, ],
+        self::TYPE_FIELDNAME     => ['id', 'email', 'phone', 'password', 'username', 'status', 'role_id', 'verified', 'resettable', 'roles_mask', 'registered', 'last_login', 'force_logout', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -160,11 +170,11 @@ class UsersTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Email' => 1, 'Password' => 2, 'Username' => 3, 'Status' => 4, 'Verified' => 5, 'Resettable' => 6, 'RolesMask' => 7, 'Registered' => 8, 'LastLogin' => 9, 'ForceLogout' => 10, 'IsAvailable' => 11, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'email' => 1, 'password' => 2, 'username' => 3, 'status' => 4, 'verified' => 5, 'resettable' => 6, 'rolesMask' => 7, 'registered' => 8, 'lastLogin' => 9, 'forceLogout' => 10, 'isAvailable' => 11, ],
-        self::TYPE_COLNAME       => [UsersTableMap::COL_ID => 0, UsersTableMap::COL_EMAIL => 1, UsersTableMap::COL_PASSWORD => 2, UsersTableMap::COL_USERNAME => 3, UsersTableMap::COL_STATUS => 4, UsersTableMap::COL_VERIFIED => 5, UsersTableMap::COL_RESETTABLE => 6, UsersTableMap::COL_ROLES_MASK => 7, UsersTableMap::COL_REGISTERED => 8, UsersTableMap::COL_LAST_LOGIN => 9, UsersTableMap::COL_FORCE_LOGOUT => 10, UsersTableMap::COL_IS_AVAILABLE => 11, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'email' => 1, 'password' => 2, 'username' => 3, 'status' => 4, 'verified' => 5, 'resettable' => 6, 'roles_mask' => 7, 'registered' => 8, 'last_login' => 9, 'force_logout' => 10, 'is_available' => 11, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Email' => 1, 'Phone' => 2, 'Password' => 3, 'Username' => 4, 'Status' => 5, 'RoleId' => 6, 'Verified' => 7, 'Resettable' => 8, 'RolesMask' => 9, 'Registered' => 10, 'LastLogin' => 11, 'ForceLogout' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'email' => 1, 'phone' => 2, 'password' => 3, 'username' => 4, 'status' => 5, 'roleId' => 6, 'verified' => 7, 'resettable' => 8, 'rolesMask' => 9, 'registered' => 10, 'lastLogin' => 11, 'forceLogout' => 12, ],
+        self::TYPE_COLNAME       => [UsersTableMap::COL_ID => 0, UsersTableMap::COL_EMAIL => 1, UsersTableMap::COL_PHONE => 2, UsersTableMap::COL_PASSWORD => 3, UsersTableMap::COL_USERNAME => 4, UsersTableMap::COL_STATUS => 5, UsersTableMap::COL_ROLE_ID => 6, UsersTableMap::COL_VERIFIED => 7, UsersTableMap::COL_RESETTABLE => 8, UsersTableMap::COL_ROLES_MASK => 9, UsersTableMap::COL_REGISTERED => 10, UsersTableMap::COL_LAST_LOGIN => 11, UsersTableMap::COL_FORCE_LOGOUT => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'email' => 1, 'phone' => 2, 'password' => 3, 'username' => 4, 'status' => 5, 'role_id' => 6, 'verified' => 7, 'resettable' => 8, 'roles_mask' => 9, 'registered' => 10, 'last_login' => 11, 'force_logout' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -185,6 +195,12 @@ class UsersTableMap extends TableMap
         'users.email' => 'EMAIL',
         'UsersTableMap::COL_EMAIL' => 'EMAIL',
         'COL_EMAIL' => 'EMAIL',
+        'Phone' => 'PHONE',
+        'Users.Phone' => 'PHONE',
+        'phone' => 'PHONE',
+        'users.phone' => 'PHONE',
+        'UsersTableMap::COL_PHONE' => 'PHONE',
+        'COL_PHONE' => 'PHONE',
         'Password' => 'PASSWORD',
         'Users.Password' => 'PASSWORD',
         'password' => 'PASSWORD',
@@ -203,6 +219,14 @@ class UsersTableMap extends TableMap
         'users.status' => 'STATUS',
         'UsersTableMap::COL_STATUS' => 'STATUS',
         'COL_STATUS' => 'STATUS',
+        'RoleId' => 'ROLE_ID',
+        'Users.RoleId' => 'ROLE_ID',
+        'roleId' => 'ROLE_ID',
+        'users.roleId' => 'ROLE_ID',
+        'UsersTableMap::COL_ROLE_ID' => 'ROLE_ID',
+        'COL_ROLE_ID' => 'ROLE_ID',
+        'role_id' => 'ROLE_ID',
+        'users.role_id' => 'ROLE_ID',
         'Verified' => 'VERIFIED',
         'Users.Verified' => 'VERIFIED',
         'verified' => 'VERIFIED',
@@ -245,14 +269,6 @@ class UsersTableMap extends TableMap
         'COL_FORCE_LOGOUT' => 'FORCE_LOGOUT',
         'force_logout' => 'FORCE_LOGOUT',
         'users.force_logout' => 'FORCE_LOGOUT',
-        'IsAvailable' => 'IS_AVAILABLE',
-        'Users.IsAvailable' => 'IS_AVAILABLE',
-        'isAvailable' => 'IS_AVAILABLE',
-        'users.isAvailable' => 'IS_AVAILABLE',
-        'UsersTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
-        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
-        'is_available' => 'IS_AVAILABLE',
-        'users.is_available' => 'IS_AVAILABLE',
     ];
 
     /**
@@ -274,16 +290,17 @@ class UsersTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 249, null);
+        $this->addColumn('phone', 'Phone', 'VARCHAR', false, 11, null);
         $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
         $this->addColumn('username', 'Username', 'VARCHAR', false, 100, null);
         $this->addColumn('status', 'Status', 'TINYINT', true, null, 0);
+        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'role', 'id', false, null, null);
         $this->addColumn('verified', 'Verified', 'TINYINT', true, null, 0);
         $this->addColumn('resettable', 'Resettable', 'TINYINT', true, null, 1);
         $this->addColumn('roles_mask', 'RolesMask', 'INTEGER', true, null, 0);
         $this->addColumn('registered', 'Registered', 'INTEGER', true, null, null);
         $this->addColumn('last_login', 'LastLogin', 'INTEGER', false, null, null);
         $this->addColumn('force_logout', 'ForceLogout', 'SMALLINT', true, null, 0);
-        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
     }
 
     /**
@@ -293,6 +310,20 @@ class UsersTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Role', '\\DB\\Role', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':role_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('ProjectRole', '\\DB\\ProjectRole', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'ProjectRoles', false);
     }
 
     /**
@@ -439,29 +470,31 @@ class UsersTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(UsersTableMap::COL_ID);
             $criteria->addSelectColumn(UsersTableMap::COL_EMAIL);
+            $criteria->addSelectColumn(UsersTableMap::COL_PHONE);
             $criteria->addSelectColumn(UsersTableMap::COL_PASSWORD);
             $criteria->addSelectColumn(UsersTableMap::COL_USERNAME);
             $criteria->addSelectColumn(UsersTableMap::COL_STATUS);
+            $criteria->addSelectColumn(UsersTableMap::COL_ROLE_ID);
             $criteria->addSelectColumn(UsersTableMap::COL_VERIFIED);
             $criteria->addSelectColumn(UsersTableMap::COL_RESETTABLE);
             $criteria->addSelectColumn(UsersTableMap::COL_ROLES_MASK);
             $criteria->addSelectColumn(UsersTableMap::COL_REGISTERED);
             $criteria->addSelectColumn(UsersTableMap::COL_LAST_LOGIN);
             $criteria->addSelectColumn(UsersTableMap::COL_FORCE_LOGOUT);
-            $criteria->addSelectColumn(UsersTableMap::COL_IS_AVAILABLE);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.email');
+            $criteria->addSelectColumn($alias . '.phone');
             $criteria->addSelectColumn($alias . '.password');
             $criteria->addSelectColumn($alias . '.username');
             $criteria->addSelectColumn($alias . '.status');
+            $criteria->addSelectColumn($alias . '.role_id');
             $criteria->addSelectColumn($alias . '.verified');
             $criteria->addSelectColumn($alias . '.resettable');
             $criteria->addSelectColumn($alias . '.roles_mask');
             $criteria->addSelectColumn($alias . '.registered');
             $criteria->addSelectColumn($alias . '.last_login');
             $criteria->addSelectColumn($alias . '.force_logout');
-            $criteria->addSelectColumn($alias . '.is_available');
         }
     }
 
@@ -482,29 +515,31 @@ class UsersTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(UsersTableMap::COL_ID);
             $criteria->removeSelectColumn(UsersTableMap::COL_EMAIL);
+            $criteria->removeSelectColumn(UsersTableMap::COL_PHONE);
             $criteria->removeSelectColumn(UsersTableMap::COL_PASSWORD);
             $criteria->removeSelectColumn(UsersTableMap::COL_USERNAME);
             $criteria->removeSelectColumn(UsersTableMap::COL_STATUS);
+            $criteria->removeSelectColumn(UsersTableMap::COL_ROLE_ID);
             $criteria->removeSelectColumn(UsersTableMap::COL_VERIFIED);
             $criteria->removeSelectColumn(UsersTableMap::COL_RESETTABLE);
             $criteria->removeSelectColumn(UsersTableMap::COL_ROLES_MASK);
             $criteria->removeSelectColumn(UsersTableMap::COL_REGISTERED);
             $criteria->removeSelectColumn(UsersTableMap::COL_LAST_LOGIN);
             $criteria->removeSelectColumn(UsersTableMap::COL_FORCE_LOGOUT);
-            $criteria->removeSelectColumn(UsersTableMap::COL_IS_AVAILABLE);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.email');
+            $criteria->removeSelectColumn($alias . '.phone');
             $criteria->removeSelectColumn($alias . '.password');
             $criteria->removeSelectColumn($alias . '.username');
             $criteria->removeSelectColumn($alias . '.status');
+            $criteria->removeSelectColumn($alias . '.role_id');
             $criteria->removeSelectColumn($alias . '.verified');
             $criteria->removeSelectColumn($alias . '.resettable');
             $criteria->removeSelectColumn($alias . '.roles_mask');
             $criteria->removeSelectColumn($alias . '.registered');
             $criteria->removeSelectColumn($alias . '.last_login');
             $criteria->removeSelectColumn($alias . '.force_logout');
-            $criteria->removeSelectColumn($alias . '.is_available');
         }
     }
 

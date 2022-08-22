@@ -2,18 +2,20 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\StageTechnic as ChildStageTechnic;
 use DB\StageTechnicQuery as ChildStageTechnicQuery;
 use DB\Technic as ChildTechnic;
 use DB\TechnicQuery as ChildTechnicQuery;
-use DB\Unit as ChildUnit;
-use DB\UnitQuery as ChildUnitQuery;
+use DB\TechnicVersion as ChildTechnicVersion;
+use DB\TechnicVersionQuery as ChildTechnicVersionQuery;
 use DB\WorkTechnic as ChildWorkTechnic;
 use DB\WorkTechnicQuery as ChildWorkTechnicQuery;
 use DB\Map\StageTechnicTableMap;
 use DB\Map\TechnicTableMap;
+use DB\Map\TechnicVersionTableMap;
 use DB\Map\WorkTechnicTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -27,6 +29,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'technic' table.
@@ -102,15 +105,39 @@ abstract class Technic implements ActiveRecordInterface
 
     /**
      * The value for the unit_id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $unit_id;
 
     /**
-     * @var        ChildUnit
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
      */
-    protected $aUnit;
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
 
     /**
      * @var        ObjectCollection|ChildStageTechnic[] Collection to store aggregation of ChildStageTechnic objects.
@@ -118,6 +145,13 @@ abstract class Technic implements ActiveRecordInterface
      */
     protected $collStageTechnics;
     protected $collStageTechnicsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildTechnicVersion[] Collection to store aggregation of ChildTechnicVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildTechnicVersion> Collection to store aggregation of ChildTechnicVersion objects.
+     */
+    protected $collTechnicVersions;
+    protected $collTechnicVersionsPartial;
 
     /**
      * @var        ObjectCollection|ChildWorkTechnic[] Collection to store aggregation of ChildWorkTechnic objects.
@@ -143,6 +177,13 @@ abstract class Technic implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildTechnicVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildTechnicVersion>
+     */
+    protected $technicVersionsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildWorkTechnic[]
      * @phpstan-var ObjectCollection&\Traversable<ChildWorkTechnic>
      */
@@ -157,6 +198,7 @@ abstract class Technic implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->is_available = true;
+        $this->version = 0;
     }
 
     /**
@@ -439,12 +481,64 @@ abstract class Technic implements ActiveRecordInterface
 
     /**
      * Get the [unit_id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getUnitId()
     {
         return $this->unit_id;
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -537,7 +631,7 @@ abstract class Technic implements ActiveRecordInterface
 
     /**
      * Set the value of [unit_id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -552,8 +646,84 @@ abstract class Technic implements ActiveRecordInterface
             $this->modifiedColumns[TechnicTableMap::COL_UNIT_ID] = true;
         }
 
-        if ($this->aUnit !== null && $this->aUnit->getId() !== $v) {
-            $this->aUnit = null;
+        return $this;
+    }
+
+    /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[TechnicTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[TechnicTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[TechnicTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[TechnicTableMap::COL_VERSION_COMMENT] = true;
         }
 
         return $this;
@@ -570,6 +740,10 @@ abstract class Technic implements ActiveRecordInterface
     public function hasOnlyDefaultValues(): bool
     {
             if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
                 return false;
             }
 
@@ -613,6 +787,21 @@ abstract class Technic implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : TechnicTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : TechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : TechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : TechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -621,7 +810,7 @@ abstract class Technic implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = TechnicTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = TechnicTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Technic'), 0, $e);
@@ -644,9 +833,6 @@ abstract class Technic implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aUnit !== null && $this->unit_id !== $this->aUnit->getId()) {
-            $this->aUnit = null;
-        }
     }
 
     /**
@@ -686,8 +872,9 @@ abstract class Technic implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aUnit = null;
             $this->collStageTechnics = null;
+
+            $this->collTechnicVersions = null;
 
             $this->collWorkTechnics = null;
 
@@ -794,18 +981,6 @@ abstract class Technic implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aUnit !== null) {
-                if ($this->aUnit->isModified() || $this->aUnit->isNew()) {
-                    $affectedRows += $this->aUnit->save($con);
-                }
-                $this->setUnit($this->aUnit);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -828,6 +1003,23 @@ abstract class Technic implements ActiveRecordInterface
 
             if ($this->collStageTechnics !== null) {
                 foreach ($this->collStageTechnics as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->technicVersionsScheduledForDeletion !== null) {
+                if (!$this->technicVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\TechnicVersionQuery::create()
+                        ->filterByPrimaryKeys($this->technicVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->technicVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collTechnicVersions !== null) {
+                foreach ($this->collTechnicVersions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -892,6 +1084,18 @@ abstract class Technic implements ActiveRecordInterface
         if ($this->isColumnModified(TechnicTableMap::COL_UNIT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'unit_id';
         }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        }
 
         $sql = sprintf(
             'INSERT INTO technic (%s) VALUES (%s)',
@@ -917,6 +1121,18 @@ abstract class Technic implements ActiveRecordInterface
                         break;
                     case 'unit_id':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -995,6 +1211,18 @@ abstract class Technic implements ActiveRecordInterface
             case 4:
                 return $this->getUnitId();
 
+            case 5:
+                return $this->getVersion();
+
+            case 6:
+                return $this->getVersionCreatedAt();
+
+            case 7:
+                return $this->getVersionCreatedBy();
+
+            case 8:
+                return $this->getVersionComment();
+
             default:
                 return null;
         } // switch()
@@ -1028,28 +1256,21 @@ abstract class Technic implements ActiveRecordInterface
             $keys[2] => $this->getPrice(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getUnitId(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aUnit) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'unit';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'unit';
-                        break;
-                    default:
-                        $key = 'Unit';
-                }
-
-                $result[$key] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->collStageTechnics) {
 
                 switch ($keyType) {
@@ -1064,6 +1285,21 @@ abstract class Technic implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collStageTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collTechnicVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'technicVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'technic_versions';
+                        break;
+                    default:
+                        $key = 'TechnicVersions';
+                }
+
+                $result[$key] = $this->collTechnicVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collWorkTechnics) {
 
@@ -1131,6 +1367,18 @@ abstract class Technic implements ActiveRecordInterface
             case 4:
                 $this->setUnitId($value);
                 break;
+            case 5:
+                $this->setVersion($value);
+                break;
+            case 6:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 7:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 8:
+                $this->setVersionComment($value);
+                break;
         } // switch()
 
         return $this;
@@ -1171,6 +1419,18 @@ abstract class Technic implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setUnitId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersion($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1229,6 +1489,18 @@ abstract class Technic implements ActiveRecordInterface
         }
         if ($this->isColumnModified(TechnicTableMap::COL_UNIT_ID)) {
             $criteria->add(TechnicTableMap::COL_UNIT_ID, $this->unit_id);
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION)) {
+            $criteria->add(TechnicTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(TechnicTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(TechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(TechnicTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(TechnicTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1322,6 +1594,10 @@ abstract class Technic implements ActiveRecordInterface
         $copyObj->setPrice($this->getPrice());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setUnitId($this->getUnitId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1331,6 +1607,12 @@ abstract class Technic implements ActiveRecordInterface
             foreach ($this->getStageTechnics() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addStageTechnic($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getTechnicVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addTechnicVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1370,57 +1652,6 @@ abstract class Technic implements ActiveRecordInterface
         return $copyObj;
     }
 
-    /**
-     * Declares an association between this object and a ChildUnit object.
-     *
-     * @param ChildUnit $v
-     * @return $this The current object (for fluent API support)
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function setUnit(ChildUnit $v = null)
-    {
-        if ($v === null) {
-            $this->setUnitId(NULL);
-        } else {
-            $this->setUnitId($v->getId());
-        }
-
-        $this->aUnit = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUnit object, it will not be re-added.
-        if ($v !== null) {
-            $v->addTechnic($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildUnit object
-     *
-     * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildUnit The associated ChildUnit object.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getUnit(?ConnectionInterface $con = null)
-    {
-        if ($this->aUnit === null && ($this->unit_id != 0)) {
-            $this->aUnit = ChildUnitQuery::create()->findPk($this->unit_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aUnit->addTechnics($this);
-             */
-        }
-
-        return $this->aUnit;
-    }
-
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -1434,6 +1665,10 @@ abstract class Technic implements ActiveRecordInterface
     {
         if ('StageTechnic' === $relationName) {
             $this->initStageTechnics();
+            return;
+        }
+        if ('TechnicVersion' === $relationName) {
+            $this->initTechnicVersions();
             return;
         }
         if ('WorkTechnic' === $relationName) {
@@ -1699,12 +1934,254 @@ abstract class Technic implements ActiveRecordInterface
      * @return ObjectCollection|ChildStageTechnic[] List of ChildStageTechnic objects
      * @phpstan-return ObjectCollection&\Traversable<ChildStageTechnic}> List of ChildStageTechnic objects
      */
-    public function getStageTechnicsJoinStage(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStageTechnicsJoinStageWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildStageTechnicQuery::create(null, $criteria);
-        $query->joinWith('Stage', $joinBehavior);
+        $query->joinWith('StageWork', $joinBehavior);
 
         return $this->getStageTechnics($query, $con);
+    }
+
+    /**
+     * Clears out the collTechnicVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addTechnicVersions()
+     */
+    public function clearTechnicVersions()
+    {
+        $this->collTechnicVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collTechnicVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialTechnicVersions($v = true): void
+    {
+        $this->collTechnicVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collTechnicVersions collection.
+     *
+     * By default this just sets the collTechnicVersions collection to an empty array (like clearcollTechnicVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initTechnicVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collTechnicVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = TechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collTechnicVersions = new $collectionClassName;
+        $this->collTechnicVersions->setModel('\DB\TechnicVersion');
+    }
+
+    /**
+     * Gets an array of ChildTechnicVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildTechnic is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildTechnicVersion[] List of ChildTechnicVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildTechnicVersion> List of ChildTechnicVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getTechnicVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collTechnicVersions) {
+                    $this->initTechnicVersions();
+                } else {
+                    $collectionClassName = TechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collTechnicVersions = new $collectionClassName;
+                    $collTechnicVersions->setModel('\DB\TechnicVersion');
+
+                    return $collTechnicVersions;
+                }
+            } else {
+                $collTechnicVersions = ChildTechnicVersionQuery::create(null, $criteria)
+                    ->filterByTechnic($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collTechnicVersionsPartial && count($collTechnicVersions)) {
+                        $this->initTechnicVersions(false);
+
+                        foreach ($collTechnicVersions as $obj) {
+                            if (false == $this->collTechnicVersions->contains($obj)) {
+                                $this->collTechnicVersions->append($obj);
+                            }
+                        }
+
+                        $this->collTechnicVersionsPartial = true;
+                    }
+
+                    return $collTechnicVersions;
+                }
+
+                if ($partial && $this->collTechnicVersions) {
+                    foreach ($this->collTechnicVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collTechnicVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collTechnicVersions = $collTechnicVersions;
+                $this->collTechnicVersionsPartial = false;
+            }
+        }
+
+        return $this->collTechnicVersions;
+    }
+
+    /**
+     * Sets a collection of ChildTechnicVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $technicVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setTechnicVersions(Collection $technicVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildTechnicVersion[] $technicVersionsToDelete */
+        $technicVersionsToDelete = $this->getTechnicVersions(new Criteria(), $con)->diff($technicVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->technicVersionsScheduledForDeletion = clone $technicVersionsToDelete;
+
+        foreach ($technicVersionsToDelete as $technicVersionRemoved) {
+            $technicVersionRemoved->setTechnic(null);
+        }
+
+        $this->collTechnicVersions = null;
+        foreach ($technicVersions as $technicVersion) {
+            $this->addTechnicVersion($technicVersion);
+        }
+
+        $this->collTechnicVersions = $technicVersions;
+        $this->collTechnicVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related TechnicVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related TechnicVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countTechnicVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTechnicVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getTechnicVersions());
+            }
+
+            $query = ChildTechnicVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByTechnic($this)
+                ->count($con);
+        }
+
+        return count($this->collTechnicVersions);
+    }
+
+    /**
+     * Method called to associate a ChildTechnicVersion object to this object
+     * through the ChildTechnicVersion foreign key attribute.
+     *
+     * @param ChildTechnicVersion $l ChildTechnicVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addTechnicVersion(ChildTechnicVersion $l)
+    {
+        if ($this->collTechnicVersions === null) {
+            $this->initTechnicVersions();
+            $this->collTechnicVersionsPartial = true;
+        }
+
+        if (!$this->collTechnicVersions->contains($l)) {
+            $this->doAddTechnicVersion($l);
+
+            if ($this->technicVersionsScheduledForDeletion and $this->technicVersionsScheduledForDeletion->contains($l)) {
+                $this->technicVersionsScheduledForDeletion->remove($this->technicVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildTechnicVersion $technicVersion The ChildTechnicVersion object to add.
+     */
+    protected function doAddTechnicVersion(ChildTechnicVersion $technicVersion): void
+    {
+        $this->collTechnicVersions[]= $technicVersion;
+        $technicVersion->setTechnic($this);
+    }
+
+    /**
+     * @param ChildTechnicVersion $technicVersion The ChildTechnicVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeTechnicVersion(ChildTechnicVersion $technicVersion)
+    {
+        if ($this->getTechnicVersions()->contains($technicVersion)) {
+            $pos = $this->collTechnicVersions->search($technicVersion);
+            $this->collTechnicVersions->remove($pos);
+            if (null === $this->technicVersionsScheduledForDeletion) {
+                $this->technicVersionsScheduledForDeletion = clone $this->collTechnicVersions;
+                $this->technicVersionsScheduledForDeletion->clear();
+            }
+            $this->technicVersionsScheduledForDeletion[]= clone $technicVersion;
+            $technicVersion->setTechnic(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1981,14 +2458,15 @@ abstract class Technic implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aUnit) {
-            $this->aUnit->removeTechnic($this);
-        }
         $this->id = null;
         $this->name = null;
         $this->price = null;
         $this->is_available = null;
         $this->unit_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2016,6 +2494,11 @@ abstract class Technic implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collTechnicVersions) {
+                foreach ($this->collTechnicVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collWorkTechnics) {
                 foreach ($this->collWorkTechnics as $o) {
                     $o->clearAllReferences($deep);
@@ -2024,8 +2507,8 @@ abstract class Technic implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collStageTechnics = null;
+        $this->collTechnicVersions = null;
         $this->collWorkTechnics = null;
-        $this->aUnit = null;
         return $this;
     }
 

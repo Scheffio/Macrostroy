@@ -87,6 +87,7 @@ function PageLoader(page) {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-table.generate(5)
+table.generate(15)
 PageLoader("#1-tab-element")
+
 

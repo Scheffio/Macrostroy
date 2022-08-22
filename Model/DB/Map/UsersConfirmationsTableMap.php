@@ -46,6 +46,11 @@ class UsersConfirmationsTableMap extends TableMap
     public const TABLE_NAME = 'users_confirmations';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'UsersConfirmations';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\UsersConfirmations';

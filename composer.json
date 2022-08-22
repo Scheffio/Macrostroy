@@ -32,6 +32,7 @@
     "ext-mysqli": "*",
     "riverline/multipart-parser": "dev-master",
     "ext-intl": "*",
-    "propel/propel": " ~2.0@dev"
+    "propel/propel": " ~2.0@dev",
+    ssh2
   }
 }

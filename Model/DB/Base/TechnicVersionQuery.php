@@ -27,7 +27,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildTechnicVersionQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
  * @method     ChildTechnicVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
- * @method     ChildTechnicVersionQuery orderByUnitIdVersion($order = Criteria::ASC) Order by the unit_id_version column
+ * @method     ChildTechnicVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildTechnicVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildTechnicVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildTechnicVersionQuery orderByStageTechnicIds($order = Criteria::ASC) Order by the stage_technic_ids column
  * @method     ChildTechnicVersionQuery orderByStageTechnicVersions($order = Criteria::ASC) Order by the stage_technic_versions column
  * @method     ChildTechnicVersionQuery orderByWorkTechnicIds($order = Criteria::ASC) Order by the work_technic_ids column
@@ -39,7 +41,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildTechnicVersionQuery groupByUnitId() Group by the unit_id column
  * @method     ChildTechnicVersionQuery groupByVersion() Group by the version column
- * @method     ChildTechnicVersionQuery groupByUnitIdVersion() Group by the unit_id_version column
+ * @method     ChildTechnicVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildTechnicVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildTechnicVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildTechnicVersionQuery groupByStageTechnicIds() Group by the stage_technic_ids column
  * @method     ChildTechnicVersionQuery groupByStageTechnicVersions() Group by the stage_technic_versions column
  * @method     ChildTechnicVersionQuery groupByWorkTechnicIds() Group by the work_technic_ids column
@@ -74,11 +78,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildTechnicVersion filtered by the is_available column
  * @method     ChildTechnicVersion|null findOneByUnitId(int $unit_id) Return the first ChildTechnicVersion filtered by the unit_id column
  * @method     ChildTechnicVersion|null findOneByVersion(int $version) Return the first ChildTechnicVersion filtered by the version column
- * @method     ChildTechnicVersion|null findOneByUnitIdVersion(int $unit_id_version) Return the first ChildTechnicVersion filtered by the unit_id_version column
- * @method     ChildTechnicVersion|null findOneByStageTechnicIds(array $stage_technic_ids) Return the first ChildTechnicVersion filtered by the stage_technic_ids column
- * @method     ChildTechnicVersion|null findOneByStageTechnicVersions(array $stage_technic_versions) Return the first ChildTechnicVersion filtered by the stage_technic_versions column
- * @method     ChildTechnicVersion|null findOneByWorkTechnicIds(array $work_technic_ids) Return the first ChildTechnicVersion filtered by the work_technic_ids column
- * @method     ChildTechnicVersion|null findOneByWorkTechnicVersions(array $work_technic_versions) Return the first ChildTechnicVersion filtered by the work_technic_versions column *
+ * @method     ChildTechnicVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildTechnicVersion filtered by the version_created_at column
+ * @method     ChildTechnicVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildTechnicVersion filtered by the version_created_by column
+ * @method     ChildTechnicVersion|null findOneByVersionComment(string $version_comment) Return the first ChildTechnicVersion filtered by the version_comment column
+ * @method     ChildTechnicVersion|null findOneByStageTechnicIds(string $stage_technic_ids) Return the first ChildTechnicVersion filtered by the stage_technic_ids column
+ * @method     ChildTechnicVersion|null findOneByStageTechnicVersions(string $stage_technic_versions) Return the first ChildTechnicVersion filtered by the stage_technic_versions column
+ * @method     ChildTechnicVersion|null findOneByWorkTechnicIds(string $work_technic_ids) Return the first ChildTechnicVersion filtered by the work_technic_ids column
+ * @method     ChildTechnicVersion|null findOneByWorkTechnicVersions(string $work_technic_versions) Return the first ChildTechnicVersion filtered by the work_technic_versions column *
 
  * @method     ChildTechnicVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildTechnicVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnicVersion requireOne(?ConnectionInterface $con = null) Return the first ChildTechnicVersion matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -89,11 +95,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildTechnicVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnicVersion requireOneByUnitId(int $unit_id) Return the first ChildTechnicVersion filtered by the unit_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnicVersion requireOneByVersion(int $version) Return the first ChildTechnicVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTechnicVersion requireOneByUnitIdVersion(int $unit_id_version) Return the first ChildTechnicVersion filtered by the unit_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTechnicVersion requireOneByStageTechnicIds(array $stage_technic_ids) Return the first ChildTechnicVersion filtered by the stage_technic_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTechnicVersion requireOneByStageTechnicVersions(array $stage_technic_versions) Return the first ChildTechnicVersion filtered by the stage_technic_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTechnicVersion requireOneByWorkTechnicIds(array $work_technic_ids) Return the first ChildTechnicVersion filtered by the work_technic_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTechnicVersion requireOneByWorkTechnicVersions(array $work_technic_versions) Return the first ChildTechnicVersion filtered by the work_technic_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildTechnicVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildTechnicVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByVersionComment(string $version_comment) Return the first ChildTechnicVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByStageTechnicIds(string $stage_technic_ids) Return the first ChildTechnicVersion filtered by the stage_technic_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByStageTechnicVersions(string $stage_technic_versions) Return the first ChildTechnicVersion filtered by the stage_technic_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByWorkTechnicIds(string $work_technic_ids) Return the first ChildTechnicVersion filtered by the work_technic_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnicVersion requireOneByWorkTechnicVersions(string $work_technic_versions) Return the first ChildTechnicVersion filtered by the work_technic_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTechnicVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildTechnicVersion objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildTechnicVersion> find(?ConnectionInterface $con = null) Return ChildTechnicVersion objects based on current ModelCriteria
@@ -109,16 +117,20 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByUnitId(int $unit_id) Return ChildTechnicVersion objects filtered by the unit_id column
  * @method     ChildTechnicVersion[]|Collection findByVersion(int $version) Return ChildTechnicVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByVersion(int $version) Return ChildTechnicVersion objects filtered by the version column
- * @method     ChildTechnicVersion[]|Collection findByUnitIdVersion(int $unit_id_version) Return ChildTechnicVersion objects filtered by the unit_id_version column
- * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByUnitIdVersion(int $unit_id_version) Return ChildTechnicVersion objects filtered by the unit_id_version column
- * @method     ChildTechnicVersion[]|Collection findByStageTechnicIds(array $stage_technic_ids) Return ChildTechnicVersion objects filtered by the stage_technic_ids column
- * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByStageTechnicIds(array $stage_technic_ids) Return ChildTechnicVersion objects filtered by the stage_technic_ids column
- * @method     ChildTechnicVersion[]|Collection findByStageTechnicVersions(array $stage_technic_versions) Return ChildTechnicVersion objects filtered by the stage_technic_versions column
- * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByStageTechnicVersions(array $stage_technic_versions) Return ChildTechnicVersion objects filtered by the stage_technic_versions column
- * @method     ChildTechnicVersion[]|Collection findByWorkTechnicIds(array $work_technic_ids) Return ChildTechnicVersion objects filtered by the work_technic_ids column
- * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByWorkTechnicIds(array $work_technic_ids) Return ChildTechnicVersion objects filtered by the work_technic_ids column
- * @method     ChildTechnicVersion[]|Collection findByWorkTechnicVersions(array $work_technic_versions) Return ChildTechnicVersion objects filtered by the work_technic_versions column
- * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByWorkTechnicVersions(array $work_technic_versions) Return ChildTechnicVersion objects filtered by the work_technic_versions column
+ * @method     ChildTechnicVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildTechnicVersion objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByVersionCreatedAt(string $version_created_at) Return ChildTechnicVersion objects filtered by the version_created_at column
+ * @method     ChildTechnicVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildTechnicVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByVersionCreatedBy(string $version_created_by) Return ChildTechnicVersion objects filtered by the version_created_by column
+ * @method     ChildTechnicVersion[]|Collection findByVersionComment(string $version_comment) Return ChildTechnicVersion objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByVersionComment(string $version_comment) Return ChildTechnicVersion objects filtered by the version_comment column
+ * @method     ChildTechnicVersion[]|Collection findByStageTechnicIds(string $stage_technic_ids) Return ChildTechnicVersion objects filtered by the stage_technic_ids column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByStageTechnicIds(string $stage_technic_ids) Return ChildTechnicVersion objects filtered by the stage_technic_ids column
+ * @method     ChildTechnicVersion[]|Collection findByStageTechnicVersions(string $stage_technic_versions) Return ChildTechnicVersion objects filtered by the stage_technic_versions column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByStageTechnicVersions(string $stage_technic_versions) Return ChildTechnicVersion objects filtered by the stage_technic_versions column
+ * @method     ChildTechnicVersion[]|Collection findByWorkTechnicIds(string $work_technic_ids) Return ChildTechnicVersion objects filtered by the work_technic_ids column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByWorkTechnicIds(string $work_technic_ids) Return ChildTechnicVersion objects filtered by the work_technic_ids column
+ * @method     ChildTechnicVersion[]|Collection findByWorkTechnicVersions(string $work_technic_versions) Return ChildTechnicVersion objects filtered by the work_technic_versions column
+ * @psalm-method Collection&\Traversable<ChildTechnicVersion> findByWorkTechnicVersions(string $work_technic_versions) Return ChildTechnicVersion objects filtered by the work_technic_versions column
  * @method     ChildTechnicVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildTechnicVersion> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -218,7 +230,7 @@ abstract class TechnicVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, price, is_available, unit_id, version, unit_id_version, stage_technic_ids, stage_technic_versions, work_technic_ids, work_technic_versions FROM technic_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, price, is_available, unit_id, version, version_created_at, version_created_by, version_comment, stage_technic_ids, stage_technic_versions, work_technic_ids, work_technic_versions FROM technic_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -554,16 +566,18 @@ abstract class TechnicVersionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the unit_id_version column
+     * Filter the query on the version_created_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByUnitIdVersion(1234); // WHERE unit_id_version = 1234
-     * $query->filterByUnitIdVersion(array(12, 34)); // WHERE unit_id_version IN (12, 34)
-     * $query->filterByUnitIdVersion(array('min' => 12)); // WHERE unit_id_version > 12
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
      * </code>
      *
-     * @param mixed $unitIdVersion The value to use as filter.
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -571,16 +585,16 @@ abstract class TechnicVersionQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByUnitIdVersion($unitIdVersion = null, ?string $comparison = null)
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
     {
-        if (is_array($unitIdVersion)) {
+        if (is_array($versionCreatedAt)) {
             $useMinMax = false;
-            if (isset($unitIdVersion['min'])) {
-                $this->addUsingAlias(TechnicVersionTableMap::COL_UNIT_ID_VERSION, $unitIdVersion['min'], Criteria::GREATER_EQUAL);
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(TechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($unitIdVersion['max'])) {
-                $this->addUsingAlias(TechnicVersionTableMap::COL_UNIT_ID_VERSION, $unitIdVersion['max'], Criteria::LESS_EQUAL);
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(TechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -591,7 +605,63 @@ abstract class TechnicVersionQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(TechnicVersionTableMap::COL_UNIT_ID_VERSION, $unitIdVersion, $comparison);
+        $this->addUsingAlias(TechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(TechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(TechnicVersionTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
 
         return $this;
     }
@@ -599,81 +669,24 @@ abstract class TechnicVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_technic_ids column
      *
-     * @param array $stageTechnicIds The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByStageTechnicIds('fooValue');   // WHERE stage_technic_ids = 'fooValue'
+     * $query->filterByStageTechnicIds('%fooValue%', Criteria::LIKE); // WHERE stage_technic_ids LIKE '%fooValue%'
+     * $query->filterByStageTechnicIds(['foo', 'bar']); // WHERE stage_technic_ids IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $stageTechnicIds The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageTechnicIds($stageTechnicIds = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($stageTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($stageTechnicIds)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($stageTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($stageTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS, $stageTechnicIds, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the stage_technic_ids column
-     * @param mixed $stageTechnicIds The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageTechnicId($stageTechnicIds = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($stageTechnicIds)) {
-                $stageTechnicIds = '%| ' . $stageTechnicIds . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $stageTechnicIds = '%| ' . $stageTechnicIds . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $stageTechnicIds, $comparison);
-            } else {
-                $this->addAnd($key, $stageTechnicIds, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS, $stageTechnicIds, $comparison);
@@ -684,81 +697,24 @@ abstract class TechnicVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_technic_versions column
      *
-     * @param array $stageTechnicVersions The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByStageTechnicVersions('fooValue');   // WHERE stage_technic_versions = 'fooValue'
+     * $query->filterByStageTechnicVersions('%fooValue%', Criteria::LIKE); // WHERE stage_technic_versions LIKE '%fooValue%'
+     * $query->filterByStageTechnicVersions(['foo', 'bar']); // WHERE stage_technic_versions IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $stageTechnicVersions The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageTechnicVersions($stageTechnicVersions = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($stageTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($stageTechnicVersions)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($stageTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($stageTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS, $stageTechnicVersions, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the stage_technic_versions column
-     * @param mixed $stageTechnicVersions The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageTechnicVersion($stageTechnicVersions = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($stageTechnicVersions)) {
-                $stageTechnicVersions = '%| ' . $stageTechnicVersions . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $stageTechnicVersions = '%| ' . $stageTechnicVersions . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $stageTechnicVersions, $comparison);
-            } else {
-                $this->addAnd($key, $stageTechnicVersions, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS, $stageTechnicVersions, $comparison);
@@ -769,81 +725,24 @@ abstract class TechnicVersionQuery extends ModelCriteria
     /**
      * Filter the query on the work_technic_ids column
      *
-     * @param array $workTechnicIds The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByWorkTechnicIds('fooValue');   // WHERE work_technic_ids = 'fooValue'
+     * $query->filterByWorkTechnicIds('%fooValue%', Criteria::LIKE); // WHERE work_technic_ids LIKE '%fooValue%'
+     * $query->filterByWorkTechnicIds(['foo', 'bar']); // WHERE work_technic_ids IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $workTechnicIds The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByWorkTechnicIds($workTechnicIds = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($workTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($workTechnicIds)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($workTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($workTechnicIds as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS, $workTechnicIds, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the work_technic_ids column
-     * @param mixed $workTechnicIds The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByWorkTechnicId($workTechnicIds = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($workTechnicIds)) {
-                $workTechnicIds = '%| ' . $workTechnicIds . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $workTechnicIds = '%| ' . $workTechnicIds . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $workTechnicIds, $comparison);
-            } else {
-                $this->addAnd($key, $workTechnicIds, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS, $workTechnicIds, $comparison);
@@ -854,81 +753,24 @@ abstract class TechnicVersionQuery extends ModelCriteria
     /**
      * Filter the query on the work_technic_versions column
      *
-     * @param array $workTechnicVersions The values to use as filter.
+     * Example usage:
+     * <code>
+     * $query->filterByWorkTechnicVersions('fooValue');   // WHERE work_technic_versions = 'fooValue'
+     * $query->filterByWorkTechnicVersions('%fooValue%', Criteria::LIKE); // WHERE work_technic_versions LIKE '%fooValue%'
+     * $query->filterByWorkTechnicVersions(['foo', 'bar']); // WHERE work_technic_versions IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $workTechnicVersions The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByWorkTechnicVersions($workTechnicVersions = null, ?string $comparison = null)
     {
-        $key = $this->getAliasedColName(TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS);
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            foreach ($workTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
+        if (null === $comparison) {
+            if (is_array($workTechnicVersions)) {
+                $comparison = Criteria::IN;
             }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_SOME) {
-            foreach ($workTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addOr($key, $value, Criteria::LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::LIKE);
-                }
-            }
-
-            return $this;
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            foreach ($workTechnicVersions as $value) {
-                $value = '%| ' . $value . ' |%';
-                if ($this->containsKey($key)) {
-                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
-                } else {
-                    $this->add($key, $value, Criteria::NOT_LIKE);
-                }
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
-        }
-
-        $this->addUsingAlias(TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS, $workTechnicVersions, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the work_technic_versions column
-     * @param mixed $workTechnicVersions The value to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByWorkTechnicVersion($workTechnicVersions = null, ?string $comparison = null)
-    {
-        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
-            if (is_scalar($workTechnicVersions)) {
-                $workTechnicVersions = '%| ' . $workTechnicVersions . ' |%';
-                $comparison = Criteria::LIKE;
-            }
-        } elseif ($comparison == Criteria::CONTAINS_NONE) {
-            $workTechnicVersions = '%| ' . $workTechnicVersions . ' |%';
-            $comparison = Criteria::NOT_LIKE;
-            $key = $this->getAliasedColName(TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS);
-            if ($this->containsKey($key)) {
-                $this->addAnd($key, $workTechnicVersions, $comparison);
-            } else {
-                $this->addAnd($key, $workTechnicVersions, $comparison);
-            }
-            $this->addOr($key, null, Criteria::ISNULL);
-
-            return $this;
         }
 
         $this->addUsingAlias(TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS, $workTechnicVersions, $comparison);

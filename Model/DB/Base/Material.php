@@ -2,10 +2,13 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Material as ChildMaterial;
 use DB\MaterialQuery as ChildMaterialQuery;
+use DB\MaterialVersion as ChildMaterialVersion;
+use DB\MaterialVersionQuery as ChildMaterialVersionQuery;
 use DB\StageMaterial as ChildStageMaterial;
 use DB\StageMaterialQuery as ChildStageMaterialQuery;
 use DB\Unit as ChildUnit;
@@ -13,6 +16,7 @@ use DB\UnitQuery as ChildUnitQuery;
 use DB\WorkMaterial as ChildWorkMaterial;
 use DB\WorkMaterialQuery as ChildWorkMaterialQuery;
 use DB\Map\MaterialTableMap;
+use DB\Map\MaterialVersionTableMap;
 use DB\Map\StageMaterialTableMap;
 use DB\Map\WorkMaterialTableMap;
 use Propel\Runtime\Propel;
@@ -27,6 +31,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'material' table.
@@ -102,15 +107,51 @@ abstract class Material implements ActiveRecordInterface
 
     /**
      * The value for the unit_id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $unit_id;
 
     /**
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * @var        ChildUnit
      */
     protected $aUnit;
+
+    /**
+     * @var        ObjectCollection|ChildMaterialVersion[] Collection to store aggregation of ChildMaterialVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildMaterialVersion> Collection to store aggregation of ChildMaterialVersion objects.
+     */
+    protected $collMaterialVersions;
+    protected $collMaterialVersionsPartial;
 
     /**
      * @var        ObjectCollection|ChildStageMaterial[] Collection to store aggregation of ChildStageMaterial objects.
@@ -136,6 +177,13 @@ abstract class Material implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildMaterialVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildMaterialVersion>
+     */
+    protected $materialVersionsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildStageMaterial[]
      * @phpstan-var ObjectCollection&\Traversable<ChildStageMaterial>
      */
@@ -157,6 +205,7 @@ abstract class Material implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->is_available = true;
+        $this->version = 0;
     }
 
     /**
@@ -439,12 +488,64 @@ abstract class Material implements ActiveRecordInterface
 
     /**
      * Get the [unit_id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getUnitId()
     {
         return $this->unit_id;
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -537,7 +638,7 @@ abstract class Material implements ActiveRecordInterface
 
     /**
      * Set the value of [unit_id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -560,6 +661,86 @@ abstract class Material implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[MaterialTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[MaterialTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[MaterialTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[MaterialTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -570,6 +751,10 @@ abstract class Material implements ActiveRecordInterface
     public function hasOnlyDefaultValues(): bool
     {
             if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
                 return false;
             }
 
@@ -613,6 +798,21 @@ abstract class Material implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : MaterialTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : MaterialTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : MaterialTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : MaterialTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : MaterialTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -621,7 +821,7 @@ abstract class Material implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = MaterialTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = MaterialTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Material'), 0, $e);
@@ -687,6 +887,8 @@ abstract class Material implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aUnit = null;
+            $this->collMaterialVersions = null;
+
             $this->collStageMaterials = null;
 
             $this->collWorkMaterials = null;
@@ -817,6 +1019,23 @@ abstract class Material implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->materialVersionsScheduledForDeletion !== null) {
+                if (!$this->materialVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\MaterialVersionQuery::create()
+                        ->filterByPrimaryKeys($this->materialVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->materialVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collMaterialVersions !== null) {
+                foreach ($this->collMaterialVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->stageMaterialsScheduledForDeletion !== null) {
                 if (!$this->stageMaterialsScheduledForDeletion->isEmpty()) {
                     \DB\StageMaterialQuery::create()
@@ -892,6 +1111,18 @@ abstract class Material implements ActiveRecordInterface
         if ($this->isColumnModified(MaterialTableMap::COL_UNIT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'unit_id';
         }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        }
 
         $sql = sprintf(
             'INSERT INTO material (%s) VALUES (%s)',
@@ -917,6 +1148,18 @@ abstract class Material implements ActiveRecordInterface
                         break;
                     case 'unit_id':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -995,6 +1238,18 @@ abstract class Material implements ActiveRecordInterface
             case 4:
                 return $this->getUnitId();
 
+            case 5:
+                return $this->getVersion();
+
+            case 6:
+                return $this->getVersionCreatedAt();
+
+            case 7:
+                return $this->getVersionCreatedBy();
+
+            case 8:
+                return $this->getVersionComment();
+
             default:
                 return null;
         } // switch()
@@ -1028,7 +1283,15 @@ abstract class Material implements ActiveRecordInterface
             $keys[2] => $this->getPrice(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getUnitId(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1049,6 +1312,21 @@ abstract class Material implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collMaterialVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'materialVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'material_versions';
+                        break;
+                    default:
+                        $key = 'MaterialVersions';
+                }
+
+                $result[$key] = $this->collMaterialVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStageMaterials) {
 
@@ -1131,6 +1409,18 @@ abstract class Material implements ActiveRecordInterface
             case 4:
                 $this->setUnitId($value);
                 break;
+            case 5:
+                $this->setVersion($value);
+                break;
+            case 6:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 7:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 8:
+                $this->setVersionComment($value);
+                break;
         } // switch()
 
         return $this;
@@ -1171,6 +1461,18 @@ abstract class Material implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setUnitId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersion($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1229,6 +1531,18 @@ abstract class Material implements ActiveRecordInterface
         }
         if ($this->isColumnModified(MaterialTableMap::COL_UNIT_ID)) {
             $criteria->add(MaterialTableMap::COL_UNIT_ID, $this->unit_id);
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION)) {
+            $criteria->add(MaterialTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(MaterialTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(MaterialTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(MaterialTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(MaterialTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1322,11 +1636,21 @@ abstract class Material implements ActiveRecordInterface
         $copyObj->setPrice($this->getPrice());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setUnitId($this->getUnitId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
+
+            foreach ($this->getMaterialVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addMaterialVersion($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getStageMaterials() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1432,6 +1756,10 @@ abstract class Material implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
+        if ('MaterialVersion' === $relationName) {
+            $this->initMaterialVersions();
+            return;
+        }
         if ('StageMaterial' === $relationName) {
             $this->initStageMaterials();
             return;
@@ -1440,6 +1768,248 @@ abstract class Material implements ActiveRecordInterface
             $this->initWorkMaterials();
             return;
         }
+    }
+
+    /**
+     * Clears out the collMaterialVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addMaterialVersions()
+     */
+    public function clearMaterialVersions()
+    {
+        $this->collMaterialVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collMaterialVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialMaterialVersions($v = true): void
+    {
+        $this->collMaterialVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collMaterialVersions collection.
+     *
+     * By default this just sets the collMaterialVersions collection to an empty array (like clearcollMaterialVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initMaterialVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collMaterialVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = MaterialVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collMaterialVersions = new $collectionClassName;
+        $this->collMaterialVersions->setModel('\DB\MaterialVersion');
+    }
+
+    /**
+     * Gets an array of ChildMaterialVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildMaterial is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildMaterialVersion[] List of ChildMaterialVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildMaterialVersion> List of ChildMaterialVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getMaterialVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collMaterialVersionsPartial && !$this->isNew();
+        if (null === $this->collMaterialVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collMaterialVersions) {
+                    $this->initMaterialVersions();
+                } else {
+                    $collectionClassName = MaterialVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collMaterialVersions = new $collectionClassName;
+                    $collMaterialVersions->setModel('\DB\MaterialVersion');
+
+                    return $collMaterialVersions;
+                }
+            } else {
+                $collMaterialVersions = ChildMaterialVersionQuery::create(null, $criteria)
+                    ->filterByMaterial($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collMaterialVersionsPartial && count($collMaterialVersions)) {
+                        $this->initMaterialVersions(false);
+
+                        foreach ($collMaterialVersions as $obj) {
+                            if (false == $this->collMaterialVersions->contains($obj)) {
+                                $this->collMaterialVersions->append($obj);
+                            }
+                        }
+
+                        $this->collMaterialVersionsPartial = true;
+                    }
+
+                    return $collMaterialVersions;
+                }
+
+                if ($partial && $this->collMaterialVersions) {
+                    foreach ($this->collMaterialVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collMaterialVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collMaterialVersions = $collMaterialVersions;
+                $this->collMaterialVersionsPartial = false;
+            }
+        }
+
+        return $this->collMaterialVersions;
+    }
+
+    /**
+     * Sets a collection of ChildMaterialVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $materialVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setMaterialVersions(Collection $materialVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildMaterialVersion[] $materialVersionsToDelete */
+        $materialVersionsToDelete = $this->getMaterialVersions(new Criteria(), $con)->diff($materialVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->materialVersionsScheduledForDeletion = clone $materialVersionsToDelete;
+
+        foreach ($materialVersionsToDelete as $materialVersionRemoved) {
+            $materialVersionRemoved->setMaterial(null);
+        }
+
+        $this->collMaterialVersions = null;
+        foreach ($materialVersions as $materialVersion) {
+            $this->addMaterialVersion($materialVersion);
+        }
+
+        $this->collMaterialVersions = $materialVersions;
+        $this->collMaterialVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related MaterialVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related MaterialVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countMaterialVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collMaterialVersionsPartial && !$this->isNew();
+        if (null === $this->collMaterialVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collMaterialVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getMaterialVersions());
+            }
+
+            $query = ChildMaterialVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByMaterial($this)
+                ->count($con);
+        }
+
+        return count($this->collMaterialVersions);
+    }
+
+    /**
+     * Method called to associate a ChildMaterialVersion object to this object
+     * through the ChildMaterialVersion foreign key attribute.
+     *
+     * @param ChildMaterialVersion $l ChildMaterialVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addMaterialVersion(ChildMaterialVersion $l)
+    {
+        if ($this->collMaterialVersions === null) {
+            $this->initMaterialVersions();
+            $this->collMaterialVersionsPartial = true;
+        }
+
+        if (!$this->collMaterialVersions->contains($l)) {
+            $this->doAddMaterialVersion($l);
+
+            if ($this->materialVersionsScheduledForDeletion and $this->materialVersionsScheduledForDeletion->contains($l)) {
+                $this->materialVersionsScheduledForDeletion->remove($this->materialVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildMaterialVersion $materialVersion The ChildMaterialVersion object to add.
+     */
+    protected function doAddMaterialVersion(ChildMaterialVersion $materialVersion): void
+    {
+        $this->collMaterialVersions[]= $materialVersion;
+        $materialVersion->setMaterial($this);
+    }
+
+    /**
+     * @param ChildMaterialVersion $materialVersion The ChildMaterialVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeMaterialVersion(ChildMaterialVersion $materialVersion)
+    {
+        if ($this->getMaterialVersions()->contains($materialVersion)) {
+            $pos = $this->collMaterialVersions->search($materialVersion);
+            $this->collMaterialVersions->remove($pos);
+            if (null === $this->materialVersionsScheduledForDeletion) {
+                $this->materialVersionsScheduledForDeletion = clone $this->collMaterialVersions;
+                $this->materialVersionsScheduledForDeletion->clear();
+            }
+            $this->materialVersionsScheduledForDeletion[]= clone $materialVersion;
+            $materialVersion->setMaterial(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1699,10 +2269,10 @@ abstract class Material implements ActiveRecordInterface
      * @return ObjectCollection|ChildStageMaterial[] List of ChildStageMaterial objects
      * @phpstan-return ObjectCollection&\Traversable<ChildStageMaterial}> List of ChildStageMaterial objects
      */
-    public function getStageMaterialsJoinStage(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStageMaterialsJoinStageWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildStageMaterialQuery::create(null, $criteria);
-        $query->joinWith('Stage', $joinBehavior);
+        $query->joinWith('StageWork', $joinBehavior);
 
         return $this->getStageMaterials($query, $con);
     }
@@ -1989,6 +2559,10 @@ abstract class Material implements ActiveRecordInterface
         $this->price = null;
         $this->is_available = null;
         $this->unit_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2011,6 +2585,11 @@ abstract class Material implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collMaterialVersions) {
+                foreach ($this->collMaterialVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collStageMaterials) {
                 foreach ($this->collStageMaterials as $o) {
                     $o->clearAllReferences($deep);
@@ -2023,6 +2602,7 @@ abstract class Material implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collMaterialVersions = null;
         $this->collStageMaterials = null;
         $this->collWorkMaterials = null;
         $this->aUnit = null;

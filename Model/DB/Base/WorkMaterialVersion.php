@@ -2,6 +2,7 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\WorkMaterial as ChildWorkMaterial;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'work_material_version' table.
@@ -65,17 +67,10 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID связи
+     * ID материала работы
      * @var        int
      */
     protected $id;
-
-    /**
-     * The value for the material_id field.
-     * ID материала
-     * @var        int
-     */
-    protected $material_id;
 
     /**
      * The value for the work_id field.
@@ -83,6 +78,13 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
      * @var        int
      */
     protected $work_id;
+
+    /**
+     * The value for the material_id field.
+     * ID материала
+     * @var        int
+     */
+    protected $material_id;
 
     /**
      * The value for the amount field.
@@ -100,12 +102,25 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     protected $version;
 
     /**
-     * The value for the material_id_version field.
+     * The value for the version_created_at field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
+     * @var        DateTime|null
      */
-    protected $material_id_version;
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
 
     /**
      * The value for the work_id_version field.
@@ -114,6 +129,14 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
      * @var        int|null
      */
     protected $work_id_version;
+
+    /**
+     * The value for the material_id_version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $material_id_version;
 
     /**
      * @var        ChildWorkMaterial
@@ -137,8 +160,8 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->version = 0;
-        $this->material_id_version = 0;
         $this->work_id_version = 0;
+        $this->material_id_version = 0;
     }
 
     /**
@@ -371,22 +394,12 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID связи
+     * ID материала работы
      * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the [material_id] column value.
-     * ID материала
-     * @return int
-     */
-    public function getMaterialId()
-    {
-        return $this->material_id;
     }
 
     /**
@@ -397,6 +410,16 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     public function getWorkId()
     {
         return $this->work_id;
+    }
+
+    /**
+     * Get the [material_id] column value.
+     * ID материала
+     * @return int
+     */
+    public function getMaterialId()
+    {
+        return $this->material_id;
     }
 
     /**
@@ -420,13 +443,45 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [material_id_version] column value.
+     * Get the [optionally formatted] temporal [version_created_at] column value.
      *
-     * @return int|null
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
      */
-    public function getMaterialIdVersion()
+    public function getVersionCreatedAt($format = null)
     {
-        return $this->material_id_version;
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -440,8 +495,18 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [material_id_version] column value.
+     *
+     * @return int|null
+     */
+    public function getMaterialIdVersion()
+    {
+        return $this->material_id_version;
+    }
+
+    /**
      * Set the value of [id] column.
-     * ID связи
+     * ID материала работы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -464,26 +529,6 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [material_id] column.
-     * ID материала
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setMaterialId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->material_id !== $v) {
-            $this->material_id = $v;
-            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_MATERIAL_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the value of [work_id] column.
      * ID работы
      * @param int $v New value
@@ -498,6 +543,26 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         if ($this->work_id !== $v) {
             $this->work_id = $v;
             $this->modifiedColumns[WorkMaterialVersionTableMap::COL_WORK_ID] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [material_id] column.
+     * ID материала
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setMaterialId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->material_id !== $v) {
+            $this->material_id = $v;
+            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_MATERIAL_ID] = true;
         }
 
         return $this;
@@ -544,20 +609,60 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [material_id_version] column.
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
      *
-     * @param int|null $v New value
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this The current object (for fluent API support)
      */
-    public function setMaterialIdVersion($v)
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->material_id_version !== $v) {
-            $this->material_id_version = $v;
-            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION] = true;
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_VERSION_COMMENT] = true;
         }
 
         return $this;
@@ -584,6 +689,26 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [material_id_version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setMaterialIdVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->material_id_version !== $v) {
+            $this->material_id_version = $v;
+            $this->modifiedColumns[WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -597,11 +722,11 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 return false;
             }
 
-            if ($this->material_id_version !== 0) {
+            if ($this->work_id_version !== 0) {
                 return false;
             }
 
-            if ($this->work_id_version !== 0) {
+            if ($this->material_id_version !== 0) {
                 return false;
             }
 
@@ -634,11 +759,11 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WorkMaterialVersionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WorkMaterialVersionTableMap::translateFieldName('MaterialId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->material_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkMaterialVersionTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WorkMaterialVersionTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->work_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkMaterialVersionTableMap::translateFieldName('MaterialId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->material_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkMaterialVersionTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
@@ -646,11 +771,23 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkMaterialVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkMaterialVersionTableMap::translateFieldName('MaterialIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->material_id_version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkMaterialVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkMaterialVersionTableMap::translateFieldName('WorkIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkMaterialVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkMaterialVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : WorkMaterialVersionTableMap::translateFieldName('WorkIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
             $this->work_id_version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : WorkMaterialVersionTableMap::translateFieldName('MaterialIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->material_id_version = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -659,7 +796,7 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = WorkMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = WorkMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\WorkMaterialVersion'), 0, $e);
@@ -876,11 +1013,11 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'material_id';
-        }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_WORK_ID)) {
             $modifiedColumns[':p' . $index++]  = 'work_id';
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'material_id';
         }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
@@ -888,11 +1025,20 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
-        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'material_id_version';
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_WORK_ID_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'work_id_version';
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'material_id_version';
         }
 
         $sql = sprintf(
@@ -908,11 +1054,11 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'material_id':
-                        $stmt->bindValue($identifier, $this->material_id, PDO::PARAM_INT);
-                        break;
                     case 'work_id':
                         $stmt->bindValue($identifier, $this->work_id, PDO::PARAM_INT);
+                        break;
+                    case 'material_id':
+                        $stmt->bindValue($identifier, $this->material_id, PDO::PARAM_INT);
                         break;
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
@@ -920,11 +1066,20 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
-                    case 'material_id_version':
-                        $stmt->bindValue($identifier, $this->material_id_version, PDO::PARAM_INT);
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                     case 'work_id_version':
                         $stmt->bindValue($identifier, $this->work_id_version, PDO::PARAM_INT);
+                        break;
+                    case 'material_id_version':
+                        $stmt->bindValue($identifier, $this->material_id_version, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -985,10 +1140,10 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getMaterialId();
+                return $this->getWorkId();
 
             case 2:
-                return $this->getWorkId();
+                return $this->getMaterialId();
 
             case 3:
                 return $this->getAmount();
@@ -997,10 +1152,19 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 return $this->getVersion();
 
             case 5:
-                return $this->getMaterialIdVersion();
+                return $this->getVersionCreatedAt();
 
             case 6:
+                return $this->getVersionCreatedBy();
+
+            case 7:
+                return $this->getVersionComment();
+
+            case 8:
                 return $this->getWorkIdVersion();
+
+            case 9:
+                return $this->getMaterialIdVersion();
 
             default:
                 return null;
@@ -1031,13 +1195,20 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         $keys = WorkMaterialVersionTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getMaterialId(),
-            $keys[2] => $this->getWorkId(),
+            $keys[1] => $this->getWorkId(),
+            $keys[2] => $this->getMaterialId(),
             $keys[3] => $this->getAmount(),
             $keys[4] => $this->getVersion(),
-            $keys[5] => $this->getMaterialIdVersion(),
-            $keys[6] => $this->getWorkIdVersion(),
+            $keys[5] => $this->getVersionCreatedAt(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersionComment(),
+            $keys[8] => $this->getWorkIdVersion(),
+            $keys[9] => $this->getMaterialIdVersion(),
         ];
+        if ($result[$keys[5]] instanceof \DateTimeInterface) {
+            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1099,10 +1270,10 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setMaterialId($value);
+                $this->setWorkId($value);
                 break;
             case 2:
-                $this->setWorkId($value);
+                $this->setMaterialId($value);
                 break;
             case 3:
                 $this->setAmount($value);
@@ -1111,10 +1282,19 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
                 $this->setVersion($value);
                 break;
             case 5:
-                $this->setMaterialIdVersion($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 6:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 7:
+                $this->setVersionComment($value);
+                break;
+            case 8:
                 $this->setWorkIdVersion($value);
+                break;
+            case 9:
+                $this->setMaterialIdVersion($value);
                 break;
         } // switch()
 
@@ -1146,10 +1326,10 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setMaterialId($arr[$keys[1]]);
+            $this->setWorkId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setWorkId($arr[$keys[2]]);
+            $this->setMaterialId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setAmount($arr[$keys[3]]);
@@ -1158,10 +1338,19 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
             $this->setVersion($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setMaterialIdVersion($arr[$keys[5]]);
+            $this->setVersionCreatedAt($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setWorkIdVersion($arr[$keys[6]]);
+            $this->setVersionCreatedBy($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionComment($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setWorkIdVersion($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setMaterialIdVersion($arr[$keys[9]]);
         }
 
         return $this;
@@ -1209,11 +1398,11 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_ID)) {
             $criteria->add(WorkMaterialVersionTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID)) {
-            $criteria->add(WorkMaterialVersionTableMap::COL_MATERIAL_ID, $this->material_id);
-        }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_WORK_ID)) {
             $criteria->add(WorkMaterialVersionTableMap::COL_WORK_ID, $this->work_id);
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID)) {
+            $criteria->add(WorkMaterialVersionTableMap::COL_MATERIAL_ID, $this->material_id);
         }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_AMOUNT)) {
             $criteria->add(WorkMaterialVersionTableMap::COL_AMOUNT, $this->amount);
@@ -1221,11 +1410,20 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION)) {
             $criteria->add(WorkMaterialVersionTableMap::COL_VERSION, $this->version);
         }
-        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
-            $criteria->add(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, $this->material_id_version);
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(WorkMaterialVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
         if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_WORK_ID_VERSION)) {
             $criteria->add(WorkMaterialVersionTableMap::COL_WORK_ID_VERSION, $this->work_id_version);
+        }
+        if ($this->isColumnModified(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
+            $criteria->add(WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, $this->material_id_version);
         }
 
         return $criteria;
@@ -1331,12 +1529,15 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setId($this->getId());
-        $copyObj->setMaterialId($this->getMaterialId());
         $copyObj->setWorkId($this->getWorkId());
+        $copyObj->setMaterialId($this->getMaterialId());
         $copyObj->setAmount($this->getAmount());
         $copyObj->setVersion($this->getVersion());
-        $copyObj->setMaterialIdVersion($this->getMaterialIdVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setWorkIdVersion($this->getWorkIdVersion());
+        $copyObj->setMaterialIdVersion($this->getMaterialIdVersion());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1428,12 +1629,15 @@ abstract class WorkMaterialVersion implements ActiveRecordInterface
             $this->aWorkMaterial->removeWorkMaterialVersion($this);
         }
         $this->id = null;
-        $this->material_id = null;
         $this->work_id = null;
+        $this->material_id = null;
         $this->amount = null;
         $this->version = null;
-        $this->material_id_version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->work_id_version = null;
+        $this->material_id_version = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

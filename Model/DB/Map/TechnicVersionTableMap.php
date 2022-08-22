@@ -46,6 +46,11 @@ class TechnicVersionTableMap extends TableMap
     public const TABLE_NAME = 'technic_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'TechnicVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\TechnicVersion';
@@ -58,7 +63,7 @@ class TechnicVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 11;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class TechnicVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 11;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -101,9 +106,19 @@ class TechnicVersionTableMap extends TableMap
     public const COL_VERSION = 'technic_version.version';
 
     /**
-     * the column name for the unit_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_UNIT_ID_VERSION = 'technic_version.unit_id_version';
+    public const COL_VERSION_CREATED_AT = 'technic_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'technic_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'technic_version.version_comment';
 
     /**
      * the column name for the stage_technic_ids field
@@ -139,11 +154,11 @@ class TechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'UnitIdVersion', 'StageTechnicIds', 'StageTechnicVersions', 'WorkTechnicIds', 'WorkTechnicVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'unitIdVersion', 'stageTechnicIds', 'stageTechnicVersions', 'workTechnicIds', 'workTechnicVersions', ],
-        self::TYPE_COLNAME       => [TechnicVersionTableMap::COL_ID, TechnicVersionTableMap::COL_NAME, TechnicVersionTableMap::COL_PRICE, TechnicVersionTableMap::COL_IS_AVAILABLE, TechnicVersionTableMap::COL_UNIT_ID, TechnicVersionTableMap::COL_VERSION, TechnicVersionTableMap::COL_UNIT_ID_VERSION, TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS, TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS, TechnicVersionTableMap::COL_WORK_TECHNIC_IDS, TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'unit_id_version', 'stage_technic_ids', 'stage_technic_versions', 'work_technic_ids', 'work_technic_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'StageTechnicIds', 'StageTechnicVersions', 'WorkTechnicIds', 'WorkTechnicVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'stageTechnicIds', 'stageTechnicVersions', 'workTechnicIds', 'workTechnicVersions', ],
+        self::TYPE_COLNAME       => [TechnicVersionTableMap::COL_ID, TechnicVersionTableMap::COL_NAME, TechnicVersionTableMap::COL_PRICE, TechnicVersionTableMap::COL_IS_AVAILABLE, TechnicVersionTableMap::COL_UNIT_ID, TechnicVersionTableMap::COL_VERSION, TechnicVersionTableMap::COL_VERSION_CREATED_AT, TechnicVersionTableMap::COL_VERSION_CREATED_BY, TechnicVersionTableMap::COL_VERSION_COMMENT, TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS, TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS, TechnicVersionTableMap::COL_WORK_TECHNIC_IDS, TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'stage_technic_ids', 'stage_technic_versions', 'work_technic_ids', 'work_technic_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -155,11 +170,11 @@ class TechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'UnitIdVersion' => 6, 'StageTechnicIds' => 7, 'StageTechnicVersions' => 8, 'WorkTechnicIds' => 9, 'WorkTechnicVersions' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'unitIdVersion' => 6, 'stageTechnicIds' => 7, 'stageTechnicVersions' => 8, 'workTechnicIds' => 9, 'workTechnicVersions' => 10, ],
-        self::TYPE_COLNAME       => [TechnicVersionTableMap::COL_ID => 0, TechnicVersionTableMap::COL_NAME => 1, TechnicVersionTableMap::COL_PRICE => 2, TechnicVersionTableMap::COL_IS_AVAILABLE => 3, TechnicVersionTableMap::COL_UNIT_ID => 4, TechnicVersionTableMap::COL_VERSION => 5, TechnicVersionTableMap::COL_UNIT_ID_VERSION => 6, TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS => 7, TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS => 8, TechnicVersionTableMap::COL_WORK_TECHNIC_IDS => 9, TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'unit_id_version' => 6, 'stage_technic_ids' => 7, 'stage_technic_versions' => 8, 'work_technic_ids' => 9, 'work_technic_versions' => 10, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'StageTechnicIds' => 9, 'StageTechnicVersions' => 10, 'WorkTechnicIds' => 11, 'WorkTechnicVersions' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'stageTechnicIds' => 9, 'stageTechnicVersions' => 10, 'workTechnicIds' => 11, 'workTechnicVersions' => 12, ],
+        self::TYPE_COLNAME       => [TechnicVersionTableMap::COL_ID => 0, TechnicVersionTableMap::COL_NAME => 1, TechnicVersionTableMap::COL_PRICE => 2, TechnicVersionTableMap::COL_IS_AVAILABLE => 3, TechnicVersionTableMap::COL_UNIT_ID => 4, TechnicVersionTableMap::COL_VERSION => 5, TechnicVersionTableMap::COL_VERSION_CREATED_AT => 6, TechnicVersionTableMap::COL_VERSION_CREATED_BY => 7, TechnicVersionTableMap::COL_VERSION_COMMENT => 8, TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS => 9, TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS => 10, TechnicVersionTableMap::COL_WORK_TECHNIC_IDS => 11, TechnicVersionTableMap::COL_WORK_TECHNIC_VERSIONS => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'stage_technic_ids' => 9, 'stage_technic_versions' => 10, 'work_technic_ids' => 11, 'work_technic_versions' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -212,14 +227,30 @@ class TechnicVersionTableMap extends TableMap
         'TechnicVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'technic_version.version' => 'VERSION',
-        'UnitIdVersion' => 'UNIT_ID_VERSION',
-        'TechnicVersion.UnitIdVersion' => 'UNIT_ID_VERSION',
-        'unitIdVersion' => 'UNIT_ID_VERSION',
-        'technicVersion.unitIdVersion' => 'UNIT_ID_VERSION',
-        'TechnicVersionTableMap::COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'unit_id_version' => 'UNIT_ID_VERSION',
-        'technic_version.unit_id_version' => 'UNIT_ID_VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'TechnicVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'technicVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'TechnicVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'technic_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'TechnicVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'technicVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'TechnicVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'technic_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'TechnicVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'technicVersion.versionComment' => 'VERSION_COMMENT',
+        'TechnicVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'technic_version.version_comment' => 'VERSION_COMMENT',
         'StageTechnicIds' => 'STAGE_TECHNIC_IDS',
         'TechnicVersion.StageTechnicIds' => 'STAGE_TECHNIC_IDS',
         'stageTechnicIds' => 'STAGE_TECHNIC_IDS',
@@ -277,11 +308,13 @@ class TechnicVersionTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('unit_id', 'UnitId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('unit_id_version', 'UnitIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_technic_ids', 'StageTechnicIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_technic_versions', 'StageTechnicVersions', 'ARRAY', false, null, null);
-        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'ARRAY', false, null, null);
-        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'ARRAY', false, null, null);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
+        $this->addColumn('stage_technic_ids', 'StageTechnicIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_technic_versions', 'StageTechnicVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'LONGVARCHAR', false, null, null);
     }
 
     /**
@@ -514,7 +547,9 @@ class TechnicVersionTableMap extends TableMap
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_UNIT_ID);
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(TechnicVersionTableMap::COL_UNIT_ID_VERSION);
+            $criteria->addSelectColumn(TechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(TechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(TechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS);
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
             $criteria->addSelectColumn(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS);
@@ -526,7 +561,9 @@ class TechnicVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.unit_id_version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.stage_technic_ids');
             $criteria->addSelectColumn($alias . '.stage_technic_versions');
             $criteria->addSelectColumn($alias . '.work_technic_ids');
@@ -555,7 +592,9 @@ class TechnicVersionTableMap extends TableMap
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_UNIT_ID);
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(TechnicVersionTableMap::COL_UNIT_ID_VERSION);
+            $criteria->removeSelectColumn(TechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(TechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(TechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_STAGE_TECHNIC_IDS);
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_STAGE_TECHNIC_VERSIONS);
             $criteria->removeSelectColumn(TechnicVersionTableMap::COL_WORK_TECHNIC_IDS);
@@ -567,7 +606,9 @@ class TechnicVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.unit_id_version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.stage_technic_ids');
             $criteria->removeSelectColumn($alias . '.stage_technic_versions');
             $criteria->removeSelectColumn($alias . '.work_technic_ids');

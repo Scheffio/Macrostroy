@@ -81,7 +81,7 @@
             'aliases' => array(
                 0 => '2.0.x-dev',
             ),
-            'reference' => '34b713ebb8abafb02a9bee3065cccebe34c2d365',
+            'reference' => '966046e3b4f30ff3414ed6fc2efe5d6e83b92074',
             'dev_requirement' => false,
         ),
         'psr/container' => array(

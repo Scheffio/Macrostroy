@@ -5,6 +5,8 @@
     align-items: center;
     flex-direction: column;
     margin-top: 80px;
+    width: 100%;
+
     .tabs-controller {
         display: flex;
         width: clamp(768px, 90vw, 1555px);
@@ -12,6 +14,7 @@
         gap: 50px;
         padding-bottom: 25px;
         position: relative;
+
         &::after {
             content: '';
             display: block;
@@ -23,14 +26,17 @@
             background-color: $EstiminUnderlineColor;
             border-radius: 2px;
         }
+
         .tabs-controller__tab-anchor {
             display: flex;
             align-items: center;
+
             .tab-anchor__anchor-name {
                 order: 0;
                 text-decoration: none;
                 color: black;
                 @include TabAnchorName;
+
                 &.selected {
                     font-size: 36px;
                     font-weight: 700;
@@ -38,55 +44,106 @@
             }
         }
     }
+
     .tabs-container {
         margin-top: 40px;
         width: 100%;
         display: flex;
         justify-content: center;
-        .tabs_container__tab-element{
+
+        .tabs_container__tab-element {
             display: none;
+
             .tab-header {
                 display: flex;
-                .tab-header__element{
+
+                .tab-header__element {
                     @include TabAnchorName;
                     display: flex;
                     height: 60px;
                     align-items: center;
+                    justify-content: center;
                     user-select: none;
-                    p{
+                    p {
                         margin: 0;
                     }
-                    .sorter{
+                    .sorter {
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
                         gap: 2px;
                         margin-right: 8px;
+
                         img {
                             &:nth-child(1) {
-                                transform: rotate(180deg) scale(1.07);
+                                transform: rotate(180deg);
                                 margin-right: 0.7px;
                             }
                         }
                     }
+
                     &:nth-child(1) {
-                        width: clamp(200px, 50vw, 550px);
+                        justify-content: flex-start;
+                        width: clamp(200px, 40vw, 550px);
                     }
+
                     &:nth-child(4) {
-                        width: clamp(100px, 50vw, 320px);
+                        width: clamp(100px, 40vw, 320px);
+                    }
+                    &:nth-child(5) {
+                        width: clamp(100px, 40vw, 220px);
                     }
                     &:nth-child(2),
                     &:nth-child(3) {
-                        width: clamp(100px, 50vw, 190px);
+                        width: clamp(100px, 40vw, 190px);
                     }
                 }
             }
+
             .grid-row {
                 display: flex;
+                width: 1555px;
+                height: 60px;
+                &:nth-child(even) {
+                    background-color: #F4F4F4;
+                }
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+                &:last-child {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+                .grid-column {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    @include TabText;
+                    box-sizing: border-box;
+                    &:nth-child(1) {
+                        justify-content: flex-start;
+                        width: clamp(200px, 40vw, 550px);
+                        padding-left: 27px;
+                    }
+
+                    &:nth-child(4) {
+                        width: clamp(100px, 40vw, 320px);
+                    }
+                    &:nth-child(5) {
+                        width: clamp(100px, 40vw, 220px);
+                    }
+                    &:nth-child(2),
+                    &:nth-child(3) {
+                        width: clamp(100px, 40vw, 190px);
+                    }
+                }
             }
         }
+
         .tabs_container__tab-element:target {
             display: block;
         }
     }
 }
+

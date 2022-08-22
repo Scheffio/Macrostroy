@@ -46,6 +46,11 @@ class GroupsVersionTableMap extends TableMap
     public const TABLE_NAME = 'groups_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'GroupsVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\GroupsVersion';
@@ -96,24 +101,24 @@ class GroupsVersionTableMap extends TableMap
     public const COL_SUBPROJECT_ID = 'groups_version.subproject_id';
 
     /**
-     * the column name for the do_create field
-     */
-    public const COL_DO_CREATE = 'groups_version.do_create';
-
-    /**
-     * the column name for the user_id field
-     */
-    public const COL_USER_ID = 'groups_version.user_id';
-
-    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'groups_version.version';
 
     /**
-     * the column name for the user_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_USER_ID_VERSION = 'groups_version.user_id_version';
+    public const COL_VERSION_CREATED_AT = 'groups_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'groups_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'groups_version.version_comment';
 
     /**
      * the column name for the subproject_id_version field
@@ -144,10 +149,10 @@ class GroupsVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'SubprojectId', 'DoCreate', 'UserId', 'Version', 'UserIdVersion', 'SubprojectIdVersion', 'HouseIds', 'HouseVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'subprojectId', 'doCreate', 'userId', 'version', 'userIdVersion', 'subprojectIdVersion', 'houseIds', 'houseVersions', ],
-        self::TYPE_COLNAME       => [GroupsVersionTableMap::COL_ID, GroupsVersionTableMap::COL_NAME, GroupsVersionTableMap::COL_STATUS, GroupsVersionTableMap::COL_IS_AVAILABLE, GroupsVersionTableMap::COL_SUBPROJECT_ID, GroupsVersionTableMap::COL_DO_CREATE, GroupsVersionTableMap::COL_USER_ID, GroupsVersionTableMap::COL_VERSION, GroupsVersionTableMap::COL_USER_ID_VERSION, GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION, GroupsVersionTableMap::COL_HOUSE_IDS, GroupsVersionTableMap::COL_HOUSE_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'subproject_id', 'do_create', 'user_id', 'version', 'user_id_version', 'subproject_id_version', 'house_ids', 'house_versions', ],
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'SubprojectId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'SubprojectIdVersion', 'HouseIds', 'HouseVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'subprojectId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'subprojectIdVersion', 'houseIds', 'houseVersions', ],
+        self::TYPE_COLNAME       => [GroupsVersionTableMap::COL_ID, GroupsVersionTableMap::COL_NAME, GroupsVersionTableMap::COL_STATUS, GroupsVersionTableMap::COL_IS_AVAILABLE, GroupsVersionTableMap::COL_SUBPROJECT_ID, GroupsVersionTableMap::COL_VERSION, GroupsVersionTableMap::COL_VERSION_CREATED_AT, GroupsVersionTableMap::COL_VERSION_CREATED_BY, GroupsVersionTableMap::COL_VERSION_COMMENT, GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION, GroupsVersionTableMap::COL_HOUSE_IDS, GroupsVersionTableMap::COL_HOUSE_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'subproject_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'subproject_id_version', 'house_ids', 'house_versions', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -160,10 +165,10 @@ class GroupsVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'SubprojectId' => 4, 'DoCreate' => 5, 'UserId' => 6, 'Version' => 7, 'UserIdVersion' => 8, 'SubprojectIdVersion' => 9, 'HouseIds' => 10, 'HouseVersions' => 11, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'subprojectId' => 4, 'doCreate' => 5, 'userId' => 6, 'version' => 7, 'userIdVersion' => 8, 'subprojectIdVersion' => 9, 'houseIds' => 10, 'houseVersions' => 11, ],
-        self::TYPE_COLNAME       => [GroupsVersionTableMap::COL_ID => 0, GroupsVersionTableMap::COL_NAME => 1, GroupsVersionTableMap::COL_STATUS => 2, GroupsVersionTableMap::COL_IS_AVAILABLE => 3, GroupsVersionTableMap::COL_SUBPROJECT_ID => 4, GroupsVersionTableMap::COL_DO_CREATE => 5, GroupsVersionTableMap::COL_USER_ID => 6, GroupsVersionTableMap::COL_VERSION => 7, GroupsVersionTableMap::COL_USER_ID_VERSION => 8, GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION => 9, GroupsVersionTableMap::COL_HOUSE_IDS => 10, GroupsVersionTableMap::COL_HOUSE_VERSIONS => 11, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'subproject_id' => 4, 'do_create' => 5, 'user_id' => 6, 'version' => 7, 'user_id_version' => 8, 'subproject_id_version' => 9, 'house_ids' => 10, 'house_versions' => 11, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'SubprojectId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'SubprojectIdVersion' => 9, 'HouseIds' => 10, 'HouseVersions' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'subprojectId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'subprojectIdVersion' => 9, 'houseIds' => 10, 'houseVersions' => 11, ],
+        self::TYPE_COLNAME       => [GroupsVersionTableMap::COL_ID => 0, GroupsVersionTableMap::COL_NAME => 1, GroupsVersionTableMap::COL_STATUS => 2, GroupsVersionTableMap::COL_IS_AVAILABLE => 3, GroupsVersionTableMap::COL_SUBPROJECT_ID => 4, GroupsVersionTableMap::COL_VERSION => 5, GroupsVersionTableMap::COL_VERSION_CREATED_AT => 6, GroupsVersionTableMap::COL_VERSION_CREATED_BY => 7, GroupsVersionTableMap::COL_VERSION_COMMENT => 8, GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION => 9, GroupsVersionTableMap::COL_HOUSE_IDS => 10, GroupsVersionTableMap::COL_HOUSE_VERSIONS => 11, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'subproject_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'subproject_id_version' => 9, 'house_ids' => 10, 'house_versions' => 11, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -210,22 +215,6 @@ class GroupsVersionTableMap extends TableMap
         'COL_SUBPROJECT_ID' => 'SUBPROJECT_ID',
         'subproject_id' => 'SUBPROJECT_ID',
         'groups_version.subproject_id' => 'SUBPROJECT_ID',
-        'DoCreate' => 'DO_CREATE',
-        'GroupsVersion.DoCreate' => 'DO_CREATE',
-        'doCreate' => 'DO_CREATE',
-        'groupsVersion.doCreate' => 'DO_CREATE',
-        'GroupsVersionTableMap::COL_DO_CREATE' => 'DO_CREATE',
-        'COL_DO_CREATE' => 'DO_CREATE',
-        'do_create' => 'DO_CREATE',
-        'groups_version.do_create' => 'DO_CREATE',
-        'UserId' => 'USER_ID',
-        'GroupsVersion.UserId' => 'USER_ID',
-        'userId' => 'USER_ID',
-        'groupsVersion.userId' => 'USER_ID',
-        'GroupsVersionTableMap::COL_USER_ID' => 'USER_ID',
-        'COL_USER_ID' => 'USER_ID',
-        'user_id' => 'USER_ID',
-        'groups_version.user_id' => 'USER_ID',
         'Version' => 'VERSION',
         'GroupsVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -233,14 +222,30 @@ class GroupsVersionTableMap extends TableMap
         'GroupsVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'groups_version.version' => 'VERSION',
-        'UserIdVersion' => 'USER_ID_VERSION',
-        'GroupsVersion.UserIdVersion' => 'USER_ID_VERSION',
-        'userIdVersion' => 'USER_ID_VERSION',
-        'groupsVersion.userIdVersion' => 'USER_ID_VERSION',
-        'GroupsVersionTableMap::COL_USER_ID_VERSION' => 'USER_ID_VERSION',
-        'COL_USER_ID_VERSION' => 'USER_ID_VERSION',
-        'user_id_version' => 'USER_ID_VERSION',
-        'groups_version.user_id_version' => 'USER_ID_VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'GroupsVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'groupsVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'GroupsVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'groups_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'GroupsVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'groupsVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'GroupsVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'groups_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'GroupsVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'groupsVersion.versionComment' => 'VERSION_COMMENT',
+        'GroupsVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'groups_version.version_comment' => 'VERSION_COMMENT',
         'SubprojectIdVersion' => 'SUBPROJECT_ID_VERSION',
         'GroupsVersion.SubprojectIdVersion' => 'SUBPROJECT_ID_VERSION',
         'subprojectIdVersion' => 'SUBPROJECT_ID_VERSION',
@@ -289,13 +294,13 @@ class GroupsVersionTableMap extends TableMap
         $this->addColumn('status', 'Status', 'CHAR', true, null, 'in_process');
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('subproject_id', 'SubprojectId', 'INTEGER', true, null, null);
-        $this->addColumn('do_create', 'DoCreate', 'DATETIME', true, null, 'CURRENT_TIMESTAMP');
-        $this->addColumn('user_id', 'UserId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('user_id_version', 'UserIdVersion', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('subproject_id_version', 'SubprojectIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('house_ids', 'HouseIds', 'ARRAY', false, null, null);
-        $this->addColumn('house_versions', 'HouseVersions', 'ARRAY', false, null, null);
+        $this->addColumn('house_ids', 'HouseIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('house_versions', 'HouseVersions', 'LONGVARCHAR', false, null, null);
     }
 
     /**
@@ -387,11 +392,11 @@ class GroupsVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -417,7 +422,7 @@ class GroupsVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 7 + $offset
+                ? 5 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -527,10 +532,10 @@ class GroupsVersionTableMap extends TableMap
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_STATUS);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_SUBPROJECT_ID);
-            $criteria->addSelectColumn(GroupsVersionTableMap::COL_DO_CREATE);
-            $criteria->addSelectColumn(GroupsVersionTableMap::COL_USER_ID);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(GroupsVersionTableMap::COL_USER_ID_VERSION);
+            $criteria->addSelectColumn(GroupsVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(GroupsVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(GroupsVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_HOUSE_IDS);
             $criteria->addSelectColumn(GroupsVersionTableMap::COL_HOUSE_VERSIONS);
@@ -540,10 +545,10 @@ class GroupsVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.status');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.subproject_id');
-            $criteria->addSelectColumn($alias . '.do_create');
-            $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.user_id_version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.subproject_id_version');
             $criteria->addSelectColumn($alias . '.house_ids');
             $criteria->addSelectColumn($alias . '.house_versions');
@@ -570,10 +575,10 @@ class GroupsVersionTableMap extends TableMap
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_STATUS);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_SUBPROJECT_ID);
-            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_DO_CREATE);
-            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_USER_ID);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_USER_ID_VERSION);
+            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(GroupsVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_HOUSE_IDS);
             $criteria->removeSelectColumn(GroupsVersionTableMap::COL_HOUSE_VERSIONS);
@@ -583,10 +588,10 @@ class GroupsVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.status');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.subproject_id');
-            $criteria->removeSelectColumn($alias . '.do_create');
-            $criteria->removeSelectColumn($alias . '.user_id');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.user_id_version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.subproject_id_version');
             $criteria->removeSelectColumn($alias . '.house_ids');
             $criteria->removeSelectColumn($alias . '.house_versions');

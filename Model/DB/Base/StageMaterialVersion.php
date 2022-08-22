@@ -2,6 +2,7 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\StageMaterial as ChildStageMaterial;
@@ -19,6 +20,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'stage_material_version' table.
@@ -65,7 +67,7 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID связи
+     * ID материала работы на этапе
      * @var        int
      */
     protected $id;
@@ -85,18 +87,26 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     protected $amount;
 
     /**
+     * The value for the is_available field.
+     * Доступ (публичный, приватный)
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $is_available;
+
+    /**
+     * The value for the stage_work_id field.
+     * ID работы этапа
+     * @var        int
+     */
+    protected $stage_work_id;
+
+    /**
      * The value for the material_id field.
      * ID материала
      * @var        int
      */
     protected $material_id;
-
-    /**
-     * The value for the stage_id field.
-     * ID этапа
-     * @var        int
-     */
-    protected $stage_id;
 
     /**
      * The value for the version field.
@@ -107,6 +117,27 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     protected $version;
 
     /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * The value for the material_id_version field.
      *
      * Note: this column has a database default value of: 0
@@ -115,12 +146,12 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     protected $material_id_version;
 
     /**
-     * The value for the stage_id_version field.
+     * The value for the stage_work_id_version field.
      *
      * Note: this column has a database default value of: 0
      * @var        int|null
      */
-    protected $stage_id_version;
+    protected $stage_work_id_version;
 
     /**
      * @var        ChildStageMaterial
@@ -143,9 +174,10 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
+        $this->is_available = true;
         $this->version = 0;
         $this->material_id_version = 0;
-        $this->stage_id_version = 0;
+        $this->stage_work_id_version = 0;
     }
 
     /**
@@ -378,7 +410,7 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID связи
+     * ID материала работы на этапе
      * @return int
      */
     public function getId()
@@ -407,6 +439,36 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [is_available] column value.
+     * Доступ (публичный, приватный)
+     * @return boolean
+     */
+    public function getIsAvailable()
+    {
+        return $this->is_available;
+    }
+
+    /**
+     * Get the [is_available] column value.
+     * Доступ (публичный, приватный)
+     * @return boolean
+     */
+    public function isAvailable()
+    {
+        return $this->getIsAvailable();
+    }
+
+    /**
+     * Get the [stage_work_id] column value.
+     * ID работы этапа
+     * @return int
+     */
+    public function getStageWorkId()
+    {
+        return $this->stage_work_id;
+    }
+
+    /**
      * Get the [material_id] column value.
      * ID материала
      * @return int
@@ -414,16 +476,6 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     public function getMaterialId()
     {
         return $this->material_id;
-    }
-
-    /**
-     * Get the [stage_id] column value.
-     * ID этапа
-     * @return int
-     */
-    public function getStageId()
-    {
-        return $this->stage_id;
     }
 
     /**
@@ -437,6 +489,48 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
+    }
+
+    /**
      * Get the [material_id_version] column value.
      *
      * @return int|null
@@ -447,18 +541,18 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [stage_id_version] column value.
+     * Get the [stage_work_id_version] column value.
      *
      * @return int|null
      */
-    public function getStageIdVersion()
+    public function getStageWorkIdVersion()
     {
-        return $this->stage_id_version;
+        return $this->stage_work_id_version;
     }
 
     /**
      * Set the value of [id] column.
-     * ID связи
+     * ID материала работы на этапе
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -521,6 +615,54 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of the [is_available] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Доступ (публичный, приватный)
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setIsAvailable($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_available !== $v) {
+            $this->is_available = $v;
+            $this->modifiedColumns[StageMaterialVersionTableMap::COL_IS_AVAILABLE] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [stage_work_id] column.
+     * ID работы этапа
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setStageWorkId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->stage_work_id !== $v) {
+            $this->stage_work_id = $v;
+            $this->modifiedColumns[StageMaterialVersionTableMap::COL_STAGE_WORK_ID] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [material_id] column.
      * ID материала
      * @param int $v New value
@@ -535,26 +677,6 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
         if ($this->material_id !== $v) {
             $this->material_id = $v;
             $this->modifiedColumns[StageMaterialVersionTableMap::COL_MATERIAL_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [stage_id] column.
-     * ID этапа
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->stage_id !== $v) {
-            $this->stage_id = $v;
-            $this->modifiedColumns[StageMaterialVersionTableMap::COL_STAGE_ID] = true;
         }
 
         return $this;
@@ -581,6 +703,66 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[StageMaterialVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[StageMaterialVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[StageMaterialVersionTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [material_id_version] column.
      *
      * @param int|null $v New value
@@ -601,20 +783,20 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [stage_id_version] column.
+     * Set the value of [stage_work_id_version] column.
      *
      * @param int|null $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setStageIdVersion($v)
+    public function setStageWorkIdVersion($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->stage_id_version !== $v) {
-            $this->stage_id_version = $v;
-            $this->modifiedColumns[StageMaterialVersionTableMap::COL_STAGE_ID_VERSION] = true;
+        if ($this->stage_work_id_version !== $v) {
+            $this->stage_work_id_version = $v;
+            $this->modifiedColumns[StageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION] = true;
         }
 
         return $this;
@@ -630,6 +812,10 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->is_available !== true) {
+                return false;
+            }
+
             if ($this->version !== 0) {
                 return false;
             }
@@ -638,7 +824,7 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
                 return false;
             }
 
-            if ($this->stage_id_version !== 0) {
+            if ($this->stage_work_id_version !== 0) {
                 return false;
             }
 
@@ -677,20 +863,35 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StageMaterialVersionTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageMaterialVersionTableMap::translateFieldName('MaterialId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageMaterialVersionTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_available = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageMaterialVersionTableMap::translateFieldName('StageWorkId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_work_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StageMaterialVersionTableMap::translateFieldName('MaterialId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->material_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageMaterialVersionTableMap::translateFieldName('StageId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StageMaterialVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StageMaterialVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StageMaterialVersionTableMap::translateFieldName('MaterialIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StageMaterialVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StageMaterialVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StageMaterialVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : StageMaterialVersionTableMap::translateFieldName('MaterialIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
             $this->material_id_version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StageMaterialVersionTableMap::translateFieldName('StageIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_id_version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : StageMaterialVersionTableMap::translateFieldName('StageWorkIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_work_id_version = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -699,7 +900,7 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = StageMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = StageMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\StageMaterialVersion'), 0, $e);
@@ -922,20 +1123,32 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_IS_AVAILABLE)) {
+            $modifiedColumns[':p' . $index++]  = 'is_available';
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_WORK_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'stage_work_id';
+        }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_MATERIAL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'material_id';
-        }
-        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_id';
         }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'material_id_version';
         }
-        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_ID_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_id_version';
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'stage_work_id_version';
         }
 
         $sql = sprintf(
@@ -957,20 +1170,32 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
+                    case 'is_available':
+                        $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
+                        break;
+                    case 'stage_work_id':
+                        $stmt->bindValue($identifier, $this->stage_work_id, PDO::PARAM_INT);
+                        break;
                     case 'material_id':
                         $stmt->bindValue($identifier, $this->material_id, PDO::PARAM_INT);
-                        break;
-                    case 'stage_id':
-                        $stmt->bindValue($identifier, $this->stage_id, PDO::PARAM_INT);
                         break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
+                        break;
                     case 'material_id_version':
                         $stmt->bindValue($identifier, $this->material_id_version, PDO::PARAM_INT);
                         break;
-                    case 'stage_id_version':
-                        $stmt->bindValue($identifier, $this->stage_id_version, PDO::PARAM_INT);
+                    case 'stage_work_id_version':
+                        $stmt->bindValue($identifier, $this->stage_work_id_version, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1037,19 +1262,31 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
                 return $this->getAmount();
 
             case 3:
-                return $this->getMaterialId();
+                return $this->getIsAvailable();
 
             case 4:
-                return $this->getStageId();
+                return $this->getStageWorkId();
 
             case 5:
-                return $this->getVersion();
+                return $this->getMaterialId();
 
             case 6:
-                return $this->getMaterialIdVersion();
+                return $this->getVersion();
 
             case 7:
-                return $this->getStageIdVersion();
+                return $this->getVersionCreatedAt();
+
+            case 8:
+                return $this->getVersionCreatedBy();
+
+            case 9:
+                return $this->getVersionComment();
+
+            case 10:
+                return $this->getMaterialIdVersion();
+
+            case 11:
+                return $this->getStageWorkIdVersion();
 
             default:
                 return null;
@@ -1082,12 +1319,20 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPrice(),
             $keys[2] => $this->getAmount(),
-            $keys[3] => $this->getMaterialId(),
-            $keys[4] => $this->getStageId(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getMaterialIdVersion(),
-            $keys[7] => $this->getStageIdVersion(),
+            $keys[3] => $this->getIsAvailable(),
+            $keys[4] => $this->getStageWorkId(),
+            $keys[5] => $this->getMaterialId(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
+            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[9] => $this->getVersionComment(),
+            $keys[10] => $this->getMaterialIdVersion(),
+            $keys[11] => $this->getStageWorkIdVersion(),
         ];
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1155,19 +1400,31 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
                 $this->setAmount($value);
                 break;
             case 3:
-                $this->setMaterialId($value);
+                $this->setIsAvailable($value);
                 break;
             case 4:
-                $this->setStageId($value);
+                $this->setStageWorkId($value);
                 break;
             case 5:
-                $this->setVersion($value);
+                $this->setMaterialId($value);
                 break;
             case 6:
-                $this->setMaterialIdVersion($value);
+                $this->setVersion($value);
                 break;
             case 7:
-                $this->setStageIdVersion($value);
+                $this->setVersionCreatedAt($value);
+                break;
+            case 8:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 9:
+                $this->setVersionComment($value);
+                break;
+            case 10:
+                $this->setMaterialIdVersion($value);
+                break;
+            case 11:
+                $this->setStageWorkIdVersion($value);
                 break;
         } // switch()
 
@@ -1205,19 +1462,31 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
             $this->setAmount($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setMaterialId($arr[$keys[3]]);
+            $this->setIsAvailable($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setStageId($arr[$keys[4]]);
+            $this->setStageWorkId($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setVersion($arr[$keys[5]]);
+            $this->setMaterialId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setMaterialIdVersion($arr[$keys[6]]);
+            $this->setVersion($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setStageIdVersion($arr[$keys[7]]);
+            $this->setVersionCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setVersionComment($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setMaterialIdVersion($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setStageWorkIdVersion($arr[$keys[11]]);
         }
 
         return $this;
@@ -1271,20 +1540,32 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_AMOUNT)) {
             $criteria->add(StageMaterialVersionTableMap::COL_AMOUNT, $this->amount);
         }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_IS_AVAILABLE)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_IS_AVAILABLE, $this->is_available);
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_WORK_ID)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_STAGE_WORK_ID, $this->stage_work_id);
+        }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_MATERIAL_ID)) {
             $criteria->add(StageMaterialVersionTableMap::COL_MATERIAL_ID, $this->material_id);
-        }
-        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_ID)) {
-            $criteria->add(StageMaterialVersionTableMap::COL_STAGE_ID, $this->stage_id);
         }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION)) {
             $criteria->add(StageMaterialVersionTableMap::COL_VERSION, $this->version);
         }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
+        }
         if ($this->isColumnModified(StageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION)) {
             $criteria->add(StageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, $this->material_id_version);
         }
-        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_ID_VERSION)) {
-            $criteria->add(StageMaterialVersionTableMap::COL_STAGE_ID_VERSION, $this->stage_id_version);
+        if ($this->isColumnModified(StageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION)) {
+            $criteria->add(StageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION, $this->stage_work_id_version);
         }
 
         return $criteria;
@@ -1392,11 +1673,15 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
         $copyObj->setId($this->getId());
         $copyObj->setPrice($this->getPrice());
         $copyObj->setAmount($this->getAmount());
+        $copyObj->setIsAvailable($this->getIsAvailable());
+        $copyObj->setStageWorkId($this->getStageWorkId());
         $copyObj->setMaterialId($this->getMaterialId());
-        $copyObj->setStageId($this->getStageId());
         $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setMaterialIdVersion($this->getMaterialIdVersion());
-        $copyObj->setStageIdVersion($this->getStageIdVersion());
+        $copyObj->setStageWorkIdVersion($this->getStageWorkIdVersion());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1490,11 +1775,15 @@ abstract class StageMaterialVersion implements ActiveRecordInterface
         $this->id = null;
         $this->price = null;
         $this->amount = null;
+        $this->is_available = null;
+        $this->stage_work_id = null;
         $this->material_id = null;
-        $this->stage_id = null;
         $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->material_id_version = null;
-        $this->stage_id_version = null;
+        $this->stage_work_id_version = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

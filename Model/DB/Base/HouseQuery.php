@@ -26,12 +26,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method     ChildHouseQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildHouseQuery orderByGroupId($order = Criteria::ASC) Order by the group_id column
+ * @method     ChildHouseQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildHouseQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildHouseQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildHouseQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildHouseQuery groupById() Group by the id column
  * @method     ChildHouseQuery groupByName() Group by the name column
  * @method     ChildHouseQuery groupByStatus() Group by the status column
  * @method     ChildHouseQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildHouseQuery groupByGroupId() Group by the group_id column
+ * @method     ChildHouseQuery groupByVersion() Group by the version column
+ * @method     ChildHouseQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildHouseQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildHouseQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildHouseQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildHouseQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,6 +59,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseQuery rightJoinWithGroups() Adds a RIGHT JOIN clause and with to the query using the Groups relation
  * @method     ChildHouseQuery innerJoinWithGroups() Adds a INNER JOIN clause and with to the query using the Groups relation
  *
+ * @method     ChildHouseQuery leftJoinHouseVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the HouseVersion relation
+ * @method     ChildHouseQuery rightJoinHouseVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HouseVersion relation
+ * @method     ChildHouseQuery innerJoinHouseVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the HouseVersion relation
+ *
+ * @method     ChildHouseQuery joinWithHouseVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the HouseVersion relation
+ *
+ * @method     ChildHouseQuery leftJoinWithHouseVersion() Adds a LEFT JOIN clause and with to the query using the HouseVersion relation
+ * @method     ChildHouseQuery rightJoinWithHouseVersion() Adds a RIGHT JOIN clause and with to the query using the HouseVersion relation
+ * @method     ChildHouseQuery innerJoinWithHouseVersion() Adds a INNER JOIN clause and with to the query using the HouseVersion relation
+ *
  * @method     ChildHouseQuery leftJoinStage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Stage relation
  * @method     ChildHouseQuery rightJoinStage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stage relation
  * @method     ChildHouseQuery innerJoinStage($relationAlias = null) Adds a INNER JOIN clause to the query using the Stage relation
@@ -61,7 +79,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseQuery rightJoinWithStage() Adds a RIGHT JOIN clause and with to the query using the Stage relation
  * @method     ChildHouseQuery innerJoinWithStage() Adds a INNER JOIN clause and with to the query using the Stage relation
  *
- * @method     \DB\GroupsQuery|\DB\StageQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\GroupsQuery|\DB\HouseVersionQuery|\DB\StageQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildHouse|null findOne(?ConnectionInterface $con = null) Return the first ChildHouse matching the query
  * @method     ChildHouse findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildHouse matching the query, or a new ChildHouse object populated from the query conditions when no match is found
@@ -70,7 +88,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouse|null findOneByName(string $name) Return the first ChildHouse filtered by the name column
  * @method     ChildHouse|null findOneByStatus(string $status) Return the first ChildHouse filtered by the status column
  * @method     ChildHouse|null findOneByIsAvailable(boolean $is_available) Return the first ChildHouse filtered by the is_available column
- * @method     ChildHouse|null findOneByGroupId(int $group_id) Return the first ChildHouse filtered by the group_id column *
+ * @method     ChildHouse|null findOneByGroupId(int $group_id) Return the first ChildHouse filtered by the group_id column
+ * @method     ChildHouse|null findOneByVersion(int $version) Return the first ChildHouse filtered by the version column
+ * @method     ChildHouse|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildHouse filtered by the version_created_at column
+ * @method     ChildHouse|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildHouse filtered by the version_created_by column
+ * @method     ChildHouse|null findOneByVersionComment(string $version_comment) Return the first ChildHouse filtered by the version_comment column *
 
  * @method     ChildHouse requirePk($key, ?ConnectionInterface $con = null) Return the ChildHouse by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouse requireOne(?ConnectionInterface $con = null) Return the first ChildHouse matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -80,6 +102,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouse requireOneByStatus(string $status) Return the first ChildHouse filtered by the status column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouse requireOneByIsAvailable(boolean $is_available) Return the first ChildHouse filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildHouse requireOneByGroupId(int $group_id) Return the first ChildHouse filtered by the group_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouse requireOneByVersion(int $version) Return the first ChildHouse filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouse requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildHouse filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouse requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildHouse filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildHouse requireOneByVersionComment(string $version_comment) Return the first ChildHouse filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildHouse[]|Collection find(?ConnectionInterface $con = null) Return ChildHouse objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildHouse> find(?ConnectionInterface $con = null) Return ChildHouse objects based on current ModelCriteria
@@ -93,6 +119,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildHouse> findByIsAvailable(boolean $is_available) Return ChildHouse objects filtered by the is_available column
  * @method     ChildHouse[]|Collection findByGroupId(int $group_id) Return ChildHouse objects filtered by the group_id column
  * @psalm-method Collection&\Traversable<ChildHouse> findByGroupId(int $group_id) Return ChildHouse objects filtered by the group_id column
+ * @method     ChildHouse[]|Collection findByVersion(int $version) Return ChildHouse objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildHouse> findByVersion(int $version) Return ChildHouse objects filtered by the version column
+ * @method     ChildHouse[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildHouse objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildHouse> findByVersionCreatedAt(string $version_created_at) Return ChildHouse objects filtered by the version_created_at column
+ * @method     ChildHouse[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildHouse objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildHouse> findByVersionCreatedBy(string $version_created_by) Return ChildHouse objects filtered by the version_created_by column
+ * @method     ChildHouse[]|Collection findByVersionComment(string $version_comment) Return ChildHouse objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildHouse> findByVersionComment(string $version_comment) Return ChildHouse objects filtered by the version_comment column
  * @method     ChildHouse[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildHouse> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -192,7 +226,7 @@ abstract class HouseQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available, group_id FROM house WHERE id = :p0';
+        $sql = 'SELECT id, name, status, is_available, group_id, version, version_created_at, version_created_by, version_comment FROM house WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -460,6 +494,150 @@ abstract class HouseQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, ?string $comparison = null)
+    {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(HouseTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(HouseTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(HouseTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(HouseTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(HouseTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query by a related \DB\Groups object
      *
      * @param \DB\Groups|ObjectCollection $groups The related object(s) to use as filter
@@ -594,6 +772,138 @@ abstract class HouseQuery extends ModelCriteria
         return $this->useExistsQuery('Groups', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
+     * Filter the query by a related \DB\HouseVersion object
+     *
+     * @param \DB\HouseVersion|ObjectCollection $houseVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByHouseVersion($houseVersion, ?string $comparison = null)
+    {
+        if ($houseVersion instanceof \DB\HouseVersion) {
+            $this
+                ->addUsingAlias(HouseTableMap::COL_ID, $houseVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($houseVersion instanceof ObjectCollection) {
+            $this
+                ->useHouseVersionQuery()
+                ->filterByPrimaryKeys($houseVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByHouseVersion() only accepts arguments of type \DB\HouseVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the HouseVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinHouseVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('HouseVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'HouseVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the HouseVersion relation HouseVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\HouseVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useHouseVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinHouseVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HouseVersion', '\DB\HouseVersionQuery');
+    }
+
+    /**
+     * Use the HouseVersion relation HouseVersion object
+     *
+     * @param callable(\DB\HouseVersionQuery):\DB\HouseVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withHouseVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useHouseVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to HouseVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\HouseVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useHouseVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to HouseVersion table for a NOT EXISTS query.
+     *
+     * @see useHouseVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\HouseVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useHouseVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Filter the query by a related \DB\Stage object
      *
      * @param \DB\Stage|ObjectCollection $stage the related object to use as filter
@@ -628,7 +938,7 @@ abstract class HouseQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinStage(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinStage(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Stage');
@@ -663,7 +973,7 @@ abstract class HouseQuery extends ModelCriteria
      *
      * @return \DB\StageQuery A secondary query class using the current class as primary query
      */
-    public function useStageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useStageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinStage($relationAlias, $joinType)
@@ -684,7 +994,7 @@ abstract class HouseQuery extends ModelCriteria
     public function withStageQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::LEFT_JOIN
+        ?string $joinType = Criteria::INNER_JOIN
     ) {
         $relatedQuery = $this->useStageQuery(
             $relationAlias,

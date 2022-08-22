@@ -2,25 +2,32 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Technic as ChildTechnic;
 use DB\TechnicQuery as ChildTechnicQuery;
 use DB\Work as ChildWork;
 use DB\WorkQuery as ChildWorkQuery;
+use DB\WorkTechnic as ChildWorkTechnic;
 use DB\WorkTechnicQuery as ChildWorkTechnicQuery;
+use DB\WorkTechnicVersion as ChildWorkTechnicVersion;
+use DB\WorkTechnicVersionQuery as ChildWorkTechnicVersionQuery;
 use DB\Map\WorkTechnicTableMap;
+use DB\Map\WorkTechnicVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'work_technic' table.
@@ -67,17 +74,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID связи
+     * ID техники работы
      * @var        int
      */
     protected $id;
-
-    /**
-     * The value for the technic_id field.
-     * ID техники
-     * @var        int
-     */
-    protected $technic_id;
 
     /**
      * The value for the work_id field.
@@ -87,6 +87,13 @@ abstract class WorkTechnic implements ActiveRecordInterface
     protected $work_id;
 
     /**
+     * The value for the technic_id field.
+     * ID техники
+     * @var        int
+     */
+    protected $technic_id;
+
+    /**
      * The value for the amount field.
      * Кол-во
      * @var        string
@@ -94,14 +101,50 @@ abstract class WorkTechnic implements ActiveRecordInterface
     protected $amount;
 
     /**
-     * @var        ChildTechnic
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
      */
-    protected $aTechnic;
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
 
     /**
      * @var        ChildWork
      */
     protected $aWork;
+
+    /**
+     * @var        ChildTechnic
+     */
+    protected $aTechnic;
+
+    /**
+     * @var        ObjectCollection|ChildWorkTechnicVersion[] Collection to store aggregation of ChildWorkTechnicVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildWorkTechnicVersion> Collection to store aggregation of ChildWorkTechnicVersion objects.
+     */
+    protected $collWorkTechnicVersions;
+    protected $collWorkTechnicVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -112,10 +155,30 @@ abstract class WorkTechnic implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildWorkTechnicVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildWorkTechnicVersion>
+     */
+    protected $workTechnicVersionsScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->version = 0;
+    }
+
+    /**
      * Initializes internal state of DB\Base\WorkTechnic object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -339,22 +402,12 @@ abstract class WorkTechnic implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID связи
+     * ID техники работы
      * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get the [technic_id] column value.
-     * ID техники
-     * @return int
-     */
-    public function getTechnicId()
-    {
-        return $this->technic_id;
     }
 
     /**
@@ -368,6 +421,16 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [technic_id] column value.
+     * ID техники
+     * @return int
+     */
+    public function getTechnicId()
+    {
+        return $this->technic_id;
+    }
+
+    /**
      * Get the [amount] column value.
      * Кол-во
      * @return string
@@ -378,8 +441,60 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
+    }
+
+    /**
      * Set the value of [id] column.
-     * ID связи
+     * ID техники работы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -392,30 +507,6 @@ abstract class WorkTechnic implements ActiveRecordInterface
         if ($this->id !== $v) {
             $this->id = $v;
             $this->modifiedColumns[WorkTechnicTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [technic_id] column.
-     * ID техники
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setTechnicId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->technic_id !== $v) {
-            $this->technic_id = $v;
-            $this->modifiedColumns[WorkTechnicTableMap::COL_TECHNIC_ID] = true;
-        }
-
-        if ($this->aTechnic !== null && $this->aTechnic->getId() !== $v) {
-            $this->aTechnic = null;
         }
 
         return $this;
@@ -446,6 +537,30 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [technic_id] column.
+     * ID техники
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setTechnicId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->technic_id !== $v) {
+            $this->technic_id = $v;
+            $this->modifiedColumns[WorkTechnicTableMap::COL_TECHNIC_ID] = true;
+        }
+
+        if ($this->aTechnic !== null && $this->aTechnic->getId() !== $v) {
+            $this->aTechnic = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [amount] column.
      * Кол-во
      * @param string $v New value
@@ -466,6 +581,86 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[WorkTechnicTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[WorkTechnicTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[WorkTechnicTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[WorkTechnicTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -475,6 +670,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->version !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -504,14 +703,29 @@ abstract class WorkTechnic implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WorkTechnicTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WorkTechnicTableMap::translateFieldName('TechnicId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->technic_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkTechnicTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WorkTechnicTableMap::translateFieldName('WorkId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->work_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkTechnicTableMap::translateFieldName('TechnicId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->technic_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkTechnicTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -520,7 +734,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = WorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = WorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\WorkTechnic'), 0, $e);
@@ -543,11 +757,11 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aTechnic !== null && $this->technic_id !== $this->aTechnic->getId()) {
-            $this->aTechnic = null;
-        }
         if ($this->aWork !== null && $this->work_id !== $this->aWork->getId()) {
             $this->aWork = null;
+        }
+        if ($this->aTechnic !== null && $this->technic_id !== $this->aTechnic->getId()) {
+            $this->aTechnic = null;
         }
     }
 
@@ -588,8 +802,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aTechnic = null;
             $this->aWork = null;
+            $this->aTechnic = null;
+            $this->collWorkTechnicVersions = null;
+
         } // if (deep)
     }
 
@@ -698,18 +914,18 @@ abstract class WorkTechnic implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aTechnic !== null) {
-                if ($this->aTechnic->isModified() || $this->aTechnic->isNew()) {
-                    $affectedRows += $this->aTechnic->save($con);
-                }
-                $this->setTechnic($this->aTechnic);
-            }
-
             if ($this->aWork !== null) {
                 if ($this->aWork->isModified() || $this->aWork->isNew()) {
                     $affectedRows += $this->aWork->save($con);
                 }
                 $this->setWork($this->aWork);
+            }
+
+            if ($this->aTechnic !== null) {
+                if ($this->aTechnic->isModified() || $this->aTechnic->isNew()) {
+                    $affectedRows += $this->aTechnic->save($con);
+                }
+                $this->setTechnic($this->aTechnic);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -721,6 +937,23 @@ abstract class WorkTechnic implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->workTechnicVersionsScheduledForDeletion !== null) {
+                if (!$this->workTechnicVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\WorkTechnicVersionQuery::create()
+                        ->filterByPrimaryKeys($this->workTechnicVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->workTechnicVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collWorkTechnicVersions !== null) {
+                foreach ($this->collWorkTechnicVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -743,19 +976,35 @@ abstract class WorkTechnic implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
+        $this->modifiedColumns[WorkTechnicTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . WorkTechnicTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(WorkTechnicTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(WorkTechnicTableMap::COL_TECHNIC_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'technic_id';
-        }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_WORK_ID)) {
             $modifiedColumns[':p' . $index++]  = 'work_id';
         }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_TECHNIC_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'technic_id';
+        }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -771,14 +1020,26 @@ abstract class WorkTechnic implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'technic_id':
-                        $stmt->bindValue($identifier, $this->technic_id, PDO::PARAM_INT);
-                        break;
                     case 'work_id':
                         $stmt->bindValue($identifier, $this->work_id, PDO::PARAM_INT);
                         break;
+                    case 'technic_id':
+                        $stmt->bindValue($identifier, $this->technic_id, PDO::PARAM_INT);
+                        break;
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -787,6 +1048,13 @@ abstract class WorkTechnic implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -839,13 +1107,25 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getTechnicId();
+                return $this->getWorkId();
 
             case 2:
-                return $this->getWorkId();
+                return $this->getTechnicId();
 
             case 3:
                 return $this->getAmount();
+
+            case 4:
+                return $this->getVersion();
+
+            case 5:
+                return $this->getVersionCreatedAt();
+
+            case 6:
+                return $this->getVersionCreatedBy();
+
+            case 7:
+                return $this->getVersionComment();
 
             default:
                 return null;
@@ -876,16 +1156,39 @@ abstract class WorkTechnic implements ActiveRecordInterface
         $keys = WorkTechnicTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTechnicId(),
-            $keys[2] => $this->getWorkId(),
+            $keys[1] => $this->getWorkId(),
+            $keys[2] => $this->getTechnicId(),
             $keys[3] => $this->getAmount(),
+            $keys[4] => $this->getVersion(),
+            $keys[5] => $this->getVersionCreatedAt(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersionComment(),
         ];
+        if ($result[$keys[5]] instanceof \DateTimeInterface) {
+            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aWork) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'work';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'work';
+                        break;
+                    default:
+                        $key = 'Work';
+                }
+
+                $result[$key] = $this->aWork->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aTechnic) {
 
                 switch ($keyType) {
@@ -901,20 +1204,20 @@ abstract class WorkTechnic implements ActiveRecordInterface
 
                 $result[$key] = $this->aTechnic->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aWork) {
+            if (null !== $this->collWorkTechnicVersions) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'work';
+                        $key = 'workTechnicVersions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'work';
+                        $key = 'work_technic_versions';
                         break;
                     default:
-                        $key = 'Work';
+                        $key = 'WorkTechnicVersions';
                 }
 
-                $result[$key] = $this->aWork->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->collWorkTechnicVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -956,13 +1259,25 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTechnicId($value);
+                $this->setWorkId($value);
                 break;
             case 2:
-                $this->setWorkId($value);
+                $this->setTechnicId($value);
                 break;
             case 3:
                 $this->setAmount($value);
+                break;
+            case 4:
+                $this->setVersion($value);
+                break;
+            case 5:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 6:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 7:
+                $this->setVersionComment($value);
                 break;
         } // switch()
 
@@ -994,13 +1309,25 @@ abstract class WorkTechnic implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setTechnicId($arr[$keys[1]]);
+            $this->setWorkId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setWorkId($arr[$keys[2]]);
+            $this->setTechnicId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setAmount($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setVersion($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionComment($arr[$keys[7]]);
         }
 
         return $this;
@@ -1048,14 +1375,26 @@ abstract class WorkTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(WorkTechnicTableMap::COL_ID)) {
             $criteria->add(WorkTechnicTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(WorkTechnicTableMap::COL_TECHNIC_ID)) {
-            $criteria->add(WorkTechnicTableMap::COL_TECHNIC_ID, $this->technic_id);
-        }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_WORK_ID)) {
             $criteria->add(WorkTechnicTableMap::COL_WORK_ID, $this->work_id);
         }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_TECHNIC_ID)) {
+            $criteria->add(WorkTechnicTableMap::COL_TECHNIC_ID, $this->technic_id);
+        }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_AMOUNT)) {
             $criteria->add(WorkTechnicTableMap::COL_AMOUNT, $this->amount);
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION)) {
+            $criteria->add(WorkTechnicTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(WorkTechnicTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(WorkTechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(WorkTechnicTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1145,12 +1484,30 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setId($this->getId());
-        $copyObj->setTechnicId($this->getTechnicId());
         $copyObj->setWorkId($this->getWorkId());
+        $copyObj->setTechnicId($this->getTechnicId());
         $copyObj->setAmount($this->getAmount());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getWorkTechnicVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addWorkTechnicVersion($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1174,57 +1531,6 @@ abstract class WorkTechnic implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildTechnic object.
-     *
-     * @param ChildTechnic $v
-     * @return $this The current object (for fluent API support)
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function setTechnic(ChildTechnic $v = null)
-    {
-        if ($v === null) {
-            $this->setTechnicId(NULL);
-        } else {
-            $this->setTechnicId($v->getId());
-        }
-
-        $this->aTechnic = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildTechnic object, it will not be re-added.
-        if ($v !== null) {
-            $v->addWorkTechnic($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildTechnic object
-     *
-     * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildTechnic The associated ChildTechnic object.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getTechnic(?ConnectionInterface $con = null)
-    {
-        if ($this->aTechnic === null && ($this->technic_id != 0)) {
-            $this->aTechnic = ChildTechnicQuery::create()->findPk($this->technic_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aTechnic->addWorkTechnics($this);
-             */
-        }
-
-        return $this->aTechnic;
     }
 
     /**
@@ -1279,6 +1585,316 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildTechnic object.
+     *
+     * @param ChildTechnic $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setTechnic(ChildTechnic $v = null)
+    {
+        if ($v === null) {
+            $this->setTechnicId(NULL);
+        } else {
+            $this->setTechnicId($v->getId());
+        }
+
+        $this->aTechnic = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildTechnic object, it will not be re-added.
+        if ($v !== null) {
+            $v->addWorkTechnic($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildTechnic object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildTechnic The associated ChildTechnic object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getTechnic(?ConnectionInterface $con = null)
+    {
+        if ($this->aTechnic === null && ($this->technic_id != 0)) {
+            $this->aTechnic = ChildTechnicQuery::create()->findPk($this->technic_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aTechnic->addWorkTechnics($this);
+             */
+        }
+
+        return $this->aTechnic;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('WorkTechnicVersion' === $relationName) {
+            $this->initWorkTechnicVersions();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collWorkTechnicVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addWorkTechnicVersions()
+     */
+    public function clearWorkTechnicVersions()
+    {
+        $this->collWorkTechnicVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collWorkTechnicVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialWorkTechnicVersions($v = true): void
+    {
+        $this->collWorkTechnicVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collWorkTechnicVersions collection.
+     *
+     * By default this just sets the collWorkTechnicVersions collection to an empty array (like clearcollWorkTechnicVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initWorkTechnicVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collWorkTechnicVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = WorkTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collWorkTechnicVersions = new $collectionClassName;
+        $this->collWorkTechnicVersions->setModel('\DB\WorkTechnicVersion');
+    }
+
+    /**
+     * Gets an array of ChildWorkTechnicVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildWorkTechnic is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildWorkTechnicVersion[] List of ChildWorkTechnicVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildWorkTechnicVersion> List of ChildWorkTechnicVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getWorkTechnicVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collWorkTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collWorkTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collWorkTechnicVersions) {
+                    $this->initWorkTechnicVersions();
+                } else {
+                    $collectionClassName = WorkTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collWorkTechnicVersions = new $collectionClassName;
+                    $collWorkTechnicVersions->setModel('\DB\WorkTechnicVersion');
+
+                    return $collWorkTechnicVersions;
+                }
+            } else {
+                $collWorkTechnicVersions = ChildWorkTechnicVersionQuery::create(null, $criteria)
+                    ->filterByWorkTechnic($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collWorkTechnicVersionsPartial && count($collWorkTechnicVersions)) {
+                        $this->initWorkTechnicVersions(false);
+
+                        foreach ($collWorkTechnicVersions as $obj) {
+                            if (false == $this->collWorkTechnicVersions->contains($obj)) {
+                                $this->collWorkTechnicVersions->append($obj);
+                            }
+                        }
+
+                        $this->collWorkTechnicVersionsPartial = true;
+                    }
+
+                    return $collWorkTechnicVersions;
+                }
+
+                if ($partial && $this->collWorkTechnicVersions) {
+                    foreach ($this->collWorkTechnicVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collWorkTechnicVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collWorkTechnicVersions = $collWorkTechnicVersions;
+                $this->collWorkTechnicVersionsPartial = false;
+            }
+        }
+
+        return $this->collWorkTechnicVersions;
+    }
+
+    /**
+     * Sets a collection of ChildWorkTechnicVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $workTechnicVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setWorkTechnicVersions(Collection $workTechnicVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildWorkTechnicVersion[] $workTechnicVersionsToDelete */
+        $workTechnicVersionsToDelete = $this->getWorkTechnicVersions(new Criteria(), $con)->diff($workTechnicVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->workTechnicVersionsScheduledForDeletion = clone $workTechnicVersionsToDelete;
+
+        foreach ($workTechnicVersionsToDelete as $workTechnicVersionRemoved) {
+            $workTechnicVersionRemoved->setWorkTechnic(null);
+        }
+
+        $this->collWorkTechnicVersions = null;
+        foreach ($workTechnicVersions as $workTechnicVersion) {
+            $this->addWorkTechnicVersion($workTechnicVersion);
+        }
+
+        $this->collWorkTechnicVersions = $workTechnicVersions;
+        $this->collWorkTechnicVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related WorkTechnicVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related WorkTechnicVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countWorkTechnicVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collWorkTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collWorkTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collWorkTechnicVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getWorkTechnicVersions());
+            }
+
+            $query = ChildWorkTechnicVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByWorkTechnic($this)
+                ->count($con);
+        }
+
+        return count($this->collWorkTechnicVersions);
+    }
+
+    /**
+     * Method called to associate a ChildWorkTechnicVersion object to this object
+     * through the ChildWorkTechnicVersion foreign key attribute.
+     *
+     * @param ChildWorkTechnicVersion $l ChildWorkTechnicVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addWorkTechnicVersion(ChildWorkTechnicVersion $l)
+    {
+        if ($this->collWorkTechnicVersions === null) {
+            $this->initWorkTechnicVersions();
+            $this->collWorkTechnicVersionsPartial = true;
+        }
+
+        if (!$this->collWorkTechnicVersions->contains($l)) {
+            $this->doAddWorkTechnicVersion($l);
+
+            if ($this->workTechnicVersionsScheduledForDeletion and $this->workTechnicVersionsScheduledForDeletion->contains($l)) {
+                $this->workTechnicVersionsScheduledForDeletion->remove($this->workTechnicVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildWorkTechnicVersion $workTechnicVersion The ChildWorkTechnicVersion object to add.
+     */
+    protected function doAddWorkTechnicVersion(ChildWorkTechnicVersion $workTechnicVersion): void
+    {
+        $this->collWorkTechnicVersions[]= $workTechnicVersion;
+        $workTechnicVersion->setWorkTechnic($this);
+    }
+
+    /**
+     * @param ChildWorkTechnicVersion $workTechnicVersion The ChildWorkTechnicVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeWorkTechnicVersion(ChildWorkTechnicVersion $workTechnicVersion)
+    {
+        if ($this->getWorkTechnicVersions()->contains($workTechnicVersion)) {
+            $pos = $this->collWorkTechnicVersions->search($workTechnicVersion);
+            $this->collWorkTechnicVersions->remove($pos);
+            if (null === $this->workTechnicVersionsScheduledForDeletion) {
+                $this->workTechnicVersionsScheduledForDeletion = clone $this->collWorkTechnicVersions;
+                $this->workTechnicVersionsScheduledForDeletion->clear();
+            }
+            $this->workTechnicVersionsScheduledForDeletion[]= clone $workTechnicVersion;
+            $workTechnicVersion->setWorkTechnic(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1287,18 +1903,23 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aTechnic) {
-            $this->aTechnic->removeWorkTechnic($this);
-        }
         if (null !== $this->aWork) {
             $this->aWork->removeWorkTechnic($this);
         }
+        if (null !== $this->aTechnic) {
+            $this->aTechnic->removeWorkTechnic($this);
+        }
         $this->id = null;
-        $this->technic_id = null;
         $this->work_id = null;
+        $this->technic_id = null;
         $this->amount = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1318,10 +1939,16 @@ abstract class WorkTechnic implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collWorkTechnicVersions) {
+                foreach ($this->collWorkTechnicVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
-        $this->aTechnic = null;
+        $this->collWorkTechnicVersions = null;
         $this->aWork = null;
+        $this->aTechnic = null;
         return $this;
     }
 

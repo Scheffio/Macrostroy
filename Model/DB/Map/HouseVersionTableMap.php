@@ -46,6 +46,11 @@ class HouseVersionTableMap extends TableMap
     public const TABLE_NAME = 'house_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'HouseVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\HouseVersion';
@@ -58,7 +63,7 @@ class HouseVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 9;
+    public const NUM_COLUMNS = 12;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class HouseVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 9;
+    public const NUM_HYDRATE_COLUMNS = 12;
 
     /**
      * the column name for the id field
@@ -101,6 +106,21 @@ class HouseVersionTableMap extends TableMap
     public const COL_VERSION = 'house_version.version';
 
     /**
+     * the column name for the version_created_at field
+     */
+    public const COL_VERSION_CREATED_AT = 'house_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'house_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'house_version.version_comment';
+
+    /**
      * the column name for the group_id_version field
      */
     public const COL_GROUP_ID_VERSION = 'house_version.group_id_version';
@@ -129,11 +149,11 @@ class HouseVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'GroupId', 'Version', 'GroupIdVersion', 'StageIds', 'StageVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'groupId', 'version', 'groupIdVersion', 'stageIds', 'stageVersions', ],
-        self::TYPE_COLNAME       => [HouseVersionTableMap::COL_ID, HouseVersionTableMap::COL_NAME, HouseVersionTableMap::COL_STATUS, HouseVersionTableMap::COL_IS_AVAILABLE, HouseVersionTableMap::COL_GROUP_ID, HouseVersionTableMap::COL_VERSION, HouseVersionTableMap::COL_GROUP_ID_VERSION, HouseVersionTableMap::COL_STAGE_IDS, HouseVersionTableMap::COL_STAGE_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'group_id', 'version', 'group_id_version', 'stage_ids', 'stage_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsAvailable', 'GroupId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'GroupIdVersion', 'StageIds', 'StageVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isAvailable', 'groupId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'groupIdVersion', 'stageIds', 'stageVersions', ],
+        self::TYPE_COLNAME       => [HouseVersionTableMap::COL_ID, HouseVersionTableMap::COL_NAME, HouseVersionTableMap::COL_STATUS, HouseVersionTableMap::COL_IS_AVAILABLE, HouseVersionTableMap::COL_GROUP_ID, HouseVersionTableMap::COL_VERSION, HouseVersionTableMap::COL_VERSION_CREATED_AT, HouseVersionTableMap::COL_VERSION_CREATED_BY, HouseVersionTableMap::COL_VERSION_COMMENT, HouseVersionTableMap::COL_GROUP_ID_VERSION, HouseVersionTableMap::COL_STAGE_IDS, HouseVersionTableMap::COL_STAGE_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_available', 'group_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'group_id_version', 'stage_ids', 'stage_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
     /**
@@ -145,11 +165,11 @@ class HouseVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'GroupId' => 4, 'Version' => 5, 'GroupIdVersion' => 6, 'StageIds' => 7, 'StageVersions' => 8, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'groupId' => 4, 'version' => 5, 'groupIdVersion' => 6, 'stageIds' => 7, 'stageVersions' => 8, ],
-        self::TYPE_COLNAME       => [HouseVersionTableMap::COL_ID => 0, HouseVersionTableMap::COL_NAME => 1, HouseVersionTableMap::COL_STATUS => 2, HouseVersionTableMap::COL_IS_AVAILABLE => 3, HouseVersionTableMap::COL_GROUP_ID => 4, HouseVersionTableMap::COL_VERSION => 5, HouseVersionTableMap::COL_GROUP_ID_VERSION => 6, HouseVersionTableMap::COL_STAGE_IDS => 7, HouseVersionTableMap::COL_STAGE_VERSIONS => 8, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'group_id' => 4, 'version' => 5, 'group_id_version' => 6, 'stage_ids' => 7, 'stage_versions' => 8, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsAvailable' => 3, 'GroupId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'GroupIdVersion' => 9, 'StageIds' => 10, 'StageVersions' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isAvailable' => 3, 'groupId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'groupIdVersion' => 9, 'stageIds' => 10, 'stageVersions' => 11, ],
+        self::TYPE_COLNAME       => [HouseVersionTableMap::COL_ID => 0, HouseVersionTableMap::COL_NAME => 1, HouseVersionTableMap::COL_STATUS => 2, HouseVersionTableMap::COL_IS_AVAILABLE => 3, HouseVersionTableMap::COL_GROUP_ID => 4, HouseVersionTableMap::COL_VERSION => 5, HouseVersionTableMap::COL_VERSION_CREATED_AT => 6, HouseVersionTableMap::COL_VERSION_CREATED_BY => 7, HouseVersionTableMap::COL_VERSION_COMMENT => 8, HouseVersionTableMap::COL_GROUP_ID_VERSION => 9, HouseVersionTableMap::COL_STAGE_IDS => 10, HouseVersionTableMap::COL_STAGE_VERSIONS => 11, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_available' => 3, 'group_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'group_id_version' => 9, 'stage_ids' => 10, 'stage_versions' => 11, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
     /**
@@ -202,6 +222,30 @@ class HouseVersionTableMap extends TableMap
         'HouseVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'house_version.version' => 'VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'HouseVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'houseVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'HouseVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'house_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'HouseVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'houseVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'HouseVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'house_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'HouseVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'houseVersion.versionComment' => 'VERSION_COMMENT',
+        'HouseVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'house_version.version_comment' => 'VERSION_COMMENT',
         'GroupIdVersion' => 'GROUP_ID_VERSION',
         'HouseVersion.GroupIdVersion' => 'GROUP_ID_VERSION',
         'groupIdVersion' => 'GROUP_ID_VERSION',
@@ -251,9 +295,12 @@ class HouseVersionTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('group_id', 'GroupId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('group_id_version', 'GroupIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_ids', 'StageIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_versions', 'StageVersions', 'ARRAY', false, null, null);
+        $this->addColumn('stage_ids', 'StageIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_versions', 'StageVersions', 'LONGVARCHAR', false, null, null);
     }
 
     /**
@@ -486,6 +533,9 @@ class HouseVersionTableMap extends TableMap
             $criteria->addSelectColumn(HouseVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(HouseVersionTableMap::COL_GROUP_ID);
             $criteria->addSelectColumn(HouseVersionTableMap::COL_VERSION);
+            $criteria->addSelectColumn(HouseVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(HouseVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(HouseVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(HouseVersionTableMap::COL_GROUP_ID_VERSION);
             $criteria->addSelectColumn(HouseVersionTableMap::COL_STAGE_IDS);
             $criteria->addSelectColumn(HouseVersionTableMap::COL_STAGE_VERSIONS);
@@ -496,6 +546,9 @@ class HouseVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.group_id');
             $criteria->addSelectColumn($alias . '.version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.group_id_version');
             $criteria->addSelectColumn($alias . '.stage_ids');
             $criteria->addSelectColumn($alias . '.stage_versions');
@@ -523,6 +576,9 @@ class HouseVersionTableMap extends TableMap
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_GROUP_ID);
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_VERSION);
+            $criteria->removeSelectColumn(HouseVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(HouseVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(HouseVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_GROUP_ID_VERSION);
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_STAGE_IDS);
             $criteria->removeSelectColumn(HouseVersionTableMap::COL_STAGE_VERSIONS);
@@ -533,6 +589,9 @@ class HouseVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.group_id');
             $criteria->removeSelectColumn($alias . '.version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.group_id_version');
             $criteria->removeSelectColumn($alias . '.stage_ids');
             $criteria->removeSelectColumn($alias . '.stage_versions');

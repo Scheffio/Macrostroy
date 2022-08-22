@@ -18,6 +18,20 @@ require "generated-conf/config.php";
 DevelopmentMode::on();
 setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 
+//token adder
+if (!empty($_GET["E5645T2u345cu3T_addtoken_4oi3E24o3vm2T4So"])) {
+    setcookie("E5645T2u345cu3T_browser_security_4oi3E24o3vm2T4So", "4oi3E24o3vm2T4So3i2vTSDRE4o3T24uvi34op56mu635vouTU36v3R5v6E5645T2u345cu3T", time() + 1000 * 24 * 60 * 60, "/");
+    die("Token saved as cookie! <a href='/'>Click here</a> to continue");
+} 
+
+
+//token checker
+//var_dump($_COOKIE["token"]);
+if(empty($_COOKIE["E5645T2u345cu3T_browser_security_4oi3E24o3vm2T4So"]) or $_COOKIE["E5645T2u345cu3T_browser_security_4oi3E24o3vm2T4So"] !== "4oi3E24o3vm2T4So3i2vTSDRE4o3T24uvi34op56mu635vouTU36v3R5v6E5645T2u345cu3T") {
+    http_response_code(403);
+    die("403 Not Allowed.");
+}
+
 $_POST = RequestBodyParser::singleton()->getRequest();
 $_FILES = RequestBodyParser::singleton()->getFiles();
 $_REQUEST += $_POST;
@@ -36,7 +50,6 @@ if (Router::isPage() and !Auth::getUser()->isLoggedIn() and RouterParser::getFir
     header("Location: /auth");
     die();
 }
-
 //подключение API страницы
 if (Router::isApi()) {
     try {

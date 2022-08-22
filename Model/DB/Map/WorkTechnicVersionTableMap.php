@@ -46,6 +46,11 @@ class WorkTechnicVersionTableMap extends TableMap
     public const TABLE_NAME = 'work_technic_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'WorkTechnicVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\WorkTechnicVersion';
@@ -58,7 +63,7 @@ class WorkTechnicVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 7;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class WorkTechnicVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 7;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -76,14 +81,14 @@ class WorkTechnicVersionTableMap extends TableMap
     public const COL_ID = 'work_technic_version.id';
 
     /**
-     * the column name for the technic_id field
-     */
-    public const COL_TECHNIC_ID = 'work_technic_version.technic_id';
-
-    /**
      * the column name for the work_id field
      */
     public const COL_WORK_ID = 'work_technic_version.work_id';
+
+    /**
+     * the column name for the technic_id field
+     */
+    public const COL_TECHNIC_ID = 'work_technic_version.technic_id';
 
     /**
      * the column name for the amount field
@@ -96,14 +101,29 @@ class WorkTechnicVersionTableMap extends TableMap
     public const COL_VERSION = 'work_technic_version.version';
 
     /**
-     * the column name for the technic_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_TECHNIC_ID_VERSION = 'work_technic_version.technic_id_version';
+    public const COL_VERSION_CREATED_AT = 'work_technic_version.version_created_at';
+
+    /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'work_technic_version.version_created_by';
+
+    /**
+     * the column name for the version_comment field
+     */
+    public const COL_VERSION_COMMENT = 'work_technic_version.version_comment';
 
     /**
      * the column name for the work_id_version field
      */
     public const COL_WORK_ID_VERSION = 'work_technic_version.work_id_version';
+
+    /**
+     * the column name for the technic_id_version field
+     */
+    public const COL_TECHNIC_ID_VERSION = 'work_technic_version.technic_id_version';
 
     /**
      * The default string format for model objects of the related table
@@ -119,11 +139,11 @@ class WorkTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'TechnicId', 'WorkId', 'Amount', 'Version', 'TechnicIdVersion', 'WorkIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'technicId', 'workId', 'amount', 'version', 'technicIdVersion', 'workIdVersion', ],
-        self::TYPE_COLNAME       => [WorkTechnicVersionTableMap::COL_ID, WorkTechnicVersionTableMap::COL_TECHNIC_ID, WorkTechnicVersionTableMap::COL_WORK_ID, WorkTechnicVersionTableMap::COL_AMOUNT, WorkTechnicVersionTableMap::COL_VERSION, WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION, WorkTechnicVersionTableMap::COL_WORK_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'technic_id', 'work_id', 'amount', 'version', 'technic_id_version', 'work_id_version', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
+        self::TYPE_PHPNAME       => ['Id', 'WorkId', 'TechnicId', 'Amount', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'TechnicIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'workId', 'technicId', 'amount', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'technicIdVersion', ],
+        self::TYPE_COLNAME       => [WorkTechnicVersionTableMap::COL_ID, WorkTechnicVersionTableMap::COL_WORK_ID, WorkTechnicVersionTableMap::COL_TECHNIC_ID, WorkTechnicVersionTableMap::COL_AMOUNT, WorkTechnicVersionTableMap::COL_VERSION, WorkTechnicVersionTableMap::COL_VERSION_CREATED_AT, WorkTechnicVersionTableMap::COL_VERSION_CREATED_BY, WorkTechnicVersionTableMap::COL_VERSION_COMMENT, WorkTechnicVersionTableMap::COL_WORK_ID_VERSION, WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'work_id', 'technic_id', 'amount', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'technic_id_version', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -135,11 +155,11 @@ class WorkTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'TechnicId' => 1, 'WorkId' => 2, 'Amount' => 3, 'Version' => 4, 'TechnicIdVersion' => 5, 'WorkIdVersion' => 6, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'technicId' => 1, 'workId' => 2, 'amount' => 3, 'version' => 4, 'technicIdVersion' => 5, 'workIdVersion' => 6, ],
-        self::TYPE_COLNAME       => [WorkTechnicVersionTableMap::COL_ID => 0, WorkTechnicVersionTableMap::COL_TECHNIC_ID => 1, WorkTechnicVersionTableMap::COL_WORK_ID => 2, WorkTechnicVersionTableMap::COL_AMOUNT => 3, WorkTechnicVersionTableMap::COL_VERSION => 4, WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION => 5, WorkTechnicVersionTableMap::COL_WORK_ID_VERSION => 6, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'technic_id' => 1, 'work_id' => 2, 'amount' => 3, 'version' => 4, 'technic_id_version' => 5, 'work_id_version' => 6, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'WorkId' => 1, 'TechnicId' => 2, 'Amount' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, 'WorkIdVersion' => 8, 'TechnicIdVersion' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'workId' => 1, 'technicId' => 2, 'amount' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, 'workIdVersion' => 8, 'technicIdVersion' => 9, ],
+        self::TYPE_COLNAME       => [WorkTechnicVersionTableMap::COL_ID => 0, WorkTechnicVersionTableMap::COL_WORK_ID => 1, WorkTechnicVersionTableMap::COL_TECHNIC_ID => 2, WorkTechnicVersionTableMap::COL_AMOUNT => 3, WorkTechnicVersionTableMap::COL_VERSION => 4, WorkTechnicVersionTableMap::COL_VERSION_CREATED_AT => 5, WorkTechnicVersionTableMap::COL_VERSION_CREATED_BY => 6, WorkTechnicVersionTableMap::COL_VERSION_COMMENT => 7, WorkTechnicVersionTableMap::COL_WORK_ID_VERSION => 8, WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'work_id' => 1, 'technic_id' => 2, 'amount' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, 'work_id_version' => 8, 'technic_id_version' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -155,14 +175,6 @@ class WorkTechnicVersionTableMap extends TableMap
         'WorkTechnicVersionTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
         'work_technic_version.id' => 'ID',
-        'TechnicId' => 'TECHNIC_ID',
-        'WorkTechnicVersion.TechnicId' => 'TECHNIC_ID',
-        'technicId' => 'TECHNIC_ID',
-        'workTechnicVersion.technicId' => 'TECHNIC_ID',
-        'WorkTechnicVersionTableMap::COL_TECHNIC_ID' => 'TECHNIC_ID',
-        'COL_TECHNIC_ID' => 'TECHNIC_ID',
-        'technic_id' => 'TECHNIC_ID',
-        'work_technic_version.technic_id' => 'TECHNIC_ID',
         'WorkId' => 'WORK_ID',
         'WorkTechnicVersion.WorkId' => 'WORK_ID',
         'workId' => 'WORK_ID',
@@ -171,6 +183,14 @@ class WorkTechnicVersionTableMap extends TableMap
         'COL_WORK_ID' => 'WORK_ID',
         'work_id' => 'WORK_ID',
         'work_technic_version.work_id' => 'WORK_ID',
+        'TechnicId' => 'TECHNIC_ID',
+        'WorkTechnicVersion.TechnicId' => 'TECHNIC_ID',
+        'technicId' => 'TECHNIC_ID',
+        'workTechnicVersion.technicId' => 'TECHNIC_ID',
+        'WorkTechnicVersionTableMap::COL_TECHNIC_ID' => 'TECHNIC_ID',
+        'COL_TECHNIC_ID' => 'TECHNIC_ID',
+        'technic_id' => 'TECHNIC_ID',
+        'work_technic_version.technic_id' => 'TECHNIC_ID',
         'Amount' => 'AMOUNT',
         'WorkTechnicVersion.Amount' => 'AMOUNT',
         'amount' => 'AMOUNT',
@@ -185,14 +205,30 @@ class WorkTechnicVersionTableMap extends TableMap
         'WorkTechnicVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'work_technic_version.version' => 'VERSION',
-        'TechnicIdVersion' => 'TECHNIC_ID_VERSION',
-        'WorkTechnicVersion.TechnicIdVersion' => 'TECHNIC_ID_VERSION',
-        'technicIdVersion' => 'TECHNIC_ID_VERSION',
-        'workTechnicVersion.technicIdVersion' => 'TECHNIC_ID_VERSION',
-        'WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION' => 'TECHNIC_ID_VERSION',
-        'COL_TECHNIC_ID_VERSION' => 'TECHNIC_ID_VERSION',
-        'technic_id_version' => 'TECHNIC_ID_VERSION',
-        'work_technic_version.technic_id_version' => 'TECHNIC_ID_VERSION',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'WorkTechnicVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'workTechnicVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'WorkTechnicVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'work_technic_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'WorkTechnicVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'workTechnicVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'WorkTechnicVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'work_technic_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'WorkTechnicVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'workTechnicVersion.versionComment' => 'VERSION_COMMENT',
+        'WorkTechnicVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'work_technic_version.version_comment' => 'VERSION_COMMENT',
         'WorkIdVersion' => 'WORK_ID_VERSION',
         'WorkTechnicVersion.WorkIdVersion' => 'WORK_ID_VERSION',
         'workIdVersion' => 'WORK_ID_VERSION',
@@ -201,6 +237,14 @@ class WorkTechnicVersionTableMap extends TableMap
         'COL_WORK_ID_VERSION' => 'WORK_ID_VERSION',
         'work_id_version' => 'WORK_ID_VERSION',
         'work_technic_version.work_id_version' => 'WORK_ID_VERSION',
+        'TechnicIdVersion' => 'TECHNIC_ID_VERSION',
+        'WorkTechnicVersion.TechnicIdVersion' => 'TECHNIC_ID_VERSION',
+        'technicIdVersion' => 'TECHNIC_ID_VERSION',
+        'workTechnicVersion.technicIdVersion' => 'TECHNIC_ID_VERSION',
+        'WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION' => 'TECHNIC_ID_VERSION',
+        'COL_TECHNIC_ID_VERSION' => 'TECHNIC_ID_VERSION',
+        'technic_id_version' => 'TECHNIC_ID_VERSION',
+        'work_technic_version.technic_id_version' => 'TECHNIC_ID_VERSION',
     ];
 
     /**
@@ -221,12 +265,15 @@ class WorkTechnicVersionTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'work_technic', 'id', true, null, null);
-        $this->addColumn('technic_id', 'TechnicId', 'INTEGER', true, null, null);
         $this->addColumn('work_id', 'WorkId', 'INTEGER', true, null, null);
+        $this->addColumn('technic_id', 'TechnicId', 'INTEGER', true, null, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('technic_id_version', 'TechnicIdVersion', 'INTEGER', false, null, 0);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('work_id_version', 'WorkIdVersion', 'INTEGER', false, null, 0);
+        $this->addColumn('technic_id_version', 'TechnicIdVersion', 'INTEGER', false, null, 0);
     }
 
     /**
@@ -454,20 +501,26 @@ class WorkTechnicVersionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_ID);
-            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID);
             $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_WORK_ID);
+            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID);
             $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_AMOUNT);
             $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
+            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_WORK_ID_VERSION);
+            $criteria->addSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.technic_id');
             $criteria->addSelectColumn($alias . '.work_id');
+            $criteria->addSelectColumn($alias . '.technic_id');
             $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.technic_id_version');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.work_id_version');
+            $criteria->addSelectColumn($alias . '.technic_id_version');
         }
     }
 
@@ -487,20 +540,26 @@ class WorkTechnicVersionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_ID);
-            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID);
             $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_WORK_ID);
+            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID);
             $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_AMOUNT);
             $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
+            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_WORK_ID_VERSION);
+            $criteria->removeSelectColumn(WorkTechnicVersionTableMap::COL_TECHNIC_ID_VERSION);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.technic_id');
             $criteria->removeSelectColumn($alias . '.work_id');
+            $criteria->removeSelectColumn($alias . '.technic_id');
             $criteria->removeSelectColumn($alias . '.amount');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.technic_id_version');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.work_id_version');
+            $criteria->removeSelectColumn($alias . '.technic_id_version');
         }
     }
 

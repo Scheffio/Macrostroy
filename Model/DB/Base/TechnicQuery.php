@@ -26,12 +26,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery orderByPrice($order = Criteria::ASC) Order by the price column
  * @method     ChildTechnicQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildTechnicQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
+ * @method     ChildTechnicQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildTechnicQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildTechnicQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildTechnicQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildTechnicQuery groupById() Group by the id column
  * @method     ChildTechnicQuery groupByName() Group by the name column
  * @method     ChildTechnicQuery groupByPrice() Group by the price column
  * @method     ChildTechnicQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildTechnicQuery groupByUnitId() Group by the unit_id column
+ * @method     ChildTechnicQuery groupByVersion() Group by the version column
+ * @method     ChildTechnicQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildTechnicQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildTechnicQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildTechnicQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildTechnicQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -40,16 +48,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildTechnicQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildTechnicQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
- *
- * @method     ChildTechnicQuery leftJoinUnit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Unit relation
- * @method     ChildTechnicQuery rightJoinUnit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Unit relation
- * @method     ChildTechnicQuery innerJoinUnit($relationAlias = null) Adds a INNER JOIN clause to the query using the Unit relation
- *
- * @method     ChildTechnicQuery joinWithUnit($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Unit relation
- *
- * @method     ChildTechnicQuery leftJoinWithUnit() Adds a LEFT JOIN clause and with to the query using the Unit relation
- * @method     ChildTechnicQuery rightJoinWithUnit() Adds a RIGHT JOIN clause and with to the query using the Unit relation
- * @method     ChildTechnicQuery innerJoinWithUnit() Adds a INNER JOIN clause and with to the query using the Unit relation
  *
  * @method     ChildTechnicQuery leftJoinStageTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the StageTechnic relation
  * @method     ChildTechnicQuery rightJoinStageTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StageTechnic relation
@@ -61,6 +59,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery rightJoinWithStageTechnic() Adds a RIGHT JOIN clause and with to the query using the StageTechnic relation
  * @method     ChildTechnicQuery innerJoinWithStageTechnic() Adds a INNER JOIN clause and with to the query using the StageTechnic relation
  *
+ * @method     ChildTechnicQuery leftJoinTechnicVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery rightJoinTechnicVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery innerJoinTechnicVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the TechnicVersion relation
+ *
+ * @method     ChildTechnicQuery joinWithTechnicVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TechnicVersion relation
+ *
+ * @method     ChildTechnicQuery leftJoinWithTechnicVersion() Adds a LEFT JOIN clause and with to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery rightJoinWithTechnicVersion() Adds a RIGHT JOIN clause and with to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery innerJoinWithTechnicVersion() Adds a INNER JOIN clause and with to the query using the TechnicVersion relation
+ *
  * @method     ChildTechnicQuery leftJoinWorkTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery rightJoinWorkTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery innerJoinWorkTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the WorkTechnic relation
@@ -71,7 +79,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery rightJoinWithWorkTechnic() Adds a RIGHT JOIN clause and with to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery innerJoinWithWorkTechnic() Adds a INNER JOIN clause and with to the query using the WorkTechnic relation
  *
- * @method     \DB\UnitQuery|\DB\StageTechnicQuery|\DB\WorkTechnicQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\StageTechnicQuery|\DB\TechnicVersionQuery|\DB\WorkTechnicQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildTechnic|null findOne(?ConnectionInterface $con = null) Return the first ChildTechnic matching the query
  * @method     ChildTechnic findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildTechnic matching the query, or a new ChildTechnic object populated from the query conditions when no match is found
@@ -80,7 +88,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnic|null findOneByName(string $name) Return the first ChildTechnic filtered by the name column
  * @method     ChildTechnic|null findOneByPrice(string $price) Return the first ChildTechnic filtered by the price column
  * @method     ChildTechnic|null findOneByIsAvailable(boolean $is_available) Return the first ChildTechnic filtered by the is_available column
- * @method     ChildTechnic|null findOneByUnitId(int $unit_id) Return the first ChildTechnic filtered by the unit_id column *
+ * @method     ChildTechnic|null findOneByUnitId(int $unit_id) Return the first ChildTechnic filtered by the unit_id column
+ * @method     ChildTechnic|null findOneByVersion(int $version) Return the first ChildTechnic filtered by the version column
+ * @method     ChildTechnic|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildTechnic filtered by the version_created_at column
+ * @method     ChildTechnic|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildTechnic filtered by the version_created_by column
+ * @method     ChildTechnic|null findOneByVersionComment(string $version_comment) Return the first ChildTechnic filtered by the version_comment column *
 
  * @method     ChildTechnic requirePk($key, ?ConnectionInterface $con = null) Return the ChildTechnic by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnic requireOne(?ConnectionInterface $con = null) Return the first ChildTechnic matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -90,6 +102,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnic requireOneByPrice(string $price) Return the first ChildTechnic filtered by the price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnic requireOneByIsAvailable(boolean $is_available) Return the first ChildTechnic filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTechnic requireOneByUnitId(int $unit_id) Return the first ChildTechnic filtered by the unit_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnic requireOneByVersion(int $version) Return the first ChildTechnic filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnic requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildTechnic filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnic requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildTechnic filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTechnic requireOneByVersionComment(string $version_comment) Return the first ChildTechnic filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTechnic[]|Collection find(?ConnectionInterface $con = null) Return ChildTechnic objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildTechnic> find(?ConnectionInterface $con = null) Return ChildTechnic objects based on current ModelCriteria
@@ -103,6 +119,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildTechnic> findByIsAvailable(boolean $is_available) Return ChildTechnic objects filtered by the is_available column
  * @method     ChildTechnic[]|Collection findByUnitId(int $unit_id) Return ChildTechnic objects filtered by the unit_id column
  * @psalm-method Collection&\Traversable<ChildTechnic> findByUnitId(int $unit_id) Return ChildTechnic objects filtered by the unit_id column
+ * @method     ChildTechnic[]|Collection findByVersion(int $version) Return ChildTechnic objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildTechnic> findByVersion(int $version) Return ChildTechnic objects filtered by the version column
+ * @method     ChildTechnic[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildTechnic objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildTechnic> findByVersionCreatedAt(string $version_created_at) Return ChildTechnic objects filtered by the version_created_at column
+ * @method     ChildTechnic[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildTechnic objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildTechnic> findByVersionCreatedBy(string $version_created_by) Return ChildTechnic objects filtered by the version_created_by column
+ * @method     ChildTechnic[]|Collection findByVersionComment(string $version_comment) Return ChildTechnic objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildTechnic> findByVersionComment(string $version_comment) Return ChildTechnic objects filtered by the version_comment column
  * @method     ChildTechnic[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildTechnic> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -202,7 +226,7 @@ abstract class TechnicQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, price, is_available, unit_id FROM technic WHERE id = :p0';
+        $sql = 'SELECT id, name, price, is_available, unit_id, version, version_created_at, version_created_by, version_comment FROM technic WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -449,8 +473,6 @@ abstract class TechnicQuery extends ModelCriteria
      * $query->filterByUnitId(array('min' => 12)); // WHERE unit_id > 12
      * </code>
      *
-     * @see       filterByUnit()
-     *
      * @param mixed $unitId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -485,139 +507,149 @@ abstract class TechnicQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \DB\Unit object
+     * Filter the query on the version column
      *
-     * @param \DB\Unit|ObjectCollection $unit The related object(s) to use as filter
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByUnit($unit, ?string $comparison = null)
+    public function filterByVersion($version = null, ?string $comparison = null)
     {
-        if ($unit instanceof \DB\Unit) {
-            return $this
-                ->addUsingAlias(TechnicTableMap::COL_UNIT_ID, $unit->getId(), $comparison);
-        } elseif ($unit instanceof ObjectCollection) {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(TechnicTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(TechnicTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
-
-            $this
-                ->addUsingAlias(TechnicTableMap::COL_UNIT_ID, $unit->toKeyValue('PrimaryKey', 'Id'), $comparison);
-
-            return $this;
-        } else {
-            throw new PropelException('filterByUnit() only accepts arguments of type \DB\Unit or Collection');
         }
+
+        $this->addUsingAlias(TechnicTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
     }
 
     /**
-     * Adds a JOIN clause to the query using the Unit relation
+     * Filter the query on the version_created_at column
      *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinUnit(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
     {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Unit');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(TechnicTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(TechnicTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Unit');
-        }
+        $this->addUsingAlias(TechnicTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
 
         return $this;
     }
 
     /**
-     * Use the Unit relation Unit object
+     * Filter the query on the version_created_by column
      *
-     * @see useQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return \DB\UnitQuery A secondary query class using the current class as primary query
+     * @return $this The current query, for fluid interface
      */
-    public function useUnitQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
     {
-        return $this
-            ->joinUnit($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Unit', '\DB\UnitQuery');
-    }
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
 
-    /**
-     * Use the Unit relation Unit object
-     *
-     * @param callable(\DB\UnitQuery):\DB\UnitQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withUnitQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useUnitQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
+        $this->addUsingAlias(TechnicTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
 
         return $this;
     }
-    /**
-     * Use the relation to Unit table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\UnitQuery The inner query object of the EXISTS statement
-     */
-    public function useUnitExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('Unit', $modelAlias, $queryClass, $typeOfExists);
-    }
 
     /**
-     * Use the relation to Unit table for a NOT EXISTS query.
+     * Filter the query on the version_comment column
      *
-     * @see useUnitExistsQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
      *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return \DB\UnitQuery The inner query object of the NOT EXISTS statement
+     * @return $this The current query, for fluid interface
      */
-    public function useUnitNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
     {
-        return $this->useExistsQuery('Unit', $modelAlias, $queryClass, 'NOT EXISTS');
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(TechnicTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
     }
+
     /**
      * Filter the query by a related \DB\StageTechnic object
      *
@@ -749,6 +781,138 @@ abstract class TechnicQuery extends ModelCriteria
     public function useStageTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('StageTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\TechnicVersion object
+     *
+     * @param \DB\TechnicVersion|ObjectCollection $technicVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByTechnicVersion($technicVersion, ?string $comparison = null)
+    {
+        if ($technicVersion instanceof \DB\TechnicVersion) {
+            $this
+                ->addUsingAlias(TechnicTableMap::COL_ID, $technicVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($technicVersion instanceof ObjectCollection) {
+            $this
+                ->useTechnicVersionQuery()
+                ->filterByPrimaryKeys($technicVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByTechnicVersion() only accepts arguments of type \DB\TechnicVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the TechnicVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinTechnicVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('TechnicVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'TechnicVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the TechnicVersion relation TechnicVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\TechnicVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useTechnicVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinTechnicVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'TechnicVersion', '\DB\TechnicVersionQuery');
+    }
+
+    /**
+     * Use the TechnicVersion relation TechnicVersion object
+     *
+     * @param callable(\DB\TechnicVersionQuery):\DB\TechnicVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withTechnicVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useTechnicVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to TechnicVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\TechnicVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useTechnicVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to TechnicVersion table for a NOT EXISTS query.
+     *
+     * @see useTechnicVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\TechnicVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useTechnicVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \DB\WorkTechnic object

@@ -6,14 +6,11 @@ use \Exception;
 use \PDO;
 use DB\Material as ChildMaterial;
 use DB\MaterialQuery as ChildMaterialQuery;
-use DB\Technic as ChildTechnic;
-use DB\TechnicQuery as ChildTechnicQuery;
 use DB\Unit as ChildUnit;
 use DB\UnitQuery as ChildUnitQuery;
 use DB\Work as ChildWork;
 use DB\WorkQuery as ChildWorkQuery;
 use DB\Map\MaterialTableMap;
-use DB\Map\TechnicTableMap;
 use DB\Map\UnitTableMap;
 use DB\Map\WorkTableMap;
 use Propel\Runtime\Propel;
@@ -74,7 +71,7 @@ abstract class Unit implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $id;
@@ -102,13 +99,6 @@ abstract class Unit implements ActiveRecordInterface
     protected $collMaterialsPartial;
 
     /**
-     * @var        ObjectCollection|ChildTechnic[] Collection to store aggregation of ChildTechnic objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildTechnic> Collection to store aggregation of ChildTechnic objects.
-     */
-    protected $collTechnics;
-    protected $collTechnicsPartial;
-
-    /**
      * @var        ObjectCollection|ChildWork[] Collection to store aggregation of ChildWork objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildWork> Collection to store aggregation of ChildWork objects.
      */
@@ -129,13 +119,6 @@ abstract class Unit implements ActiveRecordInterface
      * @phpstan-var ObjectCollection&\Traversable<ChildMaterial>
      */
     protected $materialsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildTechnic[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildTechnic>
-     */
-    protected $technicsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -385,7 +368,7 @@ abstract class Unit implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getId()
@@ -425,7 +408,7 @@ abstract class Unit implements ActiveRecordInterface
 
     /**
      * Set the value of [id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -611,8 +594,6 @@ abstract class Unit implements ActiveRecordInterface
 
             $this->collMaterials = null;
 
-            $this->collTechnics = null;
-
             $this->collWorks = null;
 
         } // if (deep)
@@ -740,23 +721,6 @@ abstract class Unit implements ActiveRecordInterface
 
             if ($this->collMaterials !== null) {
                 foreach ($this->collMaterials as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->technicsScheduledForDeletion !== null) {
-                if (!$this->technicsScheduledForDeletion->isEmpty()) {
-                    \DB\TechnicQuery::create()
-                        ->filterByPrimaryKeys($this->technicsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->technicsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collTechnics !== null) {
-                foreach ($this->collTechnics as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -958,21 +922,6 @@ abstract class Unit implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collMaterials->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collTechnics) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'technics';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'technics';
-                        break;
-                    default:
-                        $key = 'Technics';
-                }
-
-                $result[$key] = $this->collTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collWorks) {
 
@@ -1223,12 +1172,6 @@ abstract class Unit implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getTechnics() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addTechnic($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getWorks() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addWork($relObj->copy($deepCopy));
@@ -1278,10 +1221,6 @@ abstract class Unit implements ActiveRecordInterface
     {
         if ('Material' === $relationName) {
             $this->initMaterials();
-            return;
-        }
-        if ('Technic' === $relationName) {
-            $this->initTechnics();
             return;
         }
         if ('Work' === $relationName) {
@@ -1524,245 +1463,6 @@ abstract class Unit implements ActiveRecordInterface
             }
             $this->materialsScheduledForDeletion[]= clone $material;
             $material->setUnit(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Clears out the collTechnics collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addTechnics()
-     */
-    public function clearTechnics()
-    {
-        $this->collTechnics = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collTechnics collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialTechnics($v = true): void
-    {
-        $this->collTechnicsPartial = $v;
-    }
-
-    /**
-     * Initializes the collTechnics collection.
-     *
-     * By default this just sets the collTechnics collection to an empty array (like clearcollTechnics());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initTechnics(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collTechnics && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = TechnicTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collTechnics = new $collectionClassName;
-        $this->collTechnics->setModel('\DB\Technic');
-    }
-
-    /**
-     * Gets an array of ChildTechnic objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUnit is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildTechnic[] List of ChildTechnic objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildTechnic> List of ChildTechnic objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getTechnics(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collTechnicsPartial && !$this->isNew();
-        if (null === $this->collTechnics || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collTechnics) {
-                    $this->initTechnics();
-                } else {
-                    $collectionClassName = TechnicTableMap::getTableMap()->getCollectionClassName();
-
-                    $collTechnics = new $collectionClassName;
-                    $collTechnics->setModel('\DB\Technic');
-
-                    return $collTechnics;
-                }
-            } else {
-                $collTechnics = ChildTechnicQuery::create(null, $criteria)
-                    ->filterByUnit($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collTechnicsPartial && count($collTechnics)) {
-                        $this->initTechnics(false);
-
-                        foreach ($collTechnics as $obj) {
-                            if (false == $this->collTechnics->contains($obj)) {
-                                $this->collTechnics->append($obj);
-                            }
-                        }
-
-                        $this->collTechnicsPartial = true;
-                    }
-
-                    return $collTechnics;
-                }
-
-                if ($partial && $this->collTechnics) {
-                    foreach ($this->collTechnics as $obj) {
-                        if ($obj->isNew()) {
-                            $collTechnics[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collTechnics = $collTechnics;
-                $this->collTechnicsPartial = false;
-            }
-        }
-
-        return $this->collTechnics;
-    }
-
-    /**
-     * Sets a collection of ChildTechnic objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $technics A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setTechnics(Collection $technics, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildTechnic[] $technicsToDelete */
-        $technicsToDelete = $this->getTechnics(new Criteria(), $con)->diff($technics);
-
-
-        $this->technicsScheduledForDeletion = $technicsToDelete;
-
-        foreach ($technicsToDelete as $technicRemoved) {
-            $technicRemoved->setUnit(null);
-        }
-
-        $this->collTechnics = null;
-        foreach ($technics as $technic) {
-            $this->addTechnic($technic);
-        }
-
-        $this->collTechnics = $technics;
-        $this->collTechnicsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Technic objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related Technic objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countTechnics(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collTechnicsPartial && !$this->isNew();
-        if (null === $this->collTechnics || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collTechnics) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getTechnics());
-            }
-
-            $query = ChildTechnicQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUnit($this)
-                ->count($con);
-        }
-
-        return count($this->collTechnics);
-    }
-
-    /**
-     * Method called to associate a ChildTechnic object to this object
-     * through the ChildTechnic foreign key attribute.
-     *
-     * @param ChildTechnic $l ChildTechnic
-     * @return $this The current object (for fluent API support)
-     */
-    public function addTechnic(ChildTechnic $l)
-    {
-        if ($this->collTechnics === null) {
-            $this->initTechnics();
-            $this->collTechnicsPartial = true;
-        }
-
-        if (!$this->collTechnics->contains($l)) {
-            $this->doAddTechnic($l);
-
-            if ($this->technicsScheduledForDeletion and $this->technicsScheduledForDeletion->contains($l)) {
-                $this->technicsScheduledForDeletion->remove($this->technicsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildTechnic $technic The ChildTechnic object to add.
-     */
-    protected function doAddTechnic(ChildTechnic $technic): void
-    {
-        $this->collTechnics[]= $technic;
-        $technic->setUnit($this);
-    }
-
-    /**
-     * @param ChildTechnic $technic The ChildTechnic object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeTechnic(ChildTechnic $technic)
-    {
-        if ($this->getTechnics()->contains($technic)) {
-            $pos = $this->collTechnics->search($technic);
-            $this->collTechnics->remove($pos);
-            if (null === $this->technicsScheduledForDeletion) {
-                $this->technicsScheduledForDeletion = clone $this->collTechnics;
-                $this->technicsScheduledForDeletion->clear();
-            }
-            $this->technicsScheduledForDeletion[]= clone $technic;
-            $technic->setUnit(null);
         }
 
         return $this;
@@ -2046,11 +1746,6 @@ abstract class Unit implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collTechnics) {
-                foreach ($this->collTechnics as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collWorks) {
                 foreach ($this->collWorks as $o) {
                     $o->clearAllReferences($deep);
@@ -2059,7 +1754,6 @@ abstract class Unit implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collMaterials = null;
-        $this->collTechnics = null;
         $this->collWorks = null;
         return $this;
     }

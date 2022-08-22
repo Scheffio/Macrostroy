@@ -2,15 +2,19 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Groups as ChildGroups;
 use DB\GroupsQuery as ChildGroupsQuery;
 use DB\House as ChildHouse;
 use DB\HouseQuery as ChildHouseQuery;
+use DB\HouseVersion as ChildHouseVersion;
+use DB\HouseVersionQuery as ChildHouseVersionQuery;
 use DB\Stage as ChildStage;
 use DB\StageQuery as ChildStageQuery;
 use DB\Map\HouseTableMap;
+use DB\Map\HouseVersionTableMap;
 use DB\Map\StageTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -24,6 +28,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'house' table.
@@ -84,7 +89,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * The value for the status field.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * Note: this column has a database default value of: 'in_process'
      * @var        string
      */
@@ -92,7 +97,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -100,15 +105,51 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * The value for the group_id field.
-     * ID группы
+     * Id группы
      * @var        int
      */
     protected $group_id;
 
     /**
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * @var        ChildGroups
      */
     protected $aGroups;
+
+    /**
+     * @var        ObjectCollection|ChildHouseVersion[] Collection to store aggregation of ChildHouseVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion> Collection to store aggregation of ChildHouseVersion objects.
+     */
+    protected $collHouseVersions;
+    protected $collHouseVersionsPartial;
 
     /**
      * @var        ObjectCollection|ChildStage[] Collection to store aggregation of ChildStage objects.
@@ -127,6 +168,13 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildHouseVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion>
+     */
+    protected $houseVersionsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildStage[]
      * @phpstan-var ObjectCollection&\Traversable<ChildStage>
      */
@@ -142,6 +190,7 @@ abstract class House implements ActiveRecordInterface
     {
         $this->status = 'in_process';
         $this->is_available = true;
+        $this->version = 0;
     }
 
     /**
@@ -394,7 +443,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Get the [status] column value.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * @return string
      */
     public function getStatus()
@@ -404,7 +453,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -414,7 +463,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function isAvailable()
@@ -424,12 +473,64 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Get the [group_id] column value.
-     * ID группы
+     * Id группы
      * @return int
      */
     public function getGroupId()
     {
         return $this->group_id;
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -474,7 +575,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Set the value of [status] column.
-     * 	Статус (в процессе, завершен, удален)
+     * Статус (в процессе, завершен, удален)
      * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -498,7 +599,7 @@ abstract class House implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -522,7 +623,7 @@ abstract class House implements ActiveRecordInterface
 
     /**
      * Set the value of [group_id] column.
-     * ID группы
+     * Id группы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -545,6 +646,86 @@ abstract class House implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[HouseTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[HouseTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[HouseTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[HouseTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -559,6 +740,10 @@ abstract class House implements ActiveRecordInterface
             }
 
             if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
                 return false;
             }
 
@@ -602,6 +787,21 @@ abstract class House implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : HouseTableMap::translateFieldName('GroupId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->group_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : HouseTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : HouseTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : HouseTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : HouseTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -610,7 +810,7 @@ abstract class House implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = HouseTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = HouseTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\House'), 0, $e);
@@ -676,6 +876,8 @@ abstract class House implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aGroups = null;
+            $this->collHouseVersions = null;
+
             $this->collStages = null;
 
         } // if (deep)
@@ -804,6 +1006,23 @@ abstract class House implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->houseVersionsScheduledForDeletion !== null) {
+                if (!$this->houseVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\HouseVersionQuery::create()
+                        ->filterByPrimaryKeys($this->houseVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->houseVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHouseVersions !== null) {
+                foreach ($this->collHouseVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->stagesScheduledForDeletion !== null) {
                 if (!$this->stagesScheduledForDeletion->isEmpty()) {
                     \DB\StageQuery::create()
@@ -841,6 +1060,10 @@ abstract class House implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
+        $this->modifiedColumns[HouseTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . HouseTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(HouseTableMap::COL_ID)) {
@@ -857,6 +1080,18 @@ abstract class House implements ActiveRecordInterface
         }
         if ($this->isColumnModified(HouseTableMap::COL_GROUP_ID)) {
             $modifiedColumns[':p' . $index++]  = 'group_id';
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -884,6 +1119,18 @@ abstract class House implements ActiveRecordInterface
                     case 'group_id':
                         $stmt->bindValue($identifier, $this->group_id, PDO::PARAM_INT);
                         break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
+                        break;
                 }
             }
             $stmt->execute();
@@ -891,6 +1138,13 @@ abstract class House implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -954,6 +1208,18 @@ abstract class House implements ActiveRecordInterface
             case 4:
                 return $this->getGroupId();
 
+            case 5:
+                return $this->getVersion();
+
+            case 6:
+                return $this->getVersionCreatedAt();
+
+            case 7:
+                return $this->getVersionCreatedBy();
+
+            case 8:
+                return $this->getVersionComment();
+
             default:
                 return null;
         } // switch()
@@ -987,7 +1253,15 @@ abstract class House implements ActiveRecordInterface
             $keys[2] => $this->getStatus(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getGroupId(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
         ];
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1008,6 +1282,21 @@ abstract class House implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aGroups->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collHouseVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'houseVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'house_versions';
+                        break;
+                    default:
+                        $key = 'HouseVersions';
+                }
+
+                $result[$key] = $this->collHouseVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collStages) {
 
@@ -1075,6 +1364,18 @@ abstract class House implements ActiveRecordInterface
             case 4:
                 $this->setGroupId($value);
                 break;
+            case 5:
+                $this->setVersion($value);
+                break;
+            case 6:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 7:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 8:
+                $this->setVersionComment($value);
+                break;
         } // switch()
 
         return $this;
@@ -1115,6 +1416,18 @@ abstract class House implements ActiveRecordInterface
         }
         if (array_key_exists($keys[4], $arr)) {
             $this->setGroupId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersion($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1173,6 +1486,18 @@ abstract class House implements ActiveRecordInterface
         }
         if ($this->isColumnModified(HouseTableMap::COL_GROUP_ID)) {
             $criteria->add(HouseTableMap::COL_GROUP_ID, $this->group_id);
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION)) {
+            $criteria->add(HouseTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(HouseTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(HouseTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(HouseTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(HouseTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1262,16 +1587,25 @@ abstract class House implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
         $copyObj->setStatus($this->getStatus());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setGroupId($this->getGroupId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
+
+            foreach ($this->getHouseVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHouseVersion($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getStages() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1283,6 +1617,7 @@ abstract class House implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1370,10 +1705,256 @@ abstract class House implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
+        if ('HouseVersion' === $relationName) {
+            $this->initHouseVersions();
+            return;
+        }
         if ('Stage' === $relationName) {
             $this->initStages();
             return;
         }
+    }
+
+    /**
+     * Clears out the collHouseVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addHouseVersions()
+     */
+    public function clearHouseVersions()
+    {
+        $this->collHouseVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collHouseVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialHouseVersions($v = true): void
+    {
+        $this->collHouseVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collHouseVersions collection.
+     *
+     * By default this just sets the collHouseVersions collection to an empty array (like clearcollHouseVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHouseVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collHouseVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = HouseVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collHouseVersions = new $collectionClassName;
+        $this->collHouseVersions->setModel('\DB\HouseVersion');
+    }
+
+    /**
+     * Gets an array of ChildHouseVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildHouse is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildHouseVersion[] List of ChildHouseVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHouseVersion> List of ChildHouseVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getHouseVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collHouseVersionsPartial && !$this->isNew();
+        if (null === $this->collHouseVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collHouseVersions) {
+                    $this->initHouseVersions();
+                } else {
+                    $collectionClassName = HouseVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collHouseVersions = new $collectionClassName;
+                    $collHouseVersions->setModel('\DB\HouseVersion');
+
+                    return $collHouseVersions;
+                }
+            } else {
+                $collHouseVersions = ChildHouseVersionQuery::create(null, $criteria)
+                    ->filterByHouse($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collHouseVersionsPartial && count($collHouseVersions)) {
+                        $this->initHouseVersions(false);
+
+                        foreach ($collHouseVersions as $obj) {
+                            if (false == $this->collHouseVersions->contains($obj)) {
+                                $this->collHouseVersions->append($obj);
+                            }
+                        }
+
+                        $this->collHouseVersionsPartial = true;
+                    }
+
+                    return $collHouseVersions;
+                }
+
+                if ($partial && $this->collHouseVersions) {
+                    foreach ($this->collHouseVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collHouseVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHouseVersions = $collHouseVersions;
+                $this->collHouseVersionsPartial = false;
+            }
+        }
+
+        return $this->collHouseVersions;
+    }
+
+    /**
+     * Sets a collection of ChildHouseVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $houseVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setHouseVersions(Collection $houseVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildHouseVersion[] $houseVersionsToDelete */
+        $houseVersionsToDelete = $this->getHouseVersions(new Criteria(), $con)->diff($houseVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->houseVersionsScheduledForDeletion = clone $houseVersionsToDelete;
+
+        foreach ($houseVersionsToDelete as $houseVersionRemoved) {
+            $houseVersionRemoved->setHouse(null);
+        }
+
+        $this->collHouseVersions = null;
+        foreach ($houseVersions as $houseVersion) {
+            $this->addHouseVersion($houseVersion);
+        }
+
+        $this->collHouseVersions = $houseVersions;
+        $this->collHouseVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related HouseVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related HouseVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countHouseVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collHouseVersionsPartial && !$this->isNew();
+        if (null === $this->collHouseVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHouseVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHouseVersions());
+            }
+
+            $query = ChildHouseVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByHouse($this)
+                ->count($con);
+        }
+
+        return count($this->collHouseVersions);
+    }
+
+    /**
+     * Method called to associate a ChildHouseVersion object to this object
+     * through the ChildHouseVersion foreign key attribute.
+     *
+     * @param ChildHouseVersion $l ChildHouseVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addHouseVersion(ChildHouseVersion $l)
+    {
+        if ($this->collHouseVersions === null) {
+            $this->initHouseVersions();
+            $this->collHouseVersionsPartial = true;
+        }
+
+        if (!$this->collHouseVersions->contains($l)) {
+            $this->doAddHouseVersion($l);
+
+            if ($this->houseVersionsScheduledForDeletion and $this->houseVersionsScheduledForDeletion->contains($l)) {
+                $this->houseVersionsScheduledForDeletion->remove($this->houseVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildHouseVersion $houseVersion The ChildHouseVersion object to add.
+     */
+    protected function doAddHouseVersion(ChildHouseVersion $houseVersion): void
+    {
+        $this->collHouseVersions[]= $houseVersion;
+        $houseVersion->setHouse($this);
+    }
+
+    /**
+     * @param ChildHouseVersion $houseVersion The ChildHouseVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeHouseVersion(ChildHouseVersion $houseVersion)
+    {
+        if ($this->getHouseVersions()->contains($houseVersion)) {
+            $pos = $this->collHouseVersions->search($houseVersion);
+            $this->collHouseVersions->remove($pos);
+            if (null === $this->houseVersionsScheduledForDeletion) {
+                $this->houseVersionsScheduledForDeletion = clone $this->collHouseVersions;
+                $this->houseVersionsScheduledForDeletion->clear();
+            }
+            $this->houseVersionsScheduledForDeletion[]= clone $houseVersion;
+            $houseVersion->setHouse(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1608,7 +2189,7 @@ abstract class House implements ActiveRecordInterface
                 $this->stagesScheduledForDeletion = clone $this->collStages;
                 $this->stagesScheduledForDeletion->clear();
             }
-            $this->stagesScheduledForDeletion[]= $stage;
+            $this->stagesScheduledForDeletion[]= clone $stage;
             $stage->setHouse(null);
         }
 
@@ -1632,6 +2213,10 @@ abstract class House implements ActiveRecordInterface
         $this->status = null;
         $this->is_available = null;
         $this->group_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1654,6 +2239,11 @@ abstract class House implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collHouseVersions) {
+                foreach ($this->collHouseVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collStages) {
                 foreach ($this->collStages as $o) {
                     $o->clearAllReferences($deep);
@@ -1661,6 +2251,7 @@ abstract class House implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collHouseVersions = null;
         $this->collStages = null;
         $this->aGroups = null;
         return $this;

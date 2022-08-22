@@ -2,25 +2,32 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
-use DB\Stage as ChildStage;
-use DB\StageQuery as ChildStageQuery;
+use DB\StageTechnic as ChildStageTechnic;
 use DB\StageTechnicQuery as ChildStageTechnicQuery;
+use DB\StageTechnicVersion as ChildStageTechnicVersion;
+use DB\StageTechnicVersionQuery as ChildStageTechnicVersionQuery;
+use DB\StageWork as ChildStageWork;
+use DB\StageWorkQuery as ChildStageWorkQuery;
 use DB\Technic as ChildTechnic;
 use DB\TechnicQuery as ChildTechnicQuery;
 use DB\Map\StageTechnicTableMap;
+use DB\Map\StageTechnicVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'stage_technic' table.
@@ -67,7 +74,7 @@ abstract class StageTechnic implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * ID связь
+     * ID техники работы
      * @var        int
      */
     protected $id;
@@ -87,6 +94,14 @@ abstract class StageTechnic implements ActiveRecordInterface
     protected $amount;
 
     /**
+     * The value for the is_available field.
+     * Доступ (публичный, приватный)
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $is_available;
+
+    /**
      * The value for the technic_id field.
      * ID техники
      * @var        int
@@ -94,21 +109,57 @@ abstract class StageTechnic implements ActiveRecordInterface
     protected $technic_id;
 
     /**
-     * The value for the stage_id field.
-     * ID этапа
+     * The value for the stage_work_id field.
+     * ID работы этапа
      * @var        int
      */
-    protected $stage_id;
+    protected $stage_work_id;
 
     /**
-     * @var        ChildStage
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
      */
-    protected $aStage;
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
+     * @var        ChildStageWork
+     */
+    protected $aStageWork;
 
     /**
      * @var        ChildTechnic
      */
     protected $aTechnic;
+
+    /**
+     * @var        ObjectCollection|ChildStageTechnicVersion[] Collection to store aggregation of ChildStageTechnicVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildStageTechnicVersion> Collection to store aggregation of ChildStageTechnicVersion objects.
+     */
+    protected $collStageTechnicVersions;
+    protected $collStageTechnicVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -119,10 +170,31 @@ abstract class StageTechnic implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildStageTechnicVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildStageTechnicVersion>
+     */
+    protected $stageTechnicVersionsScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->is_available = true;
+        $this->version = 0;
+    }
+
+    /**
      * Initializes internal state of DB\Base\StageTechnic object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -346,7 +418,7 @@ abstract class StageTechnic implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     * ID связь
+     * ID техники работы
      * @return int
      */
     public function getId()
@@ -375,6 +447,26 @@ abstract class StageTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [is_available] column value.
+     * Доступ (публичный, приватный)
+     * @return boolean
+     */
+    public function getIsAvailable()
+    {
+        return $this->is_available;
+    }
+
+    /**
+     * Get the [is_available] column value.
+     * Доступ (публичный, приватный)
+     * @return boolean
+     */
+    public function isAvailable()
+    {
+        return $this->getIsAvailable();
+    }
+
+    /**
      * Get the [technic_id] column value.
      * ID техники
      * @return int
@@ -385,18 +477,70 @@ abstract class StageTechnic implements ActiveRecordInterface
     }
 
     /**
-     * Get the [stage_id] column value.
-     * ID этапа
+     * Get the [stage_work_id] column value.
+     * ID работы этапа
      * @return int
      */
-    public function getStageId()
+    public function getStageWorkId()
     {
-        return $this->stage_id;
+        return $this->stage_work_id;
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
      * Set the value of [id] column.
-     * ID связь
+     * ID техники работы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -455,6 +599,34 @@ abstract class StageTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of the [is_available] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Доступ (публичный, приватный)
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setIsAvailable($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_available !== $v) {
+            $this->is_available = $v;
+            $this->modifiedColumns[StageTechnicTableMap::COL_IS_AVAILABLE] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [technic_id] column.
      * ID техники
      * @param int $v New value
@@ -479,24 +651,104 @@ abstract class StageTechnic implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [stage_id] column.
-     * ID этапа
+     * Set the value of [stage_work_id] column.
+     * ID работы этапа
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setStageId($v)
+    public function setStageWorkId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->stage_id !== $v) {
-            $this->stage_id = $v;
-            $this->modifiedColumns[StageTechnicTableMap::COL_STAGE_ID] = true;
+        if ($this->stage_work_id !== $v) {
+            $this->stage_work_id = $v;
+            $this->modifiedColumns[StageTechnicTableMap::COL_STAGE_WORK_ID] = true;
         }
 
-        if ($this->aStage !== null && $this->aStage->getId() !== $v) {
-            $this->aStage = null;
+        if ($this->aStageWork !== null && $this->aStageWork->getId() !== $v) {
+            $this->aStageWork = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[StageTechnicTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[StageTechnicTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[StageTechnicTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[StageTechnicTableMap::COL_VERSION_COMMENT] = true;
         }
 
         return $this;
@@ -512,6 +764,14 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -547,11 +807,29 @@ abstract class StageTechnic implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StageTechnicTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageTechnicTableMap::translateFieldName('TechnicId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StageTechnicTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_available = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageTechnicTableMap::translateFieldName('TechnicId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->technic_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StageTechnicTableMap::translateFieldName('StageId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StageTechnicTableMap::translateFieldName('StageWorkId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stage_work_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StageTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StageTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StageTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StageTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -560,7 +838,7 @@ abstract class StageTechnic implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = StageTechnicTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = StageTechnicTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\StageTechnic'), 0, $e);
@@ -586,8 +864,8 @@ abstract class StageTechnic implements ActiveRecordInterface
         if ($this->aTechnic !== null && $this->technic_id !== $this->aTechnic->getId()) {
             $this->aTechnic = null;
         }
-        if ($this->aStage !== null && $this->stage_id !== $this->aStage->getId()) {
-            $this->aStage = null;
+        if ($this->aStageWork !== null && $this->stage_work_id !== $this->aStageWork->getId()) {
+            $this->aStageWork = null;
         }
     }
 
@@ -628,8 +906,10 @@ abstract class StageTechnic implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aStage = null;
+            $this->aStageWork = null;
             $this->aTechnic = null;
+            $this->collStageTechnicVersions = null;
+
         } // if (deep)
     }
 
@@ -738,11 +1018,11 @@ abstract class StageTechnic implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aStage !== null) {
-                if ($this->aStage->isModified() || $this->aStage->isNew()) {
-                    $affectedRows += $this->aStage->save($con);
+            if ($this->aStageWork !== null) {
+                if ($this->aStageWork->isModified() || $this->aStageWork->isNew()) {
+                    $affectedRows += $this->aStageWork->save($con);
                 }
-                $this->setStage($this->aStage);
+                $this->setStageWork($this->aStageWork);
             }
 
             if ($this->aTechnic !== null) {
@@ -761,6 +1041,23 @@ abstract class StageTechnic implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->stageTechnicVersionsScheduledForDeletion !== null) {
+                if (!$this->stageTechnicVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\StageTechnicVersionQuery::create()
+                        ->filterByPrimaryKeys($this->stageTechnicVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->stageTechnicVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collStageTechnicVersions !== null) {
+                foreach ($this->collStageTechnicVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -798,11 +1095,26 @@ abstract class StageTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(StageTechnicTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_IS_AVAILABLE)) {
+            $modifiedColumns[':p' . $index++]  = 'is_available';
+        }
         if ($this->isColumnModified(StageTechnicTableMap::COL_TECHNIC_ID)) {
             $modifiedColumns[':p' . $index++]  = 'technic_id';
         }
-        if ($this->isColumnModified(StageTechnicTableMap::COL_STAGE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'stage_id';
+        if ($this->isColumnModified(StageTechnicTableMap::COL_STAGE_WORK_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'stage_work_id';
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -824,11 +1136,26 @@ abstract class StageTechnic implements ActiveRecordInterface
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
+                    case 'is_available':
+                        $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
+                        break;
                     case 'technic_id':
                         $stmt->bindValue($identifier, $this->technic_id, PDO::PARAM_INT);
                         break;
-                    case 'stage_id':
-                        $stmt->bindValue($identifier, $this->stage_id, PDO::PARAM_INT);
+                    case 'stage_work_id':
+                        $stmt->bindValue($identifier, $this->stage_work_id, PDO::PARAM_INT);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -902,10 +1229,25 @@ abstract class StageTechnic implements ActiveRecordInterface
                 return $this->getAmount();
 
             case 3:
-                return $this->getTechnicId();
+                return $this->getIsAvailable();
 
             case 4:
-                return $this->getStageId();
+                return $this->getTechnicId();
+
+            case 5:
+                return $this->getStageWorkId();
+
+            case 6:
+                return $this->getVersion();
+
+            case 7:
+                return $this->getVersionCreatedAt();
+
+            case 8:
+                return $this->getVersionCreatedBy();
+
+            case 9:
+                return $this->getVersionComment();
 
             default:
                 return null;
@@ -938,29 +1280,38 @@ abstract class StageTechnic implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPrice(),
             $keys[2] => $this->getAmount(),
-            $keys[3] => $this->getTechnicId(),
-            $keys[4] => $this->getStageId(),
+            $keys[3] => $this->getIsAvailable(),
+            $keys[4] => $this->getTechnicId(),
+            $keys[5] => $this->getStageWorkId(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
+            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[9] => $this->getVersionComment(),
         ];
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aStage) {
+            if (null !== $this->aStageWork) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stage';
+                        $key = 'stageWork';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'stage';
+                        $key = 'stage_work';
                         break;
                     default:
-                        $key = 'Stage';
+                        $key = 'StageWork';
                 }
 
-                $result[$key] = $this->aStage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aStageWork->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aTechnic) {
 
@@ -976,6 +1327,21 @@ abstract class StageTechnic implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aTechnic->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collStageTechnicVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'stageTechnicVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stage_technic_versions';
+                        break;
+                    default:
+                        $key = 'StageTechnicVersions';
+                }
+
+                $result[$key] = $this->collStageTechnicVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1023,10 +1389,25 @@ abstract class StageTechnic implements ActiveRecordInterface
                 $this->setAmount($value);
                 break;
             case 3:
-                $this->setTechnicId($value);
+                $this->setIsAvailable($value);
                 break;
             case 4:
-                $this->setStageId($value);
+                $this->setTechnicId($value);
+                break;
+            case 5:
+                $this->setStageWorkId($value);
+                break;
+            case 6:
+                $this->setVersion($value);
+                break;
+            case 7:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 8:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 9:
+                $this->setVersionComment($value);
                 break;
         } // switch()
 
@@ -1064,10 +1445,25 @@ abstract class StageTechnic implements ActiveRecordInterface
             $this->setAmount($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setTechnicId($arr[$keys[3]]);
+            $this->setIsAvailable($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setStageId($arr[$keys[4]]);
+            $this->setTechnicId($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setStageWorkId($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersion($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setVersionComment($arr[$keys[9]]);
         }
 
         return $this;
@@ -1121,11 +1517,26 @@ abstract class StageTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(StageTechnicTableMap::COL_AMOUNT)) {
             $criteria->add(StageTechnicTableMap::COL_AMOUNT, $this->amount);
         }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_IS_AVAILABLE)) {
+            $criteria->add(StageTechnicTableMap::COL_IS_AVAILABLE, $this->is_available);
+        }
         if ($this->isColumnModified(StageTechnicTableMap::COL_TECHNIC_ID)) {
             $criteria->add(StageTechnicTableMap::COL_TECHNIC_ID, $this->technic_id);
         }
-        if ($this->isColumnModified(StageTechnicTableMap::COL_STAGE_ID)) {
-            $criteria->add(StageTechnicTableMap::COL_STAGE_ID, $this->stage_id);
+        if ($this->isColumnModified(StageTechnicTableMap::COL_STAGE_WORK_ID)) {
+            $criteria->add(StageTechnicTableMap::COL_STAGE_WORK_ID, $this->stage_work_id);
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION)) {
+            $criteria->add(StageTechnicTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(StageTechnicTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(StageTechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(StageTechnicTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(StageTechnicTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1217,8 +1628,27 @@ abstract class StageTechnic implements ActiveRecordInterface
     {
         $copyObj->setPrice($this->getPrice());
         $copyObj->setAmount($this->getAmount());
+        $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setTechnicId($this->getTechnicId());
-        $copyObj->setStageId($this->getStageId());
+        $copyObj->setStageWorkId($this->getStageWorkId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getStageTechnicVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addStageTechnicVersion($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1248,24 +1678,24 @@ abstract class StageTechnic implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildStage object.
+     * Declares an association between this object and a ChildStageWork object.
      *
-     * @param ChildStage $v
+     * @param ChildStageWork $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setStage(ChildStage $v = null)
+    public function setStageWork(ChildStageWork $v = null)
     {
         if ($v === null) {
-            $this->setStageId(NULL);
+            $this->setStageWorkId(NULL);
         } else {
-            $this->setStageId($v->getId());
+            $this->setStageWorkId($v->getId());
         }
 
-        $this->aStage = $v;
+        $this->aStageWork = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildStage object, it will not be re-added.
+        // If this object has already been added to the ChildStageWork object, it will not be re-added.
         if ($v !== null) {
             $v->addStageTechnic($this);
         }
@@ -1276,26 +1706,26 @@ abstract class StageTechnic implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildStage object
+     * Get the associated ChildStageWork object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildStage The associated ChildStage object.
+     * @return ChildStageWork The associated ChildStageWork object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStage(?ConnectionInterface $con = null)
+    public function getStageWork(?ConnectionInterface $con = null)
     {
-        if ($this->aStage === null && ($this->stage_id != 0)) {
-            $this->aStage = ChildStageQuery::create()->findPk($this->stage_id, $con);
+        if ($this->aStageWork === null && ($this->stage_work_id != 0)) {
+            $this->aStageWork = ChildStageWorkQuery::create()->findPk($this->stage_work_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aStage->addStageTechnics($this);
+                $this->aStageWork->addStageTechnics($this);
              */
         }
 
-        return $this->aStage;
+        return $this->aStageWork;
     }
 
     /**
@@ -1349,6 +1779,265 @@ abstract class StageTechnic implements ActiveRecordInterface
         return $this->aTechnic;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('StageTechnicVersion' === $relationName) {
+            $this->initStageTechnicVersions();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collStageTechnicVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addStageTechnicVersions()
+     */
+    public function clearStageTechnicVersions()
+    {
+        $this->collStageTechnicVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collStageTechnicVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialStageTechnicVersions($v = true): void
+    {
+        $this->collStageTechnicVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collStageTechnicVersions collection.
+     *
+     * By default this just sets the collStageTechnicVersions collection to an empty array (like clearcollStageTechnicVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initStageTechnicVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collStageTechnicVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = StageTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collStageTechnicVersions = new $collectionClassName;
+        $this->collStageTechnicVersions->setModel('\DB\StageTechnicVersion');
+    }
+
+    /**
+     * Gets an array of ChildStageTechnicVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildStageTechnic is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildStageTechnicVersion[] List of ChildStageTechnicVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStageTechnicVersion> List of ChildStageTechnicVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getStageTechnicVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collStageTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collStageTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collStageTechnicVersions) {
+                    $this->initStageTechnicVersions();
+                } else {
+                    $collectionClassName = StageTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collStageTechnicVersions = new $collectionClassName;
+                    $collStageTechnicVersions->setModel('\DB\StageTechnicVersion');
+
+                    return $collStageTechnicVersions;
+                }
+            } else {
+                $collStageTechnicVersions = ChildStageTechnicVersionQuery::create(null, $criteria)
+                    ->filterByStageTechnic($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collStageTechnicVersionsPartial && count($collStageTechnicVersions)) {
+                        $this->initStageTechnicVersions(false);
+
+                        foreach ($collStageTechnicVersions as $obj) {
+                            if (false == $this->collStageTechnicVersions->contains($obj)) {
+                                $this->collStageTechnicVersions->append($obj);
+                            }
+                        }
+
+                        $this->collStageTechnicVersionsPartial = true;
+                    }
+
+                    return $collStageTechnicVersions;
+                }
+
+                if ($partial && $this->collStageTechnicVersions) {
+                    foreach ($this->collStageTechnicVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collStageTechnicVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collStageTechnicVersions = $collStageTechnicVersions;
+                $this->collStageTechnicVersionsPartial = false;
+            }
+        }
+
+        return $this->collStageTechnicVersions;
+    }
+
+    /**
+     * Sets a collection of ChildStageTechnicVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $stageTechnicVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setStageTechnicVersions(Collection $stageTechnicVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildStageTechnicVersion[] $stageTechnicVersionsToDelete */
+        $stageTechnicVersionsToDelete = $this->getStageTechnicVersions(new Criteria(), $con)->diff($stageTechnicVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->stageTechnicVersionsScheduledForDeletion = clone $stageTechnicVersionsToDelete;
+
+        foreach ($stageTechnicVersionsToDelete as $stageTechnicVersionRemoved) {
+            $stageTechnicVersionRemoved->setStageTechnic(null);
+        }
+
+        $this->collStageTechnicVersions = null;
+        foreach ($stageTechnicVersions as $stageTechnicVersion) {
+            $this->addStageTechnicVersion($stageTechnicVersion);
+        }
+
+        $this->collStageTechnicVersions = $stageTechnicVersions;
+        $this->collStageTechnicVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related StageTechnicVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related StageTechnicVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countStageTechnicVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collStageTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collStageTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStageTechnicVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getStageTechnicVersions());
+            }
+
+            $query = ChildStageTechnicVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByStageTechnic($this)
+                ->count($con);
+        }
+
+        return count($this->collStageTechnicVersions);
+    }
+
+    /**
+     * Method called to associate a ChildStageTechnicVersion object to this object
+     * through the ChildStageTechnicVersion foreign key attribute.
+     *
+     * @param ChildStageTechnicVersion $l ChildStageTechnicVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStageTechnicVersion(ChildStageTechnicVersion $l)
+    {
+        if ($this->collStageTechnicVersions === null) {
+            $this->initStageTechnicVersions();
+            $this->collStageTechnicVersionsPartial = true;
+        }
+
+        if (!$this->collStageTechnicVersions->contains($l)) {
+            $this->doAddStageTechnicVersion($l);
+
+            if ($this->stageTechnicVersionsScheduledForDeletion and $this->stageTechnicVersionsScheduledForDeletion->contains($l)) {
+                $this->stageTechnicVersionsScheduledForDeletion->remove($this->stageTechnicVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildStageTechnicVersion $stageTechnicVersion The ChildStageTechnicVersion object to add.
+     */
+    protected function doAddStageTechnicVersion(ChildStageTechnicVersion $stageTechnicVersion): void
+    {
+        $this->collStageTechnicVersions[]= $stageTechnicVersion;
+        $stageTechnicVersion->setStageTechnic($this);
+    }
+
+    /**
+     * @param ChildStageTechnicVersion $stageTechnicVersion The ChildStageTechnicVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStageTechnicVersion(ChildStageTechnicVersion $stageTechnicVersion)
+    {
+        if ($this->getStageTechnicVersions()->contains($stageTechnicVersion)) {
+            $pos = $this->collStageTechnicVersions->search($stageTechnicVersion);
+            $this->collStageTechnicVersions->remove($pos);
+            if (null === $this->stageTechnicVersionsScheduledForDeletion) {
+                $this->stageTechnicVersionsScheduledForDeletion = clone $this->collStageTechnicVersions;
+                $this->stageTechnicVersionsScheduledForDeletion->clear();
+            }
+            $this->stageTechnicVersionsScheduledForDeletion[]= clone $stageTechnicVersion;
+            $stageTechnicVersion->setStageTechnic(null);
+        }
+
+        return $this;
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1358,8 +2047,8 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aStage) {
-            $this->aStage->removeStageTechnic($this);
+        if (null !== $this->aStageWork) {
+            $this->aStageWork->removeStageTechnic($this);
         }
         if (null !== $this->aTechnic) {
             $this->aTechnic->removeStageTechnic($this);
@@ -1367,10 +2056,16 @@ abstract class StageTechnic implements ActiveRecordInterface
         $this->id = null;
         $this->price = null;
         $this->amount = null;
+        $this->is_available = null;
         $this->technic_id = null;
-        $this->stage_id = null;
+        $this->stage_work_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1390,9 +2085,15 @@ abstract class StageTechnic implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collStageTechnicVersions) {
+                foreach ($this->collStageTechnicVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
-        $this->aStage = null;
+        $this->collStageTechnicVersions = null;
+        $this->aStageWork = null;
         $this->aTechnic = null;
         return $this;
     }

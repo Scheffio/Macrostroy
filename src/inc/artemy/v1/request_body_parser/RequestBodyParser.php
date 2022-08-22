@@ -30,10 +30,10 @@ class RequestBodyParser
                 return implode("\n", array_reverse($arr));
             })();
 
-            $input_file = fopen('php://temp', 'rw');
-            fwrite($input_file, $headers . "\n\n" . $input);
-            $document = new StreamedPart($input_file);
-            fclose($input_file);
+            $tmpfile = tmpfile();
+            fwrite($tmpfile, $headers . "\n\n" . $input);
+            $document = new StreamedPart($tmpfile);
+            fclose($tmpfile);
 
             foreach ($document->getParts() as $part) {
                 if ($part->isFile()) {

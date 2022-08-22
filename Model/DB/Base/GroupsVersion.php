@@ -89,7 +89,7 @@ abstract class GroupsVersion implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -103,21 +103,6 @@ abstract class GroupsVersion implements ActiveRecordInterface
     protected $subproject_id;
 
     /**
-     * The value for the do_create field.
-     *
-     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
-     * @var        DateTime
-     */
-    protected $do_create;
-
-    /**
-     * The value for the user_id field.
-     *
-     * @var        int
-     */
-    protected $user_id;
-
-    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -126,12 +111,25 @@ abstract class GroupsVersion implements ActiveRecordInterface
     protected $version;
 
     /**
-     * The value for the user_id_version field.
+     * The value for the version_created_at field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
+     * @var        DateTime|null
      */
-    protected $user_id_version;
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
 
     /**
      * The value for the subproject_id_version field.
@@ -144,30 +142,16 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * The value for the house_ids field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $house_ids;
 
     /**
-     * The unserialized $house_ids value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $house_ids_unserialized;
-
-    /**
      * The value for the house_versions field.
      *
-     * @var        array|null
+     * @var        string|null
      */
     protected $house_versions;
-
-    /**
-     * The unserialized $house_versions value - i.e. the persisted object.
-     * This is necessary to avoid repeated calls to unserialize() at runtime.
-     * @var object
-     */
-    protected $house_versions_unserialized;
 
     /**
      * @var        ChildGroups
@@ -193,7 +177,6 @@ abstract class GroupsVersion implements ActiveRecordInterface
         $this->status = 'in_process';
         $this->is_available = true;
         $this->version = 0;
-        $this->user_id_version = 0;
         $this->subproject_id_version = 0;
     }
 
@@ -457,7 +440,7 @@ abstract class GroupsVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -467,7 +450,7 @@ abstract class GroupsVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @return boolean
      */
     public function isAvailable()
@@ -486,38 +469,6 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [do_create] column value.
-     *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), and 0 if column value is 0000-00-00 00:00:00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime : string)
-     */
-    public function getDoCreate($format = null)
-    {
-        if ($format === null) {
-            return $this->do_create;
-        } else {
-            return $this->do_create instanceof \DateTimeInterface ? $this->do_create->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [user_id] column value.
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    /**
      * Get the [version] column value.
      *
      * @return int
@@ -528,13 +479,45 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [user_id_version] column value.
+     * Get the [optionally formatted] temporal [version_created_at] column value.
      *
-     * @return int|null
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
      */
-    public function getUserIdVersion()
+    public function getVersionCreatedAt($format = null)
     {
-        return $this->user_id_version;
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
     }
 
     /**
@@ -550,59 +533,21 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * Get the [house_ids] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getHouseIds()
     {
-        if (null === $this->house_ids_unserialized) {
-            $this->house_ids_unserialized = [];
-        }
-        if (!$this->house_ids_unserialized && null !== $this->house_ids) {
-            $house_ids_unserialized = substr($this->house_ids, 2, -2);
-            $this->house_ids_unserialized = '' !== $house_ids_unserialized ? explode(' | ', $house_ids_unserialized) : array();
-        }
-
-        return $this->house_ids_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [house_ids] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasHouseId($value): bool
-    {
-        return in_array($value, $this->getHouseIds());
+        return $this->house_ids;
     }
 
     /**
      * Get the [house_versions] column value.
      *
-     * @return array|null
+     * @return string|null
      */
     public function getHouseVersions()
     {
-        if (null === $this->house_versions_unserialized) {
-            $this->house_versions_unserialized = [];
-        }
-        if (!$this->house_versions_unserialized && null !== $this->house_versions) {
-            $house_versions_unserialized = substr($this->house_versions, 2, -2);
-            $this->house_versions_unserialized = '' !== $house_versions_unserialized ? explode(' | ', $house_versions_unserialized) : array();
-        }
-
-        return $this->house_versions_unserialized;
-    }
-
-    /**
-     * Test the presence of a value in the [house_versions] array column value.
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function hasHouseVersion($value): bool
-    {
-        return in_array($value, $this->getHouseVersions());
+        return $this->house_versions;
     }
 
     /**
@@ -675,7 +620,7 @@ abstract class GroupsVersion implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (открытый, приватный)
+     * Доступ (публичный, приватный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -718,46 +663,6 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of [do_create] column to a normalized version of the date/time value specified.
-     *
-     * @param string|integer|\DateTimeInterface $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
-     * @return $this The current object (for fluent API support)
-     */
-    public function setDoCreate($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->do_create !== null || $dt !== null) {
-            if ($this->do_create === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->do_create->format("Y-m-d H:i:s.u")) {
-                $this->do_create = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[GroupsVersionTableMap::COL_DO_CREATE] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [user_id] column.
-     *
-     * @param int $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setUserId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->user_id !== $v) {
-            $this->user_id = $v;
-            $this->modifiedColumns[GroupsVersionTableMap::COL_USER_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the value of [version] column.
      *
      * @param int $v New value
@@ -778,20 +683,60 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [user_id_version] column.
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
      *
-     * @param int|null $v New value
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this The current object (for fluent API support)
      */
-    public function setUserIdVersion($v)
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[GroupsVersionTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->user_id_version !== $v) {
-            $this->user_id_version = $v;
-            $this->modifiedColumns[GroupsVersionTableMap::COL_USER_ID_VERSION] = true;
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[GroupsVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[GroupsVersionTableMap::COL_VERSION_COMMENT] = true;
         }
 
         return $this;
@@ -820,14 +765,17 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * Set the value of [house_ids] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setHouseIds($v)
     {
-        if ($this->house_ids_unserialized !== $v) {
-            $this->house_ids_unserialized = $v;
-            $this->house_ids = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->house_ids !== $v) {
+            $this->house_ids = $v;
             $this->modifiedColumns[GroupsVersionTableMap::COL_HOUSE_IDS] = true;
         }
 
@@ -835,86 +783,21 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
-     * Adds a value to the [house_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addHouseId($value)
-    {
-        $currentArray = $this->getHouseIds();
-        $currentArray []= $value;
-        $this->setHouseIds($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [house_ids] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeHouseId($value)
-    {
-        $targetArray = [];
-        foreach ($this->getHouseIds() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setHouseIds($targetArray);
-
-        return $this;
-    }
-
-    /**
      * Set the value of [house_versions] column.
      *
-     * @param array|null $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setHouseVersions($v)
     {
-        if ($this->house_versions_unserialized !== $v) {
-            $this->house_versions_unserialized = $v;
-            $this->house_versions = '| ' . implode(' | ', $v) . ' |';
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->house_versions !== $v) {
+            $this->house_versions = $v;
             $this->modifiedColumns[GroupsVersionTableMap::COL_HOUSE_VERSIONS] = true;
         }
-
-        return $this;
-    }
-
-    /**
-     * Adds a value to the [house_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function addHouseVersion($value)
-    {
-        $currentArray = $this->getHouseVersions();
-        $currentArray []= $value;
-        $this->setHouseVersions($currentArray);
-
-        return $this;
-    }
-
-    /**
-     * Removes a value from the [house_versions] array column value.
-     * @param mixed $value
-     *
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeHouseVersion($value)
-    {
-        $targetArray = [];
-        foreach ($this->getHouseVersions() as $element) {
-            if ($element != $value) {
-                $targetArray []= $element;
-            }
-        }
-        $this->setHouseVersions($targetArray);
 
         return $this;
     }
@@ -938,10 +821,6 @@ abstract class GroupsVersion implements ActiveRecordInterface
             }
 
             if ($this->version !== 0) {
-                return false;
-            }
-
-            if ($this->user_id_version !== 0) {
                 return false;
             }
 
@@ -990,31 +869,29 @@ abstract class GroupsVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : GroupsVersionTableMap::translateFieldName('SubprojectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->subproject_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GroupsVersionTableMap::translateFieldName('DoCreate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : GroupsVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupsVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->do_create = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : GroupsVersionTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupsVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : GroupsVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupsVersionTableMap::translateFieldName('UserIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_id_version = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : GroupsVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : GroupsVersionTableMap::translateFieldName('SubprojectIdVersion', TableMap::TYPE_PHPNAME, $indexType)];
             $this->subproject_id_version = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : GroupsVersionTableMap::translateFieldName('HouseIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->house_ids = $col;
-            $this->house_ids_unserialized = null;
+            $this->house_ids = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : GroupsVersionTableMap::translateFieldName('HouseVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->house_versions = $col;
-            $this->house_versions_unserialized = null;
+            $this->house_versions = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1252,17 +1129,17 @@ abstract class GroupsVersion implements ActiveRecordInterface
         if ($this->isColumnModified(GroupsVersionTableMap::COL_SUBPROJECT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'subproject_id';
         }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_DO_CREATE)) {
-            $modifiedColumns[':p' . $index++]  = 'do_create';
-        }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'user_id';
-        }
         if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_USER_ID_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'user_id_version';
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
         if ($this->isColumnModified(GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'subproject_id_version';
@@ -1299,17 +1176,17 @@ abstract class GroupsVersion implements ActiveRecordInterface
                     case 'subproject_id':
                         $stmt->bindValue($identifier, $this->subproject_id, PDO::PARAM_INT);
                         break;
-                    case 'do_create':
-                        $stmt->bindValue($identifier, $this->do_create ? $this->do_create->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'user_id':
-                        $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
-                        break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
-                    case 'user_id_version':
-                        $stmt->bindValue($identifier, $this->user_id_version, PDO::PARAM_INT);
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                     case 'subproject_id_version':
                         $stmt->bindValue($identifier, $this->subproject_id_version, PDO::PARAM_INT);
@@ -1391,16 +1268,16 @@ abstract class GroupsVersion implements ActiveRecordInterface
                 return $this->getSubprojectId();
 
             case 5:
-                return $this->getDoCreate();
-
-            case 6:
-                return $this->getUserId();
-
-            case 7:
                 return $this->getVersion();
 
+            case 6:
+                return $this->getVersionCreatedAt();
+
+            case 7:
+                return $this->getVersionCreatedBy();
+
             case 8:
-                return $this->getUserIdVersion();
+                return $this->getVersionComment();
 
             case 9:
                 return $this->getSubprojectIdVersion();
@@ -1444,16 +1321,16 @@ abstract class GroupsVersion implements ActiveRecordInterface
             $keys[2] => $this->getStatus(),
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getSubprojectId(),
-            $keys[5] => $this->getDoCreate(),
-            $keys[6] => $this->getUserId(),
-            $keys[7] => $this->getVersion(),
-            $keys[8] => $this->getUserIdVersion(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
             $keys[9] => $this->getSubprojectIdVersion(),
             $keys[10] => $this->getHouseIds(),
             $keys[11] => $this->getHouseVersions(),
         ];
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1529,32 +1406,24 @@ abstract class GroupsVersion implements ActiveRecordInterface
                 $this->setSubprojectId($value);
                 break;
             case 5:
-                $this->setDoCreate($value);
-                break;
-            case 6:
-                $this->setUserId($value);
-                break;
-            case 7:
                 $this->setVersion($value);
                 break;
+            case 6:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 7:
+                $this->setVersionCreatedBy($value);
+                break;
             case 8:
-                $this->setUserIdVersion($value);
+                $this->setVersionComment($value);
                 break;
             case 9:
                 $this->setSubprojectIdVersion($value);
                 break;
             case 10:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
                 $this->setHouseIds($value);
                 break;
             case 11:
-                if (!is_array($value)) {
-                    $v = trim(substr($value, 2, -2));
-                    $value = $v ? explode(' | ', $v) : array();
-                }
                 $this->setHouseVersions($value);
                 break;
         } // switch()
@@ -1599,16 +1468,16 @@ abstract class GroupsVersion implements ActiveRecordInterface
             $this->setSubprojectId($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setDoCreate($arr[$keys[5]]);
+            $this->setVersion($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUserId($arr[$keys[6]]);
+            $this->setVersionCreatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersion($arr[$keys[7]]);
+            $this->setVersionCreatedBy($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setUserIdVersion($arr[$keys[8]]);
+            $this->setVersionComment($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
             $this->setSubprojectIdVersion($arr[$keys[9]]);
@@ -1677,17 +1546,17 @@ abstract class GroupsVersion implements ActiveRecordInterface
         if ($this->isColumnModified(GroupsVersionTableMap::COL_SUBPROJECT_ID)) {
             $criteria->add(GroupsVersionTableMap::COL_SUBPROJECT_ID, $this->subproject_id);
         }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_DO_CREATE)) {
-            $criteria->add(GroupsVersionTableMap::COL_DO_CREATE, $this->do_create);
-        }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_USER_ID)) {
-            $criteria->add(GroupsVersionTableMap::COL_USER_ID, $this->user_id);
-        }
         if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION)) {
             $criteria->add(GroupsVersionTableMap::COL_VERSION, $this->version);
         }
-        if ($this->isColumnModified(GroupsVersionTableMap::COL_USER_ID_VERSION)) {
-            $criteria->add(GroupsVersionTableMap::COL_USER_ID_VERSION, $this->user_id_version);
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(GroupsVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(GroupsVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(GroupsVersionTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(GroupsVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
         if ($this->isColumnModified(GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION)) {
             $criteria->add(GroupsVersionTableMap::COL_SUBPROJECT_ID_VERSION, $this->subproject_id_version);
@@ -1806,10 +1675,10 @@ abstract class GroupsVersion implements ActiveRecordInterface
         $copyObj->setStatus($this->getStatus());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setSubprojectId($this->getSubprojectId());
-        $copyObj->setDoCreate($this->getDoCreate());
-        $copyObj->setUserId($this->getUserId());
         $copyObj->setVersion($this->getVersion());
-        $copyObj->setUserIdVersion($this->getUserIdVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setSubprojectIdVersion($this->getSubprojectIdVersion());
         $copyObj->setHouseIds($this->getHouseIds());
         $copyObj->setHouseVersions($this->getHouseVersions());
@@ -1908,15 +1777,13 @@ abstract class GroupsVersion implements ActiveRecordInterface
         $this->status = null;
         $this->is_available = null;
         $this->subproject_id = null;
-        $this->do_create = null;
-        $this->user_id = null;
         $this->version = null;
-        $this->user_id_version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->subproject_id_version = null;
         $this->house_ids = null;
-        $this->house_ids_unserialized = null;
         $this->house_versions = null;
-        $this->house_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

@@ -46,6 +46,11 @@ class WorkVersionTableMap extends TableMap
     public const TABLE_NAME = 'work_version';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'WorkVersion';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\WorkVersion';
@@ -58,7 +63,7 @@ class WorkVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 13;
+    public const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +73,7 @@ class WorkVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 13;
+    public const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the id field
@@ -86,6 +91,11 @@ class WorkVersionTableMap extends TableMap
     public const COL_PRICE = 'work_version.price';
 
     /**
+     * the column name for the amount field
+     */
+    public const COL_AMOUNT = 'work_version.amount';
+
+    /**
      * the column name for the is_available field
      */
     public const COL_IS_AVAILABLE = 'work_version.is_available';
@@ -101,19 +111,19 @@ class WorkVersionTableMap extends TableMap
     public const COL_VERSION = 'work_version.version';
 
     /**
-     * the column name for the unit_id_version field
+     * the column name for the version_created_at field
      */
-    public const COL_UNIT_ID_VERSION = 'work_version.unit_id_version';
+    public const COL_VERSION_CREATED_AT = 'work_version.version_created_at';
 
     /**
-     * the column name for the stage_work_ids field
+     * the column name for the version_created_by field
      */
-    public const COL_STAGE_WORK_IDS = 'work_version.stage_work_ids';
+    public const COL_VERSION_CREATED_BY = 'work_version.version_created_by';
 
     /**
-     * the column name for the stage_work_versions field
+     * the column name for the version_comment field
      */
-    public const COL_STAGE_WORK_VERSIONS = 'work_version.stage_work_versions';
+    public const COL_VERSION_COMMENT = 'work_version.version_comment';
 
     /**
      * the column name for the work_material_ids field
@@ -149,11 +159,11 @@ class WorkVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'UnitIdVersion', 'StageWorkIds', 'StageWorkVersions', 'WorkMaterialIds', 'WorkMaterialVersions', 'WorkTechnicIds', 'WorkTechnicVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'unitIdVersion', 'stageWorkIds', 'stageWorkVersions', 'workMaterialIds', 'workMaterialVersions', 'workTechnicIds', 'workTechnicVersions', ],
-        self::TYPE_COLNAME       => [WorkVersionTableMap::COL_ID, WorkVersionTableMap::COL_NAME, WorkVersionTableMap::COL_PRICE, WorkVersionTableMap::COL_IS_AVAILABLE, WorkVersionTableMap::COL_UNIT_ID, WorkVersionTableMap::COL_VERSION, WorkVersionTableMap::COL_UNIT_ID_VERSION, WorkVersionTableMap::COL_STAGE_WORK_IDS, WorkVersionTableMap::COL_STAGE_WORK_VERSIONS, WorkVersionTableMap::COL_WORK_MATERIAL_IDS, WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS, WorkVersionTableMap::COL_WORK_TECHNIC_IDS, WorkVersionTableMap::COL_WORK_TECHNIC_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'unit_id_version', 'stage_work_ids', 'stage_work_versions', 'work_material_ids', 'work_material_versions', 'work_technic_ids', 'work_technic_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'Amount', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkMaterialIds', 'WorkMaterialVersions', 'WorkTechnicIds', 'WorkTechnicVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'amount', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workMaterialIds', 'workMaterialVersions', 'workTechnicIds', 'workTechnicVersions', ],
+        self::TYPE_COLNAME       => [WorkVersionTableMap::COL_ID, WorkVersionTableMap::COL_NAME, WorkVersionTableMap::COL_PRICE, WorkVersionTableMap::COL_AMOUNT, WorkVersionTableMap::COL_IS_AVAILABLE, WorkVersionTableMap::COL_UNIT_ID, WorkVersionTableMap::COL_VERSION, WorkVersionTableMap::COL_VERSION_CREATED_AT, WorkVersionTableMap::COL_VERSION_CREATED_BY, WorkVersionTableMap::COL_VERSION_COMMENT, WorkVersionTableMap::COL_WORK_MATERIAL_IDS, WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS, WorkVersionTableMap::COL_WORK_TECHNIC_IDS, WorkVersionTableMap::COL_WORK_TECHNIC_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'amount', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_material_ids', 'work_material_versions', 'work_technic_ids', 'work_technic_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, ]
     ];
 
     /**
@@ -165,11 +175,11 @@ class WorkVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'UnitIdVersion' => 6, 'StageWorkIds' => 7, 'StageWorkVersions' => 8, 'WorkMaterialIds' => 9, 'WorkMaterialVersions' => 10, 'WorkTechnicIds' => 11, 'WorkTechnicVersions' => 12, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'unitIdVersion' => 6, 'stageWorkIds' => 7, 'stageWorkVersions' => 8, 'workMaterialIds' => 9, 'workMaterialVersions' => 10, 'workTechnicIds' => 11, 'workTechnicVersions' => 12, ],
-        self::TYPE_COLNAME       => [WorkVersionTableMap::COL_ID => 0, WorkVersionTableMap::COL_NAME => 1, WorkVersionTableMap::COL_PRICE => 2, WorkVersionTableMap::COL_IS_AVAILABLE => 3, WorkVersionTableMap::COL_UNIT_ID => 4, WorkVersionTableMap::COL_VERSION => 5, WorkVersionTableMap::COL_UNIT_ID_VERSION => 6, WorkVersionTableMap::COL_STAGE_WORK_IDS => 7, WorkVersionTableMap::COL_STAGE_WORK_VERSIONS => 8, WorkVersionTableMap::COL_WORK_MATERIAL_IDS => 9, WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS => 10, WorkVersionTableMap::COL_WORK_TECHNIC_IDS => 11, WorkVersionTableMap::COL_WORK_TECHNIC_VERSIONS => 12, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'unit_id_version' => 6, 'stage_work_ids' => 7, 'stage_work_versions' => 8, 'work_material_ids' => 9, 'work_material_versions' => 10, 'work_technic_ids' => 11, 'work_technic_versions' => 12, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'Amount' => 3, 'IsAvailable' => 4, 'UnitId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, 'WorkMaterialIds' => 10, 'WorkMaterialVersions' => 11, 'WorkTechnicIds' => 12, 'WorkTechnicVersions' => 13, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'amount' => 3, 'isAvailable' => 4, 'unitId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, 'workMaterialIds' => 10, 'workMaterialVersions' => 11, 'workTechnicIds' => 12, 'workTechnicVersions' => 13, ],
+        self::TYPE_COLNAME       => [WorkVersionTableMap::COL_ID => 0, WorkVersionTableMap::COL_NAME => 1, WorkVersionTableMap::COL_PRICE => 2, WorkVersionTableMap::COL_AMOUNT => 3, WorkVersionTableMap::COL_IS_AVAILABLE => 4, WorkVersionTableMap::COL_UNIT_ID => 5, WorkVersionTableMap::COL_VERSION => 6, WorkVersionTableMap::COL_VERSION_CREATED_AT => 7, WorkVersionTableMap::COL_VERSION_CREATED_BY => 8, WorkVersionTableMap::COL_VERSION_COMMENT => 9, WorkVersionTableMap::COL_WORK_MATERIAL_IDS => 10, WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS => 11, WorkVersionTableMap::COL_WORK_TECHNIC_IDS => 12, WorkVersionTableMap::COL_WORK_TECHNIC_VERSIONS => 13, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'amount' => 3, 'is_available' => 4, 'unit_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, 'work_material_ids' => 10, 'work_material_versions' => 11, 'work_technic_ids' => 12, 'work_technic_versions' => 13, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, ]
     ];
 
     /**
@@ -199,6 +209,13 @@ class WorkVersionTableMap extends TableMap
         'WorkVersionTableMap::COL_PRICE' => 'PRICE',
         'COL_PRICE' => 'PRICE',
         'work_version.price' => 'PRICE',
+        'Amount' => 'AMOUNT',
+        'WorkVersion.Amount' => 'AMOUNT',
+        'amount' => 'AMOUNT',
+        'workVersion.amount' => 'AMOUNT',
+        'WorkVersionTableMap::COL_AMOUNT' => 'AMOUNT',
+        'COL_AMOUNT' => 'AMOUNT',
+        'work_version.amount' => 'AMOUNT',
         'IsAvailable' => 'IS_AVAILABLE',
         'WorkVersion.IsAvailable' => 'IS_AVAILABLE',
         'isAvailable' => 'IS_AVAILABLE',
@@ -222,30 +239,30 @@ class WorkVersionTableMap extends TableMap
         'WorkVersionTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'work_version.version' => 'VERSION',
-        'UnitIdVersion' => 'UNIT_ID_VERSION',
-        'WorkVersion.UnitIdVersion' => 'UNIT_ID_VERSION',
-        'unitIdVersion' => 'UNIT_ID_VERSION',
-        'workVersion.unitIdVersion' => 'UNIT_ID_VERSION',
-        'WorkVersionTableMap::COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'COL_UNIT_ID_VERSION' => 'UNIT_ID_VERSION',
-        'unit_id_version' => 'UNIT_ID_VERSION',
-        'work_version.unit_id_version' => 'UNIT_ID_VERSION',
-        'StageWorkIds' => 'STAGE_WORK_IDS',
-        'WorkVersion.StageWorkIds' => 'STAGE_WORK_IDS',
-        'stageWorkIds' => 'STAGE_WORK_IDS',
-        'workVersion.stageWorkIds' => 'STAGE_WORK_IDS',
-        'WorkVersionTableMap::COL_STAGE_WORK_IDS' => 'STAGE_WORK_IDS',
-        'COL_STAGE_WORK_IDS' => 'STAGE_WORK_IDS',
-        'stage_work_ids' => 'STAGE_WORK_IDS',
-        'work_version.stage_work_ids' => 'STAGE_WORK_IDS',
-        'StageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'WorkVersion.StageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'stageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'workVersion.stageWorkVersions' => 'STAGE_WORK_VERSIONS',
-        'WorkVersionTableMap::COL_STAGE_WORK_VERSIONS' => 'STAGE_WORK_VERSIONS',
-        'COL_STAGE_WORK_VERSIONS' => 'STAGE_WORK_VERSIONS',
-        'stage_work_versions' => 'STAGE_WORK_VERSIONS',
-        'work_version.stage_work_versions' => 'STAGE_WORK_VERSIONS',
+        'VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'WorkVersion.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'versionCreatedAt' => 'VERSION_CREATED_AT',
+        'workVersion.versionCreatedAt' => 'VERSION_CREATED_AT',
+        'WorkVersionTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
+        'version_created_at' => 'VERSION_CREATED_AT',
+        'work_version.version_created_at' => 'VERSION_CREATED_AT',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'WorkVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'workVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'WorkVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'work_version.version_created_by' => 'VERSION_CREATED_BY',
+        'VersionComment' => 'VERSION_COMMENT',
+        'WorkVersion.VersionComment' => 'VERSION_COMMENT',
+        'versionComment' => 'VERSION_COMMENT',
+        'workVersion.versionComment' => 'VERSION_COMMENT',
+        'WorkVersionTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
+        'version_comment' => 'VERSION_COMMENT',
+        'work_version.version_comment' => 'VERSION_COMMENT',
         'WorkMaterialIds' => 'WORK_MATERIAL_IDS',
         'WorkVersion.WorkMaterialIds' => 'WORK_MATERIAL_IDS',
         'workMaterialIds' => 'WORK_MATERIAL_IDS',
@@ -300,16 +317,17 @@ class WorkVersionTableMap extends TableMap
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'work', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
+        $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('unit_id', 'UnitId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
-        $this->addColumn('unit_id_version', 'UnitIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_work_ids', 'StageWorkIds', 'ARRAY', false, null, null);
-        $this->addColumn('stage_work_versions', 'StageWorkVersions', 'ARRAY', false, null, null);
-        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'ARRAY', false, null, null);
-        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'ARRAY', false, null, null);
-        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'ARRAY', false, null, null);
-        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'ARRAY', false, null, null);
+        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
+        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'LONGVARCHAR', false, null, null);
     }
 
     /**
@@ -401,11 +419,11 @@ class WorkVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -431,7 +449,7 @@ class WorkVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 5 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -539,12 +557,13 @@ class WorkVersionTableMap extends TableMap
             $criteria->addSelectColumn(WorkVersionTableMap::COL_ID);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_NAME);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_PRICE);
+            $criteria->addSelectColumn(WorkVersionTableMap::COL_AMOUNT);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_UNIT_ID);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_VERSION);
-            $criteria->addSelectColumn(WorkVersionTableMap::COL_UNIT_ID_VERSION);
-            $criteria->addSelectColumn(WorkVersionTableMap::COL_STAGE_WORK_IDS);
-            $criteria->addSelectColumn(WorkVersionTableMap::COL_STAGE_WORK_VERSIONS);
+            $criteria->addSelectColumn(WorkVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->addSelectColumn(WorkVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->addSelectColumn(WorkVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_WORK_MATERIAL_IDS);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS);
             $criteria->addSelectColumn(WorkVersionTableMap::COL_WORK_TECHNIC_IDS);
@@ -553,12 +572,13 @@ class WorkVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.price');
+            $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
             $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.unit_id_version');
-            $criteria->addSelectColumn($alias . '.stage_work_ids');
-            $criteria->addSelectColumn($alias . '.stage_work_versions');
+            $criteria->addSelectColumn($alias . '.version_created_at');
+            $criteria->addSelectColumn($alias . '.version_created_by');
+            $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.work_material_ids');
             $criteria->addSelectColumn($alias . '.work_material_versions');
             $criteria->addSelectColumn($alias . '.work_technic_ids');
@@ -584,12 +604,13 @@ class WorkVersionTableMap extends TableMap
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_ID);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_NAME);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_PRICE);
+            $criteria->removeSelectColumn(WorkVersionTableMap::COL_AMOUNT);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_UNIT_ID);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(WorkVersionTableMap::COL_UNIT_ID_VERSION);
-            $criteria->removeSelectColumn(WorkVersionTableMap::COL_STAGE_WORK_IDS);
-            $criteria->removeSelectColumn(WorkVersionTableMap::COL_STAGE_WORK_VERSIONS);
+            $criteria->removeSelectColumn(WorkVersionTableMap::COL_VERSION_CREATED_AT);
+            $criteria->removeSelectColumn(WorkVersionTableMap::COL_VERSION_CREATED_BY);
+            $criteria->removeSelectColumn(WorkVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_WORK_MATERIAL_IDS);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_WORK_MATERIAL_VERSIONS);
             $criteria->removeSelectColumn(WorkVersionTableMap::COL_WORK_TECHNIC_IDS);
@@ -598,12 +619,13 @@ class WorkVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
             $criteria->removeSelectColumn($alias . '.price');
+            $criteria->removeSelectColumn($alias . '.amount');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
             $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.unit_id_version');
-            $criteria->removeSelectColumn($alias . '.stage_work_ids');
-            $criteria->removeSelectColumn($alias . '.stage_work_versions');
+            $criteria->removeSelectColumn($alias . '.version_created_at');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
+            $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.work_material_ids');
             $criteria->removeSelectColumn($alias . '.work_material_versions');
             $criteria->removeSelectColumn($alias . '.work_technic_ids');

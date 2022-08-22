@@ -26,12 +26,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method     ChildStageQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildStageQuery orderByHouseId($order = Criteria::ASC) Order by the house_id column
+ * @method     ChildStageQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildStageQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildStageQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildStageQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildStageQuery groupById() Group by the id column
  * @method     ChildStageQuery groupByName() Group by the name column
  * @method     ChildStageQuery groupByStatus() Group by the status column
  * @method     ChildStageQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildStageQuery groupByHouseId() Group by the house_id column
+ * @method     ChildStageQuery groupByVersion() Group by the version column
+ * @method     ChildStageQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildStageQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildStageQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildStageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildStageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,37 +59,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageQuery rightJoinWithHouse() Adds a RIGHT JOIN clause and with to the query using the House relation
  * @method     ChildStageQuery innerJoinWithHouse() Adds a INNER JOIN clause and with to the query using the House relation
  *
- * @method     ChildStageQuery leftJoinStageMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the StageMaterial relation
- * @method     ChildStageQuery rightJoinStageMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StageMaterial relation
- * @method     ChildStageQuery innerJoinStageMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the StageMaterial relation
+ * @method     ChildStageQuery leftJoinStageVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the StageVersion relation
+ * @method     ChildStageQuery rightJoinStageVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StageVersion relation
+ * @method     ChildStageQuery innerJoinStageVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the StageVersion relation
  *
- * @method     ChildStageQuery joinWithStageMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StageMaterial relation
+ * @method     ChildStageQuery joinWithStageVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StageVersion relation
  *
- * @method     ChildStageQuery leftJoinWithStageMaterial() Adds a LEFT JOIN clause and with to the query using the StageMaterial relation
- * @method     ChildStageQuery rightJoinWithStageMaterial() Adds a RIGHT JOIN clause and with to the query using the StageMaterial relation
- * @method     ChildStageQuery innerJoinWithStageMaterial() Adds a INNER JOIN clause and with to the query using the StageMaterial relation
+ * @method     ChildStageQuery leftJoinWithStageVersion() Adds a LEFT JOIN clause and with to the query using the StageVersion relation
+ * @method     ChildStageQuery rightJoinWithStageVersion() Adds a RIGHT JOIN clause and with to the query using the StageVersion relation
+ * @method     ChildStageQuery innerJoinWithStageVersion() Adds a INNER JOIN clause and with to the query using the StageVersion relation
  *
- * @method     ChildStageQuery leftJoinStageTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the StageTechnic relation
- * @method     ChildStageQuery rightJoinStageTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StageTechnic relation
- * @method     ChildStageQuery innerJoinStageTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the StageTechnic relation
- *
- * @method     ChildStageQuery joinWithStageTechnic($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StageTechnic relation
- *
- * @method     ChildStageQuery leftJoinWithStageTechnic() Adds a LEFT JOIN clause and with to the query using the StageTechnic relation
- * @method     ChildStageQuery rightJoinWithStageTechnic() Adds a RIGHT JOIN clause and with to the query using the StageTechnic relation
- * @method     ChildStageQuery innerJoinWithStageTechnic() Adds a INNER JOIN clause and with to the query using the StageTechnic relation
- *
- * @method     ChildStageQuery leftJoinStageWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the StageWork relation
- * @method     ChildStageQuery rightJoinStageWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StageWork relation
- * @method     ChildStageQuery innerJoinStageWork($relationAlias = null) Adds a INNER JOIN clause to the query using the StageWork relation
- *
- * @method     ChildStageQuery joinWithStageWork($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StageWork relation
- *
- * @method     ChildStageQuery leftJoinWithStageWork() Adds a LEFT JOIN clause and with to the query using the StageWork relation
- * @method     ChildStageQuery rightJoinWithStageWork() Adds a RIGHT JOIN clause and with to the query using the StageWork relation
- * @method     ChildStageQuery innerJoinWithStageWork() Adds a INNER JOIN clause and with to the query using the StageWork relation
- *
- * @method     \DB\HouseQuery|\DB\StageMaterialQuery|\DB\StageTechnicQuery|\DB\StageWorkQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\HouseQuery|\DB\StageVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildStage|null findOne(?ConnectionInterface $con = null) Return the first ChildStage matching the query
  * @method     ChildStage findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildStage matching the query, or a new ChildStage object populated from the query conditions when no match is found
@@ -90,7 +78,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStage|null findOneByName(string $name) Return the first ChildStage filtered by the name column
  * @method     ChildStage|null findOneByStatus(string $status) Return the first ChildStage filtered by the status column
  * @method     ChildStage|null findOneByIsAvailable(boolean $is_available) Return the first ChildStage filtered by the is_available column
- * @method     ChildStage|null findOneByHouseId(int $house_id) Return the first ChildStage filtered by the house_id column *
+ * @method     ChildStage|null findOneByHouseId(int $house_id) Return the first ChildStage filtered by the house_id column
+ * @method     ChildStage|null findOneByVersion(int $version) Return the first ChildStage filtered by the version column
+ * @method     ChildStage|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildStage filtered by the version_created_at column
+ * @method     ChildStage|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildStage filtered by the version_created_by column
+ * @method     ChildStage|null findOneByVersionComment(string $version_comment) Return the first ChildStage filtered by the version_comment column *
 
  * @method     ChildStage requirePk($key, ?ConnectionInterface $con = null) Return the ChildStage by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStage requireOne(?ConnectionInterface $con = null) Return the first ChildStage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -100,6 +92,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStage requireOneByStatus(string $status) Return the first ChildStage filtered by the status column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStage requireOneByIsAvailable(boolean $is_available) Return the first ChildStage filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStage requireOneByHouseId(int $house_id) Return the first ChildStage filtered by the house_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStage requireOneByVersion(int $version) Return the first ChildStage filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStage requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildStage filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStage requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildStage filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStage requireOneByVersionComment(string $version_comment) Return the first ChildStage filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildStage[]|Collection find(?ConnectionInterface $con = null) Return ChildStage objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildStage> find(?ConnectionInterface $con = null) Return ChildStage objects based on current ModelCriteria
@@ -113,6 +109,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildStage> findByIsAvailable(boolean $is_available) Return ChildStage objects filtered by the is_available column
  * @method     ChildStage[]|Collection findByHouseId(int $house_id) Return ChildStage objects filtered by the house_id column
  * @psalm-method Collection&\Traversable<ChildStage> findByHouseId(int $house_id) Return ChildStage objects filtered by the house_id column
+ * @method     ChildStage[]|Collection findByVersion(int $version) Return ChildStage objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildStage> findByVersion(int $version) Return ChildStage objects filtered by the version column
+ * @method     ChildStage[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildStage objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildStage> findByVersionCreatedAt(string $version_created_at) Return ChildStage objects filtered by the version_created_at column
+ * @method     ChildStage[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildStage objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildStage> findByVersionCreatedBy(string $version_created_by) Return ChildStage objects filtered by the version_created_by column
+ * @method     ChildStage[]|Collection findByVersionComment(string $version_comment) Return ChildStage objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildStage> findByVersionComment(string $version_comment) Return ChildStage objects filtered by the version_comment column
  * @method     ChildStage[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildStage> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -212,7 +216,7 @@ abstract class StageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available, house_id FROM stage WHERE id = :p0';
+        $sql = 'SELECT id, name, status, is_available, house_id, version, version_created_at, version_created_by, version_comment FROM stage WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -480,6 +484,150 @@ abstract class StageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, ?string $comparison = null)
+    {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(StageTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(StageTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(StageTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(StageTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(StageTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query by a related \DB\House object
      *
      * @param \DB\House|ObjectCollection $house The related object(s) to use as filter
@@ -516,7 +664,7 @@ abstract class StageQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinHouse(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinHouse(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('House');
@@ -551,7 +699,7 @@ abstract class StageQuery extends ModelCriteria
      *
      * @return \DB\HouseQuery A secondary query class using the current class as primary query
      */
-    public function useHouseQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useHouseQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinHouse($relationAlias, $joinType)
@@ -572,7 +720,7 @@ abstract class StageQuery extends ModelCriteria
     public function withHouseQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::LEFT_JOIN
+        ?string $joinType = Criteria::INNER_JOIN
     ) {
         $relatedQuery = $this->useHouseQuery(
             $relationAlias,
@@ -614,44 +762,44 @@ abstract class StageQuery extends ModelCriteria
         return $this->useExistsQuery('House', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\StageMaterial object
+     * Filter the query by a related \DB\StageVersion object
      *
-     * @param \DB\StageMaterial|ObjectCollection $stageMaterial the related object to use as filter
+     * @param \DB\StageVersion|ObjectCollection $stageVersion the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStageMaterial($stageMaterial, ?string $comparison = null)
+    public function filterByStageVersion($stageVersion, ?string $comparison = null)
     {
-        if ($stageMaterial instanceof \DB\StageMaterial) {
+        if ($stageVersion instanceof \DB\StageVersion) {
             $this
-                ->addUsingAlias(StageTableMap::COL_ID, $stageMaterial->getStageId(), $comparison);
+                ->addUsingAlias(StageTableMap::COL_ID, $stageVersion->getId(), $comparison);
 
             return $this;
-        } elseif ($stageMaterial instanceof ObjectCollection) {
+        } elseif ($stageVersion instanceof ObjectCollection) {
             $this
-                ->useStageMaterialQuery()
-                ->filterByPrimaryKeys($stageMaterial->getPrimaryKeys())
+                ->useStageVersionQuery()
+                ->filterByPrimaryKeys($stageVersion->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByStageMaterial() only accepts arguments of type \DB\StageMaterial or Collection');
+            throw new PropelException('filterByStageVersion() only accepts arguments of type \DB\StageVersion or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the StageMaterial relation
+     * Adds a JOIN clause to the query using the StageVersion relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinStageMaterial(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinStageVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StageMaterial');
+        $relationMap = $tableMap->getRelation('StageVersion');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -666,14 +814,14 @@ abstract class StageQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'StageMaterial');
+            $this->addJoinObject($join, 'StageVersion');
         }
 
         return $this;
     }
 
     /**
-     * Use the StageMaterial relation StageMaterial object
+     * Use the StageVersion relation StageVersion object
      *
      * @see useQuery()
      *
@@ -681,19 +829,19 @@ abstract class StageQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DB\StageMaterialQuery A secondary query class using the current class as primary query
+     * @return \DB\StageVersionQuery A secondary query class using the current class as primary query
      */
-    public function useStageMaterialQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useStageVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinStageMaterial($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StageMaterial', '\DB\StageMaterialQuery');
+            ->joinStageVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StageVersion', '\DB\StageVersionQuery');
     }
 
     /**
-     * Use the StageMaterial relation StageMaterial object
+     * Use the StageVersion relation StageVersion object
      *
-     * @param callable(\DB\StageMaterialQuery):\DB\StageMaterialQuery $callable A function working on the related query
+     * @param callable(\DB\StageVersionQuery):\DB\StageVersionQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -701,12 +849,12 @@ abstract class StageQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withStageMaterialQuery(
+    public function withStageVersionQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useStageMaterialQuery(
+        $relatedQuery = $this->useStageVersionQuery(
             $relationAlias,
             $joinType
         );
@@ -716,7 +864,7 @@ abstract class StageQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the relation to StageMaterial table for an EXISTS query.
+     * Use the relation to StageVersion table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -724,290 +872,26 @@ abstract class StageQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DB\StageMaterialQuery The inner query object of the EXISTS statement
+     * @return \DB\StageVersionQuery The inner query object of the EXISTS statement
      */
-    public function useStageMaterialExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useStageVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('StageMaterial', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('StageVersion', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the relation to StageMaterial table for a NOT EXISTS query.
+     * Use the relation to StageVersion table for a NOT EXISTS query.
      *
-     * @see useStageMaterialExistsQuery()
+     * @see useStageVersionExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DB\StageMaterialQuery The inner query object of the NOT EXISTS statement
+     * @return \DB\StageVersionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useStageMaterialNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useStageVersionNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('StageMaterial', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
-     * Filter the query by a related \DB\StageTechnic object
-     *
-     * @param \DB\StageTechnic|ObjectCollection $stageTechnic the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageTechnic($stageTechnic, ?string $comparison = null)
-    {
-        if ($stageTechnic instanceof \DB\StageTechnic) {
-            $this
-                ->addUsingAlias(StageTableMap::COL_ID, $stageTechnic->getStageId(), $comparison);
-
-            return $this;
-        } elseif ($stageTechnic instanceof ObjectCollection) {
-            $this
-                ->useStageTechnicQuery()
-                ->filterByPrimaryKeys($stageTechnic->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByStageTechnic() only accepts arguments of type \DB\StageTechnic or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the StageTechnic relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinStageTechnic(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StageTechnic');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'StageTechnic');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the StageTechnic relation StageTechnic object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\StageTechnicQuery A secondary query class using the current class as primary query
-     */
-    public function useStageTechnicQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinStageTechnic($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StageTechnic', '\DB\StageTechnicQuery');
-    }
-
-    /**
-     * Use the StageTechnic relation StageTechnic object
-     *
-     * @param callable(\DB\StageTechnicQuery):\DB\StageTechnicQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withStageTechnicQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useStageTechnicQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to StageTechnic table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\StageTechnicQuery The inner query object of the EXISTS statement
-     */
-    public function useStageTechnicExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('StageTechnic', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to StageTechnic table for a NOT EXISTS query.
-     *
-     * @see useStageTechnicExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\StageTechnicQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useStageTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('StageTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
-     * Filter the query by a related \DB\StageWork object
-     *
-     * @param \DB\StageWork|ObjectCollection $stageWork the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByStageWork($stageWork, ?string $comparison = null)
-    {
-        if ($stageWork instanceof \DB\StageWork) {
-            $this
-                ->addUsingAlias(StageTableMap::COL_ID, $stageWork->getStageId(), $comparison);
-
-            return $this;
-        } elseif ($stageWork instanceof ObjectCollection) {
-            $this
-                ->useStageWorkQuery()
-                ->filterByPrimaryKeys($stageWork->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByStageWork() only accepts arguments of type \DB\StageWork or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the StageWork relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinStageWork(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StageWork');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'StageWork');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the StageWork relation StageWork object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\StageWorkQuery A secondary query class using the current class as primary query
-     */
-    public function useStageWorkQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinStageWork($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StageWork', '\DB\StageWorkQuery');
-    }
-
-    /**
-     * Use the StageWork relation StageWork object
-     *
-     * @param callable(\DB\StageWorkQuery):\DB\StageWorkQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withStageWorkQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useStageWorkQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to StageWork table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\StageWorkQuery The inner query object of the EXISTS statement
-     */
-    public function useStageWorkExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('StageWork', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to StageWork table for a NOT EXISTS query.
-     *
-     * @see useStageWorkExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\StageWorkQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useStageWorkNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('StageWork', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('StageVersion', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result

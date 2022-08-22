@@ -22,14 +22,22 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildWorkMaterialQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildWorkMaterialQuery orderByMaterialId($order = Criteria::ASC) Order by the material_id column
  * @method     ChildWorkMaterialQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
+ * @method     ChildWorkMaterialQuery orderByMaterialId($order = Criteria::ASC) Order by the material_id column
  * @method     ChildWorkMaterialQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildWorkMaterialQuery orderByVersion($order = Criteria::ASC) Order by the version column
+ * @method     ChildWorkMaterialQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
+ * @method     ChildWorkMaterialQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
+ * @method     ChildWorkMaterialQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildWorkMaterialQuery groupById() Group by the id column
- * @method     ChildWorkMaterialQuery groupByMaterialId() Group by the material_id column
  * @method     ChildWorkMaterialQuery groupByWorkId() Group by the work_id column
+ * @method     ChildWorkMaterialQuery groupByMaterialId() Group by the material_id column
  * @method     ChildWorkMaterialQuery groupByAmount() Group by the amount column
+ * @method     ChildWorkMaterialQuery groupByVersion() Group by the version column
+ * @method     ChildWorkMaterialQuery groupByVersionCreatedAt() Group by the version_created_at column
+ * @method     ChildWorkMaterialQuery groupByVersionCreatedBy() Group by the version_created_by column
+ * @method     ChildWorkMaterialQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildWorkMaterialQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildWorkMaterialQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -38,16 +46,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterialQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildWorkMaterialQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildWorkMaterialQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
- *
- * @method     ChildWorkMaterialQuery leftJoinMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the Material relation
- * @method     ChildWorkMaterialQuery rightJoinMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Material relation
- * @method     ChildWorkMaterialQuery innerJoinMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the Material relation
- *
- * @method     ChildWorkMaterialQuery joinWithMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Material relation
- *
- * @method     ChildWorkMaterialQuery leftJoinWithMaterial() Adds a LEFT JOIN clause and with to the query using the Material relation
- * @method     ChildWorkMaterialQuery rightJoinWithMaterial() Adds a RIGHT JOIN clause and with to the query using the Material relation
- * @method     ChildWorkMaterialQuery innerJoinWithMaterial() Adds a INNER JOIN clause and with to the query using the Material relation
  *
  * @method     ChildWorkMaterialQuery leftJoinWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the Work relation
  * @method     ChildWorkMaterialQuery rightJoinWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Work relation
@@ -59,34 +57,70 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterialQuery rightJoinWithWork() Adds a RIGHT JOIN clause and with to the query using the Work relation
  * @method     ChildWorkMaterialQuery innerJoinWithWork() Adds a INNER JOIN clause and with to the query using the Work relation
  *
- * @method     \DB\MaterialQuery|\DB\WorkQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildWorkMaterialQuery leftJoinMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the Material relation
+ * @method     ChildWorkMaterialQuery rightJoinMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Material relation
+ * @method     ChildWorkMaterialQuery innerJoinMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the Material relation
+ *
+ * @method     ChildWorkMaterialQuery joinWithMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Material relation
+ *
+ * @method     ChildWorkMaterialQuery leftJoinWithMaterial() Adds a LEFT JOIN clause and with to the query using the Material relation
+ * @method     ChildWorkMaterialQuery rightJoinWithMaterial() Adds a RIGHT JOIN clause and with to the query using the Material relation
+ * @method     ChildWorkMaterialQuery innerJoinWithMaterial() Adds a INNER JOIN clause and with to the query using the Material relation
+ *
+ * @method     ChildWorkMaterialQuery leftJoinWorkMaterialVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the WorkMaterialVersion relation
+ * @method     ChildWorkMaterialQuery rightJoinWorkMaterialVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WorkMaterialVersion relation
+ * @method     ChildWorkMaterialQuery innerJoinWorkMaterialVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the WorkMaterialVersion relation
+ *
+ * @method     ChildWorkMaterialQuery joinWithWorkMaterialVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WorkMaterialVersion relation
+ *
+ * @method     ChildWorkMaterialQuery leftJoinWithWorkMaterialVersion() Adds a LEFT JOIN clause and with to the query using the WorkMaterialVersion relation
+ * @method     ChildWorkMaterialQuery rightJoinWithWorkMaterialVersion() Adds a RIGHT JOIN clause and with to the query using the WorkMaterialVersion relation
+ * @method     ChildWorkMaterialQuery innerJoinWithWorkMaterialVersion() Adds a INNER JOIN clause and with to the query using the WorkMaterialVersion relation
+ *
+ * @method     \DB\WorkQuery|\DB\MaterialQuery|\DB\WorkMaterialVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildWorkMaterial|null findOne(?ConnectionInterface $con = null) Return the first ChildWorkMaterial matching the query
  * @method     ChildWorkMaterial findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildWorkMaterial matching the query, or a new ChildWorkMaterial object populated from the query conditions when no match is found
  *
  * @method     ChildWorkMaterial|null findOneById(int $id) Return the first ChildWorkMaterial filtered by the id column
- * @method     ChildWorkMaterial|null findOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column
  * @method     ChildWorkMaterial|null findOneByWorkId(int $work_id) Return the first ChildWorkMaterial filtered by the work_id column
- * @method     ChildWorkMaterial|null findOneByAmount(string $amount) Return the first ChildWorkMaterial filtered by the amount column *
+ * @method     ChildWorkMaterial|null findOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column
+ * @method     ChildWorkMaterial|null findOneByAmount(string $amount) Return the first ChildWorkMaterial filtered by the amount column
+ * @method     ChildWorkMaterial|null findOneByVersion(int $version) Return the first ChildWorkMaterial filtered by the version column
+ * @method     ChildWorkMaterial|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkMaterial filtered by the version_created_at column
+ * @method     ChildWorkMaterial|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkMaterial filtered by the version_created_by column
+ * @method     ChildWorkMaterial|null findOneByVersionComment(string $version_comment) Return the first ChildWorkMaterial filtered by the version_comment column *
 
  * @method     ChildWorkMaterial requirePk($key, ?ConnectionInterface $con = null) Return the ChildWorkMaterial by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOne(?ConnectionInterface $con = null) Return the first ChildWorkMaterial matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildWorkMaterial requireOneById(int $id) Return the first ChildWorkMaterial filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildWorkMaterial requireOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByWorkId(int $work_id) Return the first ChildWorkMaterial filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByAmount(string $amount) Return the first ChildWorkMaterial filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByVersion(int $version) Return the first ChildWorkMaterial filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkMaterial filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkMaterial filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByVersionComment(string $version_comment) Return the first ChildWorkMaterial filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildWorkMaterial[]|Collection find(?ConnectionInterface $con = null) Return ChildWorkMaterial objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> find(?ConnectionInterface $con = null) Return ChildWorkMaterial objects based on current ModelCriteria
  * @method     ChildWorkMaterial[]|Collection findById(int $id) Return ChildWorkMaterial objects filtered by the id column
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findById(int $id) Return ChildWorkMaterial objects filtered by the id column
- * @method     ChildWorkMaterial[]|Collection findByMaterialId(int $material_id) Return ChildWorkMaterial objects filtered by the material_id column
- * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByMaterialId(int $material_id) Return ChildWorkMaterial objects filtered by the material_id column
  * @method     ChildWorkMaterial[]|Collection findByWorkId(int $work_id) Return ChildWorkMaterial objects filtered by the work_id column
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByWorkId(int $work_id) Return ChildWorkMaterial objects filtered by the work_id column
+ * @method     ChildWorkMaterial[]|Collection findByMaterialId(int $material_id) Return ChildWorkMaterial objects filtered by the material_id column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByMaterialId(int $material_id) Return ChildWorkMaterial objects filtered by the material_id column
  * @method     ChildWorkMaterial[]|Collection findByAmount(string $amount) Return ChildWorkMaterial objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByAmount(string $amount) Return ChildWorkMaterial objects filtered by the amount column
+ * @method     ChildWorkMaterial[]|Collection findByVersion(int $version) Return ChildWorkMaterial objects filtered by the version column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByVersion(int $version) Return ChildWorkMaterial objects filtered by the version column
+ * @method     ChildWorkMaterial[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildWorkMaterial objects filtered by the version_created_at column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByVersionCreatedAt(string $version_created_at) Return ChildWorkMaterial objects filtered by the version_created_at column
+ * @method     ChildWorkMaterial[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildWorkMaterial objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByVersionCreatedBy(string $version_created_by) Return ChildWorkMaterial objects filtered by the version_created_by column
+ * @method     ChildWorkMaterial[]|Collection findByVersionComment(string $version_comment) Return ChildWorkMaterial objects filtered by the version_comment column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByVersionComment(string $version_comment) Return ChildWorkMaterial objects filtered by the version_comment column
  * @method     ChildWorkMaterial[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildWorkMaterial> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -186,7 +220,7 @@ abstract class WorkMaterialQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, material_id, work_id, amount FROM work_material WHERE id = :p0';
+        $sql = 'SELECT id, work_id, material_id, amount, version, version_created_at, version_created_by, version_comment FROM work_material WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -324,51 +358,6 @@ abstract class WorkMaterialQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the material_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByMaterialId(1234); // WHERE material_id = 1234
-     * $query->filterByMaterialId(array(12, 34)); // WHERE material_id IN (12, 34)
-     * $query->filterByMaterialId(array('min' => 12)); // WHERE material_id > 12
-     * </code>
-     *
-     * @see       filterByMaterial()
-     *
-     * @param mixed $materialId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByMaterialId($materialId = null, ?string $comparison = null)
-    {
-        if (is_array($materialId)) {
-            $useMinMax = false;
-            if (isset($materialId['min'])) {
-                $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($materialId['max'])) {
-                $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId, $comparison);
-
-        return $this;
-    }
-
-    /**
      * Filter the query on the work_id column
      *
      * Example usage:
@@ -409,6 +398,51 @@ abstract class WorkMaterialQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(WorkMaterialTableMap::COL_WORK_ID, $workId, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the material_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMaterialId(1234); // WHERE material_id = 1234
+     * $query->filterByMaterialId(array(12, 34)); // WHERE material_id IN (12, 34)
+     * $query->filterByMaterialId(array('min' => 12)); // WHERE material_id > 12
+     * </code>
+     *
+     * @see       filterByMaterial()
+     *
+     * @param mixed $materialId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByMaterialId($materialId = null, ?string $comparison = null)
+    {
+        if (is_array($materialId)) {
+            $useMinMax = false;
+            if (isset($materialId['min'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($materialId['max'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_MATERIAL_ID, $materialId, $comparison);
 
         return $this;
     }
@@ -456,6 +490,284 @@ abstract class WorkMaterialQuery extends ModelCriteria
         return $this;
     }
 
+    /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion(1234); // WHERE version = 1234
+     * $query->filterByVersion(array(12, 34)); // WHERE version IN (12, 34)
+     * $query->filterByVersion(array('min' => 12)); // WHERE version > 12
+     * </code>
+     *
+     * @param mixed $version The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, ?string $comparison = null)
+    {
+        if (is_array($version)) {
+            $useMinMax = false;
+            if (isset($version['min'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION, $version['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($version['max'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION, $version['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION, $version, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedAt('2011-03-14'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt('now'); // WHERE version_created_at = '2011-03-14'
+     * $query->filterByVersionCreatedAt(array('max' => 'yesterday')); // WHERE version_created_at > '2011-03-13'
+     * </code>
+     *
+     * @param mixed $versionCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedAt($versionCreatedAt = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedAt)) {
+            $useMinMax = false;
+            if (isset($versionCreatedAt['min'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedAt['max'])) {
+                $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
+     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
+     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionCreatedBy The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionCreatedBy)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the version_comment column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionComment('fooValue');   // WHERE version_comment = 'fooValue'
+     * $query->filterByVersionComment('%fooValue%', Criteria::LIKE); // WHERE version_comment LIKE '%fooValue%'
+     * $query->filterByVersionComment(['foo', 'bar']); // WHERE version_comment IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $versionComment The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionComment($versionComment = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($versionComment)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_VERSION_COMMENT, $versionComment, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query by a related \DB\Work object
+     *
+     * @param \DB\Work|ObjectCollection $work The related object(s) to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByWork($work, ?string $comparison = null)
+    {
+        if ($work instanceof \DB\Work) {
+            return $this
+                ->addUsingAlias(WorkMaterialTableMap::COL_WORK_ID, $work->getId(), $comparison);
+        } elseif ($work instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            $this
+                ->addUsingAlias(WorkMaterialTableMap::COL_WORK_ID, $work->toKeyValue('PrimaryKey', 'Id'), $comparison);
+
+            return $this;
+        } else {
+            throw new PropelException('filterByWork() only accepts arguments of type \DB\Work or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Work relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinWork(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Work');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Work');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Work relation Work object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\WorkQuery A secondary query class using the current class as primary query
+     */
+    public function useWorkQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinWork($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Work', '\DB\WorkQuery');
+    }
+
+    /**
+     * Use the Work relation Work object
+     *
+     * @param callable(\DB\WorkQuery):\DB\WorkQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withWorkQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useWorkQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Work table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\WorkQuery The inner query object of the EXISTS statement
+     */
+    public function useWorkExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Work', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Work table for a NOT EXISTS query.
+     *
+     * @see useWorkExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\WorkQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useWorkNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Work', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Filter the query by a related \DB\Material object
      *
@@ -591,46 +903,44 @@ abstract class WorkMaterialQuery extends ModelCriteria
         return $this->useExistsQuery('Material', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\Work object
+     * Filter the query by a related \DB\WorkMaterialVersion object
      *
-     * @param \DB\Work|ObjectCollection $work The related object(s) to use as filter
+     * @param \DB\WorkMaterialVersion|ObjectCollection $workMaterialVersion the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByWork($work, ?string $comparison = null)
+    public function filterByWorkMaterialVersion($workMaterialVersion, ?string $comparison = null)
     {
-        if ($work instanceof \DB\Work) {
-            return $this
-                ->addUsingAlias(WorkMaterialTableMap::COL_WORK_ID, $work->getId(), $comparison);
-        } elseif ($work instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
+        if ($workMaterialVersion instanceof \DB\WorkMaterialVersion) {
             $this
-                ->addUsingAlias(WorkMaterialTableMap::COL_WORK_ID, $work->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(WorkMaterialTableMap::COL_ID, $workMaterialVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($workMaterialVersion instanceof ObjectCollection) {
+            $this
+                ->useWorkMaterialVersionQuery()
+                ->filterByPrimaryKeys($workMaterialVersion->getPrimaryKeys())
+                ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByWork() only accepts arguments of type \DB\Work or Collection');
+            throw new PropelException('filterByWorkMaterialVersion() only accepts arguments of type \DB\WorkMaterialVersion or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Work relation
+     * Adds a JOIN clause to the query using the WorkMaterialVersion relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinWork(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinWorkMaterialVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Work');
+        $relationMap = $tableMap->getRelation('WorkMaterialVersion');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -645,14 +955,14 @@ abstract class WorkMaterialQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Work');
+            $this->addJoinObject($join, 'WorkMaterialVersion');
         }
 
         return $this;
     }
 
     /**
-     * Use the Work relation Work object
+     * Use the WorkMaterialVersion relation WorkMaterialVersion object
      *
      * @see useQuery()
      *
@@ -660,19 +970,19 @@ abstract class WorkMaterialQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DB\WorkQuery A secondary query class using the current class as primary query
+     * @return \DB\WorkMaterialVersionQuery A secondary query class using the current class as primary query
      */
-    public function useWorkQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useWorkMaterialVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinWork($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Work', '\DB\WorkQuery');
+            ->joinWorkMaterialVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'WorkMaterialVersion', '\DB\WorkMaterialVersionQuery');
     }
 
     /**
-     * Use the Work relation Work object
+     * Use the WorkMaterialVersion relation WorkMaterialVersion object
      *
-     * @param callable(\DB\WorkQuery):\DB\WorkQuery $callable A function working on the related query
+     * @param callable(\DB\WorkMaterialVersionQuery):\DB\WorkMaterialVersionQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -680,12 +990,12 @@ abstract class WorkMaterialQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withWorkQuery(
+    public function withWorkMaterialVersionQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useWorkQuery(
+        $relatedQuery = $this->useWorkMaterialVersionQuery(
             $relationAlias,
             $joinType
         );
@@ -695,7 +1005,7 @@ abstract class WorkMaterialQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the relation to Work table for an EXISTS query.
+     * Use the relation to WorkMaterialVersion table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -703,26 +1013,26 @@ abstract class WorkMaterialQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DB\WorkQuery The inner query object of the EXISTS statement
+     * @return \DB\WorkMaterialVersionQuery The inner query object of the EXISTS statement
      */
-    public function useWorkExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useWorkMaterialVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('Work', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('WorkMaterialVersion', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the relation to Work table for a NOT EXISTS query.
+     * Use the relation to WorkMaterialVersion table for a NOT EXISTS query.
      *
-     * @see useWorkExistsQuery()
+     * @see useWorkMaterialVersionExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DB\WorkQuery The inner query object of the NOT EXISTS statement
+     * @return \DB\WorkMaterialVersionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useWorkNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useWorkMaterialVersionNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('Work', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('WorkMaterialVersion', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result

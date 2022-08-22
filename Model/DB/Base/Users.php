@@ -4,13 +4,20 @@ namespace DB\Base;
 
 use \Exception;
 use \PDO;
+use DB\ProjectRole as ChildProjectRole;
+use DB\ProjectRoleQuery as ChildProjectRoleQuery;
+use DB\Role as ChildRole;
+use DB\RoleQuery as ChildRoleQuery;
+use DB\Users as ChildUsers;
 use DB\UsersQuery as ChildUsersQuery;
+use DB\Map\ProjectRoleTableMap;
 use DB\Map\UsersTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -76,6 +83,13 @@ abstract class Users implements ActiveRecordInterface
     protected $email;
 
     /**
+     * The value for the phone field.
+     *
+     * @var        string|null
+     */
+    protected $phone;
+
+    /**
      * The value for the password field.
      *
      * @var        string
@@ -96,6 +110,13 @@ abstract class Users implements ActiveRecordInterface
      * @var        int
      */
     protected $status;
+
+    /**
+     * The value for the role_id field.
+     * ID роли
+     * @var        int|null
+     */
+    protected $role_id;
 
     /**
      * The value for the verified field.
@@ -144,12 +165,16 @@ abstract class Users implements ActiveRecordInterface
     protected $force_logout;
 
     /**
-     * The value for the is_available field.
-     *
-     * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        ChildRole
      */
-    protected $is_available;
+    protected $aRole;
+
+    /**
+     * @var        ObjectCollection|ChildProjectRole[] Collection to store aggregation of ChildProjectRole objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildProjectRole> Collection to store aggregation of ChildProjectRole objects.
+     */
+    protected $collProjectRoles;
+    protected $collProjectRolesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -158,6 +183,13 @@ abstract class Users implements ActiveRecordInterface
      * @var bool
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProjectRole[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildProjectRole>
+     */
+    protected $projectRolesScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -172,7 +204,6 @@ abstract class Users implements ActiveRecordInterface
         $this->resettable = 1;
         $this->roles_mask = 0;
         $this->force_logout = 0;
-        $this->is_available = true;
     }
 
     /**
@@ -424,6 +455,16 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
+     * Get the [phone] column value.
+     *
+     * @return string|null
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
      * Get the [password] column value.
      *
      * @return string
@@ -451,6 +492,16 @@ abstract class Users implements ActiveRecordInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get the [role_id] column value.
+     * ID роли
+     * @return int|null
+     */
+    public function getRoleId()
+    {
+        return $this->role_id;
     }
 
     /**
@@ -514,26 +565,6 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Get the [is_available] column value.
-     *
-     * @return boolean
-     */
-    public function getIsAvailable()
-    {
-        return $this->is_available;
-    }
-
-    /**
-     * Get the [is_available] column value.
-     *
-     * @return boolean
-     */
-    public function isAvailable()
-    {
-        return $this->getIsAvailable();
-    }
-
-    /**
      * Set the value of [id] column.
      *
      * @param int $v New value
@@ -568,6 +599,26 @@ abstract class Users implements ActiveRecordInterface
         if ($this->email !== $v) {
             $this->email = $v;
             $this->modifiedColumns[UsersTableMap::COL_EMAIL] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [phone] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setPhone($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->phone !== $v) {
+            $this->phone = $v;
+            $this->modifiedColumns[UsersTableMap::COL_PHONE] = true;
         }
 
         return $this;
@@ -628,6 +679,30 @@ abstract class Users implements ActiveRecordInterface
         if ($this->status !== $v) {
             $this->status = $v;
             $this->modifiedColumns[UsersTableMap::COL_STATUS] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [role_id] column.
+     * ID роли
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setRoleId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->role_id !== $v) {
+            $this->role_id = $v;
+            $this->modifiedColumns[UsersTableMap::COL_ROLE_ID] = true;
+        }
+
+        if ($this->aRole !== null && $this->aRole->getId() !== $v) {
+            $this->aRole = null;
         }
 
         return $this;
@@ -754,34 +829,6 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of the [is_available] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param bool|integer|string $v The new value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setIsAvailable($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->is_available !== $v) {
-            $this->is_available = $v;
-            $this->modifiedColumns[UsersTableMap::COL_IS_AVAILABLE] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -808,10 +855,6 @@ abstract class Users implements ActiveRecordInterface
             }
 
             if ($this->force_logout !== 0) {
-                return false;
-            }
-
-            if ($this->is_available !== true) {
                 return false;
             }
 
@@ -847,35 +890,38 @@ abstract class Users implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UsersTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UsersTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UsersTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->phone = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UsersTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UsersTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UsersTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
             $this->username = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UsersTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UsersTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UsersTableMap::translateFieldName('Verified', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UsersTableMap::translateFieldName('RoleId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->role_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UsersTableMap::translateFieldName('Verified', TableMap::TYPE_PHPNAME, $indexType)];
             $this->verified = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UsersTableMap::translateFieldName('Resettable', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UsersTableMap::translateFieldName('Resettable', TableMap::TYPE_PHPNAME, $indexType)];
             $this->resettable = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UsersTableMap::translateFieldName('RolesMask', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UsersTableMap::translateFieldName('RolesMask', TableMap::TYPE_PHPNAME, $indexType)];
             $this->roles_mask = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UsersTableMap::translateFieldName('Registered', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UsersTableMap::translateFieldName('Registered', TableMap::TYPE_PHPNAME, $indexType)];
             $this->registered = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UsersTableMap::translateFieldName('LastLogin', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UsersTableMap::translateFieldName('LastLogin', TableMap::TYPE_PHPNAME, $indexType)];
             $this->last_login = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UsersTableMap::translateFieldName('ForceLogout', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UsersTableMap::translateFieldName('ForceLogout', TableMap::TYPE_PHPNAME, $indexType)];
             $this->force_logout = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UsersTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_available = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -884,7 +930,7 @@ abstract class Users implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = UsersTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = UsersTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Users'), 0, $e);
@@ -907,6 +953,9 @@ abstract class Users implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
+        if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
+            $this->aRole = null;
+        }
     }
 
     /**
@@ -945,6 +994,9 @@ abstract class Users implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
+
+            $this->aRole = null;
+            $this->collProjectRoles = null;
 
         } // if (deep)
     }
@@ -1049,6 +1101,18 @@ abstract class Users implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aRole !== null) {
+                if ($this->aRole->isModified() || $this->aRole->isNew()) {
+                    $affectedRows += $this->aRole->save($con);
+                }
+                $this->setRole($this->aRole);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1058,6 +1122,23 @@ abstract class Users implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->projectRolesScheduledForDeletion !== null) {
+                if (!$this->projectRolesScheduledForDeletion->isEmpty()) {
+                    \DB\ProjectRoleQuery::create()
+                        ->filterByPrimaryKeys($this->projectRolesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->projectRolesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProjectRoles !== null) {
+                foreach ($this->collProjectRoles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -1092,6 +1173,9 @@ abstract class Users implements ActiveRecordInterface
         if ($this->isColumnModified(UsersTableMap::COL_EMAIL)) {
             $modifiedColumns[':p' . $index++]  = 'email';
         }
+        if ($this->isColumnModified(UsersTableMap::COL_PHONE)) {
+            $modifiedColumns[':p' . $index++]  = 'phone';
+        }
         if ($this->isColumnModified(UsersTableMap::COL_PASSWORD)) {
             $modifiedColumns[':p' . $index++]  = 'password';
         }
@@ -1100,6 +1184,9 @@ abstract class Users implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UsersTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'status';
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_ROLE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'role_id';
         }
         if ($this->isColumnModified(UsersTableMap::COL_VERIFIED)) {
             $modifiedColumns[':p' . $index++]  = 'verified';
@@ -1119,9 +1206,6 @@ abstract class Users implements ActiveRecordInterface
         if ($this->isColumnModified(UsersTableMap::COL_FORCE_LOGOUT)) {
             $modifiedColumns[':p' . $index++]  = 'force_logout';
         }
-        if ($this->isColumnModified(UsersTableMap::COL_IS_AVAILABLE)) {
-            $modifiedColumns[':p' . $index++]  = 'is_available';
-        }
 
         $sql = sprintf(
             'INSERT INTO users (%s) VALUES (%s)',
@@ -1139,6 +1223,9 @@ abstract class Users implements ActiveRecordInterface
                     case 'email':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
+                    case 'phone':
+                        $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
+                        break;
                     case 'password':
                         $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
                         break;
@@ -1147,6 +1234,9 @@ abstract class Users implements ActiveRecordInterface
                         break;
                     case 'status':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_INT);
+                        break;
+                    case 'role_id':
+                        $stmt->bindValue($identifier, $this->role_id, PDO::PARAM_INT);
                         break;
                     case 'verified':
                         $stmt->bindValue($identifier, $this->verified, PDO::PARAM_INT);
@@ -1165,9 +1255,6 @@ abstract class Users implements ActiveRecordInterface
                         break;
                     case 'force_logout':
                         $stmt->bindValue($identifier, $this->force_logout, PDO::PARAM_INT);
-                        break;
-                    case 'is_available':
-                        $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1238,34 +1325,37 @@ abstract class Users implements ActiveRecordInterface
                 return $this->getEmail();
 
             case 2:
-                return $this->getPassword();
+                return $this->getPhone();
 
             case 3:
-                return $this->getUsername();
+                return $this->getPassword();
 
             case 4:
-                return $this->getStatus();
+                return $this->getUsername();
 
             case 5:
-                return $this->getVerified();
+                return $this->getStatus();
 
             case 6:
-                return $this->getResettable();
+                return $this->getRoleId();
 
             case 7:
-                return $this->getRolesMask();
+                return $this->getVerified();
 
             case 8:
-                return $this->getRegistered();
+                return $this->getResettable();
 
             case 9:
-                return $this->getLastLogin();
+                return $this->getRolesMask();
 
             case 10:
-                return $this->getForceLogout();
+                return $this->getRegistered();
 
             case 11:
-                return $this->getIsAvailable();
+                return $this->getLastLogin();
+
+            case 12:
+                return $this->getForceLogout();
 
             default:
                 return null;
@@ -1283,10 +1373,11 @@ abstract class Users implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
         if (isset($alreadyDumpedObjects['Users'][$this->hashCode()])) {
             return ['*RECURSION*'];
@@ -1296,22 +1387,55 @@ abstract class Users implements ActiveRecordInterface
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getEmail(),
-            $keys[2] => $this->getPassword(),
-            $keys[3] => $this->getUsername(),
-            $keys[4] => $this->getStatus(),
-            $keys[5] => $this->getVerified(),
-            $keys[6] => $this->getResettable(),
-            $keys[7] => $this->getRolesMask(),
-            $keys[8] => $this->getRegistered(),
-            $keys[9] => $this->getLastLogin(),
-            $keys[10] => $this->getForceLogout(),
-            $keys[11] => $this->getIsAvailable(),
+            $keys[2] => $this->getPhone(),
+            $keys[3] => $this->getPassword(),
+            $keys[4] => $this->getUsername(),
+            $keys[5] => $this->getStatus(),
+            $keys[6] => $this->getRoleId(),
+            $keys[7] => $this->getVerified(),
+            $keys[8] => $this->getResettable(),
+            $keys[9] => $this->getRolesMask(),
+            $keys[10] => $this->getRegistered(),
+            $keys[11] => $this->getLastLogin(),
+            $keys[12] => $this->getForceLogout(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aRole) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'role';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'role';
+                        break;
+                    default:
+                        $key = 'Role';
+                }
+
+                $result[$key] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collProjectRoles) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'projectRoles';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'project_roles';
+                        break;
+                    default:
+                        $key = 'ProjectRoles';
+                }
+
+                $result[$key] = $this->collProjectRoles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1354,34 +1478,37 @@ abstract class Users implements ActiveRecordInterface
                 $this->setEmail($value);
                 break;
             case 2:
-                $this->setPassword($value);
+                $this->setPhone($value);
                 break;
             case 3:
-                $this->setUsername($value);
+                $this->setPassword($value);
                 break;
             case 4:
-                $this->setStatus($value);
+                $this->setUsername($value);
                 break;
             case 5:
-                $this->setVerified($value);
+                $this->setStatus($value);
                 break;
             case 6:
-                $this->setResettable($value);
+                $this->setRoleId($value);
                 break;
             case 7:
-                $this->setRolesMask($value);
+                $this->setVerified($value);
                 break;
             case 8:
-                $this->setRegistered($value);
+                $this->setResettable($value);
                 break;
             case 9:
-                $this->setLastLogin($value);
+                $this->setRolesMask($value);
                 break;
             case 10:
-                $this->setForceLogout($value);
+                $this->setRegistered($value);
                 break;
             case 11:
-                $this->setIsAvailable($value);
+                $this->setLastLogin($value);
+                break;
+            case 12:
+                $this->setForceLogout($value);
                 break;
         } // switch()
 
@@ -1416,34 +1543,37 @@ abstract class Users implements ActiveRecordInterface
             $this->setEmail($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setPassword($arr[$keys[2]]);
+            $this->setPhone($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setUsername($arr[$keys[3]]);
+            $this->setPassword($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setStatus($arr[$keys[4]]);
+            $this->setUsername($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setVerified($arr[$keys[5]]);
+            $this->setStatus($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setResettable($arr[$keys[6]]);
+            $this->setRoleId($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setRolesMask($arr[$keys[7]]);
+            $this->setVerified($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setRegistered($arr[$keys[8]]);
+            $this->setResettable($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setLastLogin($arr[$keys[9]]);
+            $this->setRolesMask($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setForceLogout($arr[$keys[10]]);
+            $this->setRegistered($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setIsAvailable($arr[$keys[11]]);
+            $this->setLastLogin($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setForceLogout($arr[$keys[12]]);
         }
 
         return $this;
@@ -1494,6 +1624,9 @@ abstract class Users implements ActiveRecordInterface
         if ($this->isColumnModified(UsersTableMap::COL_EMAIL)) {
             $criteria->add(UsersTableMap::COL_EMAIL, $this->email);
         }
+        if ($this->isColumnModified(UsersTableMap::COL_PHONE)) {
+            $criteria->add(UsersTableMap::COL_PHONE, $this->phone);
+        }
         if ($this->isColumnModified(UsersTableMap::COL_PASSWORD)) {
             $criteria->add(UsersTableMap::COL_PASSWORD, $this->password);
         }
@@ -1502,6 +1635,9 @@ abstract class Users implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UsersTableMap::COL_STATUS)) {
             $criteria->add(UsersTableMap::COL_STATUS, $this->status);
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_ROLE_ID)) {
+            $criteria->add(UsersTableMap::COL_ROLE_ID, $this->role_id);
         }
         if ($this->isColumnModified(UsersTableMap::COL_VERIFIED)) {
             $criteria->add(UsersTableMap::COL_VERIFIED, $this->verified);
@@ -1520,9 +1656,6 @@ abstract class Users implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UsersTableMap::COL_FORCE_LOGOUT)) {
             $criteria->add(UsersTableMap::COL_FORCE_LOGOUT, $this->force_logout);
-        }
-        if ($this->isColumnModified(UsersTableMap::COL_IS_AVAILABLE)) {
-            $criteria->add(UsersTableMap::COL_IS_AVAILABLE, $this->is_available);
         }
 
         return $criteria;
@@ -1613,16 +1746,31 @@ abstract class Users implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setEmail($this->getEmail());
+        $copyObj->setPhone($this->getPhone());
         $copyObj->setPassword($this->getPassword());
         $copyObj->setUsername($this->getUsername());
         $copyObj->setStatus($this->getStatus());
+        $copyObj->setRoleId($this->getRoleId());
         $copyObj->setVerified($this->getVerified());
         $copyObj->setResettable($this->getResettable());
         $copyObj->setRolesMask($this->getRolesMask());
         $copyObj->setRegistered($this->getRegistered());
         $copyObj->setLastLogin($this->getLastLogin());
         $copyObj->setForceLogout($this->getForceLogout());
-        $copyObj->setIsAvailable($this->getIsAvailable());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getProjectRoles() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProjectRole($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1652,6 +1800,365 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildRole object.
+     *
+     * @param ChildRole|null $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setRole(ChildRole $v = null)
+    {
+        if ($v === null) {
+            $this->setRoleId(NULL);
+        } else {
+            $this->setRoleId($v->getId());
+        }
+
+        $this->aRole = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildRole object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUsers($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildRole object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildRole|null The associated ChildRole object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getRole(?ConnectionInterface $con = null)
+    {
+        if ($this->aRole === null && ($this->role_id != 0)) {
+            $this->aRole = ChildRoleQuery::create()->findPk($this->role_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRole->addUserss($this);
+             */
+        }
+
+        return $this->aRole;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('ProjectRole' === $relationName) {
+            $this->initProjectRoles();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collProjectRoles collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addProjectRoles()
+     */
+    public function clearProjectRoles()
+    {
+        $this->collProjectRoles = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collProjectRoles collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialProjectRoles($v = true): void
+    {
+        $this->collProjectRolesPartial = $v;
+    }
+
+    /**
+     * Initializes the collProjectRoles collection.
+     *
+     * By default this just sets the collProjectRoles collection to an empty array (like clearcollProjectRoles());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initProjectRoles(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collProjectRoles && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ProjectRoleTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collProjectRoles = new $collectionClassName;
+        $this->collProjectRoles->setModel('\DB\ProjectRole');
+    }
+
+    /**
+     * Gets an array of ChildProjectRole objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole> List of ChildProjectRole objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getProjectRoles(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collProjectRolesPartial && !$this->isNew();
+        if (null === $this->collProjectRoles || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collProjectRoles) {
+                    $this->initProjectRoles();
+                } else {
+                    $collectionClassName = ProjectRoleTableMap::getTableMap()->getCollectionClassName();
+
+                    $collProjectRoles = new $collectionClassName;
+                    $collProjectRoles->setModel('\DB\ProjectRole');
+
+                    return $collProjectRoles;
+                }
+            } else {
+                $collProjectRoles = ChildProjectRoleQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collProjectRolesPartial && count($collProjectRoles)) {
+                        $this->initProjectRoles(false);
+
+                        foreach ($collProjectRoles as $obj) {
+                            if (false == $this->collProjectRoles->contains($obj)) {
+                                $this->collProjectRoles->append($obj);
+                            }
+                        }
+
+                        $this->collProjectRolesPartial = true;
+                    }
+
+                    return $collProjectRoles;
+                }
+
+                if ($partial && $this->collProjectRoles) {
+                    foreach ($this->collProjectRoles as $obj) {
+                        if ($obj->isNew()) {
+                            $collProjectRoles[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collProjectRoles = $collProjectRoles;
+                $this->collProjectRolesPartial = false;
+            }
+        }
+
+        return $this->collProjectRoles;
+    }
+
+    /**
+     * Sets a collection of ChildProjectRole objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $projectRoles A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setProjectRoles(Collection $projectRoles, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildProjectRole[] $projectRolesToDelete */
+        $projectRolesToDelete = $this->getProjectRoles(new Criteria(), $con)->diff($projectRoles);
+
+
+        $this->projectRolesScheduledForDeletion = $projectRolesToDelete;
+
+        foreach ($projectRolesToDelete as $projectRoleRemoved) {
+            $projectRoleRemoved->setUsers(null);
+        }
+
+        $this->collProjectRoles = null;
+        foreach ($projectRoles as $projectRole) {
+            $this->addProjectRole($projectRole);
+        }
+
+        $this->collProjectRoles = $projectRoles;
+        $this->collProjectRolesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ProjectRole objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ProjectRole objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countProjectRoles(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collProjectRolesPartial && !$this->isNew();
+        if (null === $this->collProjectRoles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProjectRoles) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getProjectRoles());
+            }
+
+            $query = ChildProjectRoleQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collProjectRoles);
+    }
+
+    /**
+     * Method called to associate a ChildProjectRole object to this object
+     * through the ChildProjectRole foreign key attribute.
+     *
+     * @param ChildProjectRole $l ChildProjectRole
+     * @return $this The current object (for fluent API support)
+     */
+    public function addProjectRole(ChildProjectRole $l)
+    {
+        if ($this->collProjectRoles === null) {
+            $this->initProjectRoles();
+            $this->collProjectRolesPartial = true;
+        }
+
+        if (!$this->collProjectRoles->contains($l)) {
+            $this->doAddProjectRole($l);
+
+            if ($this->projectRolesScheduledForDeletion and $this->projectRolesScheduledForDeletion->contains($l)) {
+                $this->projectRolesScheduledForDeletion->remove($this->projectRolesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildProjectRole $projectRole The ChildProjectRole object to add.
+     */
+    protected function doAddProjectRole(ChildProjectRole $projectRole): void
+    {
+        $this->collProjectRoles[]= $projectRole;
+        $projectRole->setUsers($this);
+    }
+
+    /**
+     * @param ChildProjectRole $projectRole The ChildProjectRole object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeProjectRole(ChildProjectRole $projectRole)
+    {
+        if ($this->getProjectRoles()->contains($projectRole)) {
+            $pos = $this->collProjectRoles->search($projectRole);
+            $this->collProjectRoles->remove($pos);
+            if (null === $this->projectRolesScheduledForDeletion) {
+                $this->projectRolesScheduledForDeletion = clone $this->collProjectRoles;
+                $this->projectRolesScheduledForDeletion->clear();
+            }
+            $this->projectRolesScheduledForDeletion[]= clone $projectRole;
+            $projectRole->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ProjectRoles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole}> List of ChildProjectRole objects
+     */
+    public function getProjectRolesJoinRole(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProjectRoleQuery::create(null, $criteria);
+        $query->joinWith('Role', $joinBehavior);
+
+        return $this->getProjectRoles($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ProjectRoles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole}> List of ChildProjectRole objects
+     */
+    public function getProjectRolesJoinProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildProjectRoleQuery::create(null, $criteria);
+        $query->joinWith('Project', $joinBehavior);
+
+        return $this->getProjectRoles($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1660,18 +2167,22 @@ abstract class Users implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aRole) {
+            $this->aRole->removeUsers($this);
+        }
         $this->id = null;
         $this->email = null;
+        $this->phone = null;
         $this->password = null;
         $this->username = null;
         $this->status = null;
+        $this->role_id = null;
         $this->verified = null;
         $this->resettable = null;
         $this->roles_mask = null;
         $this->registered = null;
         $this->last_login = null;
         $this->force_logout = null;
-        $this->is_available = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1694,8 +2205,15 @@ abstract class Users implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collProjectRoles) {
+                foreach ($this->collProjectRoles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collProjectRoles = null;
+        $this->aRole = null;
         return $this;
     }
 

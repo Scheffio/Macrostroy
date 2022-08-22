@@ -2,10 +2,9 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
-use DB\StageWork as ChildStageWork;
-use DB\StageWorkQuery as ChildStageWorkQuery;
 use DB\Unit as ChildUnit;
 use DB\UnitQuery as ChildUnitQuery;
 use DB\Work as ChildWork;
@@ -14,10 +13,12 @@ use DB\WorkMaterialQuery as ChildWorkMaterialQuery;
 use DB\WorkQuery as ChildWorkQuery;
 use DB\WorkTechnic as ChildWorkTechnic;
 use DB\WorkTechnicQuery as ChildWorkTechnicQuery;
-use DB\Map\StageWorkTableMap;
+use DB\WorkVersion as ChildWorkVersion;
+use DB\WorkVersionQuery as ChildWorkVersionQuery;
 use DB\Map\WorkMaterialTableMap;
 use DB\Map\WorkTableMap;
 use DB\Map\WorkTechnicTableMap;
+use DB\Map\WorkVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -30,6 +31,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'work' table.
@@ -76,7 +78,7 @@ abstract class Work implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     *
+     * ID работы
      * @var        int
      */
     protected $id;
@@ -96,6 +98,13 @@ abstract class Work implements ActiveRecordInterface
     protected $price;
 
     /**
+     * The value for the amount field.
+     * Кол-во
+     * @var        string
+     */
+    protected $amount;
+
+    /**
      * The value for the is_available field.
      * Доступ (доступный, удаленный)
      * Note: this column has a database default value of: true
@@ -105,22 +114,44 @@ abstract class Work implements ActiveRecordInterface
 
     /**
      * The value for the unit_id field.
-     * ID ед.измерения
+     * ID ед. измерения
      * @var        int
      */
     protected $unit_id;
 
     /**
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * @var        ChildUnit
      */
     protected $aUnit;
-
-    /**
-     * @var        ObjectCollection|ChildStageWork[] Collection to store aggregation of ChildStageWork objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageWork> Collection to store aggregation of ChildStageWork objects.
-     */
-    protected $collStageWorks;
-    protected $collStageWorksPartial;
 
     /**
      * @var        ObjectCollection|ChildWorkMaterial[] Collection to store aggregation of ChildWorkMaterial objects.
@@ -137,19 +168,19 @@ abstract class Work implements ActiveRecordInterface
     protected $collWorkTechnicsPartial;
 
     /**
+     * @var        ObjectCollection|ChildWorkVersion[] Collection to store aggregation of ChildWorkVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildWorkVersion> Collection to store aggregation of ChildWorkVersion objects.
+     */
+    protected $collWorkVersions;
+    protected $collWorkVersionsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var bool
      */
     protected $alreadyInSave = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStageWork[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStageWork>
-     */
-    protected $stageWorksScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -166,6 +197,13 @@ abstract class Work implements ActiveRecordInterface
     protected $workTechnicsScheduledForDeletion = null;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildWorkVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildWorkVersion>
+     */
+    protected $workVersionsScheduledForDeletion = null;
+
+    /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
      * equivalent initialization method).
@@ -174,6 +212,7 @@ abstract class Work implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->is_available = true;
+        $this->version = 0;
     }
 
     /**
@@ -406,7 +445,7 @@ abstract class Work implements ActiveRecordInterface
 
     /**
      * Get the [id] column value.
-     *
+     * ID работы
      * @return int
      */
     public function getId()
@@ -435,6 +474,16 @@ abstract class Work implements ActiveRecordInterface
     }
 
     /**
+     * Get the [amount] column value.
+     * Кол-во
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
      * Get the [is_available] column value.
      * Доступ (доступный, удаленный)
      * @return boolean
@@ -456,7 +505,7 @@ abstract class Work implements ActiveRecordInterface
 
     /**
      * Get the [unit_id] column value.
-     * ID ед.измерения
+     * ID ед. измерения
      * @return int
      */
     public function getUnitId()
@@ -465,8 +514,60 @@ abstract class Work implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [version] column value.
      *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
+    }
+
+    /**
+     * Set the value of [id] column.
+     * ID работы
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -525,6 +626,26 @@ abstract class Work implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [amount] column.
+     * Кол-во
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setAmount($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->amount !== $v) {
+            $this->amount = $v;
+            $this->modifiedColumns[WorkTableMap::COL_AMOUNT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets the value of the [is_available] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
@@ -554,7 +675,7 @@ abstract class Work implements ActiveRecordInterface
 
     /**
      * Set the value of [unit_id] column.
-     * ID ед.измерения
+     * ID ед. измерения
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
@@ -577,6 +698,86 @@ abstract class Work implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[WorkTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[WorkTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[WorkTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[WorkTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -587,6 +788,10 @@ abstract class Work implements ActiveRecordInterface
     public function hasOnlyDefaultValues(): bool
     {
             if ($this->is_available !== true) {
+                return false;
+            }
+
+            if ($this->version !== 0) {
                 return false;
             }
 
@@ -625,11 +830,29 @@ abstract class Work implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WorkTableMap::translateFieldName('Price', TableMap::TYPE_PHPNAME, $indexType)];
             $this->price = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->amount = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_available = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : WorkTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : WorkTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -638,7 +861,7 @@ abstract class Work implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = WorkTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = WorkTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Work'), 0, $e);
@@ -704,11 +927,11 @@ abstract class Work implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aUnit = null;
-            $this->collStageWorks = null;
-
             $this->collWorkMaterials = null;
 
             $this->collWorkTechnics = null;
+
+            $this->collWorkVersions = null;
 
         } // if (deep)
     }
@@ -836,23 +1059,6 @@ abstract class Work implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->stageWorksScheduledForDeletion !== null) {
-                if (!$this->stageWorksScheduledForDeletion->isEmpty()) {
-                    \DB\StageWorkQuery::create()
-                        ->filterByPrimaryKeys($this->stageWorksScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->stageWorksScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collStageWorks !== null) {
-                foreach ($this->collStageWorks as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->workMaterialsScheduledForDeletion !== null) {
                 if (!$this->workMaterialsScheduledForDeletion->isEmpty()) {
                     \DB\WorkMaterialQuery::create()
@@ -887,6 +1093,23 @@ abstract class Work implements ActiveRecordInterface
                 }
             }
 
+            if ($this->workVersionsScheduledForDeletion !== null) {
+                if (!$this->workVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\WorkVersionQuery::create()
+                        ->filterByPrimaryKeys($this->workVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->workVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collWorkVersions !== null) {
+                foreach ($this->collWorkVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -907,6 +1130,10 @@ abstract class Work implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
+        $this->modifiedColumns[WorkTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . WorkTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(WorkTableMap::COL_ID)) {
@@ -918,11 +1145,26 @@ abstract class Work implements ActiveRecordInterface
         if ($this->isColumnModified(WorkTableMap::COL_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'price';
         }
+        if ($this->isColumnModified(WorkTableMap::COL_AMOUNT)) {
+            $modifiedColumns[':p' . $index++]  = 'amount';
+        }
         if ($this->isColumnModified(WorkTableMap::COL_IS_AVAILABLE)) {
             $modifiedColumns[':p' . $index++]  = 'is_available';
         }
         if ($this->isColumnModified(WorkTableMap::COL_UNIT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'unit_id';
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -944,11 +1186,26 @@ abstract class Work implements ActiveRecordInterface
                     case 'price':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_STR);
                         break;
+                    case 'amount':
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
+                        break;
                     case 'is_available':
                         $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
                         break;
                     case 'unit_id':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -957,6 +1214,13 @@ abstract class Work implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1015,10 +1279,25 @@ abstract class Work implements ActiveRecordInterface
                 return $this->getPrice();
 
             case 3:
-                return $this->getIsAvailable();
+                return $this->getAmount();
 
             case 4:
+                return $this->getIsAvailable();
+
+            case 5:
                 return $this->getUnitId();
+
+            case 6:
+                return $this->getVersion();
+
+            case 7:
+                return $this->getVersionCreatedAt();
+
+            case 8:
+                return $this->getVersionCreatedBy();
+
+            case 9:
+                return $this->getVersionComment();
 
             default:
                 return null;
@@ -1051,9 +1330,18 @@ abstract class Work implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getPrice(),
-            $keys[3] => $this->getIsAvailable(),
-            $keys[4] => $this->getUnitId(),
+            $keys[3] => $this->getAmount(),
+            $keys[4] => $this->getIsAvailable(),
+            $keys[5] => $this->getUnitId(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
+            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[9] => $this->getVersionComment(),
         ];
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1074,21 +1362,6 @@ abstract class Work implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collStageWorks) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'stageWorks';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'stage_works';
-                        break;
-                    default:
-                        $key = 'StageWorks';
-                }
-
-                $result[$key] = $this->collStageWorks->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collWorkMaterials) {
 
@@ -1119,6 +1392,21 @@ abstract class Work implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collWorkTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collWorkVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'workVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'work_versions';
+                        break;
+                    default:
+                        $key = 'WorkVersions';
+                }
+
+                $result[$key] = $this->collWorkVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1166,10 +1454,25 @@ abstract class Work implements ActiveRecordInterface
                 $this->setPrice($value);
                 break;
             case 3:
-                $this->setIsAvailable($value);
+                $this->setAmount($value);
                 break;
             case 4:
+                $this->setIsAvailable($value);
+                break;
+            case 5:
                 $this->setUnitId($value);
+                break;
+            case 6:
+                $this->setVersion($value);
+                break;
+            case 7:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 8:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 9:
+                $this->setVersionComment($value);
                 break;
         } // switch()
 
@@ -1207,10 +1510,25 @@ abstract class Work implements ActiveRecordInterface
             $this->setPrice($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setIsAvailable($arr[$keys[3]]);
+            $this->setAmount($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUnitId($arr[$keys[4]]);
+            $this->setIsAvailable($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setUnitId($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersion($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setVersionComment($arr[$keys[9]]);
         }
 
         return $this;
@@ -1264,11 +1582,26 @@ abstract class Work implements ActiveRecordInterface
         if ($this->isColumnModified(WorkTableMap::COL_PRICE)) {
             $criteria->add(WorkTableMap::COL_PRICE, $this->price);
         }
+        if ($this->isColumnModified(WorkTableMap::COL_AMOUNT)) {
+            $criteria->add(WorkTableMap::COL_AMOUNT, $this->amount);
+        }
         if ($this->isColumnModified(WorkTableMap::COL_IS_AVAILABLE)) {
             $criteria->add(WorkTableMap::COL_IS_AVAILABLE, $this->is_available);
         }
         if ($this->isColumnModified(WorkTableMap::COL_UNIT_ID)) {
             $criteria->add(WorkTableMap::COL_UNIT_ID, $this->unit_id);
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION)) {
+            $criteria->add(WorkTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(WorkTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(WorkTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(WorkTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(WorkTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1358,22 +1691,20 @@ abstract class Work implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setId($this->getId());
         $copyObj->setName($this->getName());
         $copyObj->setPrice($this->getPrice());
+        $copyObj->setAmount($this->getAmount());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setUnitId($this->getUnitId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
-
-            foreach ($this->getStageWorks() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStageWork($relObj->copy($deepCopy));
-                }
-            }
 
             foreach ($this->getWorkMaterials() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1387,10 +1718,17 @@ abstract class Work implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getWorkVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addWorkVersion($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1478,10 +1816,6 @@ abstract class Work implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('StageWork' === $relationName) {
-            $this->initStageWorks();
-            return;
-        }
         if ('WorkMaterial' === $relationName) {
             $this->initWorkMaterials();
             return;
@@ -1490,271 +1824,10 @@ abstract class Work implements ActiveRecordInterface
             $this->initWorkTechnics();
             return;
         }
-    }
-
-    /**
-     * Clears out the collStageWorks collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addStageWorks()
-     */
-    public function clearStageWorks()
-    {
-        $this->collStageWorks = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collStageWorks collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialStageWorks($v = true): void
-    {
-        $this->collStageWorksPartial = $v;
-    }
-
-    /**
-     * Initializes the collStageWorks collection.
-     *
-     * By default this just sets the collStageWorks collection to an empty array (like clearcollStageWorks());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initStageWorks(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collStageWorks && !$overrideExisting) {
+        if ('WorkVersion' === $relationName) {
+            $this->initWorkVersions();
             return;
         }
-
-        $collectionClassName = StageWorkTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collStageWorks = new $collectionClassName;
-        $this->collStageWorks->setModel('\DB\StageWork');
-    }
-
-    /**
-     * Gets an array of ChildStageWork objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildWork is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStageWork[] List of ChildStageWork objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageWork> List of ChildStageWork objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getStageWorks(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collStageWorksPartial && !$this->isNew();
-        if (null === $this->collStageWorks || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collStageWorks) {
-                    $this->initStageWorks();
-                } else {
-                    $collectionClassName = StageWorkTableMap::getTableMap()->getCollectionClassName();
-
-                    $collStageWorks = new $collectionClassName;
-                    $collStageWorks->setModel('\DB\StageWork');
-
-                    return $collStageWorks;
-                }
-            } else {
-                $collStageWorks = ChildStageWorkQuery::create(null, $criteria)
-                    ->filterByWork($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collStageWorksPartial && count($collStageWorks)) {
-                        $this->initStageWorks(false);
-
-                        foreach ($collStageWorks as $obj) {
-                            if (false == $this->collStageWorks->contains($obj)) {
-                                $this->collStageWorks->append($obj);
-                            }
-                        }
-
-                        $this->collStageWorksPartial = true;
-                    }
-
-                    return $collStageWorks;
-                }
-
-                if ($partial && $this->collStageWorks) {
-                    foreach ($this->collStageWorks as $obj) {
-                        if ($obj->isNew()) {
-                            $collStageWorks[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collStageWorks = $collStageWorks;
-                $this->collStageWorksPartial = false;
-            }
-        }
-
-        return $this->collStageWorks;
-    }
-
-    /**
-     * Sets a collection of ChildStageWork objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $stageWorks A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStageWorks(Collection $stageWorks, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildStageWork[] $stageWorksToDelete */
-        $stageWorksToDelete = $this->getStageWorks(new Criteria(), $con)->diff($stageWorks);
-
-
-        $this->stageWorksScheduledForDeletion = $stageWorksToDelete;
-
-        foreach ($stageWorksToDelete as $stageWorkRemoved) {
-            $stageWorkRemoved->setWork(null);
-        }
-
-        $this->collStageWorks = null;
-        foreach ($stageWorks as $stageWork) {
-            $this->addStageWork($stageWork);
-        }
-
-        $this->collStageWorks = $stageWorks;
-        $this->collStageWorksPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related StageWork objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related StageWork objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countStageWorks(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collStageWorksPartial && !$this->isNew();
-        if (null === $this->collStageWorks || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStageWorks) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getStageWorks());
-            }
-
-            $query = ChildStageWorkQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByWork($this)
-                ->count($con);
-        }
-
-        return count($this->collStageWorks);
-    }
-
-    /**
-     * Method called to associate a ChildStageWork object to this object
-     * through the ChildStageWork foreign key attribute.
-     *
-     * @param ChildStageWork $l ChildStageWork
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStageWork(ChildStageWork $l)
-    {
-        if ($this->collStageWorks === null) {
-            $this->initStageWorks();
-            $this->collStageWorksPartial = true;
-        }
-
-        if (!$this->collStageWorks->contains($l)) {
-            $this->doAddStageWork($l);
-
-            if ($this->stageWorksScheduledForDeletion and $this->stageWorksScheduledForDeletion->contains($l)) {
-                $this->stageWorksScheduledForDeletion->remove($this->stageWorksScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildStageWork $stageWork The ChildStageWork object to add.
-     */
-    protected function doAddStageWork(ChildStageWork $stageWork): void
-    {
-        $this->collStageWorks[]= $stageWork;
-        $stageWork->setWork($this);
-    }
-
-    /**
-     * @param ChildStageWork $stageWork The ChildStageWork object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStageWork(ChildStageWork $stageWork)
-    {
-        if ($this->getStageWorks()->contains($stageWork)) {
-            $pos = $this->collStageWorks->search($stageWork);
-            $this->collStageWorks->remove($pos);
-            if (null === $this->stageWorksScheduledForDeletion) {
-                $this->stageWorksScheduledForDeletion = clone $this->collStageWorks;
-                $this->stageWorksScheduledForDeletion->clear();
-            }
-            $this->stageWorksScheduledForDeletion[]= clone $stageWork;
-            $stageWork->setWork(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Work is new, it will return
-     * an empty collection; or if this Work has previously
-     * been saved, it will retrieve related StageWorks from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Work.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStageWork[] List of ChildStageWork objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStageWork}> List of ChildStageWork objects
-     */
-    public function getStageWorksJoinStage(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildStageWorkQuery::create(null, $criteria);
-        $query->joinWith('Stage', $joinBehavior);
-
-        return $this->getStageWorks($query, $con);
     }
 
     /**
@@ -2288,6 +2361,248 @@ abstract class Work implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collWorkVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addWorkVersions()
+     */
+    public function clearWorkVersions()
+    {
+        $this->collWorkVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collWorkVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialWorkVersions($v = true): void
+    {
+        $this->collWorkVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collWorkVersions collection.
+     *
+     * By default this just sets the collWorkVersions collection to an empty array (like clearcollWorkVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initWorkVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collWorkVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = WorkVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collWorkVersions = new $collectionClassName;
+        $this->collWorkVersions->setModel('\DB\WorkVersion');
+    }
+
+    /**
+     * Gets an array of ChildWorkVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildWork is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildWorkVersion[] List of ChildWorkVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildWorkVersion> List of ChildWorkVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getWorkVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collWorkVersionsPartial && !$this->isNew();
+        if (null === $this->collWorkVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collWorkVersions) {
+                    $this->initWorkVersions();
+                } else {
+                    $collectionClassName = WorkVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collWorkVersions = new $collectionClassName;
+                    $collWorkVersions->setModel('\DB\WorkVersion');
+
+                    return $collWorkVersions;
+                }
+            } else {
+                $collWorkVersions = ChildWorkVersionQuery::create(null, $criteria)
+                    ->filterByWork($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collWorkVersionsPartial && count($collWorkVersions)) {
+                        $this->initWorkVersions(false);
+
+                        foreach ($collWorkVersions as $obj) {
+                            if (false == $this->collWorkVersions->contains($obj)) {
+                                $this->collWorkVersions->append($obj);
+                            }
+                        }
+
+                        $this->collWorkVersionsPartial = true;
+                    }
+
+                    return $collWorkVersions;
+                }
+
+                if ($partial && $this->collWorkVersions) {
+                    foreach ($this->collWorkVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collWorkVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collWorkVersions = $collWorkVersions;
+                $this->collWorkVersionsPartial = false;
+            }
+        }
+
+        return $this->collWorkVersions;
+    }
+
+    /**
+     * Sets a collection of ChildWorkVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $workVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setWorkVersions(Collection $workVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildWorkVersion[] $workVersionsToDelete */
+        $workVersionsToDelete = $this->getWorkVersions(new Criteria(), $con)->diff($workVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->workVersionsScheduledForDeletion = clone $workVersionsToDelete;
+
+        foreach ($workVersionsToDelete as $workVersionRemoved) {
+            $workVersionRemoved->setWork(null);
+        }
+
+        $this->collWorkVersions = null;
+        foreach ($workVersions as $workVersion) {
+            $this->addWorkVersion($workVersion);
+        }
+
+        $this->collWorkVersions = $workVersions;
+        $this->collWorkVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related WorkVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related WorkVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countWorkVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collWorkVersionsPartial && !$this->isNew();
+        if (null === $this->collWorkVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collWorkVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getWorkVersions());
+            }
+
+            $query = ChildWorkVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByWork($this)
+                ->count($con);
+        }
+
+        return count($this->collWorkVersions);
+    }
+
+    /**
+     * Method called to associate a ChildWorkVersion object to this object
+     * through the ChildWorkVersion foreign key attribute.
+     *
+     * @param ChildWorkVersion $l ChildWorkVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addWorkVersion(ChildWorkVersion $l)
+    {
+        if ($this->collWorkVersions === null) {
+            $this->initWorkVersions();
+            $this->collWorkVersionsPartial = true;
+        }
+
+        if (!$this->collWorkVersions->contains($l)) {
+            $this->doAddWorkVersion($l);
+
+            if ($this->workVersionsScheduledForDeletion and $this->workVersionsScheduledForDeletion->contains($l)) {
+                $this->workVersionsScheduledForDeletion->remove($this->workVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildWorkVersion $workVersion The ChildWorkVersion object to add.
+     */
+    protected function doAddWorkVersion(ChildWorkVersion $workVersion): void
+    {
+        $this->collWorkVersions[]= $workVersion;
+        $workVersion->setWork($this);
+    }
+
+    /**
+     * @param ChildWorkVersion $workVersion The ChildWorkVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeWorkVersion(ChildWorkVersion $workVersion)
+    {
+        if ($this->getWorkVersions()->contains($workVersion)) {
+            $pos = $this->collWorkVersions->search($workVersion);
+            $this->collWorkVersions->remove($pos);
+            if (null === $this->workVersionsScheduledForDeletion) {
+                $this->workVersionsScheduledForDeletion = clone $this->collWorkVersions;
+                $this->workVersionsScheduledForDeletion->clear();
+            }
+            $this->workVersionsScheduledForDeletion[]= clone $workVersion;
+            $workVersion->setWork(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2302,8 +2617,13 @@ abstract class Work implements ActiveRecordInterface
         $this->id = null;
         $this->name = null;
         $this->price = null;
+        $this->amount = null;
         $this->is_available = null;
         $this->unit_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2326,11 +2646,6 @@ abstract class Work implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collStageWorks) {
-                foreach ($this->collStageWorks as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collWorkMaterials) {
                 foreach ($this->collWorkMaterials as $o) {
                     $o->clearAllReferences($deep);
@@ -2341,11 +2656,16 @@ abstract class Work implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collWorkVersions) {
+                foreach ($this->collWorkVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
-        $this->collStageWorks = null;
         $this->collWorkMaterials = null;
         $this->collWorkTechnics = null;
+        $this->collWorkVersions = null;
         $this->aUnit = null;
         return $this;
     }

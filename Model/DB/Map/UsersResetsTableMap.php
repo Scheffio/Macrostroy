@@ -46,6 +46,11 @@ class UsersResetsTableMap extends TableMap
     public const TABLE_NAME = 'users_resets';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'UsersResets';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\DB\\UsersResets';

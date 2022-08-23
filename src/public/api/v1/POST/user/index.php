@@ -9,7 +9,8 @@ $request = new Request();
 $password = Auth::createUuid();
 try {
     Auth::getUser()->register($request->getRequest("user_email"), $password, null, function ($selector, $token) use ($password, $request) {
-        $link = "https://" . $_SERVER['HTTP_HOST'] . '/auth/reset_password/change_password?selector=' . urlencode($selector) . '&token=' . urlencode
+        $link = "https://" . $_SERVER['HTTP_HOST'] . '/auth/create_account?selector=' . urlencode
+            ($selector) . '&token=' . urlencode
             ($token);
         MailSender::sendAccountCreatedByAdmin($request->getRequest("user_email"), $link);
         var_dump($password);

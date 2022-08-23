@@ -26,11 +26,18 @@ try {
                     RoleTableMap::COL_NAME
                 ])
                 ->leftJoinRole()
-                ->findPk($user_id);
+                ->findPk($user_id) ?: throw new new Error('No user found');
 
-    $user = UsersQuery::create()->leftJoinRole()->findPk($user_id);
-
-//    JsonOutput::success(CorrectingData::propelArray($user));
+    JsonOutput::success([
+        'id' => $user['users.id'],
+        'username' => $user['users.username'],
+        'phone' => $user['users.phone'],
+        'email' => $user['users.email'],
+        'role' => [
+            'id' => $user['role.id'],
+            'name' => $user['role.name'],
+        ],
+    ]);
 } catch (PropelException|Error $e) {
     JsonOutput::error($e->getMessage());
 }

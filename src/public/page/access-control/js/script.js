@@ -36,6 +36,23 @@ const selectableUsers = {
 document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 // ===================
 
+// parse users 
+
+fetch("/api/v1/users", {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+      }
+})
+.then(function(res) {
+    return res.json();
+})
+.then(function(json) {
+    console.log(json);
+})
+
+// ===================
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 

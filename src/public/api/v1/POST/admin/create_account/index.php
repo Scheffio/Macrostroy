@@ -23,3 +23,4 @@ try {
 } catch (\Delight\Auth\UserAlreadyExistsException $e) {
     JsonOutput::error("Пользователь с этой почтой уже существует");
 }
+

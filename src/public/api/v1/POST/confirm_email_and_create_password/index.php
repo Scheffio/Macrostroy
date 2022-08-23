@@ -1,10 +1,12 @@
 <?php
 $request = new \inc\artemy\v1\request\Request();
 $request->checkRequestVariablesStrictOrError("selector", "token", "password");
-$user_id = \DB\UsersConfirmationsQuery::create()->findOneBySelector($request->getQuery("selector"));
+$user_confirmation = \DB\UsersConfirmationsQuery::create()->findOneBySelector($request->getRequest("selector"));
+if ($user_confirmation === null) \inc\artemy\v1\json_output\JsonOutput::error();
 try {
-    \inc\artemy\v1\auth\Auth::getUser()->confirmEmail($request->getQuery("selector"), $request->getQuery("token"));
-    \inc\artemy\v1\auth\Auth::getUser()->admin()->changePasswordForUserById($user_id, $request->getRequest("password"));
+    \inc\artemy\v1\auth\Auth::getUser()->confirmEmail($request->getRequest("selector"), $request->getRequest("token"));
+    \inc\artemy\v1\auth\Auth::getUser()->admin()->changePasswordForUserById($user_confirmation->getUserId(),
+                                                                            $request->getRequest("password"));
 } catch (\Delight\Auth\InvalidSelectorTokenPairException $e) {
     \inc\artemy\v1\json_output\JsonOutput::error("Неверная связка ключ-токен");
 } catch (\Delight\Auth\TokenExpiredException $e) {
@@ -18,3 +20,5 @@ try {
 } catch (\Delight\Auth\UnknownIdException $e) {
     \inc\artemy\v1\json_output\JsonOutput::error("Пользователь не существует");
 }
+
+\inc\artemy\v1\json_output\JsonOutput::success();

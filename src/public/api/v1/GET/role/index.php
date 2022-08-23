@@ -22,10 +22,10 @@ try {
                     RoleTableMap::COL_MANAGE_HISTORY,
                     RoleTableMap::COL_MANAGE_USERS
                 ])
-                ->findById($role_id)
-                ->getData() ?: throw new Error('No role found');
+                ->findPk($role_id) ?: throw new Error('No role found');
 
-    JsonOutput::success(CorrectionData::propelArray($role));
-} catch (PropelException|Error $e) {
+    JsonOutput::success();
+    JsonOutput::success(CorrectionData::propelArray($role)['role']);
+} catch (PropelException|Error|\Delight\Db\Throwable\Error $e) {
     JsonOutput::error($e->getMessage());
 }

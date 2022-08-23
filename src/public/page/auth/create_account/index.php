@@ -1,7 +1,7 @@
 <?php
-if (empty($_GET["selector"]) or empty($_GET["token"])) header("Location: /");
+if (empty($_GET["selector"]) or empty($_GET["token"])) header("Location: /auth");
 $user = \DB\UsersConfirmationsQuery::create()->findOneBySelector($_GET["selector"]);
-if ($user === null) header("Location: /");
+if ($user === null) header("Location: /auth");
 ?>
 <!doctype html>
 <html lang="ru">

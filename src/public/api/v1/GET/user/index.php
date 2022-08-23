@@ -28,12 +28,6 @@ try {
                 ->findPk($user_id);
 
     JsonOutput::success($user);
-//    JsonOutput::success(
-//        UsersQuery::create()
-//            ->select(['id', 'username'])
-//            ->find()
-//            ->getData()
-//    );
 } catch (PropelException|Error $e) {
     JsonOutput::error($e->getMessage());
 }

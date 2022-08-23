@@ -10,6 +10,20 @@ use PHPMailer\PHPMailer\SMTP;
 
 class MailSender
 {
+    public static function sendAccountCreatedByAdmin($mail_receiver, $link): bool
+    {
+        return self::send(
+            $mail_receiver,
+            "Ваш аккаунт был создан администратором",
+            "  <h1>Здравствуйте!</h1>
+                    <p>Ваш аккаунт был создан администратором. Перейдите по ссылке и придумайте пароль. Ссылка действует только 24 часа.</p>
+                    <br>
+                    <a href='$link'>Изменить пароль</a>
+                    <br>
+                    <pre>Не работает кнопка? Скопируйте ссылку и вставьте в окно браузера: $link</pre>",
+            "Ваш аккаунт был создан администратором. Перейдите по ссылке и придумайте пароль. Ссылка действует только 24 часа. \n$link"
+        );
+    }
 
     public static function sendPasswordChange($mail_receiver, $link_to_change_password): bool
     {

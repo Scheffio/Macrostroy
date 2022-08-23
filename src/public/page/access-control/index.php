@@ -225,6 +225,7 @@
             </div>
         </div>
         <script src="js/script.js"></script>
+        <script src="../MAIN_PAGE/js/script.js"></script>
 </body>
 
 </html>

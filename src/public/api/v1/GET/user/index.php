@@ -5,7 +5,6 @@ use DB\Base\UsersQuery;
 use DB\Map\RoleTableMap;
 use DB\Map\UsersTableMap;
 use inc\artemy\v1\request\Request;
-use wipe\inc\v1\extra\CorrectingData;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;

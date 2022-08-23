@@ -2,30 +2,16 @@
 //Вывод роли.
 
 use DB\Base\RoleQuery;
-use DB\Map\RoleTableMap;
 use inc\artemy\v1\request\Request;
-use Propel\Runtime\Exception\PropelException;
-use wipe\inc\v1\extra\CorrectionData;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 
 try {
     UserRole::getByUserId()->isManageUsersOrThrow();
     $role_id = (new Request())->getQueryOrThrow('role_id');
-    $role = RoleQuery::create()
-                ->select([
-                    RoleTableMap::COL_ID,
-                    RoleTableMap::COL_NAME,
-                    RoleTableMap::COL_OBJECT_VIEWER,
-                    RoleTableMap::COL_MANAGE_OBJECTS,
-                    RoleTableMap::COL_MANAGE_VOLUMES,
-                    RoleTableMap::COL_MANAGE_HISTORY,
-                    RoleTableMap::COL_MANAGE_USERS
-                ])
-                ->findPk($role_id) ?: throw new Error('No role found');
+    $role = RoleQuery::create()->findPk($role_id)->toArray() ?: throw new Error('No role found');
 
-    JsonOutput::success();
-    JsonOutput::success(CorrectionData::propelArray($role)['role']);
-} catch (PropelException|Error|\Delight\Db\Throwable\Error $e) {
+    JsonOutput::success($role);
+} catch (Error $e) {
     JsonOutput::error($e->getMessage());
 }

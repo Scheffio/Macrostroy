@@ -72,9 +72,6 @@ if (Router::isApi()) {
 if (Router::isPage()) {
 
     try {
-        if (!empty($_COOKIE["lera"])) {
-            var_dump($_SERVER['HTTP_REFERER']);
-        }
         Output::outputPage();
     } catch (FileNotFoundException $e) {
         Output::outputError404();

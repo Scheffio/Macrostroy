@@ -61,8 +61,17 @@ class ProjectRole
     /** @var UserRole|null Роль пользователя. */
     private ?UserRole $userRole = null;
 
-    #region Access Control Functions
+    /**
+     * @param int|null $roleId ID роли проекта.
+     */
+    function __construct(?int $roleId)
+    {
+        if ($roleId) {
+            
+        }
+    }
 
+    #region Access Control Functions
     /** @return bool Разрешен ли CRUD объекта. */
     public function isAccessCrud(): bool
     {

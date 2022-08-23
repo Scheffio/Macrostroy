@@ -24,11 +24,11 @@
     <div class="wrap">
         <div class="tabs-controller">
             <div class="tabs-controller__tab-anchor">
-                <a href="#cities" class="tab-anchor__anchor-name selected">История действий</a>
+                <a class="tab-anchor__anchor-name selected">История действий</a>
             </div>
         </div>
         <div class="tabs-container">
-            <div id="cities" class="tabs_container__tab-element">
+            <div class="tabs_container__tab-element">
                 <div class="tab-header">
                     <div class="tab-header__element">
                         <div class="sorter">

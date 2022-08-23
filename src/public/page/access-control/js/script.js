@@ -15,6 +15,21 @@ fetch("/api/v1/users", {
             }
         })
     })
+
+    const selectableUsers = {
+        users: document.querySelectorAll('.users__user-field'),
+        click(elem) {
+            this.reset()
+            elem.classList.toggle('selected')
+        },
+        reset() {
+            this.users.forEach((elem) => {
+                elem.classList.remove('selected')
+            })
+        }
+    }
+    
+    document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 })
 
 // Transfer project name
@@ -39,20 +54,7 @@ checkboxes.forEach((elem) => {
 
 // Make fields clicked
 
-const selectableUsers = {
-    users: document.querySelectorAll('.users__user-field'),
-    click(elem) {
-        this.reset()
-        elem.classList.toggle('selected')
-    },
-    reset() {
-        this.users.forEach((elem) => {
-            elem.classList.remove('selected')
-        })
-    }
-}
 
-document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 // ===================
 
 // parse users 

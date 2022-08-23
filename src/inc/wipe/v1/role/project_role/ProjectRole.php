@@ -175,7 +175,7 @@ class ProjectRole
 
     /**
      * @param int|string $lvl Уровень доступа.
-     * @return $this
+     * @return ProjectRole
      */
     public function setLvl(int|string $lvl): ProjectRole
     {
@@ -211,12 +211,12 @@ class ProjectRole
     }
 
     /**
-     * @param int|null $roleId
+     * @param int $roleId ID роли проекта.
      * @return ProjectRole
      */
-    public function setRoleId(?int $roleId): ProjectRole
+    public function setRoleId(int $roleId): ProjectRole
     {
-        $this->roleId = $roleId;
+        if ($this->roleId)
         return $this;
     }
 

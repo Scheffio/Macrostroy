@@ -6,13 +6,15 @@ use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 use wipe\inc\v1\role\user_role\UserRole;
 
-if (UserRole::getByUserId()->isManageUsersOrThrow()) {
-    
+try {
+    UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
+} catch (Exception $e) {
+    JsonOutput::error("Роль не роль иди домой");
 }
 
 
 $request = new Request();
-$request->checkRequestVariables("user_nickname", "user_email", "user_role");
+$request->checkRequestVariables("user_nickname", "user_email", "user_role_id");
 
 
 if (!empty($request->getRequest("user_nickname"))) {

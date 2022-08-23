@@ -14,4 +14,5 @@ try {
     JsonOutput::success($role);
 } catch (Error $e) {
     JsonOutput::error($e->getMessage());
+} catch (Exception $e) {
 }

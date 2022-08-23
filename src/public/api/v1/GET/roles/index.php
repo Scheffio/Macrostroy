@@ -15,6 +15,6 @@ try {
             ->find()
             ->getData()
     );
-} catch (PropelException|Error $e) {
+} catch (PropelException|Exception $e) {
     JsonOutput::error($e->getMessage());
 }

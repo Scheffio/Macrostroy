@@ -1,11 +1,11 @@
 <?php
 namespace wipe\inc\v1\role\user_role;
 
-use Error;
 use DB\Role as DBRole;
 use DB\Base\Role as BaseRole;
 use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
+use Exception;
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Exception\PropelException;
 
@@ -55,15 +55,17 @@ class UserRole
     }
 
     #region Apply Default Values Functions
+
     /**
      * Заполнение свойств класса, используя ID пользователя.
      * Получение и присваивание ID роли (roleId).
      * @return void
+     * @throws Exception
      */
     private function applyDefaultValuesByUserId(): void
     {
         $user = UsersQuery::create()->findPk($this->userId) ??
-                throw new Error('No user found');
+                throw new Exception('No user found');
         $this->roleId = $user->getRoleId();
 
         $this->applyDefaultValuesByRoleId();
@@ -73,11 +75,12 @@ class UserRole
      * Заполнение свойств класса, используя ID роли.
      * Получение и присваивание объекта роли ($roleObj).
      * @return void
+     * @throws Exception
      */
     private function applyDefaultValuesByRoleId(): void
     {
         $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                         throw new Error('No role found');
+                         throw new Exception('No role found');
         $this->applyDefaultValuesByRoleObj();
     }
 
@@ -132,31 +135,43 @@ class UserRole
     /** @return bool Просмотр объектов разрешен, иначе ошибка. */
     public function isObjectViewerOrThrow(): bool
     {
-        return $this->objectViewer ?: throw new Error('No access to object view');
+        return $this->objectViewer ?: throw new Exception('No access to object view');
     }
 
-    /** @return bool CRUD объектов разрешен, иначе ошибка. */
+    /**
+     * @return bool CRUD объектов разрешен, иначе ошибка.
+     * @throws Exception
+     */
     public function isManageObjectsOrThrow(): bool
     {
-        return $this->manageObjects ?: throw new Error('No access to manage objects');
+        return $this->manageObjects ?: throw new Exception('No access to manage objects');
     }
 
-    /** @return bool CRUD объемов разрешен, иначе ошибка. */
+    /**
+     * @return bool CRUD объемов разрешен, иначе ошибка.
+     * @throws Exception
+     */
     public function isManageVolumesOrThrow(): bool
     {
-        return $this->manageVolumes ?: throw new Error('No access to manage volumes');
+        return $this->manageVolumes ?: throw new Exception('No access to manage volumes');
     }
 
-    /** @return bool Управление историей разрешено, иначе ошибка. */
+    /**
+     * @return bool Управление историей разрешено, иначе ошибка.
+     * @throws Exception
+     */
     public function isManageHistoryOrThrow(): bool
     {
-        return $this->manageHistory ?: throw new Error('No access to manage history');
+        return $this->manageHistory ?: throw new Exception('No access to manage history');
     }
 
-    /** @return bool CRUD учетными записями разрешен, иначе ошибка. */
+    /**
+     * @return bool CRUD учетными записями разрешен, иначе ошибка.
+     * @throws Exception
+     */
     public function isManageUsersOrThrow(): bool
     {
-        return $this->manageUsers ?: throw new Error('No access to manage users');
+        return $this->manageUsers ?: throw new Exception('No access to manage users');
     }
     #endregion
 
@@ -405,17 +420,18 @@ class UserRole
      * Используются такие свойства класса, как:
      * $roleName, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @param bool $isObj Использовать объект роли (true) / ID роли (false).
-     * @throws PropelException
      * @return UserRole
+     * @throws PropelException
+     * @throws Exception
      */
     public function update(bool $isObj = false): UserRole
     {
-        if ($isObj && !$this->roleObj) throw new Error('No role object');
-        elseif (!$isObj && !$this->roleId) throw new Error('No role ID');
+        if ($isObj && !$this->roleObj) throw new Exception('No role object');
+        elseif (!$isObj && !$this->roleId) throw new Exception('No role ID');
 
         if (!$isObj) {
             $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new Error('No role found');
+                             throw new Exception('No role found');
         }
 
         $this->roleObj
@@ -434,18 +450,19 @@ class UserRole
      * Удаление роли.
      * Перед удалением функция preDelete заменяется у всех пользователе данною роль на ID номер 1.
      * @param bool $isObj Использовать объект роли (true) / ID роли (false).
-     * @throws PropelException
      * @return UserRole
+     * @throws Exception
+     * @throws PropelException
      */
     public function delete(bool $isObj = false): UserRole
     {
-        if ($isObj && !$this->roleObj) throw new Error('No role object');
-        elseif (!$isObj && !$this->roleId) throw new Error('No role ID');
+        if ($isObj && !$this->roleObj) throw new Exception('No role object');
+        elseif (!$isObj && !$this->roleId) throw new Exception('No role ID');
 
         if ($isObj) $this->roleObj->delete();
         else {
             $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new Error('No role found');
+                             throw new Exception('No role found');
             $this->roleObj->delete();
         }
 

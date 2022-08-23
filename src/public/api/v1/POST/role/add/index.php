@@ -28,7 +28,7 @@ try {
             ->getRoleId()
     );
 
-} catch (Error $e) {
+} catch (Exception $e) {
     JsonOutput::error($e->getMessage());
 } catch (PropelException $e) {
     JsonOutput::error();

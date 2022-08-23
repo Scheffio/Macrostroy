@@ -25,7 +25,7 @@ try {
                     RoleTableMap::COL_NAME
                 ])
                 ->leftJoinRole()
-                ->findPk($user_id) ?: throw new Error('No user found');
+                ->findPk($user_id) ?: throw new Exception('No user found');
 
     JsonOutput::success([
         'id' => $user['users.id'],
@@ -37,6 +37,6 @@ try {
             'name' => $user['role.name'],
         ],
     ]);
-} catch (PropelException|Error $e) {
+} catch (PropelException|Exception $e) {
     JsonOutput::error($e->getMessage());
 }

@@ -7,12 +7,14 @@ use inc\artemy\v1\request\Request;
 
 $request = new Request();
 $password = Auth::createUuid();
-$nickname = $request->getRequest("user_nickname");
-$name = $request->getRequest("user_name");
-$surname = $request->getRequest("user_surname");
-$patronymic = $request->getRequest("user_surname");
+if (!empty($request->getRequest("user_nickname"))) {
+    $username = $request->getRequest("user_nickname");
+} else {
+    $request->checkRequestVariablesOrError("user_name", "user_surname", "user_patronymic");
+    $username = $request->getRequest("user_surname") . " " . $request->getRequest("user_name") . " " . $request->getRequest("user_patronymic");
+}
 try {
-    $id = Auth::getUser()->register($request->getRequest("user_email"), $password, $nickname, function ($selector, $token)
+    $id = Auth::getUser()->register($request->getRequest("user_email"), $password, $username, function ($selector, $token)
     use ($password, $request) {
         $link = "https://" . $_SERVER['HTTP_HOST'] . '/auth/create_account?selector=' . urlencode
             ($selector) . '&token=' . urlencode

@@ -13,9 +13,7 @@ try {
             ($selector) . '&token=' . urlencode
             ($token);
         MailSender::sendAccountCreatedByAdmin($request->getRequest("user_email"), $link);
-        var_dump($password);
     });
-} catch (\Delight\Auth\AuthError $e) {
 } catch (\Delight\Auth\InvalidEmailException $e) {
     JsonOutput::error("Неверная почта");
 } catch (\Delight\Auth\InvalidPasswordException $e) {

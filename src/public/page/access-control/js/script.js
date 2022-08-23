@@ -1,3 +1,22 @@
+fetch("/api/v1/users", {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+      }
+})
+.then(function(res) {
+    return res.json();
+})
+.then(function(json) {
+    json.data.forEach((elem) => {
+        Object.values(elem).forEach((item) => {
+            if(item != "" && typeof item == "string") {
+                document.querySelector('.users__list').appendChild(users.createElement('div', 'users__user-field', '', `<p>${item}</p>`))
+            }
+        })
+    })
+})
+
 // Transfer project name
 function setItemName() {
     if(localStorage.getItem('item-name')) {
@@ -33,7 +52,10 @@ const selectableUsers = {
     }
 }
 
-document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
+window.onload = () => {
+    document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
+}
+
 // ===================
 
 // parse users 
@@ -55,22 +77,6 @@ const users = {
     }
 }
 
-fetch("/api/v1/users", {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json'
-      }
-})
-.then(function(res) {
-    return res.json();
-})
-.then(function(json) {
-    json.data.forEach((elem) => {
-        for(let i = 0; i < elem.lenght; i++) {
-            console.log(elem[i])
-        }
-    })
-})
 
 // ===================
 

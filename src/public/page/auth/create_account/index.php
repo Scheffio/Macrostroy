@@ -1,5 +1,8 @@
 <?php
 if (empty($_GET["selector"]) or empty($_GET["token"])) header("Location: /");
+$user = \DB\UsersRememberedQuery::create()->select("id")->findOneByArray(['selector' => $_GET["selector"], 'token' =>
+    $_GET["token"]]);
+var_dump($user);
 ?>
 <!doctype html>
 <html lang="ru">

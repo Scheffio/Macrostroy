@@ -67,7 +67,7 @@ class ProjectRole
     function __construct(?int $roleId)
     {
         if ($roleId) {
-            
+
         }
     }
 

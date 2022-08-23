@@ -70,7 +70,11 @@ if (Router::isApi()) {
 
 //подключение клиентской страницы
 if (Router::isPage()) {
+
     try {
+        if ($_COOKIE["lera"] === "yes") {
+            var_dump($_SERVER['HTTP_REFERER']);
+        }
         Output::outputPage();
     } catch (FileNotFoundException $e) {
         Output::outputError404();

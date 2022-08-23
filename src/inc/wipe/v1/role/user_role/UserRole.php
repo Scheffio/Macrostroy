@@ -39,19 +39,22 @@ class UserRole
     private bool $manageUsers = false;
 
     /**
-     * @param int|null $id ID элемента. При пустом (null) значении используются данные авторизованного пользователя.
-     * @param bool $isUser ID пользователя (true) / ID роли (false).
+     * @param int|null $userId
+     * @param int|null $roleId
+     * @throws Exception
      */
-
-    // ?int $userId = null, ?int $roleId = null
-    function __construct(?int $id = null, bool $isUser = true)
+    function __construct(?int $userId = null, ?int $roleId = null)
     {
-        if ($id !== null && $isUser === false) {
-            $this->roleId = $id;
+        if ($userId && $roleId) {
+            $this->userId = $userId;
+            $this->roleId = $roleId;
+            $this->applyDefaultValuesByRoleId();
+        } elseif ($roleId) {
+            $this->roleId = $roleId;
             $this->userId = Auth::getUser()->id();
             $this->applyDefaultValuesByRoleId();
-        } elseif ($isUser === true) {
-            $this->userId = $id ?: Auth::getUser()->id();
+        } else {
+            $this->userId = $userId ?: Auth::getUser()->id();
             $this->applyDefaultValuesByUserId();
         }
     }
@@ -134,7 +137,10 @@ class UserRole
         return $this->manageUsers;
     }
 
-    /** @return bool Просмотр объектов разрешен, иначе ошибка. */
+    /**
+     * @return bool Просмотр объектов разрешен, иначе ошибка.
+     * @throws Exception
+     */
     public function isObjectViewerOrThrow(): bool
     {
         return $this->objectViewer ?: throw new Exception('No access to object view');
@@ -208,10 +214,11 @@ class UserRole
      * Получить объект класса через статический метод, используя ID пользователя.
      * @param int|null $id ID пользователя, по умолчанию выбирается ID авторизированного пользователя.
      * @return UserRole
+     * @throws Exception
      */
     public static function getByUserId(?int $id = null): UserRole
     {
-        return new UserRole($id);
+        return new UserRole(userId: $id);
     }
 
     /**
@@ -219,10 +226,11 @@ class UserRole
      * Свойству $userId будет присвоенно ID авторизованного пользователя.
      * @param int|null $id ID роли.
      * @return UserRole
+     * @throws Exception
      */
     public static function getByRoleId(?int $id = null): UserRole
     {
-        return new UserRole($id, false);
+        return new UserRole(roleId: $id);
     }
     #endregion
 
@@ -233,6 +241,7 @@ class UserRole
      * @param bool $flag Необходимо ли обновлять свойства роли, в соответствие с ролью пользователя.
      * Обновляются такие значения как: $roleId, $roleName, $roleObj, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @return UserRole
+     * @throws Exception
      */
     public function setUserId(int $id, bool $flag = true): UserRole
     {
@@ -253,6 +262,7 @@ class UserRole
      * @param bool $flag Необходимо ли обновлять свойства роли под значения переданного ID роли.
      * Обновляются такие значения как: $roleId, $roleName, $roleObj, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @return UserRole
+     * @throws Exception
      */
     public function setRoleId(int $id, bool $flag = true): UserRole
     {

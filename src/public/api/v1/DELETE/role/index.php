@@ -13,7 +13,7 @@ try {
     $user->isManageUsersOrThrow();
 
     $user
-        ->setRoleId($request->getMetaOrThrow('role_id'), false)
+        ->setRoleId($request->getQueryOrThrow('role_id'), false)
         ->delete();
 
     JsonOutput::success();

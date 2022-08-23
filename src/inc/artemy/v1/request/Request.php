@@ -167,7 +167,7 @@ class Request
      * @see Request::getData()
      *      или выкидывание ошибки
      */
-    public function getDataOrThrow(string $key): mixed
+    public function getRequestOrThrow(string $key): mixed
     {
         if (isset(self::$method_body[$key])) {
             return self::$method_body[$key];
@@ -182,7 +182,7 @@ class Request
      * @see Request::getMeta()
      *      или выкидывание ошибки
      */
-    public function getMetaOrThrow(string $key): mixed
+    public function getQueryOrThrow(string $key): mixed
     {
         if (isset(self::$get_body[$key])) {
             return self::$get_body[$key];
@@ -191,7 +191,7 @@ class Request
         JsonOutput::wrongRequest("BAD REQUEST 400. Missing this variable: [$key]");
     }
 
-    public static function data() :array
+    public static function getArray() :array
     {
         return self::$method_body + self::$get_body;
     }

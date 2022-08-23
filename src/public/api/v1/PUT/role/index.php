@@ -13,7 +13,7 @@ try {
     $user->isManageUsersOrThrow();
 
     $user
-        ->setRoleId($request->getMetaOrThrow('role_id'))
+        ->setRoleId($request->getQueryOrThrow('role_id'))
         ->setRoleName($request->getQuery('role_name'))
         ->setObjectViewer($request->getQuery('object_viewer'))
         ->setManageObjects($request->getQuery('manage_objects'))

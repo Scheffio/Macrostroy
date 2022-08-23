@@ -59,16 +59,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseQuery rightJoinWithGroups() Adds a RIGHT JOIN clause and with to the query using the Groups relation
  * @method     ChildHouseQuery innerJoinWithGroups() Adds a INNER JOIN clause and with to the query using the Groups relation
  *
- * @method     ChildHouseQuery leftJoinHouseVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the HouseVersion relation
- * @method     ChildHouseQuery rightJoinHouseVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HouseVersion relation
- * @method     ChildHouseQuery innerJoinHouseVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the HouseVersion relation
- *
- * @method     ChildHouseQuery joinWithHouseVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the HouseVersion relation
- *
- * @method     ChildHouseQuery leftJoinWithHouseVersion() Adds a LEFT JOIN clause and with to the query using the HouseVersion relation
- * @method     ChildHouseQuery rightJoinWithHouseVersion() Adds a RIGHT JOIN clause and with to the query using the HouseVersion relation
- * @method     ChildHouseQuery innerJoinWithHouseVersion() Adds a INNER JOIN clause and with to the query using the HouseVersion relation
- *
  * @method     ChildHouseQuery leftJoinStage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Stage relation
  * @method     ChildHouseQuery rightJoinStage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stage relation
  * @method     ChildHouseQuery innerJoinStage($relationAlias = null) Adds a INNER JOIN clause to the query using the Stage relation
@@ -79,7 +69,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildHouseQuery rightJoinWithStage() Adds a RIGHT JOIN clause and with to the query using the Stage relation
  * @method     ChildHouseQuery innerJoinWithStage() Adds a INNER JOIN clause and with to the query using the Stage relation
  *
- * @method     \DB\GroupsQuery|\DB\HouseVersionQuery|\DB\StageQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildHouseQuery leftJoinHouseVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the HouseVersion relation
+ * @method     ChildHouseQuery rightJoinHouseVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HouseVersion relation
+ * @method     ChildHouseQuery innerJoinHouseVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the HouseVersion relation
+ *
+ * @method     ChildHouseQuery joinWithHouseVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the HouseVersion relation
+ *
+ * @method     ChildHouseQuery leftJoinWithHouseVersion() Adds a LEFT JOIN clause and with to the query using the HouseVersion relation
+ * @method     ChildHouseQuery rightJoinWithHouseVersion() Adds a RIGHT JOIN clause and with to the query using the HouseVersion relation
+ * @method     ChildHouseQuery innerJoinWithHouseVersion() Adds a INNER JOIN clause and with to the query using the HouseVersion relation
+ *
+ * @method     \DB\GroupsQuery|\DB\StageQuery|\DB\HouseVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildHouse|null findOne(?ConnectionInterface $con = null) Return the first ChildHouse matching the query
  * @method     ChildHouse findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildHouse matching the query, or a new ChildHouse object populated from the query conditions when no match is found
@@ -133,7 +133,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class HouseQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\HouseQuery object.
@@ -772,138 +779,6 @@ abstract class HouseQuery extends ModelCriteria
         return $this->useExistsQuery('Groups', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\HouseVersion object
-     *
-     * @param \DB\HouseVersion|ObjectCollection $houseVersion the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByHouseVersion($houseVersion, ?string $comparison = null)
-    {
-        if ($houseVersion instanceof \DB\HouseVersion) {
-            $this
-                ->addUsingAlias(HouseTableMap::COL_ID, $houseVersion->getId(), $comparison);
-
-            return $this;
-        } elseif ($houseVersion instanceof ObjectCollection) {
-            $this
-                ->useHouseVersionQuery()
-                ->filterByPrimaryKeys($houseVersion->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByHouseVersion() only accepts arguments of type \DB\HouseVersion or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the HouseVersion relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinHouseVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('HouseVersion');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'HouseVersion');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the HouseVersion relation HouseVersion object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\HouseVersionQuery A secondary query class using the current class as primary query
-     */
-    public function useHouseVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinHouseVersion($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'HouseVersion', '\DB\HouseVersionQuery');
-    }
-
-    /**
-     * Use the HouseVersion relation HouseVersion object
-     *
-     * @param callable(\DB\HouseVersionQuery):\DB\HouseVersionQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withHouseVersionQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useHouseVersionQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to HouseVersion table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\HouseVersionQuery The inner query object of the EXISTS statement
-     */
-    public function useHouseVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to HouseVersion table for a NOT EXISTS query.
-     *
-     * @see useHouseVersionExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\HouseVersionQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useHouseVersionNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
      * Filter the query by a related \DB\Stage object
      *
      * @param \DB\Stage|ObjectCollection $stage the related object to use as filter
@@ -1036,6 +911,138 @@ abstract class HouseQuery extends ModelCriteria
         return $this->useExistsQuery('Stage', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
+     * Filter the query by a related \DB\HouseVersion object
+     *
+     * @param \DB\HouseVersion|ObjectCollection $houseVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByHouseVersion($houseVersion, ?string $comparison = null)
+    {
+        if ($houseVersion instanceof \DB\HouseVersion) {
+            $this
+                ->addUsingAlias(HouseTableMap::COL_ID, $houseVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($houseVersion instanceof ObjectCollection) {
+            $this
+                ->useHouseVersionQuery()
+                ->filterByPrimaryKeys($houseVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByHouseVersion() only accepts arguments of type \DB\HouseVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the HouseVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinHouseVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('HouseVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'HouseVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the HouseVersion relation HouseVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\HouseVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useHouseVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinHouseVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HouseVersion', '\DB\HouseVersionQuery');
+    }
+
+    /**
+     * Use the HouseVersion relation HouseVersion object
+     *
+     * @param callable(\DB\HouseVersionQuery):\DB\HouseVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withHouseVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useHouseVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to HouseVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\HouseVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useHouseVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to HouseVersion table for a NOT EXISTS query.
+     *
+     * @see useHouseVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\HouseVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useHouseVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('HouseVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Exclude object from result
      *
      * @param ChildHouse $house Object to remove from the list of results
@@ -1110,6 +1117,34 @@ abstract class HouseQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

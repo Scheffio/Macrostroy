@@ -281,6 +281,19 @@ class StageTableMap extends TableMap
     }
 
     /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors(): array
+    {
+        return [
+            'versionable' => ['version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'true', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', 'indices' => 'false'],
+        ];
+    }
+
+    /**
      * Method to invalidate the instance pool of all tables related to stage     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool(): void

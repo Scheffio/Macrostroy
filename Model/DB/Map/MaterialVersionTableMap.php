@@ -311,10 +311,10 @@ class MaterialVersionTableMap extends TableMap
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
-        $this->addColumn('stage_material_ids', 'StageMaterialIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('stage_material_versions', 'StageMaterialVersions', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_material_ids', 'StageMaterialIds', 'ARRAY', false, null, null);
+        $this->addColumn('stage_material_versions', 'StageMaterialVersions', 'ARRAY', false, null, null);
+        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'ARRAY', false, null, null);
+        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'ARRAY', false, null, null);
     }
 
     /**

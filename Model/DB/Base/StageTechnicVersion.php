@@ -88,7 +88,7 @@ abstract class StageTechnicVersion implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -440,7 +440,7 @@ abstract class StageTechnicVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -450,7 +450,7 @@ abstract class StageTechnicVersion implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function isAvailable()
@@ -620,7 +620,7 @@ abstract class StageTechnicVersion implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */

@@ -257,13 +257,6 @@ class ProjectTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'ProjectRoles', false);
-        $this->addRelation('ProjectVersion', '\\DB\\ProjectVersion', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'ProjectVersions', false);
         $this->addRelation('Subproject', '\\DB\\Subproject', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -271,6 +264,26 @@ class ProjectTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Subprojects', false);
+        $this->addRelation('ProjectVersion', '\\DB\\ProjectVersion', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'ProjectVersions', false);
+    }
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors(): array
+    {
+        return [
+            'versionable' => ['version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'true', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', 'indices' => 'false'],
+        ];
     }
 
     /**

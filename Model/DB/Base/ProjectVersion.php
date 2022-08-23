@@ -125,32 +125,32 @@ abstract class ProjectVersion implements ActiveRecordInterface
     protected $version_comment;
 
     /**
-     * The value for the project_role_ids field.
-     *
-     * @var        string|null
-     */
-    protected $project_role_ids;
-
-    /**
-     * The value for the project_role_versions field.
-     *
-     * @var        string|null
-     */
-    protected $project_role_versions;
-
-    /**
      * The value for the subproject_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $subproject_ids;
 
     /**
+     * The unserialized $subproject_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $subproject_ids_unserialized;
+
+    /**
      * The value for the subproject_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $subproject_versions;
+
+    /**
+     * The unserialized $subproject_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $subproject_versions_unserialized;
 
     /**
      * @var        ChildProject
@@ -509,43 +509,61 @@ abstract class ProjectVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [project_role_ids] column value.
-     *
-     * @return string|null
-     */
-    public function getProjectRoleIds()
-    {
-        return $this->project_role_ids;
-    }
-
-    /**
-     * Get the [project_role_versions] column value.
-     *
-     * @return string|null
-     */
-    public function getProjectRoleVersions()
-    {
-        return $this->project_role_versions;
-    }
-
-    /**
      * Get the [subproject_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getSubprojectIds()
     {
-        return $this->subproject_ids;
+        if (null === $this->subproject_ids_unserialized) {
+            $this->subproject_ids_unserialized = [];
+        }
+        if (!$this->subproject_ids_unserialized && null !== $this->subproject_ids) {
+            $subproject_ids_unserialized = substr($this->subproject_ids, 2, -2);
+            $this->subproject_ids_unserialized = '' !== $subproject_ids_unserialized ? explode(' | ', $subproject_ids_unserialized) : array();
+        }
+
+        return $this->subproject_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [subproject_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasSubprojectId($value): bool
+    {
+        return in_array($value, $this->getSubprojectIds());
     }
 
     /**
      * Get the [subproject_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getSubprojectVersions()
     {
-        return $this->subproject_versions;
+        if (null === $this->subproject_versions_unserialized) {
+            $this->subproject_versions_unserialized = [];
+        }
+        if (!$this->subproject_versions_unserialized && null !== $this->subproject_versions) {
+            $subproject_versions_unserialized = substr($this->subproject_versions, 2, -2);
+            $this->subproject_versions_unserialized = '' !== $subproject_versions_unserialized ? explode(' | ', $subproject_versions_unserialized) : array();
+        }
+
+        return $this->subproject_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [subproject_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasSubprojectVersion($value): bool
+    {
+        return in_array($value, $this->getSubprojectVersions());
     }
 
     /**
@@ -721,59 +739,16 @@ abstract class ProjectVersion implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [project_role_ids] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setProjectRoleIds($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->project_role_ids !== $v) {
-            $this->project_role_ids = $v;
-            $this->modifiedColumns[ProjectVersionTableMap::COL_PROJECT_ROLE_IDS] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [project_role_versions] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setProjectRoleVersions($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->project_role_versions !== $v) {
-            $this->project_role_versions = $v;
-            $this->modifiedColumns[ProjectVersionTableMap::COL_PROJECT_ROLE_VERSIONS] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the value of [subproject_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setSubprojectIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->subproject_ids !== $v) {
-            $this->subproject_ids = $v;
+        if ($this->subproject_ids_unserialized !== $v) {
+            $this->subproject_ids_unserialized = $v;
+            $this->subproject_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[ProjectVersionTableMap::COL_SUBPROJECT_IDS] = true;
         }
 
@@ -781,21 +756,86 @@ abstract class ProjectVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [subproject_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addSubprojectId($value)
+    {
+        $currentArray = $this->getSubprojectIds();
+        $currentArray []= $value;
+        $this->setSubprojectIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [subproject_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeSubprojectId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getSubprojectIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setSubprojectIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [subproject_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setSubprojectVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->subproject_versions !== $v) {
-            $this->subproject_versions = $v;
+        if ($this->subproject_versions_unserialized !== $v) {
+            $this->subproject_versions_unserialized = $v;
+            $this->subproject_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[ProjectVersionTableMap::COL_SUBPROJECT_VERSIONS] = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [subproject_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addSubprojectVersion($value)
+    {
+        $currentArray = $this->getSubprojectVersions();
+        $currentArray []= $value;
+        $this->setSubprojectVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [subproject_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeSubprojectVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getSubprojectVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setSubprojectVersions($targetArray);
 
         return $this;
     }
@@ -875,17 +915,13 @@ abstract class ProjectVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProjectVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProjectVersionTableMap::translateFieldName('ProjectRoleIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->project_role_ids = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProjectVersionTableMap::translateFieldName('SubprojectIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->subproject_ids = $col;
+            $this->subproject_ids_unserialized = null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ProjectVersionTableMap::translateFieldName('ProjectRoleVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->project_role_versions = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : ProjectVersionTableMap::translateFieldName('SubprojectIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->subproject_ids = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : ProjectVersionTableMap::translateFieldName('SubprojectVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->subproject_versions = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ProjectVersionTableMap::translateFieldName('SubprojectVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->subproject_versions = $col;
+            $this->subproject_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -894,7 +930,7 @@ abstract class ProjectVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = ProjectVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = ProjectVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\ProjectVersion'), 0, $e);
@@ -1132,12 +1168,6 @@ abstract class ProjectVersion implements ActiveRecordInterface
         if ($this->isColumnModified(ProjectVersionTableMap::COL_VERSION_COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
-        if ($this->isColumnModified(ProjectVersionTableMap::COL_PROJECT_ROLE_IDS)) {
-            $modifiedColumns[':p' . $index++]  = 'project_role_ids';
-        }
-        if ($this->isColumnModified(ProjectVersionTableMap::COL_PROJECT_ROLE_VERSIONS)) {
-            $modifiedColumns[':p' . $index++]  = 'project_role_versions';
-        }
         if ($this->isColumnModified(ProjectVersionTableMap::COL_SUBPROJECT_IDS)) {
             $modifiedColumns[':p' . $index++]  = 'subproject_ids';
         }
@@ -1178,12 +1208,6 @@ abstract class ProjectVersion implements ActiveRecordInterface
                         break;
                     case 'version_comment':
                         $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
-                        break;
-                    case 'project_role_ids':
-                        $stmt->bindValue($identifier, $this->project_role_ids, PDO::PARAM_STR);
-                        break;
-                    case 'project_role_versions':
-                        $stmt->bindValue($identifier, $this->project_role_versions, PDO::PARAM_STR);
                         break;
                     case 'subproject_ids':
                         $stmt->bindValue($identifier, $this->subproject_ids, PDO::PARAM_STR);
@@ -1271,15 +1295,9 @@ abstract class ProjectVersion implements ActiveRecordInterface
                 return $this->getVersionComment();
 
             case 8:
-                return $this->getProjectRoleIds();
-
-            case 9:
-                return $this->getProjectRoleVersions();
-
-            case 10:
                 return $this->getSubprojectIds();
 
-            case 11:
+            case 9:
                 return $this->getSubprojectVersions();
 
             default:
@@ -1318,10 +1336,8 @@ abstract class ProjectVersion implements ActiveRecordInterface
             $keys[5] => $this->getVersionCreatedAt(),
             $keys[6] => $this->getVersionCreatedBy(),
             $keys[7] => $this->getVersionComment(),
-            $keys[8] => $this->getProjectRoleIds(),
-            $keys[9] => $this->getProjectRoleVersions(),
-            $keys[10] => $this->getSubprojectIds(),
-            $keys[11] => $this->getSubprojectVersions(),
+            $keys[8] => $this->getSubprojectIds(),
+            $keys[9] => $this->getSubprojectVersions(),
         ];
         if ($result[$keys[5]] instanceof \DateTimeInterface) {
             $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
@@ -1409,15 +1425,17 @@ abstract class ProjectVersion implements ActiveRecordInterface
                 $this->setVersionComment($value);
                 break;
             case 8:
-                $this->setProjectRoleIds($value);
-                break;
-            case 9:
-                $this->setProjectRoleVersions($value);
-                break;
-            case 10:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setSubprojectIds($value);
                 break;
-            case 11:
+            case 9:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setSubprojectVersions($value);
                 break;
         } // switch()
@@ -1471,16 +1489,10 @@ abstract class ProjectVersion implements ActiveRecordInterface
             $this->setVersionComment($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setProjectRoleIds($arr[$keys[8]]);
+            $this->setSubprojectIds($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setProjectRoleVersions($arr[$keys[9]]);
-        }
-        if (array_key_exists($keys[10], $arr)) {
-            $this->setSubprojectIds($arr[$keys[10]]);
-        }
-        if (array_key_exists($keys[11], $arr)) {
-            $this->setSubprojectVersions($arr[$keys[11]]);
+            $this->setSubprojectVersions($arr[$keys[9]]);
         }
 
         return $this;
@@ -1548,12 +1560,6 @@ abstract class ProjectVersion implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProjectVersionTableMap::COL_VERSION_COMMENT)) {
             $criteria->add(ProjectVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
-        }
-        if ($this->isColumnModified(ProjectVersionTableMap::COL_PROJECT_ROLE_IDS)) {
-            $criteria->add(ProjectVersionTableMap::COL_PROJECT_ROLE_IDS, $this->project_role_ids);
-        }
-        if ($this->isColumnModified(ProjectVersionTableMap::COL_PROJECT_ROLE_VERSIONS)) {
-            $criteria->add(ProjectVersionTableMap::COL_PROJECT_ROLE_VERSIONS, $this->project_role_versions);
         }
         if ($this->isColumnModified(ProjectVersionTableMap::COL_SUBPROJECT_IDS)) {
             $criteria->add(ProjectVersionTableMap::COL_SUBPROJECT_IDS, $this->subproject_ids);
@@ -1672,8 +1678,6 @@ abstract class ProjectVersion implements ActiveRecordInterface
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
         $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersionComment($this->getVersionComment());
-        $copyObj->setProjectRoleIds($this->getProjectRoleIds());
-        $copyObj->setProjectRoleVersions($this->getProjectRoleVersions());
         $copyObj->setSubprojectIds($this->getSubprojectIds());
         $copyObj->setSubprojectVersions($this->getSubprojectVersions());
         if ($makeNew) {
@@ -1774,10 +1778,10 @@ abstract class ProjectVersion implements ActiveRecordInterface
         $this->version_created_at = null;
         $this->version_created_by = null;
         $this->version_comment = null;
-        $this->project_role_ids = null;
-        $this->project_role_versions = null;
         $this->subproject_ids = null;
+        $this->subproject_ids_unserialized = null;
         $this->subproject_versions = null;
+        $this->subproject_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

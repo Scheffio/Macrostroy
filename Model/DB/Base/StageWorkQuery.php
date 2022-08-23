@@ -26,6 +26,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageWorkQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildStageWorkQuery orderByPrice($order = Criteria::ASC) Order by the price column
  * @method     ChildStageWorkQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildStageWorkQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildStageWorkQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildStageWorkQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
  * @method     ChildStageWorkQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
@@ -36,6 +37,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageWorkQuery groupByWorkId() Group by the work_id column
  * @method     ChildStageWorkQuery groupByPrice() Group by the price column
  * @method     ChildStageWorkQuery groupByAmount() Group by the amount column
+ * @method     ChildStageWorkQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildStageWorkQuery groupByVersion() Group by the version column
  * @method     ChildStageWorkQuery groupByVersionCreatedAt() Group by the version_created_at column
  * @method     ChildStageWorkQuery groupByVersionCreatedBy() Group by the version_created_by column
@@ -89,6 +91,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageWork|null findOneByWorkId(int $work_id) Return the first ChildStageWork filtered by the work_id column
  * @method     ChildStageWork|null findOneByPrice(string $price) Return the first ChildStageWork filtered by the price column
  * @method     ChildStageWork|null findOneByAmount(string $amount) Return the first ChildStageWork filtered by the amount column
+ * @method     ChildStageWork|null findOneByIsAvailable(boolean $is_available) Return the first ChildStageWork filtered by the is_available column
  * @method     ChildStageWork|null findOneByVersion(int $version) Return the first ChildStageWork filtered by the version column
  * @method     ChildStageWork|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildStageWork filtered by the version_created_at column
  * @method     ChildStageWork|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildStageWork filtered by the version_created_by column
@@ -102,6 +105,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStageWork requireOneByWorkId(int $work_id) Return the first ChildStageWork filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageWork requireOneByPrice(string $price) Return the first ChildStageWork filtered by the price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageWork requireOneByAmount(string $amount) Return the first ChildStageWork filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildStageWork requireOneByIsAvailable(boolean $is_available) Return the first ChildStageWork filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageWork requireOneByVersion(int $version) Return the first ChildStageWork filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageWork requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildStageWork filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildStageWork requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildStageWork filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -119,6 +123,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildStageWork> findByPrice(string $price) Return ChildStageWork objects filtered by the price column
  * @method     ChildStageWork[]|Collection findByAmount(string $amount) Return ChildStageWork objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildStageWork> findByAmount(string $amount) Return ChildStageWork objects filtered by the amount column
+ * @method     ChildStageWork[]|Collection findByIsAvailable(boolean $is_available) Return ChildStageWork objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildStageWork> findByIsAvailable(boolean $is_available) Return ChildStageWork objects filtered by the is_available column
  * @method     ChildStageWork[]|Collection findByVersion(int $version) Return ChildStageWork objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildStageWork> findByVersion(int $version) Return ChildStageWork objects filtered by the version column
  * @method     ChildStageWork[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildStageWork objects filtered by the version_created_at column
@@ -133,7 +139,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class StageWorkQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\StageWorkQuery object.
@@ -226,7 +239,7 @@ abstract class StageWorkQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, stage_id, work_id, price, amount, version, version_created_at, version_created_by, version_comment FROM stage_work WHERE id = :p0';
+        $sql = 'SELECT id, stage_id, work_id, price, amount, is_available, version, version_created_at, version_created_by, version_comment FROM stage_work WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -531,6 +544,35 @@ abstract class StageWorkQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(StageWorkTableMap::COL_AMOUNT, $amount, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(StageWorkTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }
@@ -1150,6 +1192,34 @@ abstract class StageWorkQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

@@ -133,30 +133,58 @@ abstract class MaterialVersion implements ActiveRecordInterface
     /**
      * The value for the stage_material_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $stage_material_ids;
 
     /**
+     * The unserialized $stage_material_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $stage_material_ids_unserialized;
+
+    /**
      * The value for the stage_material_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $stage_material_versions;
 
     /**
+     * The unserialized $stage_material_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $stage_material_versions_unserialized;
+
+    /**
      * The value for the work_material_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $work_material_ids;
 
     /**
+     * The unserialized $work_material_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $work_material_ids_unserialized;
+
+    /**
      * The value for the work_material_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $work_material_versions;
+
+    /**
+     * The unserialized $work_material_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $work_material_versions_unserialized;
 
     /**
      * @var        ChildMaterial
@@ -526,41 +554,117 @@ abstract class MaterialVersion implements ActiveRecordInterface
     /**
      * Get the [stage_material_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getStageMaterialIds()
     {
-        return $this->stage_material_ids;
+        if (null === $this->stage_material_ids_unserialized) {
+            $this->stage_material_ids_unserialized = [];
+        }
+        if (!$this->stage_material_ids_unserialized && null !== $this->stage_material_ids) {
+            $stage_material_ids_unserialized = substr($this->stage_material_ids, 2, -2);
+            $this->stage_material_ids_unserialized = '' !== $stage_material_ids_unserialized ? explode(' | ', $stage_material_ids_unserialized) : array();
+        }
+
+        return $this->stage_material_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [stage_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasStageMaterialId($value): bool
+    {
+        return in_array($value, $this->getStageMaterialIds());
     }
 
     /**
      * Get the [stage_material_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getStageMaterialVersions()
     {
-        return $this->stage_material_versions;
+        if (null === $this->stage_material_versions_unserialized) {
+            $this->stage_material_versions_unserialized = [];
+        }
+        if (!$this->stage_material_versions_unserialized && null !== $this->stage_material_versions) {
+            $stage_material_versions_unserialized = substr($this->stage_material_versions, 2, -2);
+            $this->stage_material_versions_unserialized = '' !== $stage_material_versions_unserialized ? explode(' | ', $stage_material_versions_unserialized) : array();
+        }
+
+        return $this->stage_material_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [stage_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasStageMaterialVersion($value): bool
+    {
+        return in_array($value, $this->getStageMaterialVersions());
     }
 
     /**
      * Get the [work_material_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getWorkMaterialIds()
     {
-        return $this->work_material_ids;
+        if (null === $this->work_material_ids_unserialized) {
+            $this->work_material_ids_unserialized = [];
+        }
+        if (!$this->work_material_ids_unserialized && null !== $this->work_material_ids) {
+            $work_material_ids_unserialized = substr($this->work_material_ids, 2, -2);
+            $this->work_material_ids_unserialized = '' !== $work_material_ids_unserialized ? explode(' | ', $work_material_ids_unserialized) : array();
+        }
+
+        return $this->work_material_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasWorkMaterialId($value): bool
+    {
+        return in_array($value, $this->getWorkMaterialIds());
     }
 
     /**
      * Get the [work_material_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getWorkMaterialVersions()
     {
-        return $this->work_material_versions;
+        if (null === $this->work_material_versions_unserialized) {
+            $this->work_material_versions_unserialized = [];
+        }
+        if (!$this->work_material_versions_unserialized && null !== $this->work_material_versions) {
+            $work_material_versions_unserialized = substr($this->work_material_versions, 2, -2);
+            $this->work_material_versions_unserialized = '' !== $work_material_versions_unserialized ? explode(' | ', $work_material_versions_unserialized) : array();
+        }
+
+        return $this->work_material_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasWorkMaterialVersion($value): bool
+    {
+        return in_array($value, $this->getWorkMaterialVersions());
     }
 
     /**
@@ -758,17 +862,14 @@ abstract class MaterialVersion implements ActiveRecordInterface
     /**
      * Set the value of [stage_material_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageMaterialIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->stage_material_ids !== $v) {
-            $this->stage_material_ids = $v;
+        if ($this->stage_material_ids_unserialized !== $v) {
+            $this->stage_material_ids_unserialized = $v;
+            $this->stage_material_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS] = true;
         }
 
@@ -776,19 +877,50 @@ abstract class MaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [stage_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStageMaterialId($value)
+    {
+        $currentArray = $this->getStageMaterialIds();
+        $currentArray []= $value;
+        $this->setStageMaterialIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [stage_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStageMaterialId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getStageMaterialIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setStageMaterialIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [stage_material_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageMaterialVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->stage_material_versions !== $v) {
-            $this->stage_material_versions = $v;
+        if ($this->stage_material_versions_unserialized !== $v) {
+            $this->stage_material_versions_unserialized = $v;
+            $this->stage_material_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS] = true;
         }
 
@@ -796,19 +928,50 @@ abstract class MaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [stage_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStageMaterialVersion($value)
+    {
+        $currentArray = $this->getStageMaterialVersions();
+        $currentArray []= $value;
+        $this->setStageMaterialVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [stage_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStageMaterialVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getStageMaterialVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setStageMaterialVersions($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [work_material_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkMaterialIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->work_material_ids !== $v) {
-            $this->work_material_ids = $v;
+        if ($this->work_material_ids_unserialized !== $v) {
+            $this->work_material_ids_unserialized = $v;
+            $this->work_material_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[MaterialVersionTableMap::COL_WORK_MATERIAL_IDS] = true;
         }
 
@@ -816,21 +979,86 @@ abstract class MaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addWorkMaterialId($value)
+    {
+        $currentArray = $this->getWorkMaterialIds();
+        $currentArray []= $value;
+        $this->setWorkMaterialIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeWorkMaterialId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getWorkMaterialIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setWorkMaterialIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [work_material_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setWorkMaterialVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->work_material_versions !== $v) {
-            $this->work_material_versions = $v;
+        if ($this->work_material_versions_unserialized !== $v) {
+            $this->work_material_versions_unserialized = $v;
+            $this->work_material_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS] = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addWorkMaterialVersion($value)
+    {
+        $currentArray = $this->getWorkMaterialVersions();
+        $currentArray []= $value;
+        $this->setWorkMaterialVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeWorkMaterialVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getWorkMaterialVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setWorkMaterialVersions($targetArray);
 
         return $this;
     }
@@ -910,16 +1138,20 @@ abstract class MaterialVersion implements ActiveRecordInterface
             $this->version_comment = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : MaterialVersionTableMap::translateFieldName('StageMaterialIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_material_ids = (null !== $col) ? (string) $col : null;
+            $this->stage_material_ids = $col;
+            $this->stage_material_ids_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : MaterialVersionTableMap::translateFieldName('StageMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_material_versions = (null !== $col) ? (string) $col : null;
+            $this->stage_material_versions = $col;
+            $this->stage_material_versions_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : MaterialVersionTableMap::translateFieldName('WorkMaterialIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_material_ids = (null !== $col) ? (string) $col : null;
+            $this->work_material_ids = $col;
+            $this->work_material_ids_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : MaterialVersionTableMap::translateFieldName('WorkMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->work_material_versions = (null !== $col) ? (string) $col : null;
+            $this->work_material_versions = $col;
+            $this->work_material_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1456,15 +1688,31 @@ abstract class MaterialVersion implements ActiveRecordInterface
                 $this->setVersionComment($value);
                 break;
             case 9:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setStageMaterialIds($value);
                 break;
             case 10:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setStageMaterialVersions($value);
                 break;
             case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setWorkMaterialIds($value);
                 break;
             case 12:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setWorkMaterialVersions($value);
                 break;
         } // switch()
@@ -1830,9 +2078,13 @@ abstract class MaterialVersion implements ActiveRecordInterface
         $this->version_created_by = null;
         $this->version_comment = null;
         $this->stage_material_ids = null;
+        $this->stage_material_ids_unserialized = null;
         $this->stage_material_versions = null;
+        $this->stage_material_versions_unserialized = null;
         $this->work_material_ids = null;
+        $this->work_material_ids_unserialized = null;
         $this->work_material_versions = null;
+        $this->work_material_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

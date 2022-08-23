@@ -142,16 +142,30 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * The value for the house_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $house_ids;
 
     /**
+     * The unserialized $house_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $house_ids_unserialized;
+
+    /**
      * The value for the house_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $house_versions;
+
+    /**
+     * The unserialized $house_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $house_versions_unserialized;
 
     /**
      * @var        ChildGroups
@@ -533,21 +547,59 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * Get the [house_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getHouseIds()
     {
-        return $this->house_ids;
+        if (null === $this->house_ids_unserialized) {
+            $this->house_ids_unserialized = [];
+        }
+        if (!$this->house_ids_unserialized && null !== $this->house_ids) {
+            $house_ids_unserialized = substr($this->house_ids, 2, -2);
+            $this->house_ids_unserialized = '' !== $house_ids_unserialized ? explode(' | ', $house_ids_unserialized) : array();
+        }
+
+        return $this->house_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [house_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasHouseId($value): bool
+    {
+        return in_array($value, $this->getHouseIds());
     }
 
     /**
      * Get the [house_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getHouseVersions()
     {
-        return $this->house_versions;
+        if (null === $this->house_versions_unserialized) {
+            $this->house_versions_unserialized = [];
+        }
+        if (!$this->house_versions_unserialized && null !== $this->house_versions) {
+            $house_versions_unserialized = substr($this->house_versions, 2, -2);
+            $this->house_versions_unserialized = '' !== $house_versions_unserialized ? explode(' | ', $house_versions_unserialized) : array();
+        }
+
+        return $this->house_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [house_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasHouseVersion($value): bool
+    {
+        return in_array($value, $this->getHouseVersions());
     }
 
     /**
@@ -765,17 +817,14 @@ abstract class GroupsVersion implements ActiveRecordInterface
     /**
      * Set the value of [house_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setHouseIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->house_ids !== $v) {
-            $this->house_ids = $v;
+        if ($this->house_ids_unserialized !== $v) {
+            $this->house_ids_unserialized = $v;
+            $this->house_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[GroupsVersionTableMap::COL_HOUSE_IDS] = true;
         }
 
@@ -783,21 +832,86 @@ abstract class GroupsVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [house_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addHouseId($value)
+    {
+        $currentArray = $this->getHouseIds();
+        $currentArray []= $value;
+        $this->setHouseIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [house_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeHouseId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getHouseIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setHouseIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [house_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setHouseVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->house_versions !== $v) {
-            $this->house_versions = $v;
+        if ($this->house_versions_unserialized !== $v) {
+            $this->house_versions_unserialized = $v;
+            $this->house_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[GroupsVersionTableMap::COL_HOUSE_VERSIONS] = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [house_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addHouseVersion($value)
+    {
+        $currentArray = $this->getHouseVersions();
+        $currentArray []= $value;
+        $this->setHouseVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [house_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeHouseVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getHouseVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setHouseVersions($targetArray);
 
         return $this;
     }
@@ -888,10 +1002,12 @@ abstract class GroupsVersion implements ActiveRecordInterface
             $this->subproject_id_version = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : GroupsVersionTableMap::translateFieldName('HouseIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->house_ids = (null !== $col) ? (string) $col : null;
+            $this->house_ids = $col;
+            $this->house_ids_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : GroupsVersionTableMap::translateFieldName('HouseVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->house_versions = (null !== $col) ? (string) $col : null;
+            $this->house_versions = $col;
+            $this->house_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1421,9 +1537,17 @@ abstract class GroupsVersion implements ActiveRecordInterface
                 $this->setSubprojectIdVersion($value);
                 break;
             case 10:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setHouseIds($value);
                 break;
             case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setHouseVersions($value);
                 break;
         } // switch()
@@ -1783,7 +1907,9 @@ abstract class GroupsVersion implements ActiveRecordInterface
         $this->version_comment = null;
         $this->subproject_id_version = null;
         $this->house_ids = null;
+        $this->house_ids_unserialized = null;
         $this->house_versions = null;
+        $this->house_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

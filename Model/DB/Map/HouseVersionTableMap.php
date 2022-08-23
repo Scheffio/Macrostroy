@@ -299,8 +299,8 @@ class HouseVersionTableMap extends TableMap
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('group_id_version', 'GroupIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('stage_ids', 'StageIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('stage_versions', 'StageVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_ids', 'StageIds', 'ARRAY', false, null, null);
+        $this->addColumn('stage_versions', 'StageVersions', 'ARRAY', false, null, null);
     }
 
     /**

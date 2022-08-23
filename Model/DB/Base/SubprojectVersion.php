@@ -142,16 +142,30 @@ abstract class SubprojectVersion implements ActiveRecordInterface
     /**
      * The value for the groups_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $groups_ids;
 
     /**
+     * The unserialized $groups_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $groups_ids_unserialized;
+
+    /**
      * The value for the groups_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $groups_versions;
+
+    /**
+     * The unserialized $groups_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $groups_versions_unserialized;
 
     /**
      * @var        ChildSubproject
@@ -533,21 +547,59 @@ abstract class SubprojectVersion implements ActiveRecordInterface
     /**
      * Get the [groups_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getGroupsIds()
     {
-        return $this->groups_ids;
+        if (null === $this->groups_ids_unserialized) {
+            $this->groups_ids_unserialized = [];
+        }
+        if (!$this->groups_ids_unserialized && null !== $this->groups_ids) {
+            $groups_ids_unserialized = substr($this->groups_ids, 2, -2);
+            $this->groups_ids_unserialized = '' !== $groups_ids_unserialized ? explode(' | ', $groups_ids_unserialized) : array();
+        }
+
+        return $this->groups_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [groups_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasGroupsId($value): bool
+    {
+        return in_array($value, $this->getGroupsIds());
     }
 
     /**
      * Get the [groups_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getGroupsVersions()
     {
-        return $this->groups_versions;
+        if (null === $this->groups_versions_unserialized) {
+            $this->groups_versions_unserialized = [];
+        }
+        if (!$this->groups_versions_unserialized && null !== $this->groups_versions) {
+            $groups_versions_unserialized = substr($this->groups_versions, 2, -2);
+            $this->groups_versions_unserialized = '' !== $groups_versions_unserialized ? explode(' | ', $groups_versions_unserialized) : array();
+        }
+
+        return $this->groups_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [groups_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasGroupsVersion($value): bool
+    {
+        return in_array($value, $this->getGroupsVersions());
     }
 
     /**
@@ -765,17 +817,14 @@ abstract class SubprojectVersion implements ActiveRecordInterface
     /**
      * Set the value of [groups_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setGroupsIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->groups_ids !== $v) {
-            $this->groups_ids = $v;
+        if ($this->groups_ids_unserialized !== $v) {
+            $this->groups_ids_unserialized = $v;
+            $this->groups_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[SubprojectVersionTableMap::COL_GROUPS_IDS] = true;
         }
 
@@ -783,21 +832,86 @@ abstract class SubprojectVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [groups_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addGroupsId($value)
+    {
+        $currentArray = $this->getGroupsIds();
+        $currentArray []= $value;
+        $this->setGroupsIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [groups_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeGroupsId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getGroupsIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setGroupsIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [groups_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setGroupsVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->groups_versions !== $v) {
-            $this->groups_versions = $v;
+        if ($this->groups_versions_unserialized !== $v) {
+            $this->groups_versions_unserialized = $v;
+            $this->groups_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[SubprojectVersionTableMap::COL_GROUPS_VERSIONS] = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [groups_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addGroupsVersion($value)
+    {
+        $currentArray = $this->getGroupsVersions();
+        $currentArray []= $value;
+        $this->setGroupsVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [groups_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeGroupsVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getGroupsVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setGroupsVersions($targetArray);
 
         return $this;
     }
@@ -888,10 +1002,12 @@ abstract class SubprojectVersion implements ActiveRecordInterface
             $this->project_id_version = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SubprojectVersionTableMap::translateFieldName('GroupsIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->groups_ids = (null !== $col) ? (string) $col : null;
+            $this->groups_ids = $col;
+            $this->groups_ids_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SubprojectVersionTableMap::translateFieldName('GroupsVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->groups_versions = (null !== $col) ? (string) $col : null;
+            $this->groups_versions = $col;
+            $this->groups_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1421,9 +1537,17 @@ abstract class SubprojectVersion implements ActiveRecordInterface
                 $this->setProjectIdVersion($value);
                 break;
             case 10:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setGroupsIds($value);
                 break;
             case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setGroupsVersions($value);
                 break;
         } // switch()
@@ -1783,7 +1907,9 @@ abstract class SubprojectVersion implements ActiveRecordInterface
         $this->version_comment = null;
         $this->project_id_version = null;
         $this->groups_ids = null;
+        $this->groups_ids_unserialized = null;
         $this->groups_versions = null;
+        $this->groups_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

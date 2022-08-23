@@ -4,15 +4,18 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
+use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Technic as ChildTechnic;
 use DB\TechnicQuery as ChildTechnicQuery;
+use DB\TechnicVersionQuery as ChildTechnicVersionQuery;
 use DB\Work as ChildWork;
 use DB\WorkQuery as ChildWorkQuery;
 use DB\WorkTechnic as ChildWorkTechnic;
 use DB\WorkTechnicQuery as ChildWorkTechnicQuery;
 use DB\WorkTechnicVersion as ChildWorkTechnicVersion;
 use DB\WorkTechnicVersionQuery as ChildWorkTechnicVersionQuery;
+use DB\WorkVersionQuery as ChildWorkVersionQuery;
 use DB\Map\WorkTechnicTableMap;
 use DB\Map\WorkTechnicVersionTableMap;
 use Propel\Runtime\Propel;
@@ -101,6 +104,14 @@ abstract class WorkTechnic implements ActiveRecordInterface
     protected $amount;
 
     /**
+     * The value for the is_available field.
+     * Доступ (доступный, удаленный)
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $is_available;
+
+    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -154,6 +165,14 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // versionable behavior
+
+
+    /**
+     * @var bool
+     */
+    protected $enforceVersion = false;
+
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildWorkTechnicVersion[]
@@ -169,6 +188,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
+        $this->is_available = true;
         $this->version = 0;
     }
 
@@ -441,6 +461,26 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [is_available] column value.
+     * Доступ (доступный, удаленный)
+     * @return boolean
+     */
+    public function getIsAvailable()
+    {
+        return $this->is_available;
+    }
+
+    /**
+     * Get the [is_available] column value.
+     * Доступ (доступный, удаленный)
+     * @return boolean
+     */
+    public function isAvailable()
+    {
+        return $this->getIsAvailable();
+    }
+
+    /**
      * Get the [version] column value.
      *
      * @return int|null
@@ -581,6 +621,34 @@ abstract class WorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of the [is_available] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Доступ (доступный, удаленный)
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setIsAvailable($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_available !== $v) {
+            $this->is_available = $v;
+            $this->modifiedColumns[WorkTechnicTableMap::COL_IS_AVAILABLE] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [version] column.
      *
      * @param int|null $v New value
@@ -670,6 +738,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->is_available !== true) {
+                return false;
+            }
+
             if ($this->version !== 0) {
                 return false;
             }
@@ -712,19 +784,22 @@ abstract class WorkTechnic implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WorkTechnicTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WorkTechnicTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_available = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_created_by = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : WorkTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : WorkTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -734,7 +809,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = WorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = WorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\WorkTechnic'), 0, $e);
@@ -870,6 +945,14 @@ abstract class WorkTechnic implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(WorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -883,6 +966,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 WorkTechnicTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -994,6 +1081,9 @@ abstract class WorkTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(WorkTechnicTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_IS_AVAILABLE)) {
+            $modifiedColumns[':p' . $index++]  = 'is_available';
+        }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
@@ -1028,6 +1118,9 @@ abstract class WorkTechnic implements ActiveRecordInterface
                         break;
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
+                        break;
+                    case 'is_available':
+                        $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
                         break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
@@ -1116,15 +1209,18 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 return $this->getAmount();
 
             case 4:
-                return $this->getVersion();
+                return $this->getIsAvailable();
 
             case 5:
-                return $this->getVersionCreatedAt();
+                return $this->getVersion();
 
             case 6:
-                return $this->getVersionCreatedBy();
+                return $this->getVersionCreatedAt();
 
             case 7:
+                return $this->getVersionCreatedBy();
+
+            case 8:
                 return $this->getVersionComment();
 
             default:
@@ -1159,13 +1255,14 @@ abstract class WorkTechnic implements ActiveRecordInterface
             $keys[1] => $this->getWorkId(),
             $keys[2] => $this->getTechnicId(),
             $keys[3] => $this->getAmount(),
-            $keys[4] => $this->getVersion(),
-            $keys[5] => $this->getVersionCreatedAt(),
-            $keys[6] => $this->getVersionCreatedBy(),
-            $keys[7] => $this->getVersionComment(),
+            $keys[4] => $this->getIsAvailable(),
+            $keys[5] => $this->getVersion(),
+            $keys[6] => $this->getVersionCreatedAt(),
+            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[8] => $this->getVersionComment(),
         ];
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1268,15 +1365,18 @@ abstract class WorkTechnic implements ActiveRecordInterface
                 $this->setAmount($value);
                 break;
             case 4:
-                $this->setVersion($value);
+                $this->setIsAvailable($value);
                 break;
             case 5:
-                $this->setVersionCreatedAt($value);
+                $this->setVersion($value);
                 break;
             case 6:
-                $this->setVersionCreatedBy($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 7:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 8:
                 $this->setVersionComment($value);
                 break;
         } // switch()
@@ -1318,16 +1418,19 @@ abstract class WorkTechnic implements ActiveRecordInterface
             $this->setAmount($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setVersion($arr[$keys[4]]);
+            $this->setIsAvailable($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[5]]);
+            $this->setVersion($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[6]]);
+            $this->setVersionCreatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionComment($arr[$keys[7]]);
+            $this->setVersionCreatedBy($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setVersionComment($arr[$keys[8]]);
         }
 
         return $this;
@@ -1383,6 +1486,9 @@ abstract class WorkTechnic implements ActiveRecordInterface
         }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_AMOUNT)) {
             $criteria->add(WorkTechnicTableMap::COL_AMOUNT, $this->amount);
+        }
+        if ($this->isColumnModified(WorkTechnicTableMap::COL_IS_AVAILABLE)) {
+            $criteria->add(WorkTechnicTableMap::COL_IS_AVAILABLE, $this->is_available);
         }
         if ($this->isColumnModified(WorkTechnicTableMap::COL_VERSION)) {
             $criteria->add(WorkTechnicTableMap::COL_VERSION, $this->version);
@@ -1487,6 +1593,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
         $copyObj->setWorkId($this->getWorkId());
         $copyObj->setTechnicId($this->getTechnicId());
         $copyObj->setAmount($this->getAmount());
+        $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setVersion($this->getVersion());
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
         $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
@@ -1913,6 +2020,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
         $this->work_id = null;
         $this->technic_id = null;
         $this->amount = null;
+        $this->is_available = null;
         $this->version = null;
         $this->version_created_at = null;
         $this->version_created_by = null;
@@ -1962,6 +2070,337 @@ abstract class WorkTechnic implements ActiveRecordInterface
         return (string) $this->exportTo(WorkTechnicTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildWorkTechnicQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if (null !== ($object = $this->getWork($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+        if (null !== ($object = $this->getTechnic($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildWorkTechnicVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildWorkTechnicVersion();
+        $version->setId($this->getId());
+        $version->setWorkId($this->getWorkId());
+        $version->setTechnicId($this->getTechnicId());
+        $version->setAmount($this->getAmount());
+        $version->setIsAvailable($this->getIsAvailable());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setWorkTechnic($this);
+        if (($related = $this->getWork(null, $con)) && $related->getVersion()) {
+            $version->setWorkIdVersion($related->getVersion());
+        }
+        if (($related = $this->getTechnic(null, $con)) && $related->getVersion()) {
+            $version->setTechnicIdVersion($related->getVersion());
+        }
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildWorkTechnic object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildWorkTechnicVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildWorkTechnic'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setWorkId($version->getWorkId());
+        $this->setTechnicId($version->getTechnicId());
+        $this->setAmount($version->getAmount());
+        $this->setIsAvailable($version->getIsAvailable());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValue = $version->getWorkId()) {
+            if (isset($loadedObjects['ChildWork']) && isset($loadedObjects['ChildWork'][$fkValue]) && isset($loadedObjects['ChildWork'][$fkValue][$version->getWorkIdVersion()])) {
+                $related = $loadedObjects['ChildWork'][$fkValue][$version->getWorkIdVersion()];
+            } else {
+                $related = new ChildWork();
+                $relatedVersion = ChildWorkVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getWorkIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setWork($related);
+        }
+        if ($fkValue = $version->getTechnicId()) {
+            if (isset($loadedObjects['ChildTechnic']) && isset($loadedObjects['ChildTechnic'][$fkValue]) && isset($loadedObjects['ChildTechnic'][$fkValue][$version->getTechnicIdVersion()])) {
+                $related = $loadedObjects['ChildTechnic'][$fkValue][$version->getTechnicIdVersion()];
+            } else {
+                $related = new ChildTechnic();
+                $relatedVersion = ChildTechnicVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getTechnicIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setTechnic($related);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildWorkTechnicVersionQuery::create()
+            ->filterByWorkTechnic($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildWorkTechnicVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildWorkTechnicVersionQuery::create()
+            ->filterByWorkTechnic($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildWorkTechnicVersion[] A list of ChildWorkTechnicVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(WorkTechnicVersionTableMap::COL_VERSION);
+
+        return $this->getWorkTechnicVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\WorkTechnicVersion[] List of \DB\WorkTechnicVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildWorkTechnicVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(WorkTechnicVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getWorkTechnicVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -1988,7 +2427,10 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+        $this->setVersionComment('insert');
+
+        return true;
     }
 
     /**
@@ -1998,7 +2440,7 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2007,7 +2449,12 @@ abstract class WorkTechnic implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+
+        if ($this->is_available === true) $this->setVersionComment('update');
+        else $this->setVersionComment('delete');
+
+        return true;
     }
 
     /**

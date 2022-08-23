@@ -4,18 +4,22 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
+use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Groups as ChildGroups;
 use DB\GroupsQuery as ChildGroupsQuery;
+use DB\GroupsVersionQuery as ChildGroupsVersionQuery;
 use DB\House as ChildHouse;
 use DB\HouseQuery as ChildHouseQuery;
 use DB\HouseVersion as ChildHouseVersion;
 use DB\HouseVersionQuery as ChildHouseVersionQuery;
 use DB\Stage as ChildStage;
 use DB\StageQuery as ChildStageQuery;
+use DB\StageVersionQuery as ChildStageVersionQuery;
 use DB\Map\HouseTableMap;
 use DB\Map\HouseVersionTableMap;
 use DB\Map\StageTableMap;
+use DB\Map\StageVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -145,18 +149,18 @@ abstract class House implements ActiveRecordInterface
     protected $aGroups;
 
     /**
-     * @var        ObjectCollection|ChildHouseVersion[] Collection to store aggregation of ChildHouseVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion> Collection to store aggregation of ChildHouseVersion objects.
-     */
-    protected $collHouseVersions;
-    protected $collHouseVersionsPartial;
-
-    /**
      * @var        ObjectCollection|ChildStage[] Collection to store aggregation of ChildStage objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildStage> Collection to store aggregation of ChildStage objects.
      */
     protected $collStages;
     protected $collStagesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildHouseVersion[] Collection to store aggregation of ChildHouseVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion> Collection to store aggregation of ChildHouseVersion objects.
+     */
+    protected $collHouseVersions;
+    protected $collHouseVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -166,12 +170,13 @@ abstract class House implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // versionable behavior
+
+
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildHouseVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion>
+     * @var bool
      */
-    protected $houseVersionsScheduledForDeletion = null;
+    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -179,6 +184,13 @@ abstract class House implements ActiveRecordInterface
      * @phpstan-var ObjectCollection&\Traversable<ChildStage>
      */
     protected $stagesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildHouseVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildHouseVersion>
+     */
+    protected $houseVersionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -876,9 +888,9 @@ abstract class House implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aGroups = null;
-            $this->collHouseVersions = null;
-
             $this->collStages = null;
+
+            $this->collHouseVersions = null;
 
         } // if (deep)
     }
@@ -944,6 +956,14 @@ abstract class House implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(HouseTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -957,6 +977,10 @@ abstract class House implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 HouseTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1006,23 +1030,6 @@ abstract class House implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->houseVersionsScheduledForDeletion !== null) {
-                if (!$this->houseVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\HouseVersionQuery::create()
-                        ->filterByPrimaryKeys($this->houseVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->houseVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collHouseVersions !== null) {
-                foreach ($this->collHouseVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->stagesScheduledForDeletion !== null) {
                 if (!$this->stagesScheduledForDeletion->isEmpty()) {
                     \DB\StageQuery::create()
@@ -1034,6 +1041,23 @@ abstract class House implements ActiveRecordInterface
 
             if ($this->collStages !== null) {
                 foreach ($this->collStages as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->houseVersionsScheduledForDeletion !== null) {
+                if (!$this->houseVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\HouseVersionQuery::create()
+                        ->filterByPrimaryKeys($this->houseVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->houseVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHouseVersions !== null) {
+                foreach ($this->collHouseVersions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1283,21 +1307,6 @@ abstract class House implements ActiveRecordInterface
 
                 $result[$key] = $this->aGroups->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collHouseVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'houseVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'house_versions';
-                        break;
-                    default:
-                        $key = 'HouseVersions';
-                }
-
-                $result[$key] = $this->collHouseVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collStages) {
 
                 switch ($keyType) {
@@ -1312,6 +1321,21 @@ abstract class House implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collStages->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collHouseVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'houseVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'house_versions';
+                        break;
+                    default:
+                        $key = 'HouseVersions';
+                }
+
+                $result[$key] = $this->collHouseVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1601,15 +1625,15 @@ abstract class House implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getHouseVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addHouseVersion($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getStages() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addStage($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getHouseVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHouseVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1705,14 +1729,253 @@ abstract class House implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('HouseVersion' === $relationName) {
-            $this->initHouseVersions();
-            return;
-        }
         if ('Stage' === $relationName) {
             $this->initStages();
             return;
         }
+        if ('HouseVersion' === $relationName) {
+            $this->initHouseVersions();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collStages collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addStages()
+     */
+    public function clearStages()
+    {
+        $this->collStages = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collStages collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialStages($v = true): void
+    {
+        $this->collStagesPartial = $v;
+    }
+
+    /**
+     * Initializes the collStages collection.
+     *
+     * By default this just sets the collStages collection to an empty array (like clearcollStages());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initStages(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collStages && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = StageTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collStages = new $collectionClassName;
+        $this->collStages->setModel('\DB\Stage');
+    }
+
+    /**
+     * Gets an array of ChildStage objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildHouse is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildStage[] List of ChildStage objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStage> List of ChildStage objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getStages(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collStagesPartial && !$this->isNew();
+        if (null === $this->collStages || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collStages) {
+                    $this->initStages();
+                } else {
+                    $collectionClassName = StageTableMap::getTableMap()->getCollectionClassName();
+
+                    $collStages = new $collectionClassName;
+                    $collStages->setModel('\DB\Stage');
+
+                    return $collStages;
+                }
+            } else {
+                $collStages = ChildStageQuery::create(null, $criteria)
+                    ->filterByHouse($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collStagesPartial && count($collStages)) {
+                        $this->initStages(false);
+
+                        foreach ($collStages as $obj) {
+                            if (false == $this->collStages->contains($obj)) {
+                                $this->collStages->append($obj);
+                            }
+                        }
+
+                        $this->collStagesPartial = true;
+                    }
+
+                    return $collStages;
+                }
+
+                if ($partial && $this->collStages) {
+                    foreach ($this->collStages as $obj) {
+                        if ($obj->isNew()) {
+                            $collStages[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collStages = $collStages;
+                $this->collStagesPartial = false;
+            }
+        }
+
+        return $this->collStages;
+    }
+
+    /**
+     * Sets a collection of ChildStage objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $stages A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setStages(Collection $stages, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildStage[] $stagesToDelete */
+        $stagesToDelete = $this->getStages(new Criteria(), $con)->diff($stages);
+
+
+        $this->stagesScheduledForDeletion = $stagesToDelete;
+
+        foreach ($stagesToDelete as $stageRemoved) {
+            $stageRemoved->setHouse(null);
+        }
+
+        $this->collStages = null;
+        foreach ($stages as $stage) {
+            $this->addStage($stage);
+        }
+
+        $this->collStages = $stages;
+        $this->collStagesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Stage objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related Stage objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countStages(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collStagesPartial && !$this->isNew();
+        if (null === $this->collStages || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStages) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getStages());
+            }
+
+            $query = ChildStageQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByHouse($this)
+                ->count($con);
+        }
+
+        return count($this->collStages);
+    }
+
+    /**
+     * Method called to associate a ChildStage object to this object
+     * through the ChildStage foreign key attribute.
+     *
+     * @param ChildStage $l ChildStage
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStage(ChildStage $l)
+    {
+        if ($this->collStages === null) {
+            $this->initStages();
+            $this->collStagesPartial = true;
+        }
+
+        if (!$this->collStages->contains($l)) {
+            $this->doAddStage($l);
+
+            if ($this->stagesScheduledForDeletion and $this->stagesScheduledForDeletion->contains($l)) {
+                $this->stagesScheduledForDeletion->remove($this->stagesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildStage $stage The ChildStage object to add.
+     */
+    protected function doAddStage(ChildStage $stage): void
+    {
+        $this->collStages[]= $stage;
+        $stage->setHouse($this);
+    }
+
+    /**
+     * @param ChildStage $stage The ChildStage object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStage(ChildStage $stage)
+    {
+        if ($this->getStages()->contains($stage)) {
+            $pos = $this->collStages->search($stage);
+            $this->collStages->remove($pos);
+            if (null === $this->stagesScheduledForDeletion) {
+                $this->stagesScheduledForDeletion = clone $this->collStages;
+                $this->stagesScheduledForDeletion->clear();
+            }
+            $this->stagesScheduledForDeletion[]= clone $stage;
+            $stage->setHouse(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1958,245 +2221,6 @@ abstract class House implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collStages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addStages()
-     */
-    public function clearStages()
-    {
-        $this->collStages = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collStages collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialStages($v = true): void
-    {
-        $this->collStagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collStages collection.
-     *
-     * By default this just sets the collStages collection to an empty array (like clearcollStages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initStages(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collStages && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = StageTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collStages = new $collectionClassName;
-        $this->collStages->setModel('\DB\Stage');
-    }
-
-    /**
-     * Gets an array of ChildStage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildHouse is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStage[] List of ChildStage objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStage> List of ChildStage objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getStages(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collStagesPartial && !$this->isNew();
-        if (null === $this->collStages || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collStages) {
-                    $this->initStages();
-                } else {
-                    $collectionClassName = StageTableMap::getTableMap()->getCollectionClassName();
-
-                    $collStages = new $collectionClassName;
-                    $collStages->setModel('\DB\Stage');
-
-                    return $collStages;
-                }
-            } else {
-                $collStages = ChildStageQuery::create(null, $criteria)
-                    ->filterByHouse($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collStagesPartial && count($collStages)) {
-                        $this->initStages(false);
-
-                        foreach ($collStages as $obj) {
-                            if (false == $this->collStages->contains($obj)) {
-                                $this->collStages->append($obj);
-                            }
-                        }
-
-                        $this->collStagesPartial = true;
-                    }
-
-                    return $collStages;
-                }
-
-                if ($partial && $this->collStages) {
-                    foreach ($this->collStages as $obj) {
-                        if ($obj->isNew()) {
-                            $collStages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collStages = $collStages;
-                $this->collStagesPartial = false;
-            }
-        }
-
-        return $this->collStages;
-    }
-
-    /**
-     * Sets a collection of ChildStage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $stages A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setStages(Collection $stages, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildStage[] $stagesToDelete */
-        $stagesToDelete = $this->getStages(new Criteria(), $con)->diff($stages);
-
-
-        $this->stagesScheduledForDeletion = $stagesToDelete;
-
-        foreach ($stagesToDelete as $stageRemoved) {
-            $stageRemoved->setHouse(null);
-        }
-
-        $this->collStages = null;
-        foreach ($stages as $stage) {
-            $this->addStage($stage);
-        }
-
-        $this->collStages = $stages;
-        $this->collStagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Stage objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related Stage objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countStages(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collStagesPartial && !$this->isNew();
-        if (null === $this->collStages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getStages());
-            }
-
-            $query = ChildStageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByHouse($this)
-                ->count($con);
-        }
-
-        return count($this->collStages);
-    }
-
-    /**
-     * Method called to associate a ChildStage object to this object
-     * through the ChildStage foreign key attribute.
-     *
-     * @param ChildStage $l ChildStage
-     * @return $this The current object (for fluent API support)
-     */
-    public function addStage(ChildStage $l)
-    {
-        if ($this->collStages === null) {
-            $this->initStages();
-            $this->collStagesPartial = true;
-        }
-
-        if (!$this->collStages->contains($l)) {
-            $this->doAddStage($l);
-
-            if ($this->stagesScheduledForDeletion and $this->stagesScheduledForDeletion->contains($l)) {
-                $this->stagesScheduledForDeletion->remove($this->stagesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildStage $stage The ChildStage object to add.
-     */
-    protected function doAddStage(ChildStage $stage): void
-    {
-        $this->collStages[]= $stage;
-        $stage->setHouse($this);
-    }
-
-    /**
-     * @param ChildStage $stage The ChildStage object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeStage(ChildStage $stage)
-    {
-        if ($this->getStages()->contains($stage)) {
-            $pos = $this->collStages->search($stage);
-            $this->collStages->remove($pos);
-            if (null === $this->stagesScheduledForDeletion) {
-                $this->stagesScheduledForDeletion = clone $this->collStages;
-                $this->stagesScheduledForDeletion->clear();
-            }
-            $this->stagesScheduledForDeletion[]= clone $stage;
-            $stage->setHouse(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2239,20 +2263,20 @@ abstract class House implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collHouseVersions) {
-                foreach ($this->collHouseVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collStages) {
                 foreach ($this->collStages as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collHouseVersions) {
+                foreach ($this->collHouseVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
-        $this->collHouseVersions = null;
         $this->collStages = null;
+        $this->collHouseVersions = null;
         $this->aGroups = null;
         return $this;
     }
@@ -2267,6 +2291,362 @@ abstract class House implements ActiveRecordInterface
         return (string) $this->exportTo(HouseTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildHouseQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if (null !== ($object = $this->getGroups($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+        if ($this->collStages) {
+
+            // to avoid infinite loops, emulate in save
+            $this->alreadyInSave = true;
+
+            foreach ($this->getStages(null, $con) as $relatedObject) {
+
+                if ($relatedObject->isVersioningNecessary($con)) {
+
+                    $this->alreadyInSave = false;
+                    return true;
+                }
+            }
+            $this->alreadyInSave = false;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildHouseVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildHouseVersion();
+        $version->setId($this->getId());
+        $version->setName($this->getName());
+        $version->setStatus($this->getStatus());
+        $version->setIsAvailable($this->getIsAvailable());
+        $version->setGroupId($this->getGroupId());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setHouse($this);
+        if (($related = $this->getGroups(null, $con)) && $related->getVersion()) {
+            $version->setGroupIdVersion($related->getVersion());
+        }
+        $object = $this->getStages(null, $con);
+
+
+        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
+            $version->setStageIds(array_keys($relateds));
+            $version->setStageVersions(array_values($relateds));
+        }
+
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildHouse object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildHouseVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildHouse'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setName($version->getName());
+        $this->setStatus($version->getStatus());
+        $this->setIsAvailable($version->getIsAvailable());
+        $this->setGroupId($version->getGroupId());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValue = $version->getGroupId()) {
+            if (isset($loadedObjects['ChildGroups']) && isset($loadedObjects['ChildGroups'][$fkValue]) && isset($loadedObjects['ChildGroups'][$fkValue][$version->getGroupIdVersion()])) {
+                $related = $loadedObjects['ChildGroups'][$fkValue][$version->getGroupIdVersion()];
+            } else {
+                $related = new ChildGroups();
+                $relatedVersion = ChildGroupsVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getGroupIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setGroups($related);
+        }
+        if ($fkValues = $version->getStageIds()) {
+            $this->clearStages();
+            $fkVersions = $version->getStageVersions();
+            $query = ChildStageVersionQuery::create();
+            foreach ($fkValues as $key => $value) {
+                $c1 = $query->getNewCriterion(StageVersionTableMap::COL_ID, $value);
+                $c2 = $query->getNewCriterion(StageVersionTableMap::COL_VERSION, $fkVersions[$key]);
+                $c1->addAnd($c2);
+                $query->addOr($c1);
+            }
+            foreach ($query->find($con) as $relatedVersion) {
+                if (isset($loadedObjects['ChildStage']) && isset($loadedObjects['ChildStage'][$relatedVersion->getId()]) && isset($loadedObjects['ChildStage'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
+                    $related = $loadedObjects['ChildStage'][$relatedVersion->getId()][$relatedVersion->getVersion()];
+                } else {
+                    $related = new ChildStage();
+                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                    $related->setNew(false);
+                }
+                $this->addStage($related);
+                $this->collStagesPartial = false;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildHouseVersionQuery::create()
+            ->filterByHouse($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildHouseVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildHouseVersionQuery::create()
+            ->filterByHouse($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildHouseVersion[] A list of ChildHouseVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(HouseVersionTableMap::COL_VERSION);
+
+        return $this->getHouseVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\HouseVersion[] List of \DB\HouseVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildHouseVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(HouseVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getHouseVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2293,7 +2673,10 @@ abstract class House implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+        $this->setVersionComment('insert');
+
+        return true;
     }
 
     /**
@@ -2303,7 +2686,7 @@ abstract class House implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2312,7 +2695,14 @@ abstract class House implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+
+        if ($this->status === 'deleted') {
+            $this->setVersionComment('delete');
+            $this->setIsAvailable(false);
+        } else $this->setVersionComment('update');
+
+        return true;
     }
 
     /**

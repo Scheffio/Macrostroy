@@ -81,10 +81,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMaterialVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildMaterialVersion filtered by the version_created_at column
  * @method     ChildMaterialVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildMaterialVersion filtered by the version_created_by column
  * @method     ChildMaterialVersion|null findOneByVersionComment(string $version_comment) Return the first ChildMaterialVersion filtered by the version_comment column
- * @method     ChildMaterialVersion|null findOneByStageMaterialIds(string $stage_material_ids) Return the first ChildMaterialVersion filtered by the stage_material_ids column
- * @method     ChildMaterialVersion|null findOneByStageMaterialVersions(string $stage_material_versions) Return the first ChildMaterialVersion filtered by the stage_material_versions column
- * @method     ChildMaterialVersion|null findOneByWorkMaterialIds(string $work_material_ids) Return the first ChildMaterialVersion filtered by the work_material_ids column
- * @method     ChildMaterialVersion|null findOneByWorkMaterialVersions(string $work_material_versions) Return the first ChildMaterialVersion filtered by the work_material_versions column *
+ * @method     ChildMaterialVersion|null findOneByStageMaterialIds(array $stage_material_ids) Return the first ChildMaterialVersion filtered by the stage_material_ids column
+ * @method     ChildMaterialVersion|null findOneByStageMaterialVersions(array $stage_material_versions) Return the first ChildMaterialVersion filtered by the stage_material_versions column
+ * @method     ChildMaterialVersion|null findOneByWorkMaterialIds(array $work_material_ids) Return the first ChildMaterialVersion filtered by the work_material_ids column
+ * @method     ChildMaterialVersion|null findOneByWorkMaterialVersions(array $work_material_versions) Return the first ChildMaterialVersion filtered by the work_material_versions column *
 
  * @method     ChildMaterialVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildMaterialVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMaterialVersion requireOne(?ConnectionInterface $con = null) Return the first ChildMaterialVersion matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -98,10 +98,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMaterialVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildMaterialVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMaterialVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildMaterialVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMaterialVersion requireOneByVersionComment(string $version_comment) Return the first ChildMaterialVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildMaterialVersion requireOneByStageMaterialIds(string $stage_material_ids) Return the first ChildMaterialVersion filtered by the stage_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildMaterialVersion requireOneByStageMaterialVersions(string $stage_material_versions) Return the first ChildMaterialVersion filtered by the stage_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildMaterialVersion requireOneByWorkMaterialIds(string $work_material_ids) Return the first ChildMaterialVersion filtered by the work_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildMaterialVersion requireOneByWorkMaterialVersions(string $work_material_versions) Return the first ChildMaterialVersion filtered by the work_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMaterialVersion requireOneByStageMaterialIds(array $stage_material_ids) Return the first ChildMaterialVersion filtered by the stage_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMaterialVersion requireOneByStageMaterialVersions(array $stage_material_versions) Return the first ChildMaterialVersion filtered by the stage_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMaterialVersion requireOneByWorkMaterialIds(array $work_material_ids) Return the first ChildMaterialVersion filtered by the work_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMaterialVersion requireOneByWorkMaterialVersions(array $work_material_versions) Return the first ChildMaterialVersion filtered by the work_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildMaterialVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildMaterialVersion objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildMaterialVersion> find(?ConnectionInterface $con = null) Return ChildMaterialVersion objects based on current ModelCriteria
@@ -123,14 +123,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByVersionCreatedBy(string $version_created_by) Return ChildMaterialVersion objects filtered by the version_created_by column
  * @method     ChildMaterialVersion[]|Collection findByVersionComment(string $version_comment) Return ChildMaterialVersion objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByVersionComment(string $version_comment) Return ChildMaterialVersion objects filtered by the version_comment column
- * @method     ChildMaterialVersion[]|Collection findByStageMaterialIds(string $stage_material_ids) Return ChildMaterialVersion objects filtered by the stage_material_ids column
- * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByStageMaterialIds(string $stage_material_ids) Return ChildMaterialVersion objects filtered by the stage_material_ids column
- * @method     ChildMaterialVersion[]|Collection findByStageMaterialVersions(string $stage_material_versions) Return ChildMaterialVersion objects filtered by the stage_material_versions column
- * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByStageMaterialVersions(string $stage_material_versions) Return ChildMaterialVersion objects filtered by the stage_material_versions column
- * @method     ChildMaterialVersion[]|Collection findByWorkMaterialIds(string $work_material_ids) Return ChildMaterialVersion objects filtered by the work_material_ids column
- * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByWorkMaterialIds(string $work_material_ids) Return ChildMaterialVersion objects filtered by the work_material_ids column
- * @method     ChildMaterialVersion[]|Collection findByWorkMaterialVersions(string $work_material_versions) Return ChildMaterialVersion objects filtered by the work_material_versions column
- * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByWorkMaterialVersions(string $work_material_versions) Return ChildMaterialVersion objects filtered by the work_material_versions column
+ * @method     ChildMaterialVersion[]|Collection findByStageMaterialIds(array $stage_material_ids) Return ChildMaterialVersion objects filtered by the stage_material_ids column
+ * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByStageMaterialIds(array $stage_material_ids) Return ChildMaterialVersion objects filtered by the stage_material_ids column
+ * @method     ChildMaterialVersion[]|Collection findByStageMaterialVersions(array $stage_material_versions) Return ChildMaterialVersion objects filtered by the stage_material_versions column
+ * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByStageMaterialVersions(array $stage_material_versions) Return ChildMaterialVersion objects filtered by the stage_material_versions column
+ * @method     ChildMaterialVersion[]|Collection findByWorkMaterialIds(array $work_material_ids) Return ChildMaterialVersion objects filtered by the work_material_ids column
+ * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByWorkMaterialIds(array $work_material_ids) Return ChildMaterialVersion objects filtered by the work_material_ids column
+ * @method     ChildMaterialVersion[]|Collection findByWorkMaterialVersions(array $work_material_versions) Return ChildMaterialVersion objects filtered by the work_material_versions column
+ * @psalm-method Collection&\Traversable<ChildMaterialVersion> findByWorkMaterialVersions(array $work_material_versions) Return ChildMaterialVersion objects filtered by the work_material_versions column
  * @method     ChildMaterialVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildMaterialVersion> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -669,24 +669,81 @@ abstract class MaterialVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_material_ids column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByStageMaterialIds('fooValue');   // WHERE stage_material_ids = 'fooValue'
-     * $query->filterByStageMaterialIds('%fooValue%', Criteria::LIKE); // WHERE stage_material_ids LIKE '%fooValue%'
-     * $query->filterByStageMaterialIds(['foo', 'bar']); // WHERE stage_material_ids IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $stageMaterialIds The value to use as filter.
+     * @param array $stageMaterialIds The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageMaterialIds($stageMaterialIds = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($stageMaterialIds)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($stageMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($stageMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($stageMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS, $stageMaterialIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the stage_material_ids column
+     * @param mixed $stageMaterialIds The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByStageMaterialId($stageMaterialIds = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($stageMaterialIds)) {
+                $stageMaterialIds = '%| ' . $stageMaterialIds . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $stageMaterialIds = '%| ' . $stageMaterialIds . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $stageMaterialIds, $comparison);
+            } else {
+                $this->addAnd($key, $stageMaterialIds, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(MaterialVersionTableMap::COL_STAGE_MATERIAL_IDS, $stageMaterialIds, $comparison);
@@ -697,24 +754,81 @@ abstract class MaterialVersionQuery extends ModelCriteria
     /**
      * Filter the query on the stage_material_versions column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByStageMaterialVersions('fooValue');   // WHERE stage_material_versions = 'fooValue'
-     * $query->filterByStageMaterialVersions('%fooValue%', Criteria::LIKE); // WHERE stage_material_versions LIKE '%fooValue%'
-     * $query->filterByStageMaterialVersions(['foo', 'bar']); // WHERE stage_material_versions IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $stageMaterialVersions The value to use as filter.
+     * @param array $stageMaterialVersions The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByStageMaterialVersions($stageMaterialVersions = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($stageMaterialVersions)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($stageMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($stageMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($stageMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS, $stageMaterialVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the stage_material_versions column
+     * @param mixed $stageMaterialVersions The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByStageMaterialVersion($stageMaterialVersions = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($stageMaterialVersions)) {
+                $stageMaterialVersions = '%| ' . $stageMaterialVersions . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $stageMaterialVersions = '%| ' . $stageMaterialVersions . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $stageMaterialVersions, $comparison);
+            } else {
+                $this->addAnd($key, $stageMaterialVersions, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(MaterialVersionTableMap::COL_STAGE_MATERIAL_VERSIONS, $stageMaterialVersions, $comparison);
@@ -725,24 +839,81 @@ abstract class MaterialVersionQuery extends ModelCriteria
     /**
      * Filter the query on the work_material_ids column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByWorkMaterialIds('fooValue');   // WHERE work_material_ids = 'fooValue'
-     * $query->filterByWorkMaterialIds('%fooValue%', Criteria::LIKE); // WHERE work_material_ids LIKE '%fooValue%'
-     * $query->filterByWorkMaterialIds(['foo', 'bar']); // WHERE work_material_ids IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $workMaterialIds The value to use as filter.
+     * @param array $workMaterialIds The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByWorkMaterialIds($workMaterialIds = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($workMaterialIds)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($workMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($workMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($workMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS, $workMaterialIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the work_material_ids column
+     * @param mixed $workMaterialIds The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByWorkMaterialId($workMaterialIds = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($workMaterialIds)) {
+                $workMaterialIds = '%| ' . $workMaterialIds . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $workMaterialIds = '%| ' . $workMaterialIds . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $workMaterialIds, $comparison);
+            } else {
+                $this->addAnd($key, $workMaterialIds, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(MaterialVersionTableMap::COL_WORK_MATERIAL_IDS, $workMaterialIds, $comparison);
@@ -753,24 +924,81 @@ abstract class MaterialVersionQuery extends ModelCriteria
     /**
      * Filter the query on the work_material_versions column
      *
-     * Example usage:
-     * <code>
-     * $query->filterByWorkMaterialVersions('fooValue');   // WHERE work_material_versions = 'fooValue'
-     * $query->filterByWorkMaterialVersions('%fooValue%', Criteria::LIKE); // WHERE work_material_versions LIKE '%fooValue%'
-     * $query->filterByWorkMaterialVersions(['foo', 'bar']); // WHERE work_material_versions IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $workMaterialVersions The value to use as filter.
+     * @param array $workMaterialVersions The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByWorkMaterialVersions($workMaterialVersions = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($workMaterialVersions)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($workMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($workMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($workMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS, $workMaterialVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the work_material_versions column
+     * @param mixed $workMaterialVersions The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByWorkMaterialVersion($workMaterialVersions = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($workMaterialVersions)) {
+                $workMaterialVersions = '%| ' . $workMaterialVersions . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $workMaterialVersions = '%| ' . $workMaterialVersions . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $workMaterialVersions, $comparison);
+            } else {
+                $this->addAnd($key, $workMaterialVersions, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(MaterialVersionTableMap::COL_WORK_MATERIAL_VERSIONS, $workMaterialVersions, $comparison);

@@ -324,10 +324,10 @@ class WorkVersionTableMap extends TableMap
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
-        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('work_material_ids', 'WorkMaterialIds', 'ARRAY', false, null, null);
+        $this->addColumn('work_material_versions', 'WorkMaterialVersions', 'ARRAY', false, null, null);
+        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'ARRAY', false, null, null);
+        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'ARRAY', false, null, null);
     }
 
     /**

@@ -63,7 +63,7 @@ class WorkMaterialVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 10;
+    public const NUM_COLUMNS = 11;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class WorkMaterialVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 10;
+    public const NUM_HYDRATE_COLUMNS = 11;
 
     /**
      * the column name for the id field
@@ -94,6 +94,11 @@ class WorkMaterialVersionTableMap extends TableMap
      * the column name for the amount field
      */
     public const COL_AMOUNT = 'work_material_version.amount';
+
+    /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'work_material_version.is_available';
 
     /**
      * the column name for the version field
@@ -139,11 +144,11 @@ class WorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'WorkId', 'MaterialId', 'Amount', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'workId', 'materialId', 'amount', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
-        self::TYPE_COLNAME       => [WorkMaterialVersionTableMap::COL_ID, WorkMaterialVersionTableMap::COL_WORK_ID, WorkMaterialVersionTableMap::COL_MATERIAL_ID, WorkMaterialVersionTableMap::COL_AMOUNT, WorkMaterialVersionTableMap::COL_VERSION, WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, WorkMaterialVersionTableMap::COL_VERSION_COMMENT, WorkMaterialVersionTableMap::COL_WORK_ID_VERSION, WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'work_id', 'material_id', 'amount', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'material_id_version', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id', 'WorkId', 'MaterialId', 'Amount', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'workId', 'materialId', 'amount', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
+        self::TYPE_COLNAME       => [WorkMaterialVersionTableMap::COL_ID, WorkMaterialVersionTableMap::COL_WORK_ID, WorkMaterialVersionTableMap::COL_MATERIAL_ID, WorkMaterialVersionTableMap::COL_AMOUNT, WorkMaterialVersionTableMap::COL_IS_AVAILABLE, WorkMaterialVersionTableMap::COL_VERSION, WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, WorkMaterialVersionTableMap::COL_VERSION_COMMENT, WorkMaterialVersionTableMap::COL_WORK_ID_VERSION, WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'work_id', 'material_id', 'amount', 'is_available', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'material_id_version', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
     /**
@@ -155,11 +160,11 @@ class WorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'WorkId' => 1, 'MaterialId' => 2, 'Amount' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, 'WorkIdVersion' => 8, 'MaterialIdVersion' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'workId' => 1, 'materialId' => 2, 'amount' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, 'workIdVersion' => 8, 'materialIdVersion' => 9, ],
-        self::TYPE_COLNAME       => [WorkMaterialVersionTableMap::COL_ID => 0, WorkMaterialVersionTableMap::COL_WORK_ID => 1, WorkMaterialVersionTableMap::COL_MATERIAL_ID => 2, WorkMaterialVersionTableMap::COL_AMOUNT => 3, WorkMaterialVersionTableMap::COL_VERSION => 4, WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 5, WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 6, WorkMaterialVersionTableMap::COL_VERSION_COMMENT => 7, WorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 8, WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 9, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'work_id' => 1, 'material_id' => 2, 'amount' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, 'work_id_version' => 8, 'material_id_version' => 9, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'WorkId' => 1, 'MaterialId' => 2, 'Amount' => 3, 'IsAvailable' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'WorkIdVersion' => 9, 'MaterialIdVersion' => 10, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'workId' => 1, 'materialId' => 2, 'amount' => 3, 'isAvailable' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'workIdVersion' => 9, 'materialIdVersion' => 10, ],
+        self::TYPE_COLNAME       => [WorkMaterialVersionTableMap::COL_ID => 0, WorkMaterialVersionTableMap::COL_WORK_ID => 1, WorkMaterialVersionTableMap::COL_MATERIAL_ID => 2, WorkMaterialVersionTableMap::COL_AMOUNT => 3, WorkMaterialVersionTableMap::COL_IS_AVAILABLE => 4, WorkMaterialVersionTableMap::COL_VERSION => 5, WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, WorkMaterialVersionTableMap::COL_VERSION_COMMENT => 8, WorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 9, WorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'work_id' => 1, 'material_id' => 2, 'amount' => 3, 'is_available' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'work_id_version' => 9, 'material_id_version' => 10, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
     /**
@@ -198,6 +203,14 @@ class WorkMaterialVersionTableMap extends TableMap
         'WorkMaterialVersionTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'work_material_version.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'WorkMaterialVersion.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'workMaterialVersion.isAvailable' => 'IS_AVAILABLE',
+        'WorkMaterialVersionTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'work_material_version.is_available' => 'IS_AVAILABLE',
         'Version' => 'VERSION',
         'WorkMaterialVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -268,6 +281,7 @@ class WorkMaterialVersionTableMap extends TableMap
         $this->addColumn('work_id', 'WorkId', 'INTEGER', true, null, null);
         $this->addColumn('material_id', 'MaterialId', 'INTEGER', true, null, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
@@ -365,11 +379,11 @@ class WorkMaterialVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -395,7 +409,7 @@ class WorkMaterialVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 4 + $offset
+                ? 5 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -504,6 +518,7 @@ class WorkMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_VERSION);
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT);
             $criteria->addSelectColumn(WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
@@ -515,6 +530,7 @@ class WorkMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.material_id');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
             $criteria->addSelectColumn($alias . '.version_created_by');
@@ -543,6 +559,7 @@ class WorkMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_VERSION);
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_VERSION_CREATED_AT);
             $criteria->removeSelectColumn(WorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
@@ -554,6 +571,7 @@ class WorkMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.material_id');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
             $criteria->removeSelectColumn($alias . '.version_created_by');

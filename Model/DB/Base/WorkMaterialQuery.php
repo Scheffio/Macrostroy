@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterialQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildWorkMaterialQuery orderByMaterialId($order = Criteria::ASC) Order by the material_id column
  * @method     ChildWorkMaterialQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildWorkMaterialQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildWorkMaterialQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildWorkMaterialQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
  * @method     ChildWorkMaterialQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
@@ -34,6 +35,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterialQuery groupByWorkId() Group by the work_id column
  * @method     ChildWorkMaterialQuery groupByMaterialId() Group by the material_id column
  * @method     ChildWorkMaterialQuery groupByAmount() Group by the amount column
+ * @method     ChildWorkMaterialQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildWorkMaterialQuery groupByVersion() Group by the version column
  * @method     ChildWorkMaterialQuery groupByVersionCreatedAt() Group by the version_created_at column
  * @method     ChildWorkMaterialQuery groupByVersionCreatedBy() Group by the version_created_by column
@@ -86,6 +88,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterial|null findOneByWorkId(int $work_id) Return the first ChildWorkMaterial filtered by the work_id column
  * @method     ChildWorkMaterial|null findOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column
  * @method     ChildWorkMaterial|null findOneByAmount(string $amount) Return the first ChildWorkMaterial filtered by the amount column
+ * @method     ChildWorkMaterial|null findOneByIsAvailable(boolean $is_available) Return the first ChildWorkMaterial filtered by the is_available column
  * @method     ChildWorkMaterial|null findOneByVersion(int $version) Return the first ChildWorkMaterial filtered by the version column
  * @method     ChildWorkMaterial|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkMaterial filtered by the version_created_at column
  * @method     ChildWorkMaterial|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkMaterial filtered by the version_created_by column
@@ -98,6 +101,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkMaterial requireOneByWorkId(int $work_id) Return the first ChildWorkMaterial filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByMaterialId(int $material_id) Return the first ChildWorkMaterial filtered by the material_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByAmount(string $amount) Return the first ChildWorkMaterial filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkMaterial requireOneByIsAvailable(boolean $is_available) Return the first ChildWorkMaterial filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByVersion(int $version) Return the first ChildWorkMaterial filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkMaterial filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkMaterial requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkMaterial filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -113,6 +117,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByMaterialId(int $material_id) Return ChildWorkMaterial objects filtered by the material_id column
  * @method     ChildWorkMaterial[]|Collection findByAmount(string $amount) Return ChildWorkMaterial objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByAmount(string $amount) Return ChildWorkMaterial objects filtered by the amount column
+ * @method     ChildWorkMaterial[]|Collection findByIsAvailable(boolean $is_available) Return ChildWorkMaterial objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByIsAvailable(boolean $is_available) Return ChildWorkMaterial objects filtered by the is_available column
  * @method     ChildWorkMaterial[]|Collection findByVersion(int $version) Return ChildWorkMaterial objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildWorkMaterial> findByVersion(int $version) Return ChildWorkMaterial objects filtered by the version column
  * @method     ChildWorkMaterial[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildWorkMaterial objects filtered by the version_created_at column
@@ -127,7 +133,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class WorkMaterialQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\WorkMaterialQuery object.
@@ -220,7 +233,7 @@ abstract class WorkMaterialQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, work_id, material_id, amount, version, version_created_at, version_created_by, version_comment FROM work_material WHERE id = :p0';
+        $sql = 'SELECT id, work_id, material_id, amount, is_available, version, version_created_at, version_created_by, version_comment FROM work_material WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -486,6 +499,35 @@ abstract class WorkMaterialQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(WorkMaterialTableMap::COL_AMOUNT, $amount, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(WorkMaterialTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }
@@ -1109,6 +1151,34 @@ abstract class WorkMaterialQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

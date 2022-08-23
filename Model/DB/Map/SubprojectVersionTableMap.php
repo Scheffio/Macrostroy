@@ -299,8 +299,8 @@ class SubprojectVersionTableMap extends TableMap
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('project_id_version', 'ProjectIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('groups_ids', 'GroupsIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('groups_versions', 'GroupsVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('groups_ids', 'GroupsIds', 'ARRAY', false, null, null);
+        $this->addColumn('groups_versions', 'GroupsVersions', 'ARRAY', false, null, null);
     }
 
     /**

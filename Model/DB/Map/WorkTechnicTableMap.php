@@ -63,7 +63,7 @@ class WorkTechnicTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 8;
+    public const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class WorkTechnicTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 8;
+    public const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -94,6 +94,11 @@ class WorkTechnicTableMap extends TableMap
      * the column name for the amount field
      */
     public const COL_AMOUNT = 'work_technic.amount';
+
+    /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'work_technic.is_available';
 
     /**
      * the column name for the version field
@@ -129,11 +134,11 @@ class WorkTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'WorkId', 'TechnicId', 'Amount', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'workId', 'technicId', 'amount', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [WorkTechnicTableMap::COL_ID, WorkTechnicTableMap::COL_WORK_ID, WorkTechnicTableMap::COL_TECHNIC_ID, WorkTechnicTableMap::COL_AMOUNT, WorkTechnicTableMap::COL_VERSION, WorkTechnicTableMap::COL_VERSION_CREATED_AT, WorkTechnicTableMap::COL_VERSION_CREATED_BY, WorkTechnicTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'work_id', 'technic_id', 'amount', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id', 'WorkId', 'TechnicId', 'Amount', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'workId', 'technicId', 'amount', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [WorkTechnicTableMap::COL_ID, WorkTechnicTableMap::COL_WORK_ID, WorkTechnicTableMap::COL_TECHNIC_ID, WorkTechnicTableMap::COL_AMOUNT, WorkTechnicTableMap::COL_IS_AVAILABLE, WorkTechnicTableMap::COL_VERSION, WorkTechnicTableMap::COL_VERSION_CREATED_AT, WorkTechnicTableMap::COL_VERSION_CREATED_BY, WorkTechnicTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'work_id', 'technic_id', 'amount', 'is_available', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -145,11 +150,11 @@ class WorkTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'WorkId' => 1, 'TechnicId' => 2, 'Amount' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'workId' => 1, 'technicId' => 2, 'amount' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, ],
-        self::TYPE_COLNAME       => [WorkTechnicTableMap::COL_ID => 0, WorkTechnicTableMap::COL_WORK_ID => 1, WorkTechnicTableMap::COL_TECHNIC_ID => 2, WorkTechnicTableMap::COL_AMOUNT => 3, WorkTechnicTableMap::COL_VERSION => 4, WorkTechnicTableMap::COL_VERSION_CREATED_AT => 5, WorkTechnicTableMap::COL_VERSION_CREATED_BY => 6, WorkTechnicTableMap::COL_VERSION_COMMENT => 7, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'work_id' => 1, 'technic_id' => 2, 'amount' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'WorkId' => 1, 'TechnicId' => 2, 'Amount' => 3, 'IsAvailable' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'workId' => 1, 'technicId' => 2, 'amount' => 3, 'isAvailable' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
+        self::TYPE_COLNAME       => [WorkTechnicTableMap::COL_ID => 0, WorkTechnicTableMap::COL_WORK_ID => 1, WorkTechnicTableMap::COL_TECHNIC_ID => 2, WorkTechnicTableMap::COL_AMOUNT => 3, WorkTechnicTableMap::COL_IS_AVAILABLE => 4, WorkTechnicTableMap::COL_VERSION => 5, WorkTechnicTableMap::COL_VERSION_CREATED_AT => 6, WorkTechnicTableMap::COL_VERSION_CREATED_BY => 7, WorkTechnicTableMap::COL_VERSION_COMMENT => 8, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'work_id' => 1, 'technic_id' => 2, 'amount' => 3, 'is_available' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -188,6 +193,14 @@ class WorkTechnicTableMap extends TableMap
         'WorkTechnicTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'work_technic.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'WorkTechnic.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'workTechnic.isAvailable' => 'IS_AVAILABLE',
+        'WorkTechnicTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'work_technic.is_available' => 'IS_AVAILABLE',
         'Version' => 'VERSION',
         'WorkTechnic.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -242,6 +255,7 @@ class WorkTechnicTableMap extends TableMap
         $this->addForeignKey('work_id', 'WorkId', 'INTEGER', 'work', 'id', true, null, null);
         $this->addForeignKey('technic_id', 'TechnicId', 'INTEGER', 'technic', 'id', true, null, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
@@ -276,6 +290,19 @@ class WorkTechnicTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', null, 'WorkTechnicVersions', false);
+    }
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors(): array
+    {
+        return [
+            'versionable' => ['version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'true', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', 'indices' => 'false'],
+        ];
     }
 
     /**
@@ -434,6 +461,7 @@ class WorkTechnicTableMap extends TableMap
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_TECHNIC_ID);
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(WorkTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_VERSION);
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_VERSION_CREATED_AT);
             $criteria->addSelectColumn(WorkTechnicTableMap::COL_VERSION_CREATED_BY);
@@ -443,6 +471,7 @@ class WorkTechnicTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.technic_id');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
             $criteria->addSelectColumn($alias . '.version_created_by');
@@ -469,6 +498,7 @@ class WorkTechnicTableMap extends TableMap
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_TECHNIC_ID);
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(WorkTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_VERSION);
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_VERSION_CREATED_AT);
             $criteria->removeSelectColumn(WorkTechnicTableMap::COL_VERSION_CREATED_BY);
@@ -478,6 +508,7 @@ class WorkTechnicTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.technic_id');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
             $criteria->removeSelectColumn($alias . '.version_created_by');

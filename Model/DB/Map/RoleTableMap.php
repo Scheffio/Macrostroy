@@ -63,7 +63,7 @@ class RoleTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 2;
+    public const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class RoleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 2;
+    public const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the id field
@@ -84,6 +84,31 @@ class RoleTableMap extends TableMap
      * the column name for the name field
      */
     public const COL_NAME = 'role.name';
+
+    /**
+     * the column name for the object_viewer field
+     */
+    public const COL_OBJECT_VIEWER = 'role.object_viewer';
+
+    /**
+     * the column name for the manage_objects field
+     */
+    public const COL_MANAGE_OBJECTS = 'role.manage_objects';
+
+    /**
+     * the column name for the manage_volumes field
+     */
+    public const COL_MANAGE_VOLUMES = 'role.manage_volumes';
+
+    /**
+     * the column name for the manage_history field
+     */
+    public const COL_MANAGE_HISTORY = 'role.manage_history';
+
+    /**
+     * the column name for the manage_users field
+     */
+    public const COL_MANAGE_USERS = 'role.manage_users';
 
     /**
      * The default string format for model objects of the related table
@@ -99,11 +124,11 @@ class RoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', ],
-        self::TYPE_COLNAME       => [RoleTableMap::COL_ID, RoleTableMap::COL_NAME, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'ObjectViewer', 'ManageObjects', 'ManageVolumes', 'ManageHistory', 'ManageUsers', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'objectViewer', 'manageObjects', 'manageVolumes', 'manageHistory', 'manageUsers', ],
+        self::TYPE_COLNAME       => [RoleTableMap::COL_ID, RoleTableMap::COL_NAME, RoleTableMap::COL_OBJECT_VIEWER, RoleTableMap::COL_MANAGE_OBJECTS, RoleTableMap::COL_MANAGE_VOLUMES, RoleTableMap::COL_MANAGE_HISTORY, RoleTableMap::COL_MANAGE_USERS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'object_viewer', 'manage_objects', 'manage_volumes', 'manage_history', 'manage_users', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -115,11 +140,11 @@ class RoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, ],
-        self::TYPE_COLNAME       => [RoleTableMap::COL_ID => 0, RoleTableMap::COL_NAME => 1, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'ObjectViewer' => 2, 'ManageObjects' => 3, 'ManageVolumes' => 4, 'ManageHistory' => 5, 'ManageUsers' => 6, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'objectViewer' => 2, 'manageObjects' => 3, 'manageVolumes' => 4, 'manageHistory' => 5, 'manageUsers' => 6, ],
+        self::TYPE_COLNAME       => [RoleTableMap::COL_ID => 0, RoleTableMap::COL_NAME => 1, RoleTableMap::COL_OBJECT_VIEWER => 2, RoleTableMap::COL_MANAGE_OBJECTS => 3, RoleTableMap::COL_MANAGE_VOLUMES => 4, RoleTableMap::COL_MANAGE_HISTORY => 5, RoleTableMap::COL_MANAGE_USERS => 6, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'object_viewer' => 2, 'manage_objects' => 3, 'manage_volumes' => 4, 'manage_history' => 5, 'manage_users' => 6, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -140,6 +165,46 @@ class RoleTableMap extends TableMap
         'role.name' => 'NAME',
         'RoleTableMap::COL_NAME' => 'NAME',
         'COL_NAME' => 'NAME',
+        'ObjectViewer' => 'OBJECT_VIEWER',
+        'Role.ObjectViewer' => 'OBJECT_VIEWER',
+        'objectViewer' => 'OBJECT_VIEWER',
+        'role.objectViewer' => 'OBJECT_VIEWER',
+        'RoleTableMap::COL_OBJECT_VIEWER' => 'OBJECT_VIEWER',
+        'COL_OBJECT_VIEWER' => 'OBJECT_VIEWER',
+        'object_viewer' => 'OBJECT_VIEWER',
+        'role.object_viewer' => 'OBJECT_VIEWER',
+        'ManageObjects' => 'MANAGE_OBJECTS',
+        'Role.ManageObjects' => 'MANAGE_OBJECTS',
+        'manageObjects' => 'MANAGE_OBJECTS',
+        'role.manageObjects' => 'MANAGE_OBJECTS',
+        'RoleTableMap::COL_MANAGE_OBJECTS' => 'MANAGE_OBJECTS',
+        'COL_MANAGE_OBJECTS' => 'MANAGE_OBJECTS',
+        'manage_objects' => 'MANAGE_OBJECTS',
+        'role.manage_objects' => 'MANAGE_OBJECTS',
+        'ManageVolumes' => 'MANAGE_VOLUMES',
+        'Role.ManageVolumes' => 'MANAGE_VOLUMES',
+        'manageVolumes' => 'MANAGE_VOLUMES',
+        'role.manageVolumes' => 'MANAGE_VOLUMES',
+        'RoleTableMap::COL_MANAGE_VOLUMES' => 'MANAGE_VOLUMES',
+        'COL_MANAGE_VOLUMES' => 'MANAGE_VOLUMES',
+        'manage_volumes' => 'MANAGE_VOLUMES',
+        'role.manage_volumes' => 'MANAGE_VOLUMES',
+        'ManageHistory' => 'MANAGE_HISTORY',
+        'Role.ManageHistory' => 'MANAGE_HISTORY',
+        'manageHistory' => 'MANAGE_HISTORY',
+        'role.manageHistory' => 'MANAGE_HISTORY',
+        'RoleTableMap::COL_MANAGE_HISTORY' => 'MANAGE_HISTORY',
+        'COL_MANAGE_HISTORY' => 'MANAGE_HISTORY',
+        'manage_history' => 'MANAGE_HISTORY',
+        'role.manage_history' => 'MANAGE_HISTORY',
+        'ManageUsers' => 'MANAGE_USERS',
+        'Role.ManageUsers' => 'MANAGE_USERS',
+        'manageUsers' => 'MANAGE_USERS',
+        'role.manageUsers' => 'MANAGE_USERS',
+        'RoleTableMap::COL_MANAGE_USERS' => 'MANAGE_USERS',
+        'COL_MANAGE_USERS' => 'MANAGE_USERS',
+        'manage_users' => 'MANAGE_USERS',
+        'role.manage_users' => 'MANAGE_USERS',
     ];
 
     /**
@@ -161,6 +226,11 @@ class RoleTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
+        $this->addColumn('object_viewer', 'ObjectViewer', 'BOOLEAN', true, 1, false);
+        $this->addColumn('manage_objects', 'ManageObjects', 'BOOLEAN', true, 1, false);
+        $this->addColumn('manage_volumes', 'ManageVolumes', 'BOOLEAN', true, 1, false);
+        $this->addColumn('manage_history', 'ManageHistory', 'BOOLEAN', true, 1, false);
+        $this->addColumn('manage_users', 'ManageUsers', 'BOOLEAN', true, 1, false);
     }
 
     /**
@@ -170,27 +240,13 @@ class RoleTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Access', '\\DB\\Access', RelationMap::ONE_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':role_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
-        $this->addRelation('ProjectRole', '\\DB\\ProjectRole', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':role_id',
-    1 => ':id',
-  ),
-), null, null, 'ProjectRoles', false);
         $this->addRelation('Users', '\\DB\\Users', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':role_id',
-    1 => ':id',
-  ),
-), null, null, 'Userss', false);
+            0 =>
+                array (
+                    0 => ':role_id',
+                    1 => ':id',
+                ),
+        ), null, null, 'Userss', false);
     }
 
     /**
@@ -231,9 +287,9 @@ class RoleTableMap extends TableMap
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
         return (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
-                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        $indexType == TableMap::TYPE_NUM
+            ? 0 + $offset
+            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -259,7 +315,7 @@ class RoleTableMap extends TableMap
      * @param array $row Row returned by DataFetcher->fetch().
      * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -337,9 +393,19 @@ class RoleTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(RoleTableMap::COL_ID);
             $criteria->addSelectColumn(RoleTableMap::COL_NAME);
+            $criteria->addSelectColumn(RoleTableMap::COL_OBJECT_VIEWER);
+            $criteria->addSelectColumn(RoleTableMap::COL_MANAGE_OBJECTS);
+            $criteria->addSelectColumn(RoleTableMap::COL_MANAGE_VOLUMES);
+            $criteria->addSelectColumn(RoleTableMap::COL_MANAGE_HISTORY);
+            $criteria->addSelectColumn(RoleTableMap::COL_MANAGE_USERS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.object_viewer');
+            $criteria->addSelectColumn($alias . '.manage_objects');
+            $criteria->addSelectColumn($alias . '.manage_volumes');
+            $criteria->addSelectColumn($alias . '.manage_history');
+            $criteria->addSelectColumn($alias . '.manage_users');
         }
     }
 
@@ -360,9 +426,19 @@ class RoleTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(RoleTableMap::COL_ID);
             $criteria->removeSelectColumn(RoleTableMap::COL_NAME);
+            $criteria->removeSelectColumn(RoleTableMap::COL_OBJECT_VIEWER);
+            $criteria->removeSelectColumn(RoleTableMap::COL_MANAGE_OBJECTS);
+            $criteria->removeSelectColumn(RoleTableMap::COL_MANAGE_VOLUMES);
+            $criteria->removeSelectColumn(RoleTableMap::COL_MANAGE_HISTORY);
+            $criteria->removeSelectColumn(RoleTableMap::COL_MANAGE_USERS);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
+            $criteria->removeSelectColumn($alias . '.object_viewer');
+            $criteria->removeSelectColumn($alias . '.manage_objects');
+            $criteria->removeSelectColumn($alias . '.manage_volumes');
+            $criteria->removeSelectColumn($alias . '.manage_history');
+            $criteria->removeSelectColumn($alias . '.manage_users');
         }
     }
 
@@ -389,8 +465,8 @@ class RoleTableMap extends TableMap
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, ?ConnectionInterface $con = null): int
-     {
+    public static function doDelete($values, ?ConnectionInterface $con = null): int
+    {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(RoleTableMap::DATABASE_NAME);
         }

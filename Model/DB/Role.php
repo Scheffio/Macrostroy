@@ -5,7 +5,7 @@ namespace DB;
 use DB\Base\Role as BaseRole;
 
 /**
- * Skeleton subclass for representing a row from the 'role' table.
+ * Skeleton subclass for representing a row from the 'access_role' table.
  *
  *
  *

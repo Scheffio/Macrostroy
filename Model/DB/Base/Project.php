@@ -4,6 +4,7 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
+use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Project as ChildProject;
 use DB\ProjectQuery as ChildProjectQuery;
@@ -13,10 +14,12 @@ use DB\ProjectVersion as ChildProjectVersion;
 use DB\ProjectVersionQuery as ChildProjectVersionQuery;
 use DB\Subproject as ChildSubproject;
 use DB\SubprojectQuery as ChildSubprojectQuery;
+use DB\SubprojectVersionQuery as ChildSubprojectVersionQuery;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\ProjectTableMap;
 use DB\Map\ProjectVersionTableMap;
 use DB\Map\SubprojectTableMap;
+use DB\Map\SubprojectVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -141,18 +144,18 @@ abstract class Project implements ActiveRecordInterface
     protected $collProjectRolesPartial;
 
     /**
-     * @var        ObjectCollection|ChildProjectVersion[] Collection to store aggregation of ChildProjectVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildProjectVersion> Collection to store aggregation of ChildProjectVersion objects.
-     */
-    protected $collProjectVersions;
-    protected $collProjectVersionsPartial;
-
-    /**
      * @var        ObjectCollection|ChildSubproject[] Collection to store aggregation of ChildSubproject objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildSubproject> Collection to store aggregation of ChildSubproject objects.
      */
     protected $collSubprojects;
     protected $collSubprojectsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildProjectVersion[] Collection to store aggregation of ChildProjectVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildProjectVersion> Collection to store aggregation of ChildProjectVersion objects.
+     */
+    protected $collProjectVersions;
+    protected $collProjectVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -161,6 +164,14 @@ abstract class Project implements ActiveRecordInterface
      * @var bool
      */
     protected $alreadyInSave = false;
+
+    // versionable behavior
+
+
+    /**
+     * @var bool
+     */
+    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -171,17 +182,17 @@ abstract class Project implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildProjectVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildProjectVersion>
-     */
-    protected $projectVersionsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildSubproject[]
      * @phpstan-var ObjectCollection&\Traversable<ChildSubproject>
      */
     protected $subprojectsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildProjectVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildProjectVersion>
+     */
+    protected $projectVersionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -840,9 +851,9 @@ abstract class Project implements ActiveRecordInterface
 
             $this->collProjectRoles = null;
 
-            $this->collProjectVersions = null;
-
             $this->collSubprojects = null;
+
+            $this->collProjectVersions = null;
 
         } // if (deep)
     }
@@ -908,6 +919,14 @@ abstract class Project implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(ProjectTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -921,6 +940,10 @@ abstract class Project implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 ProjectTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -975,23 +998,6 @@ abstract class Project implements ActiveRecordInterface
                 }
             }
 
-            if ($this->projectVersionsScheduledForDeletion !== null) {
-                if (!$this->projectVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\ProjectVersionQuery::create()
-                        ->filterByPrimaryKeys($this->projectVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->projectVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collProjectVersions !== null) {
-                foreach ($this->collProjectVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->subprojectsScheduledForDeletion !== null) {
                 if (!$this->subprojectsScheduledForDeletion->isEmpty()) {
                     \DB\SubprojectQuery::create()
@@ -1003,6 +1009,23 @@ abstract class Project implements ActiveRecordInterface
 
             if ($this->collSubprojects !== null) {
                 foreach ($this->collSubprojects as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->projectVersionsScheduledForDeletion !== null) {
+                if (!$this->projectVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\ProjectVersionQuery::create()
+                        ->filterByPrimaryKeys($this->projectVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->projectVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collProjectVersions !== null) {
+                foreach ($this->collProjectVersions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1242,21 +1265,6 @@ abstract class Project implements ActiveRecordInterface
 
                 $result[$key] = $this->collProjectRoles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collProjectVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'projectVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'project_versions';
-                        break;
-                    default:
-                        $key = 'ProjectVersions';
-                }
-
-                $result[$key] = $this->collProjectVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collSubprojects) {
 
                 switch ($keyType) {
@@ -1271,6 +1279,21 @@ abstract class Project implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collSubprojects->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collProjectVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'projectVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'project_versions';
+                        break;
+                    default:
+                        $key = 'ProjectVersions';
+                }
+
+                $result[$key] = $this->collProjectVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1556,15 +1579,15 @@ abstract class Project implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getProjectVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addProjectVersion($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getSubprojects() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSubproject($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getProjectVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addProjectVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1613,12 +1636,12 @@ abstract class Project implements ActiveRecordInterface
             $this->initProjectRoles();
             return;
         }
-        if ('ProjectVersion' === $relationName) {
-            $this->initProjectVersions();
-            return;
-        }
         if ('Subproject' === $relationName) {
             $this->initSubprojects();
+            return;
+        }
+        if ('ProjectVersion' === $relationName) {
+            $this->initProjectVersions();
             return;
         }
     }
@@ -1915,6 +1938,245 @@ abstract class Project implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collSubprojects collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addSubprojects()
+     */
+    public function clearSubprojects()
+    {
+        $this->collSubprojects = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collSubprojects collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialSubprojects($v = true): void
+    {
+        $this->collSubprojectsPartial = $v;
+    }
+
+    /**
+     * Initializes the collSubprojects collection.
+     *
+     * By default this just sets the collSubprojects collection to an empty array (like clearcollSubprojects());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSubprojects(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collSubprojects && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SubprojectTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSubprojects = new $collectionClassName;
+        $this->collSubprojects->setModel('\DB\Subproject');
+    }
+
+    /**
+     * Gets an array of ChildSubproject objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProject is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSubproject[] List of ChildSubproject objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildSubproject> List of ChildSubproject objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getSubprojects(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collSubprojectsPartial && !$this->isNew();
+        if (null === $this->collSubprojects || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collSubprojects) {
+                    $this->initSubprojects();
+                } else {
+                    $collectionClassName = SubprojectTableMap::getTableMap()->getCollectionClassName();
+
+                    $collSubprojects = new $collectionClassName;
+                    $collSubprojects->setModel('\DB\Subproject');
+
+                    return $collSubprojects;
+                }
+            } else {
+                $collSubprojects = ChildSubprojectQuery::create(null, $criteria)
+                    ->filterByProject($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSubprojectsPartial && count($collSubprojects)) {
+                        $this->initSubprojects(false);
+
+                        foreach ($collSubprojects as $obj) {
+                            if (false == $this->collSubprojects->contains($obj)) {
+                                $this->collSubprojects->append($obj);
+                            }
+                        }
+
+                        $this->collSubprojectsPartial = true;
+                    }
+
+                    return $collSubprojects;
+                }
+
+                if ($partial && $this->collSubprojects) {
+                    foreach ($this->collSubprojects as $obj) {
+                        if ($obj->isNew()) {
+                            $collSubprojects[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSubprojects = $collSubprojects;
+                $this->collSubprojectsPartial = false;
+            }
+        }
+
+        return $this->collSubprojects;
+    }
+
+    /**
+     * Sets a collection of ChildSubproject objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $subprojects A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setSubprojects(Collection $subprojects, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildSubproject[] $subprojectsToDelete */
+        $subprojectsToDelete = $this->getSubprojects(new Criteria(), $con)->diff($subprojects);
+
+
+        $this->subprojectsScheduledForDeletion = $subprojectsToDelete;
+
+        foreach ($subprojectsToDelete as $subprojectRemoved) {
+            $subprojectRemoved->setProject(null);
+        }
+
+        $this->collSubprojects = null;
+        foreach ($subprojects as $subproject) {
+            $this->addSubproject($subproject);
+        }
+
+        $this->collSubprojects = $subprojects;
+        $this->collSubprojectsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Subproject objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related Subproject objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countSubprojects(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collSubprojectsPartial && !$this->isNew();
+        if (null === $this->collSubprojects || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSubprojects) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSubprojects());
+            }
+
+            $query = ChildSubprojectQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProject($this)
+                ->count($con);
+        }
+
+        return count($this->collSubprojects);
+    }
+
+    /**
+     * Method called to associate a ChildSubproject object to this object
+     * through the ChildSubproject foreign key attribute.
+     *
+     * @param ChildSubproject $l ChildSubproject
+     * @return $this The current object (for fluent API support)
+     */
+    public function addSubproject(ChildSubproject $l)
+    {
+        if ($this->collSubprojects === null) {
+            $this->initSubprojects();
+            $this->collSubprojectsPartial = true;
+        }
+
+        if (!$this->collSubprojects->contains($l)) {
+            $this->doAddSubproject($l);
+
+            if ($this->subprojectsScheduledForDeletion and $this->subprojectsScheduledForDeletion->contains($l)) {
+                $this->subprojectsScheduledForDeletion->remove($this->subprojectsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSubproject $subproject The ChildSubproject object to add.
+     */
+    protected function doAddSubproject(ChildSubproject $subproject): void
+    {
+        $this->collSubprojects[]= $subproject;
+        $subproject->setProject($this);
+    }
+
+    /**
+     * @param ChildSubproject $subproject The ChildSubproject object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeSubproject(ChildSubproject $subproject)
+    {
+        if ($this->getSubprojects()->contains($subproject)) {
+            $pos = $this->collSubprojects->search($subproject);
+            $this->collSubprojects->remove($pos);
+            if (null === $this->subprojectsScheduledForDeletion) {
+                $this->subprojectsScheduledForDeletion = clone $this->collSubprojects;
+                $this->subprojectsScheduledForDeletion->clear();
+            }
+            $this->subprojectsScheduledForDeletion[]= clone $subproject;
+            $subproject->setProject(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears out the collProjectVersions collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2157,245 +2419,6 @@ abstract class Project implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collSubprojects collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addSubprojects()
-     */
-    public function clearSubprojects()
-    {
-        $this->collSubprojects = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collSubprojects collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialSubprojects($v = true): void
-    {
-        $this->collSubprojectsPartial = $v;
-    }
-
-    /**
-     * Initializes the collSubprojects collection.
-     *
-     * By default this just sets the collSubprojects collection to an empty array (like clearcollSubprojects());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSubprojects(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collSubprojects && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = SubprojectTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collSubprojects = new $collectionClassName;
-        $this->collSubprojects->setModel('\DB\Subproject');
-    }
-
-    /**
-     * Gets an array of ChildSubproject objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildProject is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSubproject[] List of ChildSubproject objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildSubproject> List of ChildSubproject objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getSubprojects(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collSubprojectsPartial && !$this->isNew();
-        if (null === $this->collSubprojects || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collSubprojects) {
-                    $this->initSubprojects();
-                } else {
-                    $collectionClassName = SubprojectTableMap::getTableMap()->getCollectionClassName();
-
-                    $collSubprojects = new $collectionClassName;
-                    $collSubprojects->setModel('\DB\Subproject');
-
-                    return $collSubprojects;
-                }
-            } else {
-                $collSubprojects = ChildSubprojectQuery::create(null, $criteria)
-                    ->filterByProject($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSubprojectsPartial && count($collSubprojects)) {
-                        $this->initSubprojects(false);
-
-                        foreach ($collSubprojects as $obj) {
-                            if (false == $this->collSubprojects->contains($obj)) {
-                                $this->collSubprojects->append($obj);
-                            }
-                        }
-
-                        $this->collSubprojectsPartial = true;
-                    }
-
-                    return $collSubprojects;
-                }
-
-                if ($partial && $this->collSubprojects) {
-                    foreach ($this->collSubprojects as $obj) {
-                        if ($obj->isNew()) {
-                            $collSubprojects[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSubprojects = $collSubprojects;
-                $this->collSubprojectsPartial = false;
-            }
-        }
-
-        return $this->collSubprojects;
-    }
-
-    /**
-     * Sets a collection of ChildSubproject objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $subprojects A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setSubprojects(Collection $subprojects, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildSubproject[] $subprojectsToDelete */
-        $subprojectsToDelete = $this->getSubprojects(new Criteria(), $con)->diff($subprojects);
-
-
-        $this->subprojectsScheduledForDeletion = $subprojectsToDelete;
-
-        foreach ($subprojectsToDelete as $subprojectRemoved) {
-            $subprojectRemoved->setProject(null);
-        }
-
-        $this->collSubprojects = null;
-        foreach ($subprojects as $subproject) {
-            $this->addSubproject($subproject);
-        }
-
-        $this->collSubprojects = $subprojects;
-        $this->collSubprojectsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Subproject objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related Subproject objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countSubprojects(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collSubprojectsPartial && !$this->isNew();
-        if (null === $this->collSubprojects || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSubprojects) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSubprojects());
-            }
-
-            $query = ChildSubprojectQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByProject($this)
-                ->count($con);
-        }
-
-        return count($this->collSubprojects);
-    }
-
-    /**
-     * Method called to associate a ChildSubproject object to this object
-     * through the ChildSubproject foreign key attribute.
-     *
-     * @param ChildSubproject $l ChildSubproject
-     * @return $this The current object (for fluent API support)
-     */
-    public function addSubproject(ChildSubproject $l)
-    {
-        if ($this->collSubprojects === null) {
-            $this->initSubprojects();
-            $this->collSubprojectsPartial = true;
-        }
-
-        if (!$this->collSubprojects->contains($l)) {
-            $this->doAddSubproject($l);
-
-            if ($this->subprojectsScheduledForDeletion and $this->subprojectsScheduledForDeletion->contains($l)) {
-                $this->subprojectsScheduledForDeletion->remove($this->subprojectsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildSubproject $subproject The ChildSubproject object to add.
-     */
-    protected function doAddSubproject(ChildSubproject $subproject): void
-    {
-        $this->collSubprojects[]= $subproject;
-        $subproject->setProject($this);
-    }
-
-    /**
-     * @param ChildSubproject $subproject The ChildSubproject object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeSubproject(ChildSubproject $subproject)
-    {
-        if ($this->getSubprojects()->contains($subproject)) {
-            $pos = $this->collSubprojects->search($subproject);
-            $this->collSubprojects->remove($pos);
-            if (null === $this->subprojectsScheduledForDeletion) {
-                $this->subprojectsScheduledForDeletion = clone $this->collSubprojects;
-                $this->subprojectsScheduledForDeletion->clear();
-            }
-            $this->subprojectsScheduledForDeletion[]= clone $subproject;
-            $subproject->setProject(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2439,21 +2462,21 @@ abstract class Project implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collProjectVersions) {
-                foreach ($this->collProjectVersions as $o) {
+            if ($this->collSubprojects) {
+                foreach ($this->collSubprojects as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSubprojects) {
-                foreach ($this->collSubprojects as $o) {
+            if ($this->collProjectVersions) {
+                foreach ($this->collProjectVersions as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
         $this->collProjectRoles = null;
-        $this->collProjectVersions = null;
         $this->collSubprojects = null;
+        $this->collProjectVersions = null;
         return $this;
     }
 
@@ -2467,6 +2490,339 @@ abstract class Project implements ActiveRecordInterface
         return (string) $this->exportTo(ProjectTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildProjectQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if ($this->collSubprojects) {
+
+            // to avoid infinite loops, emulate in save
+            $this->alreadyInSave = true;
+
+            foreach ($this->getSubprojects(null, $con) as $relatedObject) {
+
+                if ($relatedObject->isVersioningNecessary($con)) {
+
+                    $this->alreadyInSave = false;
+                    return true;
+                }
+            }
+            $this->alreadyInSave = false;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildProjectVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildProjectVersion();
+        $version->setId($this->getId());
+        $version->setName($this->getName());
+        $version->setStatus($this->getStatus());
+        $version->setIsAvailable($this->getIsAvailable());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setProject($this);
+        $object = $this->getSubprojects(null, $con);
+
+
+        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
+            $version->setSubprojectIds(array_keys($relateds));
+            $version->setSubprojectVersions(array_values($relateds));
+        }
+
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildProject object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildProjectVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildProject'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setName($version->getName());
+        $this->setStatus($version->getStatus());
+        $this->setIsAvailable($version->getIsAvailable());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValues = $version->getSubprojectIds()) {
+            $this->clearSubprojects();
+            $fkVersions = $version->getSubprojectVersions();
+            $query = ChildSubprojectVersionQuery::create();
+            foreach ($fkValues as $key => $value) {
+                $c1 = $query->getNewCriterion(SubprojectVersionTableMap::COL_ID, $value);
+                $c2 = $query->getNewCriterion(SubprojectVersionTableMap::COL_VERSION, $fkVersions[$key]);
+                $c1->addAnd($c2);
+                $query->addOr($c1);
+            }
+            foreach ($query->find($con) as $relatedVersion) {
+                if (isset($loadedObjects['ChildSubproject']) && isset($loadedObjects['ChildSubproject'][$relatedVersion->getId()]) && isset($loadedObjects['ChildSubproject'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
+                    $related = $loadedObjects['ChildSubproject'][$relatedVersion->getId()][$relatedVersion->getVersion()];
+                } else {
+                    $related = new ChildSubproject();
+                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                    $related->setNew(false);
+                }
+                $this->addSubproject($related);
+                $this->collSubprojectsPartial = false;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildProjectVersionQuery::create()
+            ->filterByProject($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildProjectVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildProjectVersionQuery::create()
+            ->filterByProject($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildProjectVersion[] A list of ChildProjectVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(ProjectVersionTableMap::COL_VERSION);
+
+        return $this->getProjectVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\ProjectVersion[] List of \DB\ProjectVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildProjectVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(ProjectVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getProjectVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2493,7 +2849,10 @@ abstract class Project implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+        $this->setVersionComment('insert');
+
+        return true;
     }
 
     /**
@@ -2503,7 +2862,7 @@ abstract class Project implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2512,7 +2871,14 @@ abstract class Project implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+
+        if ($this->status === 'deleted') {
+            $this->setVersionComment('delete');
+            $this->setIsAvailable(false);
+        } else $this->setVersionComment('update');
+
+        return true;
     }
 
     /**

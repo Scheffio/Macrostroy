@@ -133,7 +133,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class SubprojectQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\SubprojectQuery object.
@@ -1110,6 +1117,34 @@ abstract class SubprojectQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

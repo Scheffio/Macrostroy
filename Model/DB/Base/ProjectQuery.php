@@ -57,16 +57,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectQuery rightJoinWithProjectRole() Adds a RIGHT JOIN clause and with to the query using the ProjectRole relation
  * @method     ChildProjectQuery innerJoinWithProjectRole() Adds a INNER JOIN clause and with to the query using the ProjectRole relation
  *
- * @method     ChildProjectQuery leftJoinProjectVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectVersion relation
- * @method     ChildProjectQuery rightJoinProjectVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectVersion relation
- * @method     ChildProjectQuery innerJoinProjectVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the ProjectVersion relation
- *
- * @method     ChildProjectQuery joinWithProjectVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProjectVersion relation
- *
- * @method     ChildProjectQuery leftJoinWithProjectVersion() Adds a LEFT JOIN clause and with to the query using the ProjectVersion relation
- * @method     ChildProjectQuery rightJoinWithProjectVersion() Adds a RIGHT JOIN clause and with to the query using the ProjectVersion relation
- * @method     ChildProjectQuery innerJoinWithProjectVersion() Adds a INNER JOIN clause and with to the query using the ProjectVersion relation
- *
  * @method     ChildProjectQuery leftJoinSubproject($relationAlias = null) Adds a LEFT JOIN clause to the query using the Subproject relation
  * @method     ChildProjectQuery rightJoinSubproject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Subproject relation
  * @method     ChildProjectQuery innerJoinSubproject($relationAlias = null) Adds a INNER JOIN clause to the query using the Subproject relation
@@ -77,7 +67,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectQuery rightJoinWithSubproject() Adds a RIGHT JOIN clause and with to the query using the Subproject relation
  * @method     ChildProjectQuery innerJoinWithSubproject() Adds a INNER JOIN clause and with to the query using the Subproject relation
  *
- * @method     \DB\ProjectRoleQuery|\DB\ProjectVersionQuery|\DB\SubprojectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildProjectQuery leftJoinProjectVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery rightJoinProjectVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery innerJoinProjectVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the ProjectVersion relation
+ *
+ * @method     ChildProjectQuery joinWithProjectVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProjectVersion relation
+ *
+ * @method     ChildProjectQuery leftJoinWithProjectVersion() Adds a LEFT JOIN clause and with to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery rightJoinWithProjectVersion() Adds a RIGHT JOIN clause and with to the query using the ProjectVersion relation
+ * @method     ChildProjectQuery innerJoinWithProjectVersion() Adds a INNER JOIN clause and with to the query using the ProjectVersion relation
+ *
+ * @method     \DB\ProjectRoleQuery|\DB\SubprojectQuery|\DB\ProjectVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProject|null findOne(?ConnectionInterface $con = null) Return the first ChildProject matching the query
  * @method     ChildProject findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProject matching the query, or a new ChildProject object populated from the query conditions when no match is found
@@ -127,7 +127,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class ProjectQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\ProjectQuery object.
@@ -719,138 +726,6 @@ abstract class ProjectQuery extends ModelCriteria
         return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\ProjectVersion object
-     *
-     * @param \DB\ProjectVersion|ObjectCollection $projectVersion the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByProjectVersion($projectVersion, ?string $comparison = null)
-    {
-        if ($projectVersion instanceof \DB\ProjectVersion) {
-            $this
-                ->addUsingAlias(ProjectTableMap::COL_ID, $projectVersion->getId(), $comparison);
-
-            return $this;
-        } elseif ($projectVersion instanceof ObjectCollection) {
-            $this
-                ->useProjectVersionQuery()
-                ->filterByPrimaryKeys($projectVersion->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByProjectVersion() only accepts arguments of type \DB\ProjectVersion or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the ProjectVersion relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinProjectVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ProjectVersion');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'ProjectVersion');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the ProjectVersion relation ProjectVersion object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\ProjectVersionQuery A secondary query class using the current class as primary query
-     */
-    public function useProjectVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinProjectVersion($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ProjectVersion', '\DB\ProjectVersionQuery');
-    }
-
-    /**
-     * Use the ProjectVersion relation ProjectVersion object
-     *
-     * @param callable(\DB\ProjectVersionQuery):\DB\ProjectVersionQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withProjectVersionQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useProjectVersionQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to ProjectVersion table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\ProjectVersionQuery The inner query object of the EXISTS statement
-     */
-    public function useProjectVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to ProjectVersion table for a NOT EXISTS query.
-     *
-     * @see useProjectVersionExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\ProjectVersionQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useProjectVersionNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
      * Filter the query by a related \DB\Subproject object
      *
      * @param \DB\Subproject|ObjectCollection $subproject the related object to use as filter
@@ -983,6 +858,138 @@ abstract class ProjectQuery extends ModelCriteria
         return $this->useExistsQuery('Subproject', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
+     * Filter the query by a related \DB\ProjectVersion object
+     *
+     * @param \DB\ProjectVersion|ObjectCollection $projectVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByProjectVersion($projectVersion, ?string $comparison = null)
+    {
+        if ($projectVersion instanceof \DB\ProjectVersion) {
+            $this
+                ->addUsingAlias(ProjectTableMap::COL_ID, $projectVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($projectVersion instanceof ObjectCollection) {
+            $this
+                ->useProjectVersionQuery()
+                ->filterByPrimaryKeys($projectVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByProjectVersion() only accepts arguments of type \DB\ProjectVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ProjectVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinProjectVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ProjectVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ProjectVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ProjectVersion relation ProjectVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ProjectVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useProjectVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinProjectVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProjectVersion', '\DB\ProjectVersionQuery');
+    }
+
+    /**
+     * Use the ProjectVersion relation ProjectVersion object
+     *
+     * @param callable(\DB\ProjectVersionQuery):\DB\ProjectVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withProjectVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useProjectVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ProjectVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ProjectVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useProjectVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ProjectVersion table for a NOT EXISTS query.
+     *
+     * @see useProjectVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ProjectVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useProjectVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ProjectVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Exclude object from result
      *
      * @param ChildProject $project Object to remove from the list of results
@@ -1057,6 +1064,34 @@ abstract class ProjectQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

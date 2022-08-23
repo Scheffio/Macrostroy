@@ -299,8 +299,8 @@ class GroupsVersionTableMap extends TableMap
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('subproject_id_version', 'SubprojectIdVersion', 'INTEGER', false, null, 0);
-        $this->addColumn('house_ids', 'HouseIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('house_versions', 'HouseVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('house_ids', 'HouseIds', 'ARRAY', false, null, null);
+        $this->addColumn('house_versions', 'HouseVersions', 'ARRAY', false, null, null);
     }
 
     /**

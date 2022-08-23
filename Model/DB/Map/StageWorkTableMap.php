@@ -63,7 +63,7 @@ class StageWorkTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 9;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class StageWorkTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 9;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -99,6 +99,11 @@ class StageWorkTableMap extends TableMap
      * the column name for the amount field
      */
     public const COL_AMOUNT = 'stage_work.amount';
+
+    /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'stage_work.is_available';
 
     /**
      * the column name for the version field
@@ -134,11 +139,11 @@ class StageWorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'StageId', 'WorkId', 'Price', 'Amount', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'stageId', 'workId', 'price', 'amount', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [StageWorkTableMap::COL_ID, StageWorkTableMap::COL_STAGE_ID, StageWorkTableMap::COL_WORK_ID, StageWorkTableMap::COL_PRICE, StageWorkTableMap::COL_AMOUNT, StageWorkTableMap::COL_VERSION, StageWorkTableMap::COL_VERSION_CREATED_AT, StageWorkTableMap::COL_VERSION_CREATED_BY, StageWorkTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'stage_id', 'work_id', 'price', 'amount', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
+        self::TYPE_PHPNAME       => ['Id', 'StageId', 'WorkId', 'Price', 'Amount', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'stageId', 'workId', 'price', 'amount', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [StageWorkTableMap::COL_ID, StageWorkTableMap::COL_STAGE_ID, StageWorkTableMap::COL_WORK_ID, StageWorkTableMap::COL_PRICE, StageWorkTableMap::COL_AMOUNT, StageWorkTableMap::COL_IS_AVAILABLE, StageWorkTableMap::COL_VERSION, StageWorkTableMap::COL_VERSION_CREATED_AT, StageWorkTableMap::COL_VERSION_CREATED_BY, StageWorkTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'stage_id', 'work_id', 'price', 'amount', 'is_available', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -150,11 +155,11 @@ class StageWorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'StageId' => 1, 'WorkId' => 2, 'Price' => 3, 'Amount' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'stageId' => 1, 'workId' => 2, 'price' => 3, 'amount' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
-        self::TYPE_COLNAME       => [StageWorkTableMap::COL_ID => 0, StageWorkTableMap::COL_STAGE_ID => 1, StageWorkTableMap::COL_WORK_ID => 2, StageWorkTableMap::COL_PRICE => 3, StageWorkTableMap::COL_AMOUNT => 4, StageWorkTableMap::COL_VERSION => 5, StageWorkTableMap::COL_VERSION_CREATED_AT => 6, StageWorkTableMap::COL_VERSION_CREATED_BY => 7, StageWorkTableMap::COL_VERSION_COMMENT => 8, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'stage_id' => 1, 'work_id' => 2, 'price' => 3, 'amount' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'StageId' => 1, 'WorkId' => 2, 'Price' => 3, 'Amount' => 4, 'IsAvailable' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'stageId' => 1, 'workId' => 2, 'price' => 3, 'amount' => 4, 'isAvailable' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, ],
+        self::TYPE_COLNAME       => [StageWorkTableMap::COL_ID => 0, StageWorkTableMap::COL_STAGE_ID => 1, StageWorkTableMap::COL_WORK_ID => 2, StageWorkTableMap::COL_PRICE => 3, StageWorkTableMap::COL_AMOUNT => 4, StageWorkTableMap::COL_IS_AVAILABLE => 5, StageWorkTableMap::COL_VERSION => 6, StageWorkTableMap::COL_VERSION_CREATED_AT => 7, StageWorkTableMap::COL_VERSION_CREATED_BY => 8, StageWorkTableMap::COL_VERSION_COMMENT => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'stage_id' => 1, 'work_id' => 2, 'price' => 3, 'amount' => 4, 'is_available' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -200,6 +205,14 @@ class StageWorkTableMap extends TableMap
         'StageWorkTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'stage_work.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'StageWork.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'stageWork.isAvailable' => 'IS_AVAILABLE',
+        'StageWorkTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'stage_work.is_available' => 'IS_AVAILABLE',
         'Version' => 'VERSION',
         'StageWork.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -255,6 +268,7 @@ class StageWorkTableMap extends TableMap
         $this->addColumn('work_id', 'WorkId', 'INTEGER', true, null, null);
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
@@ -289,6 +303,19 @@ class StageWorkTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', null, 'StageWorkVersions', false);
+    }
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors(): array
+    {
+        return [
+            'versionable' => ['version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'true', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', 'indices' => 'false'],
+        ];
     }
 
     /**
@@ -448,6 +475,7 @@ class StageWorkTableMap extends TableMap
             $criteria->addSelectColumn(StageWorkTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(StageWorkTableMap::COL_PRICE);
             $criteria->addSelectColumn(StageWorkTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(StageWorkTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(StageWorkTableMap::COL_VERSION);
             $criteria->addSelectColumn(StageWorkTableMap::COL_VERSION_CREATED_AT);
             $criteria->addSelectColumn(StageWorkTableMap::COL_VERSION_CREATED_BY);
@@ -458,6 +486,7 @@ class StageWorkTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.price');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
             $criteria->addSelectColumn($alias . '.version_created_by');
@@ -485,6 +514,7 @@ class StageWorkTableMap extends TableMap
             $criteria->removeSelectColumn(StageWorkTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(StageWorkTableMap::COL_PRICE);
             $criteria->removeSelectColumn(StageWorkTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(StageWorkTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(StageWorkTableMap::COL_VERSION);
             $criteria->removeSelectColumn(StageWorkTableMap::COL_VERSION_CREATED_AT);
             $criteria->removeSelectColumn(StageWorkTableMap::COL_VERSION_CREATED_BY);
@@ -495,6 +525,7 @@ class StageWorkTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.price');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
             $criteria->removeSelectColumn($alias . '.version_created_by');

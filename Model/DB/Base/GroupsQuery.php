@@ -59,16 +59,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery rightJoinWithSubproject() Adds a RIGHT JOIN clause and with to the query using the Subproject relation
  * @method     ChildGroupsQuery innerJoinWithSubproject() Adds a INNER JOIN clause and with to the query using the Subproject relation
  *
- * @method     ChildGroupsQuery leftJoinGroupsVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupsVersion relation
- * @method     ChildGroupsQuery rightJoinGroupsVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupsVersion relation
- * @method     ChildGroupsQuery innerJoinGroupsVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupsVersion relation
- *
- * @method     ChildGroupsQuery joinWithGroupsVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the GroupsVersion relation
- *
- * @method     ChildGroupsQuery leftJoinWithGroupsVersion() Adds a LEFT JOIN clause and with to the query using the GroupsVersion relation
- * @method     ChildGroupsQuery rightJoinWithGroupsVersion() Adds a RIGHT JOIN clause and with to the query using the GroupsVersion relation
- * @method     ChildGroupsQuery innerJoinWithGroupsVersion() Adds a INNER JOIN clause and with to the query using the GroupsVersion relation
- *
  * @method     ChildGroupsQuery leftJoinHouse($relationAlias = null) Adds a LEFT JOIN clause to the query using the House relation
  * @method     ChildGroupsQuery rightJoinHouse($relationAlias = null) Adds a RIGHT JOIN clause to the query using the House relation
  * @method     ChildGroupsQuery innerJoinHouse($relationAlias = null) Adds a INNER JOIN clause to the query using the House relation
@@ -79,7 +69,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery rightJoinWithHouse() Adds a RIGHT JOIN clause and with to the query using the House relation
  * @method     ChildGroupsQuery innerJoinWithHouse() Adds a INNER JOIN clause and with to the query using the House relation
  *
- * @method     \DB\SubprojectQuery|\DB\GroupsVersionQuery|\DB\HouseQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildGroupsQuery leftJoinGroupsVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery rightJoinGroupsVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery innerJoinGroupsVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the GroupsVersion relation
+ *
+ * @method     ChildGroupsQuery joinWithGroupsVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the GroupsVersion relation
+ *
+ * @method     ChildGroupsQuery leftJoinWithGroupsVersion() Adds a LEFT JOIN clause and with to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery rightJoinWithGroupsVersion() Adds a RIGHT JOIN clause and with to the query using the GroupsVersion relation
+ * @method     ChildGroupsQuery innerJoinWithGroupsVersion() Adds a INNER JOIN clause and with to the query using the GroupsVersion relation
+ *
+ * @method     \DB\SubprojectQuery|\DB\HouseQuery|\DB\GroupsVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGroups|null findOne(?ConnectionInterface $con = null) Return the first ChildGroups matching the query
  * @method     ChildGroups findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildGroups matching the query, or a new ChildGroups object populated from the query conditions when no match is found
@@ -133,7 +133,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class GroupsQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\GroupsQuery object.
@@ -772,138 +779,6 @@ abstract class GroupsQuery extends ModelCriteria
         return $this->useExistsQuery('Subproject', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\GroupsVersion object
-     *
-     * @param \DB\GroupsVersion|ObjectCollection $groupsVersion the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByGroupsVersion($groupsVersion, ?string $comparison = null)
-    {
-        if ($groupsVersion instanceof \DB\GroupsVersion) {
-            $this
-                ->addUsingAlias(GroupsTableMap::COL_ID, $groupsVersion->getId(), $comparison);
-
-            return $this;
-        } elseif ($groupsVersion instanceof ObjectCollection) {
-            $this
-                ->useGroupsVersionQuery()
-                ->filterByPrimaryKeys($groupsVersion->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByGroupsVersion() only accepts arguments of type \DB\GroupsVersion or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the GroupsVersion relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinGroupsVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('GroupsVersion');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'GroupsVersion');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the GroupsVersion relation GroupsVersion object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\GroupsVersionQuery A secondary query class using the current class as primary query
-     */
-    public function useGroupsVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinGroupsVersion($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'GroupsVersion', '\DB\GroupsVersionQuery');
-    }
-
-    /**
-     * Use the GroupsVersion relation GroupsVersion object
-     *
-     * @param callable(\DB\GroupsVersionQuery):\DB\GroupsVersionQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withGroupsVersionQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useGroupsVersionQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to GroupsVersion table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\GroupsVersionQuery The inner query object of the EXISTS statement
-     */
-    public function useGroupsVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to GroupsVersion table for a NOT EXISTS query.
-     *
-     * @see useGroupsVersionExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\GroupsVersionQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useGroupsVersionNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
      * Filter the query by a related \DB\House object
      *
      * @param \DB\House|ObjectCollection $house the related object to use as filter
@@ -1036,6 +911,138 @@ abstract class GroupsQuery extends ModelCriteria
         return $this->useExistsQuery('House', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
+     * Filter the query by a related \DB\GroupsVersion object
+     *
+     * @param \DB\GroupsVersion|ObjectCollection $groupsVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByGroupsVersion($groupsVersion, ?string $comparison = null)
+    {
+        if ($groupsVersion instanceof \DB\GroupsVersion) {
+            $this
+                ->addUsingAlias(GroupsTableMap::COL_ID, $groupsVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($groupsVersion instanceof ObjectCollection) {
+            $this
+                ->useGroupsVersionQuery()
+                ->filterByPrimaryKeys($groupsVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByGroupsVersion() only accepts arguments of type \DB\GroupsVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the GroupsVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinGroupsVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('GroupsVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'GroupsVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the GroupsVersion relation GroupsVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\GroupsVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useGroupsVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinGroupsVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'GroupsVersion', '\DB\GroupsVersionQuery');
+    }
+
+    /**
+     * Use the GroupsVersion relation GroupsVersion object
+     *
+     * @param callable(\DB\GroupsVersionQuery):\DB\GroupsVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withGroupsVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useGroupsVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to GroupsVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\GroupsVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useGroupsVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to GroupsVersion table for a NOT EXISTS query.
+     *
+     * @see useGroupsVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\GroupsVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useGroupsVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('GroupsVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Exclude object from result
      *
      * @param ChildGroups $groups Object to remove from the list of results
@@ -1110,6 +1117,34 @@ abstract class GroupsQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

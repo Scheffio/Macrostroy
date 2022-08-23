@@ -142,16 +142,30 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * The value for the stage_ids field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $stage_ids;
 
     /**
+     * The unserialized $stage_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $stage_ids_unserialized;
+
+    /**
      * The value for the stage_versions field.
      *
-     * @var        string|null
+     * @var        array|null
      */
     protected $stage_versions;
+
+    /**
+     * The unserialized $stage_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $stage_versions_unserialized;
 
     /**
      * @var        ChildHouse
@@ -533,21 +547,59 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * Get the [stage_ids] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getStageIds()
     {
-        return $this->stage_ids;
+        if (null === $this->stage_ids_unserialized) {
+            $this->stage_ids_unserialized = [];
+        }
+        if (!$this->stage_ids_unserialized && null !== $this->stage_ids) {
+            $stage_ids_unserialized = substr($this->stage_ids, 2, -2);
+            $this->stage_ids_unserialized = '' !== $stage_ids_unserialized ? explode(' | ', $stage_ids_unserialized) : array();
+        }
+
+        return $this->stage_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [stage_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasStageId($value): bool
+    {
+        return in_array($value, $this->getStageIds());
     }
 
     /**
      * Get the [stage_versions] column value.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getStageVersions()
     {
-        return $this->stage_versions;
+        if (null === $this->stage_versions_unserialized) {
+            $this->stage_versions_unserialized = [];
+        }
+        if (!$this->stage_versions_unserialized && null !== $this->stage_versions) {
+            $stage_versions_unserialized = substr($this->stage_versions, 2, -2);
+            $this->stage_versions_unserialized = '' !== $stage_versions_unserialized ? explode(' | ', $stage_versions_unserialized) : array();
+        }
+
+        return $this->stage_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [stage_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasStageVersion($value): bool
+    {
+        return in_array($value, $this->getStageVersions());
     }
 
     /**
@@ -765,17 +817,14 @@ abstract class HouseVersion implements ActiveRecordInterface
     /**
      * Set the value of [stage_ids] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageIds($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->stage_ids !== $v) {
-            $this->stage_ids = $v;
+        if ($this->stage_ids_unserialized !== $v) {
+            $this->stage_ids_unserialized = $v;
+            $this->stage_ids = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[HouseVersionTableMap::COL_STAGE_IDS] = true;
         }
 
@@ -783,21 +832,86 @@ abstract class HouseVersion implements ActiveRecordInterface
     }
 
     /**
+     * Adds a value to the [stage_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStageId($value)
+    {
+        $currentArray = $this->getStageIds();
+        $currentArray []= $value;
+        $this->setStageIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [stage_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStageId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getStageIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setStageIds($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Set the value of [stage_versions] column.
      *
-     * @param string|null $v New value
+     * @param array|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setStageVersions($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->stage_versions !== $v) {
-            $this->stage_versions = $v;
+        if ($this->stage_versions_unserialized !== $v) {
+            $this->stage_versions_unserialized = $v;
+            $this->stage_versions = '| ' . implode(' | ', $v) . ' |';
             $this->modifiedColumns[HouseVersionTableMap::COL_STAGE_VERSIONS] = true;
         }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [stage_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addStageVersion($value)
+    {
+        $currentArray = $this->getStageVersions();
+        $currentArray []= $value;
+        $this->setStageVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [stage_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeStageVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getStageVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setStageVersions($targetArray);
 
         return $this;
     }
@@ -888,10 +1002,12 @@ abstract class HouseVersion implements ActiveRecordInterface
             $this->group_id_version = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : HouseVersionTableMap::translateFieldName('StageIds', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_ids = (null !== $col) ? (string) $col : null;
+            $this->stage_ids = $col;
+            $this->stage_ids_unserialized = null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : HouseVersionTableMap::translateFieldName('StageVersions', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->stage_versions = (null !== $col) ? (string) $col : null;
+            $this->stage_versions = $col;
+            $this->stage_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1421,9 +1537,17 @@ abstract class HouseVersion implements ActiveRecordInterface
                 $this->setGroupIdVersion($value);
                 break;
             case 10:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setStageIds($value);
                 break;
             case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
                 $this->setStageVersions($value);
                 break;
         } // switch()
@@ -1783,7 +1907,9 @@ abstract class HouseVersion implements ActiveRecordInterface
         $this->version_comment = null;
         $this->group_id_version = null;
         $this->stage_ids = null;
+        $this->stage_ids_unserialized = null;
         $this->stage_versions = null;
+        $this->stage_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

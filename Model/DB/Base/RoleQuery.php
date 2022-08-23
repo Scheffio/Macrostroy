@@ -23,9 +23,19 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRoleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildRoleQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildRoleQuery orderByObjectViewer($order = Criteria::ASC) Order by the object_viewer column
+ * @method     ChildRoleQuery orderByManageObjects($order = Criteria::ASC) Order by the manage_objects column
+ * @method     ChildRoleQuery orderByManageVolumes($order = Criteria::ASC) Order by the manage_volumes column
+ * @method     ChildRoleQuery orderByManageHistory($order = Criteria::ASC) Order by the manage_history column
+ * @method     ChildRoleQuery orderByManageUsers($order = Criteria::ASC) Order by the manage_users column
  *
  * @method     ChildRoleQuery groupById() Group by the id column
  * @method     ChildRoleQuery groupByName() Group by the name column
+ * @method     ChildRoleQuery groupByObjectViewer() Group by the object_viewer column
+ * @method     ChildRoleQuery groupByManageObjects() Group by the manage_objects column
+ * @method     ChildRoleQuery groupByManageVolumes() Group by the manage_volumes column
+ * @method     ChildRoleQuery groupByManageHistory() Group by the manage_history column
+ * @method     ChildRoleQuery groupByManageUsers() Group by the manage_users column
  *
  * @method     ChildRoleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildRoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -34,26 +44,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoleQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildRoleQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildRoleQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
- *
- * @method     ChildRoleQuery leftJoinAccess($relationAlias = null) Adds a LEFT JOIN clause to the query using the Access relation
- * @method     ChildRoleQuery rightJoinAccess($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Access relation
- * @method     ChildRoleQuery innerJoinAccess($relationAlias = null) Adds a INNER JOIN clause to the query using the Access relation
- *
- * @method     ChildRoleQuery joinWithAccess($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Access relation
- *
- * @method     ChildRoleQuery leftJoinWithAccess() Adds a LEFT JOIN clause and with to the query using the Access relation
- * @method     ChildRoleQuery rightJoinWithAccess() Adds a RIGHT JOIN clause and with to the query using the Access relation
- * @method     ChildRoleQuery innerJoinWithAccess() Adds a INNER JOIN clause and with to the query using the Access relation
- *
- * @method     ChildRoleQuery leftJoinProjectRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectRole relation
- * @method     ChildRoleQuery rightJoinProjectRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectRole relation
- * @method     ChildRoleQuery innerJoinProjectRole($relationAlias = null) Adds a INNER JOIN clause to the query using the ProjectRole relation
- *
- * @method     ChildRoleQuery joinWithProjectRole($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProjectRole relation
- *
- * @method     ChildRoleQuery leftJoinWithProjectRole() Adds a LEFT JOIN clause and with to the query using the ProjectRole relation
- * @method     ChildRoleQuery rightJoinWithProjectRole() Adds a RIGHT JOIN clause and with to the query using the ProjectRole relation
- * @method     ChildRoleQuery innerJoinWithProjectRole() Adds a INNER JOIN clause and with to the query using the ProjectRole relation
  *
  * @method     ChildRoleQuery leftJoinUsers($relationAlias = null) Adds a LEFT JOIN clause to the query using the Users relation
  * @method     ChildRoleQuery rightJoinUsers($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Users relation
@@ -65,19 +55,29 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoleQuery rightJoinWithUsers() Adds a RIGHT JOIN clause and with to the query using the Users relation
  * @method     ChildRoleQuery innerJoinWithUsers() Adds a INNER JOIN clause and with to the query using the Users relation
  *
- * @method     \DB\AccessQuery|\DB\ProjectRoleQuery|\DB\UsersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\UsersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildRole|null findOne(?ConnectionInterface $con = null) Return the first ChildRole matching the query
  * @method     ChildRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildRole matching the query, or a new ChildRole object populated from the query conditions when no match is found
  *
  * @method     ChildRole|null findOneById(int $id) Return the first ChildRole filtered by the id column
- * @method     ChildRole|null findOneByName(string $name) Return the first ChildRole filtered by the name column *
+ * @method     ChildRole|null findOneByName(string $name) Return the first ChildRole filtered by the name column
+ * @method     ChildRole|null findOneByObjectViewer(boolean $object_viewer) Return the first ChildRole filtered by the object_viewer column
+ * @method     ChildRole|null findOneByManageObjects(boolean $manage_objects) Return the first ChildRole filtered by the manage_objects column
+ * @method     ChildRole|null findOneByManageVolumes(boolean $manage_volumes) Return the first ChildRole filtered by the manage_volumes column
+ * @method     ChildRole|null findOneByManageHistory(boolean $manage_history) Return the first ChildRole filtered by the manage_history column
+ * @method     ChildRole|null findOneByManageUsers(boolean $manage_users) Return the first ChildRole filtered by the manage_users column *
 
  * @method     ChildRole requirePk($key, ?ConnectionInterface $con = null) Return the ChildRole by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRole requireOne(?ConnectionInterface $con = null) Return the first ChildRole matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildRole requireOneById(int $id) Return the first ChildRole filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRole requireOneByName(string $name) Return the first ChildRole filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRole requireOneByObjectViewer(boolean $object_viewer) Return the first ChildRole filtered by the object_viewer column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRole requireOneByManageObjects(boolean $manage_objects) Return the first ChildRole filtered by the manage_objects column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRole requireOneByManageVolumes(boolean $manage_volumes) Return the first ChildRole filtered by the manage_volumes column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRole requireOneByManageHistory(boolean $manage_history) Return the first ChildRole filtered by the manage_history column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRole requireOneByManageUsers(boolean $manage_users) Return the first ChildRole filtered by the manage_users column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildRole[]|Collection find(?ConnectionInterface $con = null) Return ChildRole objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildRole> find(?ConnectionInterface $con = null) Return ChildRole objects based on current ModelCriteria
@@ -85,6 +85,16 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildRole> findById(int $id) Return ChildRole objects filtered by the id column
  * @method     ChildRole[]|Collection findByName(string $name) Return ChildRole objects filtered by the name column
  * @psalm-method Collection&\Traversable<ChildRole> findByName(string $name) Return ChildRole objects filtered by the name column
+ * @method     ChildRole[]|Collection findByObjectViewer(boolean $object_viewer) Return ChildRole objects filtered by the object_viewer column
+ * @psalm-method Collection&\Traversable<ChildRole> findByObjectViewer(boolean $object_viewer) Return ChildRole objects filtered by the object_viewer column
+ * @method     ChildRole[]|Collection findByManageObjects(boolean $manage_objects) Return ChildRole objects filtered by the manage_objects column
+ * @psalm-method Collection&\Traversable<ChildRole> findByManageObjects(boolean $manage_objects) Return ChildRole objects filtered by the manage_objects column
+ * @method     ChildRole[]|Collection findByManageVolumes(boolean $manage_volumes) Return ChildRole objects filtered by the manage_volumes column
+ * @psalm-method Collection&\Traversable<ChildRole> findByManageVolumes(boolean $manage_volumes) Return ChildRole objects filtered by the manage_volumes column
+ * @method     ChildRole[]|Collection findByManageHistory(boolean $manage_history) Return ChildRole objects filtered by the manage_history column
+ * @psalm-method Collection&\Traversable<ChildRole> findByManageHistory(boolean $manage_history) Return ChildRole objects filtered by the manage_history column
+ * @method     ChildRole[]|Collection findByManageUsers(boolean $manage_users) Return ChildRole objects filtered by the manage_users column
+ * @psalm-method Collection&\Traversable<ChildRole> findByManageUsers(boolean $manage_users) Return ChildRole objects filtered by the manage_users column
  * @method     ChildRole[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildRole> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -184,7 +194,7 @@ abstract class RoleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name FROM role WHERE id = :p0';
+        $sql = 'SELECT id, name, object_viewer, manage_objects, manage_volumes, manage_history, manage_users FROM role WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -350,269 +360,150 @@ abstract class RoleQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \DB\Access object
+     * Filter the query on the object_viewer column
      *
-     * @param \DB\Access|ObjectCollection $access the related object to use as filter
+     * Example usage:
+     * <code>
+     * $query->filterByObjectViewer(true); // WHERE object_viewer = true
+     * $query->filterByObjectViewer('yes'); // WHERE object_viewer = true
+     * </code>
+     *
+     * @param bool|string $objectViewer The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByAccess($access, ?string $comparison = null)
+    public function filterByObjectViewer($objectViewer = null, ?string $comparison = null)
     {
-        if ($access instanceof \DB\Access) {
-            $this
-                ->addUsingAlias(RoleTableMap::COL_ID, $access->getRoleId(), $comparison);
-
-            return $this;
-        } elseif ($access instanceof ObjectCollection) {
-            $this
-                ->useAccessQuery()
-                ->filterByPrimaryKeys($access->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByAccess() only accepts arguments of type \DB\Access or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Access relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinAccess(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Access');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (is_string($objectViewer)) {
+            $objectViewer = in_array(strtolower($objectViewer), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Access');
-        }
+        $this->addUsingAlias(RoleTableMap::COL_OBJECT_VIEWER, $objectViewer, $comparison);
 
         return $this;
     }
 
     /**
-     * Use the Access relation Access object
+     * Filter the query on the manage_objects column
      *
-     * @see useQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByManageObjects(true); // WHERE manage_objects = true
+     * $query->filterByManageObjects('yes'); // WHERE manage_objects = true
+     * </code>
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\AccessQuery A secondary query class using the current class as primary query
-     */
-    public function useAccessQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinAccess($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Access', '\DB\AccessQuery');
-    }
-
-    /**
-     * Use the Access relation Access object
-     *
-     * @param callable(\DB\AccessQuery):\DB\AccessQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withAccessQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useAccessQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to Access table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\AccessQuery The inner query object of the EXISTS statement
-     */
-    public function useAccessExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('Access', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to Access table for a NOT EXISTS query.
-     *
-     * @see useAccessExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\AccessQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useAccessNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('Access', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
-     * Filter the query by a related \DB\ProjectRole object
-     *
-     * @param \DB\ProjectRole|ObjectCollection $projectRole the related object to use as filter
+     * @param bool|string $manageObjects The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByProjectRole($projectRole, ?string $comparison = null)
+    public function filterByManageObjects($manageObjects = null, ?string $comparison = null)
     {
-        if ($projectRole instanceof \DB\ProjectRole) {
-            $this
-                ->addUsingAlias(RoleTableMap::COL_ID, $projectRole->getRoleId(), $comparison);
-
-            return $this;
-        } elseif ($projectRole instanceof ObjectCollection) {
-            $this
-                ->useProjectRoleQuery()
-                ->filterByPrimaryKeys($projectRole->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByProjectRole() only accepts arguments of type \DB\ProjectRole or Collection');
+        if (is_string($manageObjects)) {
+            $manageObjects = in_array(strtolower($manageObjects), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
+
+        $this->addUsingAlias(RoleTableMap::COL_MANAGE_OBJECTS, $manageObjects, $comparison);
+
+        return $this;
     }
 
     /**
-     * Adds a JOIN clause to the query using the ProjectRole relation
+     * Filter the query on the manage_volumes column
      *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * Example usage:
+     * <code>
+     * $query->filterByManageVolumes(true); // WHERE manage_volumes = true
+     * $query->filterByManageVolumes('yes'); // WHERE manage_volumes = true
+     * </code>
+     *
+     * @param bool|string $manageVolumes The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinProjectRole(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function filterByManageVolumes($manageVolumes = null, ?string $comparison = null)
     {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ProjectRole');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (is_string($manageVolumes)) {
+            $manageVolumes = in_array(strtolower($manageVolumes), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'ProjectRole');
-        }
+        $this->addUsingAlias(RoleTableMap::COL_MANAGE_VOLUMES, $manageVolumes, $comparison);
 
         return $this;
     }
 
     /**
-     * Use the ProjectRole relation ProjectRole object
+     * Filter the query on the manage_history column
      *
-     * @see useQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByManageHistory(true); // WHERE manage_history = true
+     * $query->filterByManageHistory('yes'); // WHERE manage_history = true
+     * </code>
      *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param bool|string $manageHistory The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return \DB\ProjectRoleQuery A secondary query class using the current class as primary query
+     * @return $this The current query, for fluid interface
      */
-    public function useProjectRoleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function filterByManageHistory($manageHistory = null, ?string $comparison = null)
     {
-        return $this
-            ->joinProjectRole($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ProjectRole', '\DB\ProjectRoleQuery');
-    }
+        if (is_string($manageHistory)) {
+            $manageHistory = in_array(strtolower($manageHistory), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
 
-    /**
-     * Use the ProjectRole relation ProjectRole object
-     *
-     * @param callable(\DB\ProjectRoleQuery):\DB\ProjectRoleQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withProjectRoleQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useProjectRoleQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
+        $this->addUsingAlias(RoleTableMap::COL_MANAGE_HISTORY, $manageHistory, $comparison);
 
         return $this;
     }
-    /**
-     * Use the relation to ProjectRole table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\ProjectRoleQuery The inner query object of the EXISTS statement
-     */
-    public function useProjectRoleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, $typeOfExists);
-    }
 
     /**
-     * Use the relation to ProjectRole table for a NOT EXISTS query.
+     * Filter the query on the manage_users column
      *
-     * @see useProjectRoleExistsQuery()
+     * Example usage:
+     * <code>
+     * $query->filterByManageUsers(true); // WHERE manage_users = true
+     * $query->filterByManageUsers('yes'); // WHERE manage_users = true
+     * </code>
      *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param bool|string $manageUsers The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return \DB\ProjectRoleQuery The inner query object of the NOT EXISTS statement
+     * @return $this The current query, for fluid interface
      */
-    public function useProjectRoleNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function filterByManageUsers($manageUsers = null, ?string $comparison = null)
     {
-        return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, 'NOT EXISTS');
+        if (is_string($manageUsers)) {
+            $manageUsers = in_array(strtolower($manageUsers), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(RoleTableMap::COL_MANAGE_USERS, $manageUsers, $comparison);
+
+        return $this;
     }
+
     /**
      * Filter the query by a related \DB\Users object
      *
@@ -648,7 +539,7 @@ abstract class RoleQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinUsers(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinUsers(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Users');
@@ -683,7 +574,7 @@ abstract class RoleQuery extends ModelCriteria
      *
      * @return \DB\UsersQuery A secondary query class using the current class as primary query
      */
-    public function useUsersQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useUsersQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinUsers($relationAlias, $joinType)
@@ -704,7 +595,7 @@ abstract class RoleQuery extends ModelCriteria
     public function withUsersQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::LEFT_JOIN
+        ?string $joinType = Criteria::INNER_JOIN
     ) {
         $relatedQuery = $this->useUsersQuery(
             $relationAlias,

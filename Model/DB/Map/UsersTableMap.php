@@ -293,14 +293,14 @@ class UsersTableMap extends TableMap
         $this->addColumn('phone', 'Phone', 'VARCHAR', false, 11, null);
         $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
         $this->addColumn('username', 'Username', 'VARCHAR', false, 100, null);
-        $this->addColumn('status', 'Status', 'TINYINT', true, null, 0);
-        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'role', 'id', false, null, null);
-        $this->addColumn('verified', 'Verified', 'TINYINT', true, null, 0);
-        $this->addColumn('resettable', 'Resettable', 'TINYINT', true, null, 1);
-        $this->addColumn('roles_mask', 'RolesMask', 'INTEGER', true, null, 0);
-        $this->addColumn('registered', 'Registered', 'INTEGER', true, null, null);
-        $this->addColumn('last_login', 'LastLogin', 'INTEGER', false, null, null);
-        $this->addColumn('force_logout', 'ForceLogout', 'SMALLINT', true, null, 0);
+        $this->addColumn('status', 'Status', 'TINYINT', true, 2, 0);
+        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'access_role', 'id', true, null, 1);
+        $this->addColumn('verified', 'Verified', 'BOOLEAN', true, 1, false);
+        $this->addColumn('resettable', 'Resettable', 'BOOLEAN', true, 1, true);
+        $this->addColumn('roles_mask', 'RolesMask', 'INTEGER', true, 10, 0);
+        $this->addColumn('registered', 'Registered', 'INTEGER', true, 10, null);
+        $this->addColumn('last_login', 'LastLogin', 'INTEGER', false, 10, null);
+        $this->addColumn('force_logout', 'ForceLogout', 'SMALLINT', true, 7, 0);
     }
 
     /**

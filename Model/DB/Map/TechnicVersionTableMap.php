@@ -311,10 +311,10 @@ class TechnicVersionTableMap extends TableMap
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
-        $this->addColumn('stage_technic_ids', 'StageTechnicIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('stage_technic_versions', 'StageTechnicVersions', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('stage_technic_ids', 'StageTechnicIds', 'ARRAY', false, null, null);
+        $this->addColumn('stage_technic_versions', 'StageTechnicVersions', 'ARRAY', false, null, null);
+        $this->addColumn('work_technic_ids', 'WorkTechnicIds', 'ARRAY', false, null, null);
+        $this->addColumn('work_technic_versions', 'WorkTechnicVersions', 'ARRAY', false, null, null);
     }
 
     /**

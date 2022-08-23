@@ -4,6 +4,7 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
+use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\StageTechnic as ChildStageTechnic;
 use DB\StageTechnicQuery as ChildStageTechnicQuery;
@@ -11,8 +12,10 @@ use DB\StageTechnicVersion as ChildStageTechnicVersion;
 use DB\StageTechnicVersionQuery as ChildStageTechnicVersionQuery;
 use DB\StageWork as ChildStageWork;
 use DB\StageWorkQuery as ChildStageWorkQuery;
+use DB\StageWorkVersionQuery as ChildStageWorkVersionQuery;
 use DB\Technic as ChildTechnic;
 use DB\TechnicQuery as ChildTechnicQuery;
+use DB\TechnicVersionQuery as ChildTechnicVersionQuery;
 use DB\Map\StageTechnicTableMap;
 use DB\Map\StageTechnicVersionTableMap;
 use Propel\Runtime\Propel;
@@ -95,7 +98,7 @@ abstract class StageTechnic implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -168,6 +171,14 @@ abstract class StageTechnic implements ActiveRecordInterface
      * @var bool
      */
     protected $alreadyInSave = false;
+
+    // versionable behavior
+
+
+    /**
+     * @var bool
+     */
+    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -448,7 +459,7 @@ abstract class StageTechnic implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -458,7 +469,7 @@ abstract class StageTechnic implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function isAvailable()
@@ -604,7 +615,7 @@ abstract class StageTechnic implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Доступ (публичный, приватный)
+     * Доступ (доступный, удаленный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -974,6 +985,14 @@ abstract class StageTechnic implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(StageTechnicTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -987,6 +1006,10 @@ abstract class StageTechnic implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 StageTechnicTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2108,6 +2131,339 @@ abstract class StageTechnic implements ActiveRecordInterface
         return (string) $this->exportTo(StageTechnicTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildStageTechnicQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if (null !== ($object = $this->getStageWork($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+        if (null !== ($object = $this->getTechnic($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildStageTechnicVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildStageTechnicVersion();
+        $version->setId($this->getId());
+        $version->setPrice($this->getPrice());
+        $version->setAmount($this->getAmount());
+        $version->setIsAvailable($this->getIsAvailable());
+        $version->setTechnicId($this->getTechnicId());
+        $version->setStageWorkId($this->getStageWorkId());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setStageTechnic($this);
+        if (($related = $this->getStageWork(null, $con)) && $related->getVersion()) {
+            $version->setStageWorkIdVersion($related->getVersion());
+        }
+        if (($related = $this->getTechnic(null, $con)) && $related->getVersion()) {
+            $version->setTechnicIdVersion($related->getVersion());
+        }
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildStageTechnic object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildStageTechnicVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildStageTechnic'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setPrice($version->getPrice());
+        $this->setAmount($version->getAmount());
+        $this->setIsAvailable($version->getIsAvailable());
+        $this->setTechnicId($version->getTechnicId());
+        $this->setStageWorkId($version->getStageWorkId());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValue = $version->getStageWorkId()) {
+            if (isset($loadedObjects['ChildStageWork']) && isset($loadedObjects['ChildStageWork'][$fkValue]) && isset($loadedObjects['ChildStageWork'][$fkValue][$version->getStageWorkIdVersion()])) {
+                $related = $loadedObjects['ChildStageWork'][$fkValue][$version->getStageWorkIdVersion()];
+            } else {
+                $related = new ChildStageWork();
+                $relatedVersion = ChildStageWorkVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getStageWorkIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setStageWork($related);
+        }
+        if ($fkValue = $version->getTechnicId()) {
+            if (isset($loadedObjects['ChildTechnic']) && isset($loadedObjects['ChildTechnic'][$fkValue]) && isset($loadedObjects['ChildTechnic'][$fkValue][$version->getTechnicIdVersion()])) {
+                $related = $loadedObjects['ChildTechnic'][$fkValue][$version->getTechnicIdVersion()];
+            } else {
+                $related = new ChildTechnic();
+                $relatedVersion = ChildTechnicVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getTechnicIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setTechnic($related);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildStageTechnicVersionQuery::create()
+            ->filterByStageTechnic($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildStageTechnicVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildStageTechnicVersionQuery::create()
+            ->filterByStageTechnic($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildStageTechnicVersion[] A list of ChildStageTechnicVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(StageTechnicVersionTableMap::COL_VERSION);
+
+        return $this->getStageTechnicVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\StageTechnicVersion[] List of \DB\StageTechnicVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildStageTechnicVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(StageTechnicVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getStageTechnicVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2134,7 +2490,10 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+        $this->setVersionComment('insert');
+
+        return true;
     }
 
     /**
@@ -2144,7 +2503,7 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2153,7 +2512,12 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+
+        if ($this->is_available === true) $this->setVersionComment('update');
+        else $this->setVersionComment('delete');
+
+        return true;
     }
 
     /**
@@ -2163,7 +2527,7 @@ abstract class StageTechnic implements ActiveRecordInterface
      */
     public function postUpdate(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before deleting the object in database

@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkTechnicVersionQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildWorkTechnicVersionQuery orderByTechnicId($order = Criteria::ASC) Order by the technic_id column
  * @method     ChildWorkTechnicVersionQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildWorkTechnicVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildWorkTechnicVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildWorkTechnicVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
  * @method     ChildWorkTechnicVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
@@ -36,6 +37,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkTechnicVersionQuery groupByWorkId() Group by the work_id column
  * @method     ChildWorkTechnicVersionQuery groupByTechnicId() Group by the technic_id column
  * @method     ChildWorkTechnicVersionQuery groupByAmount() Group by the amount column
+ * @method     ChildWorkTechnicVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildWorkTechnicVersionQuery groupByVersion() Group by the version column
  * @method     ChildWorkTechnicVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
  * @method     ChildWorkTechnicVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
@@ -70,6 +72,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkTechnicVersion|null findOneByWorkId(int $work_id) Return the first ChildWorkTechnicVersion filtered by the work_id column
  * @method     ChildWorkTechnicVersion|null findOneByTechnicId(int $technic_id) Return the first ChildWorkTechnicVersion filtered by the technic_id column
  * @method     ChildWorkTechnicVersion|null findOneByAmount(string $amount) Return the first ChildWorkTechnicVersion filtered by the amount column
+ * @method     ChildWorkTechnicVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildWorkTechnicVersion filtered by the is_available column
  * @method     ChildWorkTechnicVersion|null findOneByVersion(int $version) Return the first ChildWorkTechnicVersion filtered by the version column
  * @method     ChildWorkTechnicVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkTechnicVersion filtered by the version_created_at column
  * @method     ChildWorkTechnicVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkTechnicVersion filtered by the version_created_by column
@@ -84,6 +87,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWorkTechnicVersion requireOneByWorkId(int $work_id) Return the first ChildWorkTechnicVersion filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkTechnicVersion requireOneByTechnicId(int $technic_id) Return the first ChildWorkTechnicVersion filtered by the technic_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkTechnicVersion requireOneByAmount(string $amount) Return the first ChildWorkTechnicVersion filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWorkTechnicVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildWorkTechnicVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkTechnicVersion requireOneByVersion(int $version) Return the first ChildWorkTechnicVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkTechnicVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildWorkTechnicVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWorkTechnicVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildWorkTechnicVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -101,6 +105,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildWorkTechnicVersion> findByTechnicId(int $technic_id) Return ChildWorkTechnicVersion objects filtered by the technic_id column
  * @method     ChildWorkTechnicVersion[]|Collection findByAmount(string $amount) Return ChildWorkTechnicVersion objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildWorkTechnicVersion> findByAmount(string $amount) Return ChildWorkTechnicVersion objects filtered by the amount column
+ * @method     ChildWorkTechnicVersion[]|Collection findByIsAvailable(boolean $is_available) Return ChildWorkTechnicVersion objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildWorkTechnicVersion> findByIsAvailable(boolean $is_available) Return ChildWorkTechnicVersion objects filtered by the is_available column
  * @method     ChildWorkTechnicVersion[]|Collection findByVersion(int $version) Return ChildWorkTechnicVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildWorkTechnicVersion> findByVersion(int $version) Return ChildWorkTechnicVersion objects filtered by the version column
  * @method     ChildWorkTechnicVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildWorkTechnicVersion objects filtered by the version_created_at column
@@ -212,7 +218,7 @@ abstract class WorkTechnicVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, work_id, technic_id, amount, version, version_created_at, version_created_by, version_comment, work_id_version, technic_id_version FROM work_technic_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, work_id, technic_id, amount, is_available, version, version_created_at, version_created_by, version_comment, work_id_version, technic_id_version FROM work_technic_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -486,6 +492,35 @@ abstract class WorkTechnicVersionQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(WorkTechnicVersionTableMap::COL_AMOUNT, $amount, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(WorkTechnicVersionTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }

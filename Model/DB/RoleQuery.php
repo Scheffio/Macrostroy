@@ -5,7 +5,7 @@ namespace DB;
 use DB\Base\RoleQuery as BaseRoleQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'role' table.
+ * Skeleton subclass for performing query and update operations on the 'access_role' table.
  *
  *
  *

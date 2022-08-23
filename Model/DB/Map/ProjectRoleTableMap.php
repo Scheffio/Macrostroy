@@ -63,7 +63,7 @@ class ProjectRoleTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 10;
+    public const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class ProjectRoleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 10;
+    public const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the id field
@@ -86,9 +86,9 @@ class ProjectRoleTableMap extends TableMap
     public const COL_LVL = 'project_role.lvl';
 
     /**
-     * the column name for the role_id field
+     * the column name for the is_crud field
      */
-    public const COL_ROLE_ID = 'project_role.role_id';
+    public const COL_IS_CRUD = 'project_role.is_crud';
 
     /**
      * the column name for the project_id field
@@ -106,26 +106,6 @@ class ProjectRoleTableMap extends TableMap
     public const COL_USER_ID = 'project_role.user_id';
 
     /**
-     * the column name for the version field
-     */
-    public const COL_VERSION = 'project_role.version';
-
-    /**
-     * the column name for the version_created_at field
-     */
-    public const COL_VERSION_CREATED_AT = 'project_role.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'project_role.version_created_by';
-
-    /**
-     * the column name for the version_comment field
-     */
-    public const COL_VERSION_COMMENT = 'project_role.version_comment';
-
-    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -139,11 +119,11 @@ class ProjectRoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Lvl', 'RoleId', 'ProjectId', 'ObjectId', 'UserId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'lvl', 'roleId', 'projectId', 'objectId', 'userId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID, ProjectRoleTableMap::COL_LVL, ProjectRoleTableMap::COL_ROLE_ID, ProjectRoleTableMap::COL_PROJECT_ID, ProjectRoleTableMap::COL_OBJECT_ID, ProjectRoleTableMap::COL_USER_ID, ProjectRoleTableMap::COL_VERSION, ProjectRoleTableMap::COL_VERSION_CREATED_AT, ProjectRoleTableMap::COL_VERSION_CREATED_BY, ProjectRoleTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'lvl', 'role_id', 'project_id', 'object_id', 'user_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id', 'Lvl', 'IsCrud', 'ProjectId', 'ObjectId', 'UserId', ],
+        self::TYPE_CAMELNAME     => ['id', 'lvl', 'isCrud', 'projectId', 'objectId', 'userId', ],
+        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID, ProjectRoleTableMap::COL_LVL, ProjectRoleTableMap::COL_IS_CRUD, ProjectRoleTableMap::COL_PROJECT_ID, ProjectRoleTableMap::COL_OBJECT_ID, ProjectRoleTableMap::COL_USER_ID, ],
+        self::TYPE_FIELDNAME     => ['id', 'lvl', 'is_crud', 'project_id', 'object_id', 'user_id', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -155,11 +135,11 @@ class ProjectRoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Lvl' => 1, 'RoleId' => 2, 'ProjectId' => 3, 'ObjectId' => 4, 'UserId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'lvl' => 1, 'roleId' => 2, 'projectId' => 3, 'objectId' => 4, 'userId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, ],
-        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID => 0, ProjectRoleTableMap::COL_LVL => 1, ProjectRoleTableMap::COL_ROLE_ID => 2, ProjectRoleTableMap::COL_PROJECT_ID => 3, ProjectRoleTableMap::COL_OBJECT_ID => 4, ProjectRoleTableMap::COL_USER_ID => 5, ProjectRoleTableMap::COL_VERSION => 6, ProjectRoleTableMap::COL_VERSION_CREATED_AT => 7, ProjectRoleTableMap::COL_VERSION_CREATED_BY => 8, ProjectRoleTableMap::COL_VERSION_COMMENT => 9, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'lvl' => 1, 'role_id' => 2, 'project_id' => 3, 'object_id' => 4, 'user_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Lvl' => 1, 'IsCrud' => 2, 'ProjectId' => 3, 'ObjectId' => 4, 'UserId' => 5, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'lvl' => 1, 'isCrud' => 2, 'projectId' => 3, 'objectId' => 4, 'userId' => 5, ],
+        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID => 0, ProjectRoleTableMap::COL_LVL => 1, ProjectRoleTableMap::COL_IS_CRUD => 2, ProjectRoleTableMap::COL_PROJECT_ID => 3, ProjectRoleTableMap::COL_OBJECT_ID => 4, ProjectRoleTableMap::COL_USER_ID => 5, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'lvl' => 1, 'is_crud' => 2, 'project_id' => 3, 'object_id' => 4, 'user_id' => 5, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -182,14 +162,14 @@ class ProjectRoleTableMap extends TableMap
         'ProjectRoleTableMap::COL_LVL' => 'LVL',
         'COL_LVL' => 'LVL',
         'project_role.lvl' => 'LVL',
-        'RoleId' => 'ROLE_ID',
-        'ProjectRole.RoleId' => 'ROLE_ID',
-        'roleId' => 'ROLE_ID',
-        'projectRole.roleId' => 'ROLE_ID',
-        'ProjectRoleTableMap::COL_ROLE_ID' => 'ROLE_ID',
-        'COL_ROLE_ID' => 'ROLE_ID',
-        'role_id' => 'ROLE_ID',
-        'project_role.role_id' => 'ROLE_ID',
+        'IsCrud' => 'IS_CRUD',
+        'ProjectRole.IsCrud' => 'IS_CRUD',
+        'isCrud' => 'IS_CRUD',
+        'projectRole.isCrud' => 'IS_CRUD',
+        'ProjectRoleTableMap::COL_IS_CRUD' => 'IS_CRUD',
+        'COL_IS_CRUD' => 'IS_CRUD',
+        'is_crud' => 'IS_CRUD',
+        'project_role.is_crud' => 'IS_CRUD',
         'ProjectId' => 'PROJECT_ID',
         'ProjectRole.ProjectId' => 'PROJECT_ID',
         'projectId' => 'PROJECT_ID',
@@ -214,37 +194,6 @@ class ProjectRoleTableMap extends TableMap
         'COL_USER_ID' => 'USER_ID',
         'user_id' => 'USER_ID',
         'project_role.user_id' => 'USER_ID',
-        'Version' => 'VERSION',
-        'ProjectRole.Version' => 'VERSION',
-        'version' => 'VERSION',
-        'projectRole.version' => 'VERSION',
-        'ProjectRoleTableMap::COL_VERSION' => 'VERSION',
-        'COL_VERSION' => 'VERSION',
-        'project_role.version' => 'VERSION',
-        'VersionCreatedAt' => 'VERSION_CREATED_AT',
-        'ProjectRole.VersionCreatedAt' => 'VERSION_CREATED_AT',
-        'versionCreatedAt' => 'VERSION_CREATED_AT',
-        'projectRole.versionCreatedAt' => 'VERSION_CREATED_AT',
-        'ProjectRoleTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
-        'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
-        'version_created_at' => 'VERSION_CREATED_AT',
-        'project_role.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ProjectRole.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'projectRole.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ProjectRoleTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'project_role.version_created_by' => 'VERSION_CREATED_BY',
-        'VersionComment' => 'VERSION_COMMENT',
-        'ProjectRole.VersionComment' => 'VERSION_COMMENT',
-        'versionComment' => 'VERSION_COMMENT',
-        'projectRole.versionComment' => 'VERSION_COMMENT',
-        'ProjectRoleTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
-        'COL_VERSION_COMMENT' => 'VERSION_COMMENT',
-        'version_comment' => 'VERSION_COMMENT',
-        'project_role.version_comment' => 'VERSION_COMMENT',
     ];
 
     /**
@@ -265,15 +214,11 @@ class ProjectRoleTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('lvl', 'Lvl', 'TINYINT', true, null, 1);
-        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'role', 'id', true, null, null);
+        $this->addColumn('lvl', 'Lvl', 'BOOLEAN', true, 1, true);
+        $this->addColumn('is_crud', 'IsCrud', 'BOOLEAN', true, 1, false);
         $this->addForeignKey('project_id', 'ProjectId', 'INTEGER', 'project', 'id', true, null, null);
         $this->addColumn('object_id', 'ObjectId', 'INTEGER', true, null, null);
         $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'users', 'id', true, null, null);
-        $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
-        $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
     /**
@@ -283,44 +228,20 @@ class ProjectRoleTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Role', '\\DB\\Role', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':role_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
         $this->addRelation('Project', '\\DB\\Project', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':project_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
+            0 =>
+                array (
+                    0 => ':project_id',
+                    1 => ':id',
+                ),
+        ), null, null, null, false);
         $this->addRelation('Users', '\\DB\\Users', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':user_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
-        $this->addRelation('ProjectRoleVersion', '\\DB\\ProjectRoleVersion', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'ProjectRoleVersions', false);
-    }
-
-    /**
-     * Method to invalidate the instance pool of all tables related to project_role     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool(): void
-    {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        ProjectRoleVersionTableMap::clearInstancePool();
+            0 =>
+                array (
+                    0 => ':user_id',
+                    1 => ':id',
+                ),
+        ), null, null, null, false);
     }
 
     /**
@@ -361,9 +282,9 @@ class ProjectRoleTableMap extends TableMap
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
         return (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
-                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        $indexType == TableMap::TYPE_NUM
+            ? 0 + $offset
+            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -389,7 +310,7 @@ class ProjectRoleTableMap extends TableMap
      * @param array $row Row returned by DataFetcher->fetch().
      * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -467,25 +388,17 @@ class ProjectRoleTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_ID);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_LVL);
-            $criteria->addSelectColumn(ProjectRoleTableMap::COL_ROLE_ID);
+            $criteria->addSelectColumn(ProjectRoleTableMap::COL_IS_CRUD);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_PROJECT_ID);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_OBJECT_ID);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(ProjectRoleTableMap::COL_VERSION);
-            $criteria->addSelectColumn(ProjectRoleTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ProjectRoleTableMap::COL_VERSION_CREATED_BY);
-            $criteria->addSelectColumn(ProjectRoleTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.lvl');
-            $criteria->addSelectColumn($alias . '.role_id');
+            $criteria->addSelectColumn($alias . '.is_crud');
             $criteria->addSelectColumn($alias . '.project_id');
             $criteria->addSelectColumn($alias . '.object_id');
             $criteria->addSelectColumn($alias . '.user_id');
-            $criteria->addSelectColumn($alias . '.version');
-            $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
-            $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -506,25 +419,17 @@ class ProjectRoleTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_ID);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_LVL);
-            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_ROLE_ID);
+            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_IS_CRUD);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_PROJECT_ID);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_OBJECT_ID);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_USER_ID);
-            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_VERSION);
-            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_VERSION_CREATED_BY);
-            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.lvl');
-            $criteria->removeSelectColumn($alias . '.role_id');
+            $criteria->removeSelectColumn($alias . '.is_crud');
             $criteria->removeSelectColumn($alias . '.project_id');
             $criteria->removeSelectColumn($alias . '.object_id');
             $criteria->removeSelectColumn($alias . '.user_id');
-            $criteria->removeSelectColumn($alias . '.version');
-            $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
-            $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }
 
@@ -551,8 +456,8 @@ class ProjectRoleTableMap extends TableMap
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, ?ConnectionInterface $con = null): int
-     {
+    public static function doDelete($values, ?ConnectionInterface $con = null): int
+    {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ProjectRoleTableMap::DATABASE_NAME);
         }

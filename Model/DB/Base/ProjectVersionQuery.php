@@ -29,8 +29,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
  * @method     ChildProjectVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildProjectVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
- * @method     ChildProjectVersionQuery orderByProjectRoleIds($order = Criteria::ASC) Order by the project_role_ids column
- * @method     ChildProjectVersionQuery orderByProjectRoleVersions($order = Criteria::ASC) Order by the project_role_versions column
  * @method     ChildProjectVersionQuery orderBySubprojectIds($order = Criteria::ASC) Order by the subproject_ids column
  * @method     ChildProjectVersionQuery orderBySubprojectVersions($order = Criteria::ASC) Order by the subproject_versions column
  *
@@ -42,8 +40,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
  * @method     ChildProjectVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildProjectVersionQuery groupByVersionComment() Group by the version_comment column
- * @method     ChildProjectVersionQuery groupByProjectRoleIds() Group by the project_role_ids column
- * @method     ChildProjectVersionQuery groupByProjectRoleVersions() Group by the project_role_versions column
  * @method     ChildProjectVersionQuery groupBySubprojectIds() Group by the subproject_ids column
  * @method     ChildProjectVersionQuery groupBySubprojectVersions() Group by the subproject_versions column
  *
@@ -78,10 +74,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildProjectVersion filtered by the version_created_at column
  * @method     ChildProjectVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildProjectVersion filtered by the version_created_by column
  * @method     ChildProjectVersion|null findOneByVersionComment(string $version_comment) Return the first ChildProjectVersion filtered by the version_comment column
- * @method     ChildProjectVersion|null findOneByProjectRoleIds(string $project_role_ids) Return the first ChildProjectVersion filtered by the project_role_ids column
- * @method     ChildProjectVersion|null findOneByProjectRoleVersions(string $project_role_versions) Return the first ChildProjectVersion filtered by the project_role_versions column
- * @method     ChildProjectVersion|null findOneBySubprojectIds(string $subproject_ids) Return the first ChildProjectVersion filtered by the subproject_ids column
- * @method     ChildProjectVersion|null findOneBySubprojectVersions(string $subproject_versions) Return the first ChildProjectVersion filtered by the subproject_versions column *
+ * @method     ChildProjectVersion|null findOneBySubprojectIds(array $subproject_ids) Return the first ChildProjectVersion filtered by the subproject_ids column
+ * @method     ChildProjectVersion|null findOneBySubprojectVersions(array $subproject_versions) Return the first ChildProjectVersion filtered by the subproject_versions column *
 
  * @method     ChildProjectVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildProjectVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectVersion requireOne(?ConnectionInterface $con = null) Return the first ChildProjectVersion matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -94,10 +88,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildProjectVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildProjectVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectVersion requireOneByVersionComment(string $version_comment) Return the first ChildProjectVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectVersion requireOneByProjectRoleIds(string $project_role_ids) Return the first ChildProjectVersion filtered by the project_role_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectVersion requireOneByProjectRoleVersions(string $project_role_versions) Return the first ChildProjectVersion filtered by the project_role_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectVersion requireOneBySubprojectIds(string $subproject_ids) Return the first ChildProjectVersion filtered by the subproject_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectVersion requireOneBySubprojectVersions(string $subproject_versions) Return the first ChildProjectVersion filtered by the subproject_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProjectVersion requireOneBySubprojectIds(array $subproject_ids) Return the first ChildProjectVersion filtered by the subproject_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProjectVersion requireOneBySubprojectVersions(array $subproject_versions) Return the first ChildProjectVersion filtered by the subproject_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProjectVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildProjectVersion objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildProjectVersion> find(?ConnectionInterface $con = null) Return ChildProjectVersion objects based on current ModelCriteria
@@ -117,14 +109,10 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildProjectVersion> findByVersionCreatedBy(string $version_created_by) Return ChildProjectVersion objects filtered by the version_created_by column
  * @method     ChildProjectVersion[]|Collection findByVersionComment(string $version_comment) Return ChildProjectVersion objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildProjectVersion> findByVersionComment(string $version_comment) Return ChildProjectVersion objects filtered by the version_comment column
- * @method     ChildProjectVersion[]|Collection findByProjectRoleIds(string $project_role_ids) Return ChildProjectVersion objects filtered by the project_role_ids column
- * @psalm-method Collection&\Traversable<ChildProjectVersion> findByProjectRoleIds(string $project_role_ids) Return ChildProjectVersion objects filtered by the project_role_ids column
- * @method     ChildProjectVersion[]|Collection findByProjectRoleVersions(string $project_role_versions) Return ChildProjectVersion objects filtered by the project_role_versions column
- * @psalm-method Collection&\Traversable<ChildProjectVersion> findByProjectRoleVersions(string $project_role_versions) Return ChildProjectVersion objects filtered by the project_role_versions column
- * @method     ChildProjectVersion[]|Collection findBySubprojectIds(string $subproject_ids) Return ChildProjectVersion objects filtered by the subproject_ids column
- * @psalm-method Collection&\Traversable<ChildProjectVersion> findBySubprojectIds(string $subproject_ids) Return ChildProjectVersion objects filtered by the subproject_ids column
- * @method     ChildProjectVersion[]|Collection findBySubprojectVersions(string $subproject_versions) Return ChildProjectVersion objects filtered by the subproject_versions column
- * @psalm-method Collection&\Traversable<ChildProjectVersion> findBySubprojectVersions(string $subproject_versions) Return ChildProjectVersion objects filtered by the subproject_versions column
+ * @method     ChildProjectVersion[]|Collection findBySubprojectIds(array $subproject_ids) Return ChildProjectVersion objects filtered by the subproject_ids column
+ * @psalm-method Collection&\Traversable<ChildProjectVersion> findBySubprojectIds(array $subproject_ids) Return ChildProjectVersion objects filtered by the subproject_ids column
+ * @method     ChildProjectVersion[]|Collection findBySubprojectVersions(array $subproject_versions) Return ChildProjectVersion objects filtered by the subproject_versions column
+ * @psalm-method Collection&\Traversable<ChildProjectVersion> findBySubprojectVersions(array $subproject_versions) Return ChildProjectVersion objects filtered by the subproject_versions column
  * @method     ChildProjectVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildProjectVersion> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -224,7 +212,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_available, version, version_created_at, version_created_by, version_comment, project_role_ids, project_role_versions, subproject_ids, subproject_versions FROM project_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, status, is_available, version, version_created_at, version_created_by, version_comment, subproject_ids, subproject_versions FROM project_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -603,82 +591,83 @@ abstract class ProjectVersionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the project_role_ids column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByProjectRoleIds('fooValue');   // WHERE project_role_ids = 'fooValue'
-     * $query->filterByProjectRoleIds('%fooValue%', Criteria::LIKE); // WHERE project_role_ids LIKE '%fooValue%'
-     * $query->filterByProjectRoleIds(['foo', 'bar']); // WHERE project_role_ids IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $projectRoleIds The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByProjectRoleIds($projectRoleIds = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($projectRoleIds)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(ProjectVersionTableMap::COL_PROJECT_ROLE_IDS, $projectRoleIds, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the project_role_versions column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByProjectRoleVersions('fooValue');   // WHERE project_role_versions = 'fooValue'
-     * $query->filterByProjectRoleVersions('%fooValue%', Criteria::LIKE); // WHERE project_role_versions LIKE '%fooValue%'
-     * $query->filterByProjectRoleVersions(['foo', 'bar']); // WHERE project_role_versions IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $projectRoleVersions The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByProjectRoleVersions($projectRoleVersions = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($projectRoleVersions)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(ProjectVersionTableMap::COL_PROJECT_ROLE_VERSIONS, $projectRoleVersions, $comparison);
-
-        return $this;
-    }
-
-    /**
      * Filter the query on the subproject_ids column
      *
-     * Example usage:
-     * <code>
-     * $query->filterBySubprojectIds('fooValue');   // WHERE subproject_ids = 'fooValue'
-     * $query->filterBySubprojectIds('%fooValue%', Criteria::LIKE); // WHERE subproject_ids LIKE '%fooValue%'
-     * $query->filterBySubprojectIds(['foo', 'bar']); // WHERE subproject_ids IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $subprojectIds The value to use as filter.
+     * @param array $subprojectIds The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterBySubprojectIds($subprojectIds = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($subprojectIds)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(ProjectVersionTableMap::COL_SUBPROJECT_IDS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($subprojectIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($subprojectIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($subprojectIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(ProjectVersionTableMap::COL_SUBPROJECT_IDS, $subprojectIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the subproject_ids column
+     * @param mixed $subprojectIds The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterBySubprojectId($subprojectIds = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($subprojectIds)) {
+                $subprojectIds = '%| ' . $subprojectIds . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $subprojectIds = '%| ' . $subprojectIds . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(ProjectVersionTableMap::COL_SUBPROJECT_IDS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $subprojectIds, $comparison);
+            } else {
+                $this->addAnd($key, $subprojectIds, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(ProjectVersionTableMap::COL_SUBPROJECT_IDS, $subprojectIds, $comparison);
@@ -689,24 +678,81 @@ abstract class ProjectVersionQuery extends ModelCriteria
     /**
      * Filter the query on the subproject_versions column
      *
-     * Example usage:
-     * <code>
-     * $query->filterBySubprojectVersions('fooValue');   // WHERE subproject_versions = 'fooValue'
-     * $query->filterBySubprojectVersions('%fooValue%', Criteria::LIKE); // WHERE subproject_versions LIKE '%fooValue%'
-     * $query->filterBySubprojectVersions(['foo', 'bar']); // WHERE subproject_versions IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $subprojectVersions The value to use as filter.
+     * @param array $subprojectVersions The values to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterBySubprojectVersions($subprojectVersions = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($subprojectVersions)) {
-                $comparison = Criteria::IN;
+        $key = $this->getAliasedColName(ProjectVersionTableMap::COL_SUBPROJECT_VERSIONS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($subprojectVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
             }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($subprojectVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($subprojectVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(ProjectVersionTableMap::COL_SUBPROJECT_VERSIONS, $subprojectVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the subproject_versions column
+     * @param mixed $subprojectVersions The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterBySubprojectVersion($subprojectVersions = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($subprojectVersions)) {
+                $subprojectVersions = '%| ' . $subprojectVersions . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $subprojectVersions = '%| ' . $subprojectVersions . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(ProjectVersionTableMap::COL_SUBPROJECT_VERSIONS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $subprojectVersions, $comparison);
+            } else {
+                $this->addAnd($key, $subprojectVersions, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
         }
 
         $this->addUsingAlias(ProjectVersionTableMap::COL_SUBPROJECT_VERSIONS, $subprojectVersions, $comparison);

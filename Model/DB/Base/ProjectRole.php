@@ -2,34 +2,25 @@
 
 namespace DB\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
 use DB\Project as ChildProject;
 use DB\ProjectQuery as ChildProjectQuery;
-use DB\ProjectRole as ChildProjectRole;
 use DB\ProjectRoleQuery as ChildProjectRoleQuery;
-use DB\ProjectRoleVersion as ChildProjectRoleVersion;
-use DB\ProjectRoleVersionQuery as ChildProjectRoleVersionQuery;
-use DB\Role as ChildRole;
-use DB\RoleQuery as ChildRoleQuery;
 use DB\Users as ChildUsers;
 use DB\UsersQuery as ChildUsersQuery;
 use DB\Map\ProjectRoleTableMap;
-use DB\Map\ProjectRoleVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'project_role' table.
@@ -89,17 +80,18 @@ abstract class ProjectRole implements ActiveRecordInterface
 3 - группа;
 4 - дом;
 5 - этап )
-     * Note: this column has a database default value of: 1
-     * @var        int
+     * Note: this column has a database default value of: true
+     * @var        boolean
      */
     protected $lvl;
 
     /**
-     * The value for the role_id field.
-     * ID роли
-     * @var        int
+     * The value for the is_crud field.
+     * Доступен ли CRUD объекта
+     * Note: this column has a database default value of: false
+     * @var        boolean
      */
-    protected $role_id;
+    protected $is_crud;
 
     /**
      * The value for the project_id field.
@@ -123,40 +115,6 @@ abstract class ProjectRole implements ActiveRecordInterface
     protected $user_id;
 
     /**
-     * The value for the version field.
-     *
-     * Note: this column has a database default value of: 0
-     * @var        int|null
-     */
-    protected $version;
-
-    /**
-     * The value for the version_created_at field.
-     *
-     * @var        DateTime|null
-     */
-    protected $version_created_at;
-
-    /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
-
-    /**
-     * The value for the version_comment field.
-     *
-     * @var        string|null
-     */
-    protected $version_comment;
-
-    /**
-     * @var        ChildRole
-     */
-    protected $aRole;
-
-    /**
      * @var        ChildProject
      */
     protected $aProject;
@@ -167,26 +125,12 @@ abstract class ProjectRole implements ActiveRecordInterface
     protected $aUsers;
 
     /**
-     * @var        ObjectCollection|ChildProjectRoleVersion[] Collection to store aggregation of ChildProjectRoleVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildProjectRoleVersion> Collection to store aggregation of ChildProjectRoleVersion objects.
-     */
-    protected $collProjectRoleVersions;
-    protected $collProjectRoleVersionsPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var bool
      */
     protected $alreadyInSave = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildProjectRoleVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildProjectRoleVersion>
-     */
-    protected $projectRoleVersionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -196,8 +140,8 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
-        $this->lvl = 1;
-        $this->version = 0;
+        $this->lvl = true;
+        $this->is_crud = false;
     }
 
     /**
@@ -446,7 +390,7 @@ abstract class ProjectRole implements ActiveRecordInterface
 3 - группа;
 4 - дом;
 5 - этап )
-     * @return int
+     * @return boolean
      */
     public function getLvl()
     {
@@ -454,13 +398,38 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Get the [role_id] column value.
-     * ID роли
-     * @return int
+     * Get the [lvl] column value.
+     * Уровень
+( 1 - проекта;
+2 - подпроект;
+3 - группа;
+4 - дом;
+5 - этап )
+     * @return boolean
      */
-    public function getRoleId()
+    public function isLvl()
     {
-        return $this->role_id;
+        return $this->getLvl();
+    }
+
+    /**
+     * Get the [is_crud] column value.
+     * Доступен ли CRUD объекта
+     * @return boolean
+     */
+    public function getIsCrud()
+    {
+        return $this->is_crud;
+    }
+
+    /**
+     * Get the [is_crud] column value.
+     * Доступен ли CRUD объекта
+     * @return boolean
+     */
+    public function isCrud()
+    {
+        return $this->getIsCrud();
     }
 
     /**
@@ -494,58 +463,6 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Get the [version] column value.
-     *
-     * @return int|null
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [version_created_at] column value.
-     *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime|null : string|null)
-     */
-    public function getVersionCreatedAt($format = null)
-    {
-        if ($format === null) {
-            return $this->version_created_at;
-        } else {
-            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
-    }
-
-    /**
-     * Get the [version_comment] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionComment()
-    {
-        return $this->version_comment;
-    }
-
-    /**
      * Set the value of [id] column.
      * ID роли проекта
      * @param int $v New value
@@ -566,20 +483,28 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [lvl] column.
+     * Sets the value of the [lvl] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * Уровень
 ( 1 - проекта;
 2 - подпроект;
 3 - группа;
 4 - дом;
 5 - этап )
-     * @param int $v New value
+     * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
     public function setLvl($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->lvl !== $v) {
@@ -591,24 +516,28 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [role_id] column.
-     * ID роли
-     * @param int $v New value
+     * Sets the value of the [is_crud] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Доступен ли CRUD объекта
+     * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
-    public function setRoleId($v)
+    public function setIsCrud($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
-        if ($this->role_id !== $v) {
-            $this->role_id = $v;
-            $this->modifiedColumns[ProjectRoleTableMap::COL_ROLE_ID] = true;
-        }
-
-        if ($this->aRole !== null && $this->aRole->getId() !== $v) {
-            $this->aRole = null;
+        if ($this->is_crud !== $v) {
+            $this->is_crud = $v;
+            $this->modifiedColumns[ProjectRoleTableMap::COL_IS_CRUD] = true;
         }
 
         return $this;
@@ -683,86 +612,6 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [version] column.
-     *
-     * @param int|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersion($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->version !== $v) {
-            $this->version = $v;
-            $this->modifiedColumns[ProjectRoleTableMap::COL_VERSION] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->version_created_at !== null || $dt !== null) {
-            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
-                $this->version_created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ProjectRoleTableMap::COL_VERSION_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[ProjectRoleTableMap::COL_VERSION_CREATED_BY] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_comment] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionComment($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_comment !== $v) {
-            $this->version_comment = $v;
-            $this->modifiedColumns[ProjectRoleTableMap::COL_VERSION_COMMENT] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -772,11 +621,11 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->lvl !== 1) {
+            if ($this->lvl !== true) {
                 return false;
             }
 
-            if ($this->version !== 0) {
+            if ($this->is_crud !== false) {
                 return false;
             }
 
@@ -810,10 +659,10 @@ abstract class ProjectRole implements ActiveRecordInterface
             $this->id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProjectRoleTableMap::translateFieldName('Lvl', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->lvl = (null !== $col) ? (int) $col : null;
+            $this->lvl = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProjectRoleTableMap::translateFieldName('RoleId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->role_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProjectRoleTableMap::translateFieldName('IsCrud', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_crud = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ProjectRoleTableMap::translateFieldName('ProjectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->project_id = (null !== $col) ? (int) $col : null;
@@ -823,21 +672,6 @@ abstract class ProjectRole implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ProjectRoleTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ProjectRoleTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ProjectRoleTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ProjectRoleTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ProjectRoleTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -846,7 +680,7 @@ abstract class ProjectRole implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = ProjectRoleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = ProjectRoleTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\ProjectRole'), 0, $e);
@@ -869,9 +703,6 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
-            $this->aRole = null;
-        }
         if ($this->aProject !== null && $this->project_id !== $this->aProject->getId()) {
             $this->aProject = null;
         }
@@ -917,11 +748,8 @@ abstract class ProjectRole implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aRole = null;
             $this->aProject = null;
             $this->aUsers = null;
-            $this->collProjectRoleVersions = null;
-
         } // if (deep)
     }
 
@@ -1030,13 +858,6 @@ abstract class ProjectRole implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aRole !== null) {
-                if ($this->aRole->isModified() || $this->aRole->isNew()) {
-                    $affectedRows += $this->aRole->save($con);
-                }
-                $this->setRole($this->aRole);
-            }
-
             if ($this->aProject !== null) {
                 if ($this->aProject->isModified() || $this->aProject->isNew()) {
                     $affectedRows += $this->aProject->save($con);
@@ -1060,23 +881,6 @@ abstract class ProjectRole implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->projectRoleVersionsScheduledForDeletion !== null) {
-                if (!$this->projectRoleVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\ProjectRoleVersionQuery::create()
-                        ->filterByPrimaryKeys($this->projectRoleVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->projectRoleVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collProjectRoleVersions !== null) {
-                foreach ($this->collProjectRoleVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -1111,8 +915,8 @@ abstract class ProjectRole implements ActiveRecordInterface
         if ($this->isColumnModified(ProjectRoleTableMap::COL_LVL)) {
             $modifiedColumns[':p' . $index++]  = 'lvl';
         }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_ROLE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'role_id';
+        if ($this->isColumnModified(ProjectRoleTableMap::COL_IS_CRUD)) {
+            $modifiedColumns[':p' . $index++]  = 'is_crud';
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_PROJECT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'project_id';
@@ -1122,18 +926,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'user_id';
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'version';
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_COMMENT)) {
-            $modifiedColumns[':p' . $index++]  = 'version_comment';
         }
 
         $sql = sprintf(
@@ -1150,10 +942,10 @@ abstract class ProjectRole implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                     case 'lvl':
-                        $stmt->bindValue($identifier, $this->lvl, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, (int) $this->lvl, PDO::PARAM_INT);
                         break;
-                    case 'role_id':
-                        $stmt->bindValue($identifier, $this->role_id, PDO::PARAM_INT);
+                    case 'is_crud':
+                        $stmt->bindValue($identifier, (int) $this->is_crud, PDO::PARAM_INT);
                         break;
                     case 'project_id':
                         $stmt->bindValue($identifier, $this->project_id, PDO::PARAM_INT);
@@ -1163,18 +955,6 @@ abstract class ProjectRole implements ActiveRecordInterface
                         break;
                     case 'user_id':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
-                        break;
-                    case 'version':
-                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
-                        break;
-                    case 'version_created_at':
-                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
-                        break;
-                    case 'version_comment':
-                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1245,7 +1025,7 @@ abstract class ProjectRole implements ActiveRecordInterface
                 return $this->getLvl();
 
             case 2:
-                return $this->getRoleId();
+                return $this->getIsCrud();
 
             case 3:
                 return $this->getProjectId();
@@ -1255,18 +1035,6 @@ abstract class ProjectRole implements ActiveRecordInterface
 
             case 5:
                 return $this->getUserId();
-
-            case 6:
-                return $this->getVersion();
-
-            case 7:
-                return $this->getVersionCreatedAt();
-
-            case 8:
-                return $this->getVersionCreatedBy();
-
-            case 9:
-                return $this->getVersionComment();
 
             default:
                 return null;
@@ -1298,40 +1066,17 @@ abstract class ProjectRole implements ActiveRecordInterface
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getLvl(),
-            $keys[2] => $this->getRoleId(),
+            $keys[2] => $this->getIsCrud(),
             $keys[3] => $this->getProjectId(),
             $keys[4] => $this->getObjectId(),
             $keys[5] => $this->getUserId(),
-            $keys[6] => $this->getVersion(),
-            $keys[7] => $this->getVersionCreatedAt(),
-            $keys[8] => $this->getVersionCreatedBy(),
-            $keys[9] => $this->getVersionComment(),
         ];
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aRole) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'role';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'role';
-                        break;
-                    default:
-                        $key = 'Role';
-                }
-
-                $result[$key] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->aProject) {
 
                 switch ($keyType) {
@@ -1361,21 +1106,6 @@ abstract class ProjectRole implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collProjectRoleVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'projectRoleVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'project_role_versions';
-                        break;
-                    default:
-                        $key = 'ProjectRoleVersions';
-                }
-
-                $result[$key] = $this->collProjectRoleVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1420,7 +1150,7 @@ abstract class ProjectRole implements ActiveRecordInterface
                 $this->setLvl($value);
                 break;
             case 2:
-                $this->setRoleId($value);
+                $this->setIsCrud($value);
                 break;
             case 3:
                 $this->setProjectId($value);
@@ -1430,18 +1160,6 @@ abstract class ProjectRole implements ActiveRecordInterface
                 break;
             case 5:
                 $this->setUserId($value);
-                break;
-            case 6:
-                $this->setVersion($value);
-                break;
-            case 7:
-                $this->setVersionCreatedAt($value);
-                break;
-            case 8:
-                $this->setVersionCreatedBy($value);
-                break;
-            case 9:
-                $this->setVersionComment($value);
                 break;
         } // switch()
 
@@ -1476,7 +1194,7 @@ abstract class ProjectRole implements ActiveRecordInterface
             $this->setLvl($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setRoleId($arr[$keys[2]]);
+            $this->setIsCrud($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setProjectId($arr[$keys[3]]);
@@ -1486,18 +1204,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         if (array_key_exists($keys[5], $arr)) {
             $this->setUserId($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setVersion($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setVersionComment($arr[$keys[9]]);
         }
 
         return $this;
@@ -1548,8 +1254,8 @@ abstract class ProjectRole implements ActiveRecordInterface
         if ($this->isColumnModified(ProjectRoleTableMap::COL_LVL)) {
             $criteria->add(ProjectRoleTableMap::COL_LVL, $this->lvl);
         }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_ROLE_ID)) {
-            $criteria->add(ProjectRoleTableMap::COL_ROLE_ID, $this->role_id);
+        if ($this->isColumnModified(ProjectRoleTableMap::COL_IS_CRUD)) {
+            $criteria->add(ProjectRoleTableMap::COL_IS_CRUD, $this->is_crud);
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_PROJECT_ID)) {
             $criteria->add(ProjectRoleTableMap::COL_PROJECT_ID, $this->project_id);
@@ -1559,18 +1265,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_USER_ID)) {
             $criteria->add(ProjectRoleTableMap::COL_USER_ID, $this->user_id);
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION)) {
-            $criteria->add(ProjectRoleTableMap::COL_VERSION, $this->version);
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_CREATED_AT)) {
-            $criteria->add(ProjectRoleTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(ProjectRoleTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
-        }
-        if ($this->isColumnModified(ProjectRoleTableMap::COL_VERSION_COMMENT)) {
-            $criteria->add(ProjectRoleTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1661,28 +1355,10 @@ abstract class ProjectRole implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setLvl($this->getLvl());
-        $copyObj->setRoleId($this->getRoleId());
+        $copyObj->setIsCrud($this->getIsCrud());
         $copyObj->setProjectId($this->getProjectId());
         $copyObj->setObjectId($this->getObjectId());
         $copyObj->setUserId($this->getUserId());
-        $copyObj->setVersion($this->getVersion());
-        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
-        $copyObj->setVersionComment($this->getVersionComment());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getProjectRoleVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addProjectRoleVersion($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1709,57 +1385,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildRole object.
-     *
-     * @param ChildRole $v
-     * @return $this The current object (for fluent API support)
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function setRole(ChildRole $v = null)
-    {
-        if ($v === null) {
-            $this->setRoleId(NULL);
-        } else {
-            $this->setRoleId($v->getId());
-        }
-
-        $this->aRole = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildRole object, it will not be re-added.
-        if ($v !== null) {
-            $v->addProjectRole($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildRole object
-     *
-     * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildRole The associated ChildRole object.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getRole(?ConnectionInterface $con = null)
-    {
-        if ($this->aRole === null && ($this->role_id != 0)) {
-            $this->aRole = ChildRoleQuery::create()->findPk($this->role_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aRole->addProjectRoles($this);
-             */
-        }
-
-        return $this->aRole;
     }
 
     /**
@@ -1864,265 +1489,6 @@ abstract class ProjectRole implements ActiveRecordInterface
         return $this->aUsers;
     }
 
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName): void
-    {
-        if ('ProjectRoleVersion' === $relationName) {
-            $this->initProjectRoleVersions();
-            return;
-        }
-    }
-
-    /**
-     * Clears out the collProjectRoleVersions collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addProjectRoleVersions()
-     */
-    public function clearProjectRoleVersions()
-    {
-        $this->collProjectRoleVersions = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collProjectRoleVersions collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialProjectRoleVersions($v = true): void
-    {
-        $this->collProjectRoleVersionsPartial = $v;
-    }
-
-    /**
-     * Initializes the collProjectRoleVersions collection.
-     *
-     * By default this just sets the collProjectRoleVersions collection to an empty array (like clearcollProjectRoleVersions());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initProjectRoleVersions(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collProjectRoleVersions && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = ProjectRoleVersionTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collProjectRoleVersions = new $collectionClassName;
-        $this->collProjectRoleVersions->setModel('\DB\ProjectRoleVersion');
-    }
-
-    /**
-     * Gets an array of ChildProjectRoleVersion objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildProjectRole is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildProjectRoleVersion[] List of ChildProjectRoleVersion objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildProjectRoleVersion> List of ChildProjectRoleVersion objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getProjectRoleVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collProjectRoleVersionsPartial && !$this->isNew();
-        if (null === $this->collProjectRoleVersions || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collProjectRoleVersions) {
-                    $this->initProjectRoleVersions();
-                } else {
-                    $collectionClassName = ProjectRoleVersionTableMap::getTableMap()->getCollectionClassName();
-
-                    $collProjectRoleVersions = new $collectionClassName;
-                    $collProjectRoleVersions->setModel('\DB\ProjectRoleVersion');
-
-                    return $collProjectRoleVersions;
-                }
-            } else {
-                $collProjectRoleVersions = ChildProjectRoleVersionQuery::create(null, $criteria)
-                    ->filterByProjectRole($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collProjectRoleVersionsPartial && count($collProjectRoleVersions)) {
-                        $this->initProjectRoleVersions(false);
-
-                        foreach ($collProjectRoleVersions as $obj) {
-                            if (false == $this->collProjectRoleVersions->contains($obj)) {
-                                $this->collProjectRoleVersions->append($obj);
-                            }
-                        }
-
-                        $this->collProjectRoleVersionsPartial = true;
-                    }
-
-                    return $collProjectRoleVersions;
-                }
-
-                if ($partial && $this->collProjectRoleVersions) {
-                    foreach ($this->collProjectRoleVersions as $obj) {
-                        if ($obj->isNew()) {
-                            $collProjectRoleVersions[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collProjectRoleVersions = $collProjectRoleVersions;
-                $this->collProjectRoleVersionsPartial = false;
-            }
-        }
-
-        return $this->collProjectRoleVersions;
-    }
-
-    /**
-     * Sets a collection of ChildProjectRoleVersion objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $projectRoleVersions A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setProjectRoleVersions(Collection $projectRoleVersions, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildProjectRoleVersion[] $projectRoleVersionsToDelete */
-        $projectRoleVersionsToDelete = $this->getProjectRoleVersions(new Criteria(), $con)->diff($projectRoleVersions);
-
-
-        //since at least one column in the foreign key is at the same time a PK
-        //we can not just set a PK to NULL in the lines below. We have to store
-        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->projectRoleVersionsScheduledForDeletion = clone $projectRoleVersionsToDelete;
-
-        foreach ($projectRoleVersionsToDelete as $projectRoleVersionRemoved) {
-            $projectRoleVersionRemoved->setProjectRole(null);
-        }
-
-        $this->collProjectRoleVersions = null;
-        foreach ($projectRoleVersions as $projectRoleVersion) {
-            $this->addProjectRoleVersion($projectRoleVersion);
-        }
-
-        $this->collProjectRoleVersions = $projectRoleVersions;
-        $this->collProjectRoleVersionsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related ProjectRoleVersion objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related ProjectRoleVersion objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countProjectRoleVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collProjectRoleVersionsPartial && !$this->isNew();
-        if (null === $this->collProjectRoleVersions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collProjectRoleVersions) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getProjectRoleVersions());
-            }
-
-            $query = ChildProjectRoleVersionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByProjectRole($this)
-                ->count($con);
-        }
-
-        return count($this->collProjectRoleVersions);
-    }
-
-    /**
-     * Method called to associate a ChildProjectRoleVersion object to this object
-     * through the ChildProjectRoleVersion foreign key attribute.
-     *
-     * @param ChildProjectRoleVersion $l ChildProjectRoleVersion
-     * @return $this The current object (for fluent API support)
-     */
-    public function addProjectRoleVersion(ChildProjectRoleVersion $l)
-    {
-        if ($this->collProjectRoleVersions === null) {
-            $this->initProjectRoleVersions();
-            $this->collProjectRoleVersionsPartial = true;
-        }
-
-        if (!$this->collProjectRoleVersions->contains($l)) {
-            $this->doAddProjectRoleVersion($l);
-
-            if ($this->projectRoleVersionsScheduledForDeletion and $this->projectRoleVersionsScheduledForDeletion->contains($l)) {
-                $this->projectRoleVersionsScheduledForDeletion->remove($this->projectRoleVersionsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildProjectRoleVersion $projectRoleVersion The ChildProjectRoleVersion object to add.
-     */
-    protected function doAddProjectRoleVersion(ChildProjectRoleVersion $projectRoleVersion): void
-    {
-        $this->collProjectRoleVersions[]= $projectRoleVersion;
-        $projectRoleVersion->setProjectRole($this);
-    }
-
-    /**
-     * @param ChildProjectRoleVersion $projectRoleVersion The ChildProjectRoleVersion object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeProjectRoleVersion(ChildProjectRoleVersion $projectRoleVersion)
-    {
-        if ($this->getProjectRoleVersions()->contains($projectRoleVersion)) {
-            $pos = $this->collProjectRoleVersions->search($projectRoleVersion);
-            $this->collProjectRoleVersions->remove($pos);
-            if (null === $this->projectRoleVersionsScheduledForDeletion) {
-                $this->projectRoleVersionsScheduledForDeletion = clone $this->collProjectRoleVersions;
-                $this->projectRoleVersionsScheduledForDeletion->clear();
-            }
-            $this->projectRoleVersionsScheduledForDeletion[]= clone $projectRoleVersion;
-            $projectRoleVersion->setProjectRole(null);
-        }
-
-        return $this;
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -2132,9 +1498,6 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aRole) {
-            $this->aRole->removeProjectRole($this);
-        }
         if (null !== $this->aProject) {
             $this->aProject->removeProjectRole($this);
         }
@@ -2143,14 +1506,10 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         $this->id = null;
         $this->lvl = null;
-        $this->role_id = null;
+        $this->is_crud = null;
         $this->project_id = null;
         $this->object_id = null;
         $this->user_id = null;
-        $this->version = null;
-        $this->version_created_at = null;
-        $this->version_created_by = null;
-        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2173,15 +1532,8 @@ abstract class ProjectRole implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collProjectRoleVersions) {
-                foreach ($this->collProjectRoleVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collProjectRoleVersions = null;
-        $this->aRole = null;
         $this->aProject = null;
         $this->aUsers = null;
         return $this;

@@ -4,6 +4,7 @@ namespace DB\Base;
 
 use \DateTime;
 use \Exception;
+use inc\artemy\v1\auth\Auth;
 use \PDO;
 use DB\Groups as ChildGroups;
 use DB\GroupsQuery as ChildGroupsQuery;
@@ -11,11 +12,14 @@ use DB\GroupsVersion as ChildGroupsVersion;
 use DB\GroupsVersionQuery as ChildGroupsVersionQuery;
 use DB\House as ChildHouse;
 use DB\HouseQuery as ChildHouseQuery;
+use DB\HouseVersionQuery as ChildHouseVersionQuery;
 use DB\Subproject as ChildSubproject;
 use DB\SubprojectQuery as ChildSubprojectQuery;
+use DB\SubprojectVersionQuery as ChildSubprojectVersionQuery;
 use DB\Map\GroupsTableMap;
 use DB\Map\GroupsVersionTableMap;
 use DB\Map\HouseTableMap;
+use DB\Map\HouseVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -145,18 +149,18 @@ abstract class Groups implements ActiveRecordInterface
     protected $aSubproject;
 
     /**
-     * @var        ObjectCollection|ChildGroupsVersion[] Collection to store aggregation of ChildGroupsVersion objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion> Collection to store aggregation of ChildGroupsVersion objects.
-     */
-    protected $collGroupsVersions;
-    protected $collGroupsVersionsPartial;
-
-    /**
      * @var        ObjectCollection|ChildHouse[] Collection to store aggregation of ChildHouse objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildHouse> Collection to store aggregation of ChildHouse objects.
      */
     protected $collHouses;
     protected $collHousesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildGroupsVersion[] Collection to store aggregation of ChildGroupsVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion> Collection to store aggregation of ChildGroupsVersion objects.
+     */
+    protected $collGroupsVersions;
+    protected $collGroupsVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -166,12 +170,13 @@ abstract class Groups implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // versionable behavior
+
+
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildGroupsVersion[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion>
+     * @var bool
      */
-    protected $groupsVersionsScheduledForDeletion = null;
+    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -179,6 +184,13 @@ abstract class Groups implements ActiveRecordInterface
      * @phpstan-var ObjectCollection&\Traversable<ChildHouse>
      */
     protected $housesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGroupsVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildGroupsVersion>
+     */
+    protected $groupsVersionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -876,9 +888,9 @@ abstract class Groups implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aSubproject = null;
-            $this->collGroupsVersions = null;
-
             $this->collHouses = null;
+
+            $this->collGroupsVersions = null;
 
         } // if (deep)
     }
@@ -944,6 +956,14 @@ abstract class Groups implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(GroupsTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -957,6 +977,10 @@ abstract class Groups implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 GroupsTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1006,23 +1030,6 @@ abstract class Groups implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->groupsVersionsScheduledForDeletion !== null) {
-                if (!$this->groupsVersionsScheduledForDeletion->isEmpty()) {
-                    \DB\GroupsVersionQuery::create()
-                        ->filterByPrimaryKeys($this->groupsVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->groupsVersionsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collGroupsVersions !== null) {
-                foreach ($this->collGroupsVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->housesScheduledForDeletion !== null) {
                 if (!$this->housesScheduledForDeletion->isEmpty()) {
                     \DB\HouseQuery::create()
@@ -1034,6 +1041,23 @@ abstract class Groups implements ActiveRecordInterface
 
             if ($this->collHouses !== null) {
                 foreach ($this->collHouses as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->groupsVersionsScheduledForDeletion !== null) {
+                if (!$this->groupsVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\GroupsVersionQuery::create()
+                        ->filterByPrimaryKeys($this->groupsVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->groupsVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collGroupsVersions !== null) {
+                foreach ($this->collGroupsVersions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1283,21 +1307,6 @@ abstract class Groups implements ActiveRecordInterface
 
                 $result[$key] = $this->aSubproject->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collGroupsVersions) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'groupsVersions';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'groups_versions';
-                        break;
-                    default:
-                        $key = 'GroupsVersions';
-                }
-
-                $result[$key] = $this->collGroupsVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collHouses) {
 
                 switch ($keyType) {
@@ -1312,6 +1321,21 @@ abstract class Groups implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collHouses->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collGroupsVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groupsVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groups_versions';
+                        break;
+                    default:
+                        $key = 'GroupsVersions';
+                }
+
+                $result[$key] = $this->collGroupsVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1601,15 +1625,15 @@ abstract class Groups implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getGroupsVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGroupsVersion($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getHouses() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addHouse($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getGroupsVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addGroupsVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1705,14 +1729,253 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('GroupsVersion' === $relationName) {
-            $this->initGroupsVersions();
-            return;
-        }
         if ('House' === $relationName) {
             $this->initHouses();
             return;
         }
+        if ('GroupsVersion' === $relationName) {
+            $this->initGroupsVersions();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collHouses collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addHouses()
+     */
+    public function clearHouses()
+    {
+        $this->collHouses = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collHouses collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialHouses($v = true): void
+    {
+        $this->collHousesPartial = $v;
+    }
+
+    /**
+     * Initializes the collHouses collection.
+     *
+     * By default this just sets the collHouses collection to an empty array (like clearcollHouses());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHouses(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collHouses && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = HouseTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collHouses = new $collectionClassName;
+        $this->collHouses->setModel('\DB\House');
+    }
+
+    /**
+     * Gets an array of ChildHouse objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildHouse[] List of ChildHouse objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildHouse> List of ChildHouse objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getHouses(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collHousesPartial && !$this->isNew();
+        if (null === $this->collHouses || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collHouses) {
+                    $this->initHouses();
+                } else {
+                    $collectionClassName = HouseTableMap::getTableMap()->getCollectionClassName();
+
+                    $collHouses = new $collectionClassName;
+                    $collHouses->setModel('\DB\House');
+
+                    return $collHouses;
+                }
+            } else {
+                $collHouses = ChildHouseQuery::create(null, $criteria)
+                    ->filterByGroups($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collHousesPartial && count($collHouses)) {
+                        $this->initHouses(false);
+
+                        foreach ($collHouses as $obj) {
+                            if (false == $this->collHouses->contains($obj)) {
+                                $this->collHouses->append($obj);
+                            }
+                        }
+
+                        $this->collHousesPartial = true;
+                    }
+
+                    return $collHouses;
+                }
+
+                if ($partial && $this->collHouses) {
+                    foreach ($this->collHouses as $obj) {
+                        if ($obj->isNew()) {
+                            $collHouses[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHouses = $collHouses;
+                $this->collHousesPartial = false;
+            }
+        }
+
+        return $this->collHouses;
+    }
+
+    /**
+     * Sets a collection of ChildHouse objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $houses A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setHouses(Collection $houses, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildHouse[] $housesToDelete */
+        $housesToDelete = $this->getHouses(new Criteria(), $con)->diff($houses);
+
+
+        $this->housesScheduledForDeletion = $housesToDelete;
+
+        foreach ($housesToDelete as $houseRemoved) {
+            $houseRemoved->setGroups(null);
+        }
+
+        $this->collHouses = null;
+        foreach ($houses as $house) {
+            $this->addHouse($house);
+        }
+
+        $this->collHouses = $houses;
+        $this->collHousesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related House objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related House objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countHouses(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collHousesPartial && !$this->isNew();
+        if (null === $this->collHouses || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHouses) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHouses());
+            }
+
+            $query = ChildHouseQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroups($this)
+                ->count($con);
+        }
+
+        return count($this->collHouses);
+    }
+
+    /**
+     * Method called to associate a ChildHouse object to this object
+     * through the ChildHouse foreign key attribute.
+     *
+     * @param ChildHouse $l ChildHouse
+     * @return $this The current object (for fluent API support)
+     */
+    public function addHouse(ChildHouse $l)
+    {
+        if ($this->collHouses === null) {
+            $this->initHouses();
+            $this->collHousesPartial = true;
+        }
+
+        if (!$this->collHouses->contains($l)) {
+            $this->doAddHouse($l);
+
+            if ($this->housesScheduledForDeletion and $this->housesScheduledForDeletion->contains($l)) {
+                $this->housesScheduledForDeletion->remove($this->housesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildHouse $house The ChildHouse object to add.
+     */
+    protected function doAddHouse(ChildHouse $house): void
+    {
+        $this->collHouses[]= $house;
+        $house->setGroups($this);
+    }
+
+    /**
+     * @param ChildHouse $house The ChildHouse object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeHouse(ChildHouse $house)
+    {
+        if ($this->getHouses()->contains($house)) {
+            $pos = $this->collHouses->search($house);
+            $this->collHouses->remove($pos);
+            if (null === $this->housesScheduledForDeletion) {
+                $this->housesScheduledForDeletion = clone $this->collHouses;
+                $this->housesScheduledForDeletion->clear();
+            }
+            $this->housesScheduledForDeletion[]= clone $house;
+            $house->setGroups(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1958,245 +2221,6 @@ abstract class Groups implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collHouses collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addHouses()
-     */
-    public function clearHouses()
-    {
-        $this->collHouses = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collHouses collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialHouses($v = true): void
-    {
-        $this->collHousesPartial = $v;
-    }
-
-    /**
-     * Initializes the collHouses collection.
-     *
-     * By default this just sets the collHouses collection to an empty array (like clearcollHouses());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initHouses(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collHouses && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = HouseTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collHouses = new $collectionClassName;
-        $this->collHouses->setModel('\DB\House');
-    }
-
-    /**
-     * Gets an array of ChildHouse objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildGroups is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildHouse[] List of ChildHouse objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildHouse> List of ChildHouse objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getHouses(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collHousesPartial && !$this->isNew();
-        if (null === $this->collHouses || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collHouses) {
-                    $this->initHouses();
-                } else {
-                    $collectionClassName = HouseTableMap::getTableMap()->getCollectionClassName();
-
-                    $collHouses = new $collectionClassName;
-                    $collHouses->setModel('\DB\House');
-
-                    return $collHouses;
-                }
-            } else {
-                $collHouses = ChildHouseQuery::create(null, $criteria)
-                    ->filterByGroups($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collHousesPartial && count($collHouses)) {
-                        $this->initHouses(false);
-
-                        foreach ($collHouses as $obj) {
-                            if (false == $this->collHouses->contains($obj)) {
-                                $this->collHouses->append($obj);
-                            }
-                        }
-
-                        $this->collHousesPartial = true;
-                    }
-
-                    return $collHouses;
-                }
-
-                if ($partial && $this->collHouses) {
-                    foreach ($this->collHouses as $obj) {
-                        if ($obj->isNew()) {
-                            $collHouses[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collHouses = $collHouses;
-                $this->collHousesPartial = false;
-            }
-        }
-
-        return $this->collHouses;
-    }
-
-    /**
-     * Sets a collection of ChildHouse objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $houses A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setHouses(Collection $houses, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildHouse[] $housesToDelete */
-        $housesToDelete = $this->getHouses(new Criteria(), $con)->diff($houses);
-
-
-        $this->housesScheduledForDeletion = $housesToDelete;
-
-        foreach ($housesToDelete as $houseRemoved) {
-            $houseRemoved->setGroups(null);
-        }
-
-        $this->collHouses = null;
-        foreach ($houses as $house) {
-            $this->addHouse($house);
-        }
-
-        $this->collHouses = $houses;
-        $this->collHousesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related House objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related House objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countHouses(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collHousesPartial && !$this->isNew();
-        if (null === $this->collHouses || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collHouses) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getHouses());
-            }
-
-            $query = ChildHouseQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByGroups($this)
-                ->count($con);
-        }
-
-        return count($this->collHouses);
-    }
-
-    /**
-     * Method called to associate a ChildHouse object to this object
-     * through the ChildHouse foreign key attribute.
-     *
-     * @param ChildHouse $l ChildHouse
-     * @return $this The current object (for fluent API support)
-     */
-    public function addHouse(ChildHouse $l)
-    {
-        if ($this->collHouses === null) {
-            $this->initHouses();
-            $this->collHousesPartial = true;
-        }
-
-        if (!$this->collHouses->contains($l)) {
-            $this->doAddHouse($l);
-
-            if ($this->housesScheduledForDeletion and $this->housesScheduledForDeletion->contains($l)) {
-                $this->housesScheduledForDeletion->remove($this->housesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildHouse $house The ChildHouse object to add.
-     */
-    protected function doAddHouse(ChildHouse $house): void
-    {
-        $this->collHouses[]= $house;
-        $house->setGroups($this);
-    }
-
-    /**
-     * @param ChildHouse $house The ChildHouse object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeHouse(ChildHouse $house)
-    {
-        if ($this->getHouses()->contains($house)) {
-            $pos = $this->collHouses->search($house);
-            $this->collHouses->remove($pos);
-            if (null === $this->housesScheduledForDeletion) {
-                $this->housesScheduledForDeletion = clone $this->collHouses;
-                $this->housesScheduledForDeletion->clear();
-            }
-            $this->housesScheduledForDeletion[]= clone $house;
-            $house->setGroups(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2239,20 +2263,20 @@ abstract class Groups implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collGroupsVersions) {
-                foreach ($this->collGroupsVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collHouses) {
                 foreach ($this->collHouses as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collGroupsVersions) {
+                foreach ($this->collGroupsVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
-        $this->collGroupsVersions = null;
         $this->collHouses = null;
+        $this->collGroupsVersions = null;
         $this->aSubproject = null;
         return $this;
     }
@@ -2267,6 +2291,362 @@ abstract class Groups implements ActiveRecordInterface
         return (string) $this->exportTo(GroupsTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildGroupsQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if (null !== ($object = $this->getSubproject($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+        if ($this->collHouses) {
+
+            // to avoid infinite loops, emulate in save
+            $this->alreadyInSave = true;
+
+            foreach ($this->getHouses(null, $con) as $relatedObject) {
+
+                if ($relatedObject->isVersioningNecessary($con)) {
+
+                    $this->alreadyInSave = false;
+                    return true;
+                }
+            }
+            $this->alreadyInSave = false;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildGroupsVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildGroupsVersion();
+        $version->setId($this->getId());
+        $version->setName($this->getName());
+        $version->setStatus($this->getStatus());
+        $version->setIsAvailable($this->getIsAvailable());
+        $version->setSubprojectId($this->getSubprojectId());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setGroups($this);
+        if (($related = $this->getSubproject(null, $con)) && $related->getVersion()) {
+            $version->setSubprojectIdVersion($related->getVersion());
+        }
+        $object = $this->getHouses(null, $con);
+
+
+        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
+            $version->setHouseIds(array_keys($relateds));
+            $version->setHouseVersions(array_values($relateds));
+        }
+
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildGroups object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildGroupsVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildGroups'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setName($version->getName());
+        $this->setStatus($version->getStatus());
+        $this->setIsAvailable($version->getIsAvailable());
+        $this->setSubprojectId($version->getSubprojectId());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValue = $version->getSubprojectId()) {
+            if (isset($loadedObjects['ChildSubproject']) && isset($loadedObjects['ChildSubproject'][$fkValue]) && isset($loadedObjects['ChildSubproject'][$fkValue][$version->getSubprojectIdVersion()])) {
+                $related = $loadedObjects['ChildSubproject'][$fkValue][$version->getSubprojectIdVersion()];
+            } else {
+                $related = new ChildSubproject();
+                $relatedVersion = ChildSubprojectVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getSubprojectIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setSubproject($related);
+        }
+        if ($fkValues = $version->getHouseIds()) {
+            $this->clearHouses();
+            $fkVersions = $version->getHouseVersions();
+            $query = ChildHouseVersionQuery::create();
+            foreach ($fkValues as $key => $value) {
+                $c1 = $query->getNewCriterion(HouseVersionTableMap::COL_ID, $value);
+                $c2 = $query->getNewCriterion(HouseVersionTableMap::COL_VERSION, $fkVersions[$key]);
+                $c1->addAnd($c2);
+                $query->addOr($c1);
+            }
+            foreach ($query->find($con) as $relatedVersion) {
+                if (isset($loadedObjects['ChildHouse']) && isset($loadedObjects['ChildHouse'][$relatedVersion->getId()]) && isset($loadedObjects['ChildHouse'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
+                    $related = $loadedObjects['ChildHouse'][$relatedVersion->getId()][$relatedVersion->getVersion()];
+                } else {
+                    $related = new ChildHouse();
+                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                    $related->setNew(false);
+                }
+                $this->addHouse($related);
+                $this->collHousesPartial = false;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildGroupsVersionQuery::create()
+            ->filterByGroups($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildGroupsVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildGroupsVersionQuery::create()
+            ->filterByGroups($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildGroupsVersion[] A list of ChildGroupsVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(GroupsVersionTableMap::COL_VERSION);
+
+        return $this->getGroupsVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\GroupsVersion[] List of \DB\GroupsVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildGroupsVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(GroupsVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getGroupsVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con
@@ -2293,7 +2673,10 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+        $this->setVersionComment('insert');
+
+        return true;
     }
 
     /**
@@ -2303,7 +2686,7 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2312,7 +2695,14 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        $this->setVersionCreatedBy(Auth::getUser()->id());
+
+        if ($this->status === 'deleted') {
+            $this->setVersionComment('delete');
+            $this->setIsAvailable(false);
+        } else $this->setVersionComment('update');
+
+        return true;
     }
 
     /**

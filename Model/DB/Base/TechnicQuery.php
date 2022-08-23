@@ -59,16 +59,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery rightJoinWithStageTechnic() Adds a RIGHT JOIN clause and with to the query using the StageTechnic relation
  * @method     ChildTechnicQuery innerJoinWithStageTechnic() Adds a INNER JOIN clause and with to the query using the StageTechnic relation
  *
- * @method     ChildTechnicQuery leftJoinTechnicVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the TechnicVersion relation
- * @method     ChildTechnicQuery rightJoinTechnicVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TechnicVersion relation
- * @method     ChildTechnicQuery innerJoinTechnicVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the TechnicVersion relation
- *
- * @method     ChildTechnicQuery joinWithTechnicVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TechnicVersion relation
- *
- * @method     ChildTechnicQuery leftJoinWithTechnicVersion() Adds a LEFT JOIN clause and with to the query using the TechnicVersion relation
- * @method     ChildTechnicQuery rightJoinWithTechnicVersion() Adds a RIGHT JOIN clause and with to the query using the TechnicVersion relation
- * @method     ChildTechnicQuery innerJoinWithTechnicVersion() Adds a INNER JOIN clause and with to the query using the TechnicVersion relation
- *
  * @method     ChildTechnicQuery leftJoinWorkTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery rightJoinWorkTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery innerJoinWorkTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the WorkTechnic relation
@@ -79,7 +69,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTechnicQuery rightJoinWithWorkTechnic() Adds a RIGHT JOIN clause and with to the query using the WorkTechnic relation
  * @method     ChildTechnicQuery innerJoinWithWorkTechnic() Adds a INNER JOIN clause and with to the query using the WorkTechnic relation
  *
- * @method     \DB\StageTechnicQuery|\DB\TechnicVersionQuery|\DB\WorkTechnicQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildTechnicQuery leftJoinTechnicVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery rightJoinTechnicVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery innerJoinTechnicVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the TechnicVersion relation
+ *
+ * @method     ChildTechnicQuery joinWithTechnicVersion($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TechnicVersion relation
+ *
+ * @method     ChildTechnicQuery leftJoinWithTechnicVersion() Adds a LEFT JOIN clause and with to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery rightJoinWithTechnicVersion() Adds a RIGHT JOIN clause and with to the query using the TechnicVersion relation
+ * @method     ChildTechnicQuery innerJoinWithTechnicVersion() Adds a INNER JOIN clause and with to the query using the TechnicVersion relation
+ *
+ * @method     \DB\StageTechnicQuery|\DB\WorkTechnicQuery|\DB\TechnicVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildTechnic|null findOne(?ConnectionInterface $con = null) Return the first ChildTechnic matching the query
  * @method     ChildTechnic findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildTechnic matching the query, or a new ChildTechnic object populated from the query conditions when no match is found
@@ -133,7 +133,14 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class TechnicQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // versionable behavior
+
+    /**
+     * Whether the versioning is enabled
+     */
+    static $isVersioningEnabled = true;
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \DB\Base\TechnicQuery object.
@@ -783,138 +790,6 @@ abstract class TechnicQuery extends ModelCriteria
         return $this->useExistsQuery('StageTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \DB\TechnicVersion object
-     *
-     * @param \DB\TechnicVersion|ObjectCollection $technicVersion the related object to use as filter
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByTechnicVersion($technicVersion, ?string $comparison = null)
-    {
-        if ($technicVersion instanceof \DB\TechnicVersion) {
-            $this
-                ->addUsingAlias(TechnicTableMap::COL_ID, $technicVersion->getId(), $comparison);
-
-            return $this;
-        } elseif ($technicVersion instanceof ObjectCollection) {
-            $this
-                ->useTechnicVersionQuery()
-                ->filterByPrimaryKeys($technicVersion->getPrimaryKeys())
-                ->endUse();
-
-            return $this;
-        } else {
-            throw new PropelException('filterByTechnicVersion() only accepts arguments of type \DB\TechnicVersion or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the TechnicVersion relation
-     *
-     * @param string|null $relationAlias Optional alias for the relation
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function joinTechnicVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('TechnicVersion');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'TechnicVersion');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the TechnicVersion relation TechnicVersion object
-     *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \DB\TechnicVersionQuery A secondary query class using the current class as primary query
-     */
-    public function useTechnicVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinTechnicVersion($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TechnicVersion', '\DB\TechnicVersionQuery');
-    }
-
-    /**
-     * Use the TechnicVersion relation TechnicVersion object
-     *
-     * @param callable(\DB\TechnicVersionQuery):\DB\TechnicVersionQuery $callable A function working on the related query
-     *
-     * @param string|null $relationAlias optional alias for the relation
-     *
-     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this
-     */
-    public function withTechnicVersionQuery(
-        callable $callable,
-        string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
-    ) {
-        $relatedQuery = $this->useTechnicVersionQuery(
-            $relationAlias,
-            $joinType
-        );
-        $callable($relatedQuery);
-        $relatedQuery->endUse();
-
-        return $this;
-    }
-    /**
-     * Use the relation to TechnicVersion table for an EXISTS query.
-     *
-     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
-     *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
-     *
-     * @return \DB\TechnicVersionQuery The inner query object of the EXISTS statement
-     */
-    public function useTechnicVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
-    {
-        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, $typeOfExists);
-    }
-
-    /**
-     * Use the relation to TechnicVersion table for a NOT EXISTS query.
-     *
-     * @see useTechnicVersionExistsQuery()
-     *
-     * @param string|null $modelAlias sets an alias for the nested query
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
-     *
-     * @return \DB\TechnicVersionQuery The inner query object of the NOT EXISTS statement
-     */
-    public function useTechnicVersionNotExistsQuery($modelAlias = null, $queryClass = null)
-    {
-        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, 'NOT EXISTS');
-    }
-    /**
      * Filter the query by a related \DB\WorkTechnic object
      *
      * @param \DB\WorkTechnic|ObjectCollection $workTechnic the related object to use as filter
@@ -1047,6 +922,138 @@ abstract class TechnicQuery extends ModelCriteria
         return $this->useExistsQuery('WorkTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
+     * Filter the query by a related \DB\TechnicVersion object
+     *
+     * @param \DB\TechnicVersion|ObjectCollection $technicVersion the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByTechnicVersion($technicVersion, ?string $comparison = null)
+    {
+        if ($technicVersion instanceof \DB\TechnicVersion) {
+            $this
+                ->addUsingAlias(TechnicTableMap::COL_ID, $technicVersion->getId(), $comparison);
+
+            return $this;
+        } elseif ($technicVersion instanceof ObjectCollection) {
+            $this
+                ->useTechnicVersionQuery()
+                ->filterByPrimaryKeys($technicVersion->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByTechnicVersion() only accepts arguments of type \DB\TechnicVersion or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the TechnicVersion relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinTechnicVersion(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('TechnicVersion');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'TechnicVersion');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the TechnicVersion relation TechnicVersion object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\TechnicVersionQuery A secondary query class using the current class as primary query
+     */
+    public function useTechnicVersionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinTechnicVersion($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'TechnicVersion', '\DB\TechnicVersionQuery');
+    }
+
+    /**
+     * Use the TechnicVersion relation TechnicVersion object
+     *
+     * @param callable(\DB\TechnicVersionQuery):\DB\TechnicVersionQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withTechnicVersionQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useTechnicVersionQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to TechnicVersion table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\TechnicVersionQuery The inner query object of the EXISTS statement
+     */
+    public function useTechnicVersionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to TechnicVersion table for a NOT EXISTS query.
+     *
+     * @see useTechnicVersionExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\TechnicVersionQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useTechnicVersionNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('TechnicVersion', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
      * Exclude object from result
      *
      * @param ChildTechnic $technic Object to remove from the list of results
@@ -1121,6 +1128,34 @@ abstract class TechnicQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // versionable behavior
+
+    /**
+     * Checks whether versioning is enabled
+     *
+     * @return bool
+     */
+    static public function isVersioningEnabled(): bool
+    {
+        return self::$isVersioningEnabled;
+    }
+
+    /**
+     * Enables versioning
+     */
+    static public function enableVersioning(): void
+    {
+        self::$isVersioningEnabled = true;
+    }
+
+    /**
+     * Disables versioning
+     */
+    static public function disableVersioning(): void
+    {
+        self::$isVersioningEnabled = false;
     }
 
 }

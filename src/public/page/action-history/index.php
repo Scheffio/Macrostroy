@@ -24,7 +24,7 @@
     <div class="wrap">
         <div class="tabs-controller">
             <div class="tabs-controller__tab-anchor">
-                <a class="tab-anchor__anchor-name selected">История действий</a>
+                <p class="tab-anchor__anchor-name selected">История действий</p>
             </div>
         </div>
         <div class="tabs-container">

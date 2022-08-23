@@ -12,6 +12,7 @@
         width: clamp(768px, 90vw, 1555px);
         justify-content: flex-start;
         gap: 50px;
+        padding-bottom: 10px;
         position: relative;
 
         &::after {
@@ -35,6 +36,9 @@
                 text-decoration: none;
                 color: black;
                 @include TabAnchorName;
+                p {
+                    margin: 0;
+                }
 
                 &.selected {
                     font-size: 36px;

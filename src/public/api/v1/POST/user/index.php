@@ -6,12 +6,13 @@ use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 
 $request = new Request();
+$password = Auth::createUuid();
 try {
-    Auth::getUser()->register($request->getRequest("user_email"), Auth::createUuid(), null, function ($selector, $token) use ($request) {
+    Auth::getUser()->register($request->getRequest("user_email"), $password, null, function ($selector, $token) use ($password, $request) {
         $link = "https://" . $_SERVER['HTTP_HOST'] . '/auth/reset_password/change_password?selector=' . urlencode($selector) . '&token=' . urlencode
             ($token);
         MailSender::sendAccountCreatedByAdmin($request->getRequest("user_email"), $link);
-        var_dump();
+        var_dump($password);
     });
 } catch (\Delight\Auth\AuthError $e) {
 } catch (\Delight\Auth\InvalidEmailException $e) {

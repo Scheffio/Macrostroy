@@ -36,7 +36,8 @@ const selectableUsers = {
 document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 // ===================
 
-
+titleChecker.resetClasses()
+titleChecker.checkTitle(document.title)
 
 
 

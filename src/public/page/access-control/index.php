@@ -210,7 +210,8 @@
                             <label for="public">Все разрешения</label>
                         </div>
                     </div>
-                    <p class="permission__description">Пользователь с таким разрешением имеет доступ ко всем CRUD - опциям.</p>
+                    <p class="permission__description">Пользователь с таким разрешением имеет доступ ко всем CRUD -
+                        опциям.</p>
                 </div>
                 <div class="underline"></div>
                 <div class="permission">
@@ -220,12 +221,15 @@
                             <label for="watch">Просмотр</label>
                         </div>
                     </div>
-                    <p class="permission__description">Пользователь с таким разрешением имеет доступ к просмотру этого раздела.</p>
+                    <p class="permission__description">Пользователь с таким разрешением имеет доступ к просмотру этого
+                        раздела.</p>
                 </div>
             </div>
         </div>
-        <script src="js/script.js"></script>
-        <script src="../MAIN_PAGE/js/script.js"></script>
+    </div>
+
+    <script src="../../static/js/titleChecker.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

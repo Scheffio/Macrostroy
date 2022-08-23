@@ -299,6 +299,7 @@
             </div>
         </div>
     </div>
+    <script src="../../static/js/titleChecker.js"></script>
     <script src="js/script.js"></script>
 </body>
 

@@ -29,13 +29,15 @@
         .tabs-controller__tab-anchor {
             display: flex;
             align-items: center;
-            margin: 0;
 
             .tab-anchor__anchor-name {
                 order: 0;
                 text-decoration: none;
                 color: black;
                 @include TabAnchorName;
+                p {
+                    margin: 0;
+                }
 
                 &.selected {
                     font-size: 36px;

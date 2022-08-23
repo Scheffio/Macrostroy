@@ -4,6 +4,9 @@
 namespace inc\artemy\v1\development_mode;
 
 
+use DB\UsersThrottlingQuery;
+use Propel\Runtime\Exception\PropelException;
+
 class DevelopmentMode
 {
     private static bool $isActive = false;
@@ -36,10 +39,18 @@ class DevelopmentMode
 
     public static function addCache(): void
     {
-        header('cache-control: max-age=120000, cache, store, must-revalidate', true); // HTTP 1.1.
-        header('Pragma: cache', true);                                              // HTTP 1.0.
+        header('cache-control: max-age=120000, cache, store, must-revalidate', true);       // HTTP 1.1.
+        header('Pragma: cache', true);                                                      // HTTP 1.0.
         header('Expires: 120000', true);                                                    // Proxies.
         header('Access-Control-Max-Age: 120000', true);
+    }
+
+    public static function clearUsersThrottling(): void
+    {
+        try {
+            UsersThrottlingQuery::create()->deleteAll();
+        } catch (PropelException $e) {
+        }
     }
 
     private static function showPhpErrors(): void

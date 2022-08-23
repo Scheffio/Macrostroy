@@ -38,6 +38,23 @@ document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEvent
 
 // parse users 
 
+const users = {
+    createElement(element, elementClass, elementModificator, elementContent) {
+        let create = document.createElement(`${element}`)
+        if (elementClass != '' && elementModificator != '') {
+            create.classList.add(`${elementClass}`)
+            create.classList.add(`${elementModificator}`)
+        } else if (elementClass != '') {
+            create.classList.add(`${elementClass}`)
+        }
+        if (elementContent != '') {
+            create.innerHTML = elementContent
+        }
+        return create
+        // элементо-генератор
+    }
+}
+
 fetch("/api/v1/users", {
     method: 'GET',
     headers: {
@@ -48,7 +65,11 @@ fetch("/api/v1/users", {
     return res.json();
 })
 .then(function(json) {
-    console.log(json);
+    json.data.forEach((elem) => {
+        for(let i = 0; i < elem.lenght; i++) {
+            console.log(elem[i])
+        }
+    })
 })
 
 // ===================

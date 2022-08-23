@@ -11,7 +11,7 @@ if (empty($_GET["selector"]) or empty($_GET["token"])) header("Location: /");
     <title>Document</title>
 </head>
 <body>
-<h1>Создания аккаунта для почты $email$</h1>
+<h1>Создание аккаунта для почты $email$</h1>
 <form action="">
     <label>
         <input type="password" required>

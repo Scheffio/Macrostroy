@@ -3,6 +3,7 @@
 
 use DB\Base\UsersQuery;
 use DB\Map\UsersTableMap;
+use inc\artemy\v1\request\Request;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
@@ -19,7 +20,12 @@ try {
         );
     }
 
-    
+    $request = new Request();
+    $user_id = $request->getQueryOrThrow('user_id');
+    $project_id = $request->getQueryOrThrow('project_id');
+    $object_id = $request->getQueryOrThrow('object_id');
+    $object_name = $request->getQueryOrThrow('object_name');
+
 
 } catch (PropelException|Exception $e) {
     JsonOutput::error($e->getMessage());

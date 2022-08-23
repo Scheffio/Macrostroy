@@ -42,6 +42,8 @@ class UserRole
      * @param int|null $id ID элемента. При пустом (null) значении используются данные авторизованного пользователя.
      * @param bool $isUser ID пользователя (true) / ID роли (false).
      */
+
+    // ?int $userId = null, ?int $roleId = null
     function __construct(?int $id = null, bool $isUser = true)
     {
         if ($id !== null && $isUser === false) {

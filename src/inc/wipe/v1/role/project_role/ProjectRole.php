@@ -63,12 +63,16 @@ class ProjectRole
 
     /**
      * @param int|null $roleId ID роли проекта.
+     * @param int|null $userId ID пользователя.
      */
-    function __construct(?int $roleId)
+    function __construct(?int $roleId = null, ?int $userId = null)
     {
-        if ($roleId) {
-
+        if ($roleId && $userId) {
+            $this->userId = $userId;
+            $this->userRole = new UserRole($userId);
         }
+        elseif ($roleId) {}
+        elseif ($userId) {}
     }
 
     #region Access Control Functions

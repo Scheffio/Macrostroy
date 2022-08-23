@@ -141,6 +141,11 @@ class UsersTableMap extends TableMap
     public const COL_FORCE_LOGOUT = 'users.force_logout';
 
     /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'users.is_available';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';

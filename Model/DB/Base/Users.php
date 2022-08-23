@@ -166,6 +166,35 @@ abstract class Users implements ActiveRecordInterface
     protected $force_logout;
 
     /**
+     * The value for the name field.
+     * Имя
+     * @var        string|null
+     */
+    protected $name;
+
+    /**
+     * The value for the surname field.
+     * Фамилия
+     * @var        string|null
+     */
+    protected $surname;
+
+    /**
+     * The value for the patronymic field.
+     * Отчество
+     * @var        string|null
+     */
+    protected $patronymic;
+
+    /**
+     * The value for the is_available field.
+     *
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $is_available;
+
+    /**
      * @var        ChildRole
      */
     protected $aRole;
@@ -206,6 +235,7 @@ abstract class Users implements ActiveRecordInterface
         $this->resettable = true;
         $this->roles_mask = 0;
         $this->force_logout = 0;
+        $this->is_available = true;
     }
 
     /**
@@ -587,6 +617,56 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
+     * Get the [name] column value.
+     * Имя
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the [surname] column value.
+     * Фамилия
+     * @return string|null
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * Get the [patronymic] column value.
+     * Отчество
+     * @return string|null
+     */
+    public function getPatronymic()
+    {
+        return $this->patronymic;
+    }
+
+    /**
+     * Get the [is_available] column value.
+     *
+     * @return boolean
+     */
+    public function getIsAvailable()
+    {
+        return $this->is_available;
+    }
+
+    /**
+     * Get the [is_available] column value.
+     *
+     * @return boolean
+     */
+    public function isAvailable()
+    {
+        return $this->getIsAvailable();
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v New value
@@ -867,6 +947,94 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [name] column.
+     * Имя
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[UsersTableMap::COL_NAME] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [surname] column.
+     * Фамилия
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setSurname($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->surname !== $v) {
+            $this->surname = $v;
+            $this->modifiedColumns[UsersTableMap::COL_SURNAME] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [patronymic] column.
+     * Отчество
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setPatronymic($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->patronymic !== $v) {
+            $this->patronymic = $v;
+            $this->modifiedColumns[UsersTableMap::COL_PATRONYMIC] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of the [is_available] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setIsAvailable($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_available !== $v) {
+            $this->is_available = $v;
+            $this->modifiedColumns[UsersTableMap::COL_IS_AVAILABLE] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -876,29 +1044,33 @@ abstract class Users implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->status !== 0) {
-                return false;
-            }
+        if ($this->status !== 0) {
+            return false;
+        }
 
-            if ($this->role_id !== 1) {
-                return false;
-            }
+        if ($this->role_id !== 1) {
+            return false;
+        }
 
-            if ($this->verified !== false) {
-                return false;
-            }
+        if ($this->verified !== false) {
+            return false;
+        }
 
-            if ($this->resettable !== true) {
-                return false;
-            }
+        if ($this->resettable !== true) {
+            return false;
+        }
 
-            if ($this->roles_mask !== 0) {
-                return false;
-            }
+        if ($this->roles_mask !== 0) {
+            return false;
+        }
 
-            if ($this->force_logout !== 0) {
-                return false;
-            }
+        if ($this->force_logout !== 0) {
+            return false;
+        }
+
+        if ($this->is_available !== true) {
+            return false;
+        }
 
         // otherwise, everything was equal, so return TRUE
         return true;
@@ -916,7 +1088,7 @@ abstract class Users implements ActiveRecordInterface
      * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param bool $rehydrate Whether this object is being re-hydrated from the database.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @return int next starting column
@@ -964,6 +1136,18 @@ abstract class Users implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UsersTableMap::translateFieldName('ForceLogout', TableMap::TYPE_PHPNAME, $indexType)];
             $this->force_logout = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UsersTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UsersTableMap::translateFieldName('Surname', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->surname = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UsersTableMap::translateFieldName('Patronymic', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->patronymic = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UsersTableMap::translateFieldName('IsAvailable', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_available = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -972,7 +1156,7 @@ abstract class Users implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 13; // 13 = UsersTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = UsersTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\Users'), 0, $e);
@@ -1208,7 +1392,7 @@ abstract class Users implements ActiveRecordInterface
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . UsersTableMap::COL_ID . ')');
         }
 
-         // check the columns in natural order for more readable SQL queries
+        // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(UsersTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
@@ -1247,6 +1431,18 @@ abstract class Users implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UsersTableMap::COL_FORCE_LOGOUT)) {
             $modifiedColumns[':p' . $index++]  = 'force_logout';
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'name';
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_SURNAME)) {
+            $modifiedColumns[':p' . $index++]  = 'surname';
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_PATRONYMIC)) {
+            $modifiedColumns[':p' . $index++]  = 'patronymic';
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_IS_AVAILABLE)) {
+            $modifiedColumns[':p' . $index++]  = 'is_available';
         }
 
         $sql = sprintf(
@@ -1297,6 +1493,18 @@ abstract class Users implements ActiveRecordInterface
                         break;
                     case 'force_logout':
                         $stmt->bindValue($identifier, $this->force_logout, PDO::PARAM_INT);
+                        break;
+                    case 'name':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'surname':
+                        $stmt->bindValue($identifier, $this->surname, PDO::PARAM_STR);
+                        break;
+                    case 'patronymic':
+                        $stmt->bindValue($identifier, $this->patronymic, PDO::PARAM_STR);
+                        break;
+                    case 'is_available':
+                        $stmt->bindValue($identifier, (int) $this->is_available, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1399,6 +1607,18 @@ abstract class Users implements ActiveRecordInterface
             case 12:
                 return $this->getForceLogout();
 
+            case 13:
+                return $this->getName();
+
+            case 14:
+                return $this->getSurname();
+
+            case 15:
+                return $this->getPatronymic();
+
+            case 16:
+                return $this->getIsAvailable();
+
             default:
                 return null;
         } // switch()
@@ -1440,6 +1660,10 @@ abstract class Users implements ActiveRecordInterface
             $keys[10] => $this->getRegistered(),
             $keys[11] => $this->getLastLogin(),
             $keys[12] => $this->getForceLogout(),
+            $keys[13] => $this->getName(),
+            $keys[14] => $this->getSurname(),
+            $keys[15] => $this->getPatronymic(),
+            $keys[16] => $this->getIsAvailable(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1451,10 +1675,10 @@ abstract class Users implements ActiveRecordInterface
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'access_role';
+                        $key = 'role';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'access_role';
+                        $key = 'role';
                         break;
                     default:
                         $key = 'Role';
@@ -1552,6 +1776,18 @@ abstract class Users implements ActiveRecordInterface
             case 12:
                 $this->setForceLogout($value);
                 break;
+            case 13:
+                $this->setName($value);
+                break;
+            case 14:
+                $this->setSurname($value);
+                break;
+            case 15:
+                $this->setPatronymic($value);
+                break;
+            case 16:
+                $this->setIsAvailable($value);
+                break;
         } // switch()
 
         return $this;
@@ -1617,11 +1853,23 @@ abstract class Users implements ActiveRecordInterface
         if (array_key_exists($keys[12], $arr)) {
             $this->setForceLogout($arr[$keys[12]]);
         }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setName($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setSurname($arr[$keys[14]]);
+        }
+        if (array_key_exists($keys[15], $arr)) {
+            $this->setPatronymic($arr[$keys[15]]);
+        }
+        if (array_key_exists($keys[16], $arr)) {
+            $this->setIsAvailable($arr[$keys[16]]);
+        }
 
         return $this;
     }
 
-     /**
+    /**
      * Populate the current object from a string, using a given parser format
      * <code>
      * $book = new Book();
@@ -1698,6 +1946,18 @@ abstract class Users implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UsersTableMap::COL_FORCE_LOGOUT)) {
             $criteria->add(UsersTableMap::COL_FORCE_LOGOUT, $this->force_logout);
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_NAME)) {
+            $criteria->add(UsersTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_SURNAME)) {
+            $criteria->add(UsersTableMap::COL_SURNAME, $this->surname);
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_PATRONYMIC)) {
+            $criteria->add(UsersTableMap::COL_PATRONYMIC, $this->patronymic);
+        }
+        if ($this->isColumnModified(UsersTableMap::COL_IS_AVAILABLE)) {
+            $criteria->add(UsersTableMap::COL_IS_AVAILABLE, $this->is_available);
         }
 
         return $criteria;
@@ -1799,6 +2059,10 @@ abstract class Users implements ActiveRecordInterface
         $copyObj->setRegistered($this->getRegistered());
         $copyObj->setLastLogin($this->getLastLogin());
         $copyObj->setForceLogout($this->getForceLogout());
+        $copyObj->setName($this->getName());
+        $copyObj->setSurname($this->getSurname());
+        $copyObj->setPatronymic($this->getPatronymic());
+        $copyObj->setIsAvailable($this->getIsAvailable());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2166,32 +2430,6 @@ abstract class Users implements ActiveRecordInterface
      * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
      * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole}> List of ChildProjectRole objects
      */
-    public function getProjectRolesJoinRole(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildProjectRoleQuery::create(null, $criteria);
-        $query->joinWith('Role', $joinBehavior);
-
-        return $this->getProjectRoles($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Users is new, it will return
-     * an empty collection; or if this Users has previously
-     * been saved, it will retrieve related ProjectRoles from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Users.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole}> List of ChildProjectRole objects
-     */
     public function getProjectRolesJoinProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProjectRoleQuery::create(null, $criteria);
@@ -2225,6 +2463,10 @@ abstract class Users implements ActiveRecordInterface
         $this->registered = null;
         $this->last_login = null;
         $this->force_logout = null;
+        $this->name = null;
+        $this->surname = null;
+        $this->patronymic = null;
+        $this->is_available = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2276,7 +2518,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preSave(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -2286,7 +2528,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postSave(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before inserting to database
@@ -2295,7 +2537,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -2305,7 +2547,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -2314,7 +2556,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -2324,7 +2566,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postUpdate(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before deleting the object in database
@@ -2333,7 +2575,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preDelete(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -2343,7 +2585,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postDelete(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
 
     /**

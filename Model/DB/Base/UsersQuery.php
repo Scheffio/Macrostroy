@@ -34,6 +34,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery orderByRegistered($order = Criteria::ASC) Order by the registered column
  * @method     ChildUsersQuery orderByLastLogin($order = Criteria::ASC) Order by the last_login column
  * @method     ChildUsersQuery orderByForceLogout($order = Criteria::ASC) Order by the force_logout column
+ * @method     ChildUsersQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildUsersQuery orderBySurname($order = Criteria::ASC) Order by the surname column
+ * @method     ChildUsersQuery orderByPatronymic($order = Criteria::ASC) Order by the patronymic column
+ * @method     ChildUsersQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  *
  * @method     ChildUsersQuery groupById() Group by the id column
  * @method     ChildUsersQuery groupByEmail() Group by the email column
@@ -48,6 +52,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery groupByRegistered() Group by the registered column
  * @method     ChildUsersQuery groupByLastLogin() Group by the last_login column
  * @method     ChildUsersQuery groupByForceLogout() Group by the force_logout column
+ * @method     ChildUsersQuery groupByName() Group by the name column
+ * @method     ChildUsersQuery groupBySurname() Group by the surname column
+ * @method     ChildUsersQuery groupByPatronymic() Group by the patronymic column
+ * @method     ChildUsersQuery groupByIsAvailable() Group by the is_available column
  *
  * @method     ChildUsersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUsersQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -94,7 +102,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsers|null findOneByRolesMask(int $roles_mask) Return the first ChildUsers filtered by the roles_mask column
  * @method     ChildUsers|null findOneByRegistered(int $registered) Return the first ChildUsers filtered by the registered column
  * @method     ChildUsers|null findOneByLastLogin(int $last_login) Return the first ChildUsers filtered by the last_login column
- * @method     ChildUsers|null findOneByForceLogout(int $force_logout) Return the first ChildUsers filtered by the force_logout column *
+ * @method     ChildUsers|null findOneByForceLogout(int $force_logout) Return the first ChildUsers filtered by the force_logout column
+ * @method     ChildUsers|null findOneByName(string $name) Return the first ChildUsers filtered by the name column
+ * @method     ChildUsers|null findOneBySurname(string $surname) Return the first ChildUsers filtered by the surname column
+ * @method     ChildUsers|null findOneByPatronymic(string $patronymic) Return the first ChildUsers filtered by the patronymic column
+ * @method     ChildUsers|null findOneByIsAvailable(boolean $is_available) Return the first ChildUsers filtered by the is_available column *
 
  * @method     ChildUsers requirePk($key, ?ConnectionInterface $con = null) Return the ChildUsers by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -112,6 +124,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsers requireOneByRegistered(int $registered) Return the first ChildUsers filtered by the registered column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByLastLogin(int $last_login) Return the first ChildUsers filtered by the last_login column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByForceLogout(int $force_logout) Return the first ChildUsers filtered by the force_logout column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneByName(string $name) Return the first ChildUsers filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneBySurname(string $surname) Return the first ChildUsers filtered by the surname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneByPatronymic(string $patronymic) Return the first ChildUsers filtered by the patronymic column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneByIsAvailable(boolean $is_available) Return the first ChildUsers filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUsers[]|Collection find(?ConnectionInterface $con = null) Return ChildUsers objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildUsers> find(?ConnectionInterface $con = null) Return ChildUsers objects based on current ModelCriteria
@@ -141,6 +157,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildUsers> findByLastLogin(int $last_login) Return ChildUsers objects filtered by the last_login column
  * @method     ChildUsers[]|Collection findByForceLogout(int $force_logout) Return ChildUsers objects filtered by the force_logout column
  * @psalm-method Collection&\Traversable<ChildUsers> findByForceLogout(int $force_logout) Return ChildUsers objects filtered by the force_logout column
+ * @method     ChildUsers[]|Collection findByName(string $name) Return ChildUsers objects filtered by the name column
+ * @psalm-method Collection&\Traversable<ChildUsers> findByName(string $name) Return ChildUsers objects filtered by the name column
+ * @method     ChildUsers[]|Collection findBySurname(string $surname) Return ChildUsers objects filtered by the surname column
+ * @psalm-method Collection&\Traversable<ChildUsers> findBySurname(string $surname) Return ChildUsers objects filtered by the surname column
+ * @method     ChildUsers[]|Collection findByPatronymic(string $patronymic) Return ChildUsers objects filtered by the patronymic column
+ * @psalm-method Collection&\Traversable<ChildUsers> findByPatronymic(string $patronymic) Return ChildUsers objects filtered by the patronymic column
+ * @method     ChildUsers[]|Collection findByIsAvailable(boolean $is_available) Return ChildUsers objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildUsers> findByIsAvailable(boolean $is_available) Return ChildUsers objects filtered by the is_available column
  * @method     ChildUsers[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildUsers> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -240,7 +264,7 @@ abstract class UsersQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, email, phone, password, username, status, role_id, verified, resettable, roles_mask, registered, last_login, force_logout FROM users WHERE id = :p0';
+        $sql = 'SELECT id, email, phone, password, username, status, role_id, verified, resettable, roles_mask, registered, last_login, force_logout, name, surname, patronymic, is_available FROM users WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -803,6 +827,119 @@ abstract class UsersQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(UsersTableMap::COL_FORCE_LOGOUT, $forceLogout, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE name LIKE '%fooValue%'
+     * $query->filterByName(['foo', 'bar']); // WHERE name IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $name The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByName($name = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(UsersTableMap::COL_NAME, $name, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the surname column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySurname('fooValue');   // WHERE surname = 'fooValue'
+     * $query->filterBySurname('%fooValue%', Criteria::LIKE); // WHERE surname LIKE '%fooValue%'
+     * $query->filterBySurname(['foo', 'bar']); // WHERE surname IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $surname The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterBySurname($surname = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($surname)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(UsersTableMap::COL_SURNAME, $surname, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the patronymic column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPatronymic('fooValue');   // WHERE patronymic = 'fooValue'
+     * $query->filterByPatronymic('%fooValue%', Criteria::LIKE); // WHERE patronymic LIKE '%fooValue%'
+     * $query->filterByPatronymic(['foo', 'bar']); // WHERE patronymic IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $patronymic The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByPatronymic($patronymic = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($patronymic)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(UsersTableMap::COL_PATRONYMIC, $patronymic, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(UsersTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }

@@ -2,7 +2,8 @@
 
 namespace wipe\inc\v1\role\project_role;
 
-use PHPMailer\PHPMailer\Exception;
+use DB\RoleQuery;
+use Exception;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -64,17 +65,33 @@ class ProjectRole
     /**
      * @param int|null $roleId ID роли проекта.
      * @param int|null $userId ID пользователя.
+     * @throws Exception
      */
     function __construct(?int $roleId = null, ?int $userId = null)
     {
         if ($roleId && $userId) {
+            $this->roleId = $roleId;
             $this->userId = $userId;
-            $this->userRole = new UserRole($userId);
+            $this->userRole = new UserRole(userId: $userId);
         }
-        elseif ($roleId) {}
-        elseif ($userId) {}
+        elseif ($roleId) {
+            $this->roleId = $roleId;
+        }
+        elseif ($userId) {
+            $this->userId = $userId;
+            $this->userRole = new UserRole(userId: $userId);
+        }
     }
 
+    private function applyDefaultValuesByRoleId(): void
+    {
+        $role = RoleQuery::create()->findPk($this->roleId);
+    }
+
+    private function applyDefaultValuesByUserId(): void
+    {
+
+    }
     #region Access Control Functions
     /** @return bool Разрешен ли CRUD объекта. */
     public function isAccessCrud(): bool
@@ -232,17 +249,23 @@ class ProjectRole
      */
     public function setRoleId(int $roleId): ProjectRole
     {
-        if ($this->roleId)
+        if ($this->roleId !== $roleId) {
+            $this->roleId = $roleId;
+        }
+
         return $this;
     }
 
     /**
-     * @param UserRole|null $userRole Роль пользователя.
+     * @param UserRole $userRole Роль пользователя.
      * @return ProjectRole
      */
-    public function setUserRole(?UserRole $userRole): ProjectRole
+    public function setUserRole(UserRole $userRole): ProjectRole
     {
-        $this->userRole = $userRole;
+        if ($this->userRole->getRoleId() !== $userRole->getRoleId()) {
+            $this->userRole = $userRole;
+        }
+
         return $this;
     }
     #endregion

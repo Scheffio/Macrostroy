@@ -1,0 +1,651 @@
+@import "../../static/additional";
+
+.wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 80px;
+    width: 100%;
+
+    .tabs-controller {
+        display: flex;
+        width: clamp(768px, 90vw, 1555px);
+        justify-content: flex-start;
+        gap: 50px;
+        padding-bottom: 25px;
+        position: relative;
+
+        &::after {
+            content: '';
+            display: block;
+            width: clamp(768px, 90vw, 1555px);
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background-color: $EstiminUnderlineColor;
+            border-radius: 2px;
+        }
+
+        .tabs-controller__tab-anchor {
+            display: flex;
+            align-items: center;
+
+            .tab-anchor__anchor-name {
+                order: 0;
+                text-decoration: none;
+                color: black;
+                @include TabAnchorName;
+
+                &.selected {
+                    font-size: 36px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    .tabs-container {
+        margin-top: 40px;
+        width: clamp(768px, 90vw, 1555px);
+        display: flex;
+        justify-content: center;
+
+        .tabs_container__tab-element {
+            display: none;
+
+            .tab-header {
+                display: flex;
+                width: clamp(768px, 90vw, 1555px);
+
+                .tab-header__element {
+                    @include TabAnchorName;
+                    display: flex;
+                    height: 60px;
+                    align-items: center;
+                    justify-content: center;
+                    user-select: none;
+
+                    p {
+                        margin: 0;
+                    }
+
+                    .sorter {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        gap: 2px;
+                        margin-right: 8px;
+
+                        img {
+                            &:nth-child(1) {
+                                transform: rotate(180deg);
+                                margin-right: 0.7px;
+                            }
+
+                            &:hover {
+                                cursor: pointer;
+                            }
+                        }
+                    }
+
+                    &:nth-child(1) {
+                        justify-content: flex-start;
+                        width: clamp(200px, 40vw, 550px);
+                    }
+
+                    &:nth-child(4) {
+                        width: clamp(100px, 40vw, 320px);
+                    }
+
+                    &:nth-child(5) {
+                        width: clamp(100px, 40vw, 220px);
+                    }
+
+                    &:nth-child(2),
+                    &:nth-child(3) {
+                        width: clamp(100px, 40vw, 190px);
+                    }
+                }
+            }
+
+            .grid-row {
+                display: flex;
+                width: clamp(768px, 90vw, 1555px);
+                height: 60px;
+
+                &:nth-child(even) {
+                    background-color: #F4F4F4;
+                }
+
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+
+                &:last-child {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+
+                .grid-column {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    @include TabText;
+                    box-sizing: border-box;
+
+                    &.status {
+                        position: relative;
+
+                        &::before {
+                            content: '';
+                            display: block;
+                            width: 10px;
+                            height: 10px;
+                            background-color: $EstiminBlank;
+                            border-radius: 100%;
+                            position: absolute;
+                            left: 25px;
+                            top: 45%;
+                        }
+
+                        &.active::before {
+                            background-color: $EstiminSuccessful;
+                        }
+
+                        &.closed::before {
+                            background-color: $EstiminClosed;
+                        }
+
+                        &.deleted::before {
+                            background-color: $EstiminDeleted;
+                        }
+                        &.stoped::before {
+                            background-color: $EstiminStoped;
+                        }
+                    }
+
+                    &:nth-child(1) {
+                        justify-content: flex-start;
+                        width: clamp(200px, 40vw, 550px);
+                        padding-left: 27px;
+                    }
+
+                    &:nth-child(4) {
+                        width: clamp(100px, 40vw, 320px);
+                    }
+
+                    &:nth-child(5) {
+                        width: clamp(100px, 40vw, 220px);
+                    }
+
+                    &:nth-child(2),
+                    &:nth-child(3) {
+                        width: clamp(100px, 40vw, 190px);
+                    }
+                }
+            }
+        }
+
+        .tabs_container__tab-element:target {
+            display: block;
+        }
+    }
+
+    .add-project {
+        width: clamp(768px, 90vw, 1555px);
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 50px;
+
+        .add-project__button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            @include Button($EstiminColor4, $EstiminColor8, 120px, 40px);
+
+            &:hover {
+                .plus {
+
+                    &::before,
+                    &::after {
+                        background-color: $EstiminColor4;
+                        transition: .3s;
+                    }
+                }
+            }
+
+            .plus {
+                width: 20px;
+                height: 20px;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    display: block;
+                    width: 2px;
+                    height: 15px;
+                    position: absolute;
+                    background-color: $EstiminColor8;
+                    top: 3px;
+                    left: 5px;
+                    transition: .3s;
+                }
+
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 2px;
+                    height: 15px;
+                    background-color: $EstiminColor8;
+                    transform: rotate(90deg);
+                    position: absolute;
+                    top: 3px;
+                    left: 5px;
+                    transition: .3s;
+                }
+            }
+        }
+    }
+}
+
+.context-menu {
+    @include TabText;
+    width: 260px;
+    height: 290px;
+    background-color: $EstiminBackground3;
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    position: absolute;
+    border-radius: 10px;
+
+    &.opened {
+        display: flex;
+    }
+
+    .context-menu__items {
+        width: 100%;
+        padding: 0;
+        list-style-type: none;
+        position: relative;
+        transform-style: preserve-3d;
+
+        .context-menu__item {
+            background-color: $EstiminBackground3;
+            transform-style: preserve-3d;
+            position: relative;
+            &:first-child {
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+            &:last-child {
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            .status-context-sub-menu {
+                display: flex;
+                width: 165px;
+                height: 59px;
+                background-color: $EstiminBackground3;
+                align-items: flex-start;
+                flex-direction: column;
+                justify-content: center;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                list-style: none;
+                position: absolute;
+                top: -1px;
+                left: 95px;
+                padding: 0;
+                transition: .6s;
+                transform: translateZ(-10px);
+
+                .status-context-sub-menu__item {
+                    position: relative;
+                    width: 100%;
+                    &:hover {
+                        background-color: $EstiminContextMenuItemsBackground;
+                        cursor: pointer;
+
+                        &:last-child {
+                            border-bottom-right-radius: 10px;
+                        }
+
+                        &:first-child {
+                            border-top-right-radius: 10px;
+                        }
+                    }
+
+                    &:last-child {
+                        &::after {
+                            display: none;
+                        }
+                    }
+
+                    &::after {
+                        content: '';
+                        display: block;
+                        height: 1px;
+                        width: 100%;
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        background-color: $EstiminContextMenuUnderlineColor;
+                    }
+
+                    a {
+                        padding-left: 10px;
+                    }
+                }
+            }
+
+            &.status-submenu {
+                &:hover {
+                .status-context-sub-menu {
+                        display: flex;
+                        left: 260px;
+                        opacity: 1;
+                    }
+                    &::before {
+                        transition: .3s;
+                        transform: rotate(45deg);
+                        opacity: .5;
+                    }
+                }
+                &::before {
+                    content: '';
+                    display: block;
+                    height: 8px;
+                    width: 8px;
+                    background-color: transparent;
+                    border-right: 2px solid white;
+                    border-bottom: 2px solid white;
+                    position: absolute;
+                    top: 8px;
+                    right: 20px;
+                    transform: rotate(-45deg);
+                    transition: .3s;
+                }
+            }
+
+            &.disabled {
+                opacity: 0.5;
+
+                &:hover {
+                    background-color: $EstiminBackground3;
+                    cursor: not-allowed;
+                    a{ 
+                        cursor: not-allowed;
+                    }
+                }
+            }
+
+            &:hover {
+                background-color: $EstiminContextMenuItemsBackground;
+                cursor: pointer;
+
+                &:last-child {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+            }
+
+            &:last-child {
+                &::after {
+                    display: none;
+                }
+            }
+
+            &::after {
+                content: '';
+                display: block;
+                height: 1px;
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                background-color: $EstiminContextMenuUnderlineColor;
+            }
+
+            a {
+                color: white;
+                text-decoration: none;
+                padding-left: 10px;
+            }
+        }
+    }
+}
+
+@keyframes showModal {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hideModal {
+    0% {
+        display: flex;
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;  
+    }
+    100% {
+        display: none;
+    }
+}
+
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: .3s;
+    opacity: 0;
+    &.opened {
+        display: flex;
+        animation: showModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    &.closed {
+        animation: hideModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    .modal-wrap {
+        background-color: white;
+        width: 540px;
+        height: 495px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        top: -1000px;
+        transition: .6s;
+        &.opened {
+            transition: .6s;
+            top: 0px;
+        }
+        &.closed {
+            transition: .6s;
+            top: -1000px;
+        }
+        span {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            transition: .3s;
+            right: 20px;
+            &::before{
+                content: '';
+                display: block;
+                width: 15px;
+                height: 2px;
+                background-color: black;
+                transform: rotate(-45deg);
+                position: absolute;
+            }
+            &::after {
+                content: '';
+                display: block;
+                width: 15px;
+                height: 2px;
+                background-color: black;
+                transform: rotate(45deg);
+                position: absolute;
+            }
+            &:hover {
+                cursor: pointer;
+                opacity: .6;
+                transition: .3s;
+            }
+        }
+        .modal-header {
+            position: relative;
+            .title {
+                @include MainTitle;
+            }
+        }
+        .modal-body {
+            form {
+                gap: 30px;
+                display: flex;
+                flex-direction: column;
+                .modal-body__name {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(405px, 50px);
+                    }
+                    &::before {
+                        content: 'Название';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__name.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -25px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__status {
+                    margin-top: 30px;
+                    select {
+                        @include Input(250px, 45px);
+                    }
+                    position: relative;
+                    &::before {
+                        content: 'Статус';
+                        display: block;
+                        position: absolute;
+                        top: -25px;
+                        left: 10px;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        padding: 0px 5px;
+                    }
+                }
+                .modal-body__access {
+                    label {
+                        @include inputPlaceholder;
+                    }
+                    .checkboxes {
+                        margin-top: 5px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        justify-content: flex;
+                        gap: 5px;
+                        label {
+                            @include InputRegularText;
+                            user-select: none;
+                        }
+                        .public,
+                        .private {
+                            display: flex;
+                            align-items: center;
+                            label {
+                                user-select: none;
+                            }
+                            input[type="radio"] {
+                                position: absolute;
+                                z-index: -1;
+                                opacity: 0;
+                                &:checked+label::after {
+                                    content: '';
+                                    display: block;
+                                    width: 12px;
+                                    height: 12px;
+                                    position: absolute;
+                                    top: 5px;
+                                    left: 4px;
+                                    background-color: black;
+                                }
+                                &:checked+label::before{
+                                    content: '';
+                                    width: 1em;
+                                    height: 1em;
+                                    display: block;
+                                }
+                                &+label {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    position: relative;
+                                    &::before {
+                                        content: '';
+                                        display: inline-block;
+                                        width: 1em;
+                                        height: 1em;
+                                        flex-shrink: 0;
+                                        flex-grow: 0;
+                                        border: 2px solid black;
+                                        margin-right: 0.5em;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .modal-footer {
+            margin-top: 30px;
+            button {
+                @include Button($EstiminColor4, $EstiminColor8, 140px, 40px)
+            }
+        }
+    }
+}

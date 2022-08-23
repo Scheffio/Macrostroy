@@ -2,7 +2,7 @@
 
 namespace wipe\inc\v1\role\project_role;
 
-use Error;
+use PHPMailer\PHPMailer\Exception;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -69,10 +69,13 @@ class ProjectRole
         return $this->isCrud;
     }
 
-    /** @return bool CRUD объекта разрешен, иначе ошибка. */
+    /**
+     * @return bool CRUD объекта разрешен, иначе ошибка.
+     * @throws Exception
+     */
     public function isAccessCrudOrThrow(): bool
     {
-        return $this->isCrud ?: throw new Error('No access to CRUD the object');
+        return $this->isCrud ?: throw new Exception('No access to CRUD the object');
     }
     #endregion
 
@@ -221,7 +224,7 @@ class ProjectRole
     }
 
     /**
-     * @param UserRole|null $userRole
+     * @param UserRole|null $userRole Роль пользователя.
      * @return ProjectRole
      */
     public function setUserRole(?UserRole $userRole): ProjectRole

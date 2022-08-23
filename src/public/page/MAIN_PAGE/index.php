@@ -255,7 +255,7 @@
                 <a>Сформировать смету</a>
             </li>
             <li class="context-menu__item about">
-                <a>История действий</a>
+                <a href="../action-history">История действий</a>
             </li>
             <li class="context-menu__item delete" onclick="CCM.contextMenu_delete(CCM.rowInFocus)">
                 <a>Удалить</a>

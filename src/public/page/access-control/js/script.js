@@ -52,10 +52,7 @@ const selectableUsers = {
     }
 }
 
-window.onload = () => {
-    document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
-}
-
+document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 // ===================
 
 // parse users 
@@ -82,19 +79,4 @@ const users = {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 setItemName()

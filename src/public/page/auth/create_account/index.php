@@ -1,8 +1,7 @@
 <?php
 if (empty($_GET["selector"]) or empty($_GET["token"])) header("Location: /");
-$user = \DB\UsersRememberedQuery::create()->select("id")->findOneByArray(['selector' => $_GET["selector"], 'token' =>
-    $_GET["token"]]);
-var_dump($user);
+$user = \DB\UsersConfirmationsQuery::create()->findOneBySelector($_GET["selector"]);
+if ($user === null) header("Location: /");
 ?>
 <!doctype html>
 <html lang="ru">
@@ -14,14 +13,19 @@ var_dump($user);
     <title>Document</title>
 </head>
 <body>
-<h1>Создание аккаунта для почты $email$</h1>
+<h1>Создание аккаунта для почты <?= $user->getEmail() ?></h1>
 <form action="">
     <label>
+        пароль:
         <input type="password" required>
     </label>
+    <br>
     <label>
+        повторить пароль:
         <input type="password" required>
     </label>
+    <br>
+    <input type="submit">
 </form>
 </body>
 </html>

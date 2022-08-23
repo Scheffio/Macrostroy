@@ -5,6 +5,7 @@ use DB\Base\RoleQuery;
 use DB\Map\RoleTableMap;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\extra\CorrectionData;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 
@@ -24,11 +25,7 @@ try {
                 ->findById($role_id)
                 ->getData() ?: throw new Error('No role found');
 
-    $role = array_map(function($value, $key) {
-        return explode('.', $key)[1];
-    }, $role);
-
-    JsonOutput::success($role);
+    JsonOutput::success(CorrectionData::propelArray($role));
 } catch (PropelException|Error $e) {
     JsonOutput::error($e->getMessage());
 }

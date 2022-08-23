@@ -179,7 +179,9 @@ class ProjectRole
      */
     public function setLvl(int|string $lvl): ProjectRole
     {
-        return $this;
+        return  is_int($lvl)
+                ? $this->setLvlByNum($lvl)
+                : $this->setLvlByName($lvl);
     }
 
     /**
@@ -188,12 +190,8 @@ class ProjectRole
      */
     public function setLvlByNum(int $lvlNum): ProjectRole
     {
-
-
         if ($this->lvl !== $lvlNum) {
             $this->lvl = $lvlNum;
-
-
         }
 
         return $this;

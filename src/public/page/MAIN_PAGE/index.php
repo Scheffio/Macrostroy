@@ -14,10 +14,12 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
     <title>Estimin - Главная</title>
+    <?php require __DIR__ . "/../../../inc/timur/header-styles.php" ?>
 </head>
 
 <body class="body">
     <!-- HEADER -->
+    <?php require __DIR__ . "/../../../inc/timur/header.php" ?>
     <!-- ================= -->
     <div class="wrap">
         <div class="tabs-controller">
@@ -241,10 +243,6 @@
                         onclick="CCM.contextMenu_changeStatus(this, CCM.rowInFocus)">
                         <a>Завершён</a>
                     </li>
-                    <li class="status-context-sub-menu__item"
-                        onclick="CCM.contextMenu_changeStatus(this, CCM.rowInFocus)">
-                        <a>Заморожен</a>
-                    </li>
                 </ul>
             </li>
             <li class="context-menu__item private" onclick="CCM.contextMenu_private(CCM.rowInFocus)">
@@ -279,7 +277,6 @@
                         <select>
                             <option value="В процессе">В процессе</option>
                             <option value="Завершён">Завершён</option>
-                            <option value="Заморожен">Заморожен</option>
                         </select>
                     </div>
                     <div class="modal-body__access">

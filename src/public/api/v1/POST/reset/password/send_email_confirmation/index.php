@@ -23,7 +23,7 @@ $auth = Auth::getUser();
 
 
 $request = new Request();
-$request->checkRequestVariablesStrictNoNullOrError("user_email");
+$request->checkRequestVariablesStrictOrError("user_email");
 
 try {
     $recovery_link = "";

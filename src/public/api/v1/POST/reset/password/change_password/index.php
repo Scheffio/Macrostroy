@@ -13,7 +13,7 @@ use inc\artemy\v1\request\Request;
 
 $throttling = !DevelopmentMode::isActive();
 $request = new Request();
-$request->checkRequestVariablesStrictNoNullOrError("selector", "token", "password");
+$request->checkRequestVariablesStrictOrError("selector", "token", "password");
 $selector = $request->getRequest("selector");
 $token = $request->getRequest("token");
 $password = $request->getRequest("password");

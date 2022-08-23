@@ -109,7 +109,14 @@ class Request
         return true;
     }
 
-    public function checkRequestVariablesStrictNoNullOrError(...$variables): bool
+    /**
+     * Строго проверяет на наличие всех переменных в теле метода. Если был передан null - не считает ключ как
+     * переданный параметр.
+     *
+     * @param ...$variables
+     * @return bool
+     */
+    public function checkRequestVariablesStrictOrError(...$variables): bool
     {
         $missingVariables = array();
         foreach ($variables as $variable) {

@@ -7,5 +7,6 @@ use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 
 $request = new Request();
+Auth::getUser()->register($request->getRequest("user_email"), Auth::createUuid(), null, function () {
 
-Auth::getUser()->register($request->getRequest())
+});

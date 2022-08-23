@@ -10,12 +10,16 @@ use Propel\Runtime\Exception\PropelException;
 try {
     UserRole::getByUserId()->isManageUsersOrThrow();
 
-    JsonOutput::success(
-        UsersQuery::create()
-            ->select(['id', 'username'])
-            ->find()
-            ->getData()
-    );
+    if (empty($_GET)) {
+        JsonOutput::success(
+            UsersQuery::create()
+                ->select(['id', 'username'])
+                ->find()
+                ->getData()
+        );
+    }
+
+    
 } catch (PropelException|Exception $e) {
     JsonOutput::error($e->getMessage());
 }

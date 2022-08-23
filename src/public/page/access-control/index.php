@@ -24,7 +24,7 @@
     <div class="wrap">
         <div class="tabs-controller">
             <div class="tabs-controller__tab-anchor">
-                <a class="tab-anchor__anchor-name selected">Управление доступом к проекту «ЖК Рыбное»</a>
+                <p class="tab-anchor__anchor-name selected">Управление доступом к проекту «ЖК Рыбное»</p>
             </div>
         </div>
         <div class="content">

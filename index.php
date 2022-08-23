@@ -72,7 +72,7 @@ if (Router::isApi()) {
 if (Router::isPage()) {
 
     try {
-        if ($_COOKIE["lera"] === "yes") {
+        if (!empty($_COOKIE["lera"])) {
             var_dump($_SERVER['HTTP_REFERER']);
         }
         Output::outputPage();

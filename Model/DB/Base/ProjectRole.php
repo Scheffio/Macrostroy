@@ -141,7 +141,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
-        $this->lvl = true;
+        $this->lvl = 1;
     }
 
     /**
@@ -1573,13 +1573,13 @@ abstract class ProjectRole implements ActiveRecordInterface
     public function preInsert(?ConnectionInterface $con = null): bool
     {
         $projectRole = ProjectRoleQuery::create()
-                        ->filterByLvl($this->lvl)
+                        ->filterByLvl((int)$this->lvl)
                         ->filterByUserId($this->user_id)
                         ->filterByObjectId($this->object_id)
                         ->filterByProjectId($this->project_id)
                         ->findOne();
 
-        if ($projectRole !== null) {
+        if ($projectRole->getId() !== null) {
             throw new Exception('Such an entry already exists, use the update');
         }
 

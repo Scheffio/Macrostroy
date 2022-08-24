@@ -9,6 +9,7 @@ use DB\ProjectRole as DbProjectRole;
 use DB\ProjectRoleQuery as DbProjectRoleQuery;
 use DB\Base\ProjectRole as BaseProjectRole;
 use inc\artemy\v1\json_output\JsonOutput;
+use JetBrains\PhpStorm\NoReturn;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -520,7 +521,7 @@ class ProjectRole
     {
         if (!$this->roleObj) $this->searchOrThrow();
 
-        $this->extracted();
+        $this->extracted($this->roleObj);
         $this->roleObj->save();
 
         return $this;
@@ -545,15 +546,23 @@ class ProjectRole
      */
     public function addOrUpdate(): ProjectRole
     {
-        $this->roleObj = ProjectRoleQuery::create()
-                            ->filterByLvl($this->lvl)
-                            ->filterByUserId($this->userId)
-                            ->filterByObjectId($this->objectId)
-                            ->filterByProjectId($this->projectId)
-                            ->findOneOrCreate();
+        $projectRole = ProjectRoleQuery::create()
+                        ->filterByLvl($this->lvl)
+                        ->filterByUserId($this->userId)
+                        ->filterByObjectId($this->objectId)
+                        ->filterByProjectId($this->projectId)
+                        ->findOneOrCreate();
 
-        $this->extracted();
-        $this->roleObj->save();
+        $this->extracted($projectRole);
+        JsonOutput::error([
+            'getId' => $projectRole->getId(),
+            'getLvl' => $projectRole->getLvl(),
+            'getIsCrud' => $projectRole->getIsCrud(),
+            'getUserId' => $projectRole->getUserId(),
+            'getObjectId' => $projectRole->getObjectId(),
+            'getProjectId' => $projectRole->getProjectId(),
+        ]);
+        $projectRole->save();
 
         return $this;
     }
@@ -561,14 +570,15 @@ class ProjectRole
 
     /**
      * Назначение знечений с проверкой на их наличие, для свойства класса $roleObj.
+     * @param BaseProjectRole $object
      * @return void
      */
-    public function extracted(): void
+    public function extracted(BaseProjectRole &$object): void
     {
-        if ($this->lvl) $this->roleObj->setLvl($this->lvl);
-        if ($this->isCrud !== null) $this->roleObj->setIsCrud($this->isCrud);
-        if ($this->userId !== null) $this->roleObj->setUserId($this->userId);
-        if ($this->objectId !== null) $this->roleObj->setObjectId($this->objectId);
-        if ($this->projectId !== null) $this->roleObj->setProjectId($this->projectId);
+        if ($this->lvl) $object->setLvl($this->lvl);
+        if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
+        if ($this->userId !== null) $object->setUserId($this->userId);
+        if ($this->objectId !== null) $object->setObjectId($this->objectId);
+        if ($this->projectId !== null) $object->setProjectId($this->projectId);
     }
 }

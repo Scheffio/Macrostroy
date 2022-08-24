@@ -29,5 +29,5 @@ try {
 
     JsonOutput::success();
 } catch (Exception $e) {
-    JsonOutput::error($e);
+    JsonOutput::error($e->getMessage());
 }

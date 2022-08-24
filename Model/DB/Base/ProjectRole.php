@@ -1580,12 +1580,12 @@ abstract class ProjectRole implements ActiveRecordInterface
                         ->findOne();
 
         if ($projectRole !== null) {
-            JsonOutput::error('Such an entry already exists, use the update');
+            throw new Exception('Such an entry already exists, use the update');
         }
 
         if ($this->is_crud === false &&
             UserRole::getByUserId($this->user_id)->isManageUsers()) {
-            JsonOutput::error('Unable to edit administrator access');
+            throw new Exception('Unable to edit administrator access');
         }
 
         return true;
@@ -1614,7 +1614,7 @@ abstract class ProjectRole implements ActiveRecordInterface
         if ($isCrud &&
             $this->is_crud === false &&
             UserRole::getByUserId($this->user_id)->isManageUsers()) {
-            JsonOutput::error('Unable to edit administrator access');
+            throw new Exception('Unable to edit administrator access');
         }
 
         return true;

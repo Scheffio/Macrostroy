@@ -67,11 +67,46 @@ class ProjectRole
     private ?UserRole $userRole = null;
 
     /**
+     * @param int|null $roleId
+     * @param int|null $userId
+     * @param int|null $lvl
+     * @param bool|null $isCrud
+     * @param int|null $projectId
+     * @param int|null $objectId
+     * @throws Exception
+     */
+    function __construct(
+        ?int $roleId = null,
+        ?int $userId = null,
+        ?int $lvl = null,
+        ?bool $isCrud = null,
+        ?int $projectId = null,
+        ?int $objectId = null)
+    {
+        if ($roleId && $userId) {
+            $this->roleId = $roleId;
+            $this->applyDefaultValuesByRoleId();
+            $this->userId = $userId;
+            $this->applyDefaultValuesByUserId();
+        }
+        elseif ($roleId) {
+            $this->roleId = $roleId;
+            $this->applyDefaultValuesByRoleId();
+        }
+        elseif ($userId) {
+            $this->userId = $userId;
+            $this->applyDefaultValuesByUserId();
+        }
+
+
+    }
+
+    /**
      * @param int|null $roleId ID роли проекта.
      * @param int|null $userId ID пользователя.
      * @throws Exception
      */
-    function __construct(?int $roleId = null, ?int $userId = null)
+    function __construct1(?int $roleId = null, ?int $userId = null)
     {
         if ($roleId && $userId) {
             $this->roleId = $roleId;
@@ -98,11 +133,21 @@ class ProjectRole
     {
         $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
                          throw new Exception('No project role found');
+        $this->applyDefaultValuesByRoleObj();
+    }
+
+    /**
+     * Заполнение свойств класса, используя объект роли проекта.
+     * @throws Exception
+     */
+    private function applyDefaultValuesByRoleObj(): void
+    {
         $this->roleId = $this->roleObj->getId();
         $this->isCrud = $this->roleObj->getIsCrud();
         $this->setLvlByNum($this->roleObj->getLvl());
         $this->objectId = $this->roleObj->getObjectId();
         $this->userId = $this->roleObj->getUserId();
+        $this->applyDefaultValuesByUserId();
     }
 
     /**
@@ -229,7 +274,10 @@ class ProjectRole
     {
         if ($this->userId !== $userId) {
             $this->userId = $userId;
-            $this->applyDefaultValuesByUserId();
+
+            if ($flag) {
+                $this->applyDefaultValuesByUserId();
+            }
         }
 
         return $this;
@@ -264,6 +312,7 @@ class ProjectRole
     /**
      * @param bool|null $isCrud Разрешен ли CRUD объекта.
      * @return ProjectRole
+     * @throws Exception
      */
     public function setIsCrud(?bool $isCrud): ProjectRole
     {
@@ -271,8 +320,10 @@ class ProjectRole
             if ($this->userRole &&
                 $this->userRole->isManageUsers() &&
                 $isCrud !== true) {
-                throw new Exception('Unable to limit the administrator');
+                throw new Exception('Unable to edit administrator access');
             }
+
+            $this->isCrud = $isCrud;
         }
 
         return $this;
@@ -365,12 +416,18 @@ class ProjectRole
 
     /**
      * @param int $roleId ID роли проекта.
+     * @param bool $flag Необходимо ли обновлять свойства роли проекта, в соответствие с ID роли.
      * @return ProjectRole
+     * @throws Exception
      */
-    public function setRoleId(int $roleId): ProjectRole
+    public function setRoleId(int $roleId, bool $flag = false): ProjectRole
     {
         if ($this->roleId !== $roleId) {
             $this->roleId = $roleId;
+
+            if ($flag) {
+                $this->applyDefaultValuesByRoleId();
+            }
         }
 
         return $this;
@@ -391,15 +448,23 @@ class ProjectRole
 
     /**
      * @param BaseProjectRole $projectRole Объект роли проекта.
+     * @param bool $flag Необходимо ли обновлять свойства роли проекта, в соответствие с переданным объектом.
      * @return ProjectRole
+     * @throws Exception
      */
-    public function setProjectRole(BaseProjectRole $projectRole): ProjectRole
+    public function setProjectRole(BaseProjectRole $projectRole, bool $flag = false): ProjectRole
     {
         if ($this->roleObj->getId() !== $projectRole->getId()) {
             $this->roleObj = $projectRole;
+
+            if ($flag) {
+                $this->applyDefaultValuesByRoleObj();
+            }
         }
 
         return $this;
     }
     #endregion
+
+
 }

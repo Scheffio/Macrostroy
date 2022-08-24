@@ -262,15 +262,17 @@ class ProjectRole
     }
 
     /**
-     * @param bool $isCrud Разрешен ли CRUD объекта.
+     * @param bool|null $isCrud Разрешен ли CRUD объекта.
      * @return ProjectRole
      */
-    public function setIsCrud(bool $isCrud): ProjectRole
+    public function setIsCrud(?bool $isCrud): ProjectRole
     {
-        if ($this->isCrud !== $isCrud && !$this->userRole) {
-            $this->isCrud = $isCrud;
-        } elseif ($this->isCrud !== $isCrud && $this->userRole) {
-            
+        if ($this->isCrud !== $isCrud) {
+            if ($this->userRole &&
+                $this->userRole->isManageUsers() &&
+                $isCrud !== true) {
+                throw new Exception('Unable to limit the administrator');
+            }
         }
 
         return $this;

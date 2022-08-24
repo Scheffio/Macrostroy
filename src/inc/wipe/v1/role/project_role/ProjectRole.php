@@ -2,12 +2,12 @@
 
 namespace wipe\inc\v1\role\project_role;
 
-use DB\Base\ProjectRoleQuery;
-use DB\ProjectRoleQuery as DbProjectRoleQuery;
-use DB\RoleQuery;
 use Exception;
+use DB\RoleQuery;
+use DB\Base\ProjectRoleQuery;
+use DB\ProjectRole as DbProjectRole;
+use DB\ProjectRoleQuery as DbProjectRoleQuery;
 use DB\Base\ProjectRole as BaseProjectRole;
-use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -50,7 +50,7 @@ class ProjectRole
     private ?BaseProjectRole $roleObj = null;
 
     /** @var int|null Номер уровня доступа. */
-    private ?int $lvl = null;
+    private int $lvl = 1;
 
     /** @var string|null Наименование уровня доступа. */
     private ?string $lvlName = null;
@@ -73,7 +73,7 @@ class ProjectRole
     /**
      * @param int|null $roleId ID роли проекта.
      * @param int|null $userId ID пользователя.
-     * @param int|string|null $lvl Номер уровня доступа.
+     * @param int|string $lvl Номер уровня доступа.
      * @param int|null $projectId ID проекта.
      * @param int|null $objectId ID объекта (проект, подпроект, группа, дом, этап).
      * @throws Exception
@@ -81,7 +81,7 @@ class ProjectRole
     function __construct(
         ?int $roleId = null,
         ?int $userId = null,
-        int|string|null $lvl = null,
+        int|string $lvl = 1,
         ?int $projectId = null,
         ?int $objectId = null)
     {
@@ -449,45 +449,32 @@ class ProjectRole
     }
     #endregion
 
-    private function isAccessSave(): bool
-    {
-        return  $this->projectId !== null &&
-                $this->objectId !== null &&
-                $this->userId !== null;
-    }
+    #region CRUD Functions
 
-    private function getAction(): string
-    {
-        $role = ProjectRoleQuery::create()
-                ->filterByProjectId($this->projectId)
-                ->filterByObjectId($this->objectId)
-                ->filterByUserId($this->userId)
-                ->findOne();
-
-        if (!$role) return 'insert';
-        elseif ($this->isCrud === null) return 'delete';
-        else return 'update';
-    }
 
     private function insert(): ProjectRole
     {
+        $role = new DbProjectRole();
+        $role->setUserId($this->userId);
+        $role->setObjectId($this->objectId);
+        $role->setProjectId($this->projectId);
+
         return $this;
     }
 
     private function update(): ProjectRole
     {
+        
+
         return $this;
     }
 
+    /**
+     * Удаление роли проекта.
+     */
     private function delete(): ProjectRole
     {
         return $this;
     }
-
-    public function save(): ProjectRole
-    {
-        if (!$this->isAccessSave()) throw new Exception('Not enough data is needed:');
-
-        return $this;
-    }
+    #endregion
 }

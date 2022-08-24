@@ -478,9 +478,11 @@ class ProjectRole
         if (!$this->roleObj) {
             if ($this->projectId) $this->applyDefaultValuesByRoleId();
             else $this->applyDefaultValuesBySearch();
+
+            if (!$this->roleObj) throw new Exception('No project role found');
         }
 
-        if ($this->isCrud)
+        if ($thi)
 
         return $this;
     }

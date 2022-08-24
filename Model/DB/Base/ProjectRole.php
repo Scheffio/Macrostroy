@@ -1597,9 +1597,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        echo 'preUpdate ';
-        if ($this->is_crud) {
-            echo 'if ($this->is_crud) ';
+        if (in_array('project_role.is_crud', $this->getModifiedColumns())) {
             $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
             $isFalse = $this->is_crud === false;
 

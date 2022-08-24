@@ -501,6 +501,8 @@ class ProjectRole
             ->setProjectId($this->projectId)
             ->save();
 
+        $this->roleId = $role->getId();
+
         return $this;
     }
 

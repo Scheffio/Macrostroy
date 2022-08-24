@@ -1579,11 +1579,13 @@ abstract class ProjectRole implements ActiveRecordInterface
                         ->filterByProjectId($this->project_id)
                         ->findOne();
 
-        if ($projectRole !== null) throw new Exception('Unable to edit administrator access');
+        if ($projectRole !== null) {
+            JsonOutput::error('Such an entry already exists, use the update');
+        }
 
-        if ($this->is_crud === false) {
-            $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
-            if ($isAdmin) throw new Exception('Unable to edit administrator access');
+        if ($this->is_crud === false &&
+            UserRole::getByUserId($this->user_id)->isManageUsers()) {
+            JsonOutput::error('Unable to edit administrator access');
         }
 
         return true;
@@ -1606,11 +1608,13 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        if (in_array('project_role.is_crud', $this->getModifiedColumns())) {
-            $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
-            $isFalse = $this->is_crud === false;
+        $columns = $this->getModifiedColumns();
+        $isCrud = in_array('project_role.is_crud', $columns);
 
-            if ($isAdmin && $isFalse) throw new Exception('Unable to edit administrator access');
+        if ($isCrud &&
+            $this->is_crud === false &&
+            UserRole::getByUserId($this->user_id)->isManageUsers()) {
+            JsonOutput::error('Unable to edit administrator access');
         }
 
         return true;

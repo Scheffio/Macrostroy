@@ -1596,10 +1596,12 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
-        $isFalse = $this->is_crud === false;
+        if ($this->is_crud) {
+            $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
+            $isFalse = $this->is_crud === false;
 
-        if ($isAdmin && $isFalse) throw new Exception('Unable to edit administrator access');
+            if ($isAdmin && $isFalse) throw new Exception('Unable to edit administrator access');
+        }
 
         return true;
     }

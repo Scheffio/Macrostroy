@@ -2375,8 +2375,6 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        echo json_encode($this->getModifiedColumns());
-
         if ($this->id && $this->role_id) {
             $isAdmin = UserRole::getByUserId($this->role_id)->isManageUsers();
 

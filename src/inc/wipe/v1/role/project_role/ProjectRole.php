@@ -449,16 +449,6 @@ class ProjectRole
     }
     #endregion
 
-    /**
-     * Редактирование прав пользователя в проекте разрешено, иначе ошибка.
-     * @throws Exception
-     */
-    private function isAccessEditCrudOrThrow(): bool
-    {
-        return  UserRole::getByUserId($this->userId)->isManageUsers() &&
-                $this->isCrud !== false ?: throw new Exception('Unable to edit administrator access');
-    }
-
     private function isAccessSave(): bool
     {
         return  $this->projectId !== null &&
@@ -466,7 +456,7 @@ class ProjectRole
                 $this->userId !== null;
     }
 
-    private function getAction(): ?bool
+    private function getAction(): string
     {
         $role = ProjectRoleQuery::create()
                 ->filterByProjectId($this->projectId)
@@ -474,7 +464,9 @@ class ProjectRole
                 ->filterByUserId($this->userId)
                 ->findOne();
 
-        return !!$role;
+        if (!$role) return 'insert';
+        elseif ($this->isCrud === null) return 'delete';
+        else return 'update';
     }
 
     private function insert(): ProjectRole
@@ -494,7 +486,7 @@ class ProjectRole
 
     public function save(): ProjectRole
     {
-
+        if (!$this->isAccessSave()) throw new Exception('Not enough data is needed:');
 
         return $this;
     }

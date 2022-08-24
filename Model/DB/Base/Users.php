@@ -24,6 +24,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use wipe\inc\v1\role\user_role\UserRole;
 
 /**
  * Base class that represents a row from the 'users' table.
@@ -2370,9 +2371,25 @@ abstract class Users implements ActiveRecordInterface
      * Code to be run before updating the object in database
      * @param ConnectionInterface|null $con
      * @return bool
+     * @throws Exception
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
+        echo json_encode($this->getModifiedColumns());
+
+        if ($this->id && $this->role_id) {
+            $isAdmin = UserRole::getByUserId($this->role_id)->isManageUsers();
+
+            if ($isAdmin) {
+                $projectRole = ProjectRoleQuery::create()->findByUserId($this->id);
+
+                foreach ($projectRole as $role) {
+                    $role->setIsCrud(true);
+                    $role->save();
+                }
+            }
+        }
+
         return true;
     }
 

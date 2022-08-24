@@ -93,10 +93,12 @@ class ProjectRole
         $this->applyDefaultValuesBySearch();
     }
 
+    #region Apply Default Values Functions
     /**
-     * @return DbProjectRoleQuery|Criteria
+     * Заполнение свойств класса, используя поиск по переданным первоначально значениям.
+     * @throws Exception
      */
-    private function getCriteria(): Criteria|DbProjectRoleQuery
+    private function applyDefaultValuesBySearch(): void
     {
         $role = ProjectRoleQuery::create();
 
@@ -106,17 +108,6 @@ class ProjectRole
         if ($this->projectId) $role->filterByProjectId($this->projectId);
         if ($this->objectId) $role->filterByObjectId($this->objectId);
 
-        return $role;
-    }
-
-    #region Apply Default Values Functions
-    /**
-     * Заполнение свойств класса, используя поиск по переданным первоначально значениям.
-     * @throws Exception
-     */
-    private function applyDefaultValuesBySearch(): void
-    {
-        $role = $this->getCriteria();
         $this->roleObj = $role->findOne();
 
         if ($this->roleObj) {
@@ -459,13 +450,51 @@ class ProjectRole
     #endregion
 
     /**
-     * @throws PropelException
+     * Редактирование прав пользователя в проекте разрешено, иначе ошибка.
+     * @throws Exception
      */
-    public function update(): ProjectRole
+    private function isAccessEditCrudOrThrow(): bool
     {
-        $role = $this->getCriteria();
+        return  UserRole::getByUserId($this->userId)->isManageUsers() &&
+                $this->isCrud !== false ?: throw new Exception('Unable to edit administrator access');
+    }
 
-        $role->findOneOrCreate();
+    private function isAccessSave(): bool
+    {
+        return  $this->projectId !== null &&
+                $this->objectId !== null &&
+                $this->userId !== null;
+    }
+
+    private function getAction(): ?bool
+    {
+        $role = ProjectRoleQuery::create()
+                ->filterByProjectId($this->projectId)
+                ->filterByObjectId($this->objectId)
+                ->filterByUserId($this->userId)
+                ->findOne();
+
+        return !!$role;
+    }
+
+    private function insert(): ProjectRole
+    {
+        return $this;
+    }
+
+    private function update(): ProjectRole
+    {
+        return $this;
+    }
+
+    private function delete(): ProjectRole
+    {
+        return $this;
+    }
+
+    public function save(): ProjectRole
+    {
+
 
         return $this;
     }

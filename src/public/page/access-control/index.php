@@ -23,7 +23,7 @@
     <!-- ================= -->
     <div class="wrap">
         <div class="title">
-            <p>История действий</p>
+            <p>Управление доступом к проекту</p>
             <a href="../MAIN_PAGE/" class="back">Назад</a>
         </div>
         <div class="content">

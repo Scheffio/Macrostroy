@@ -554,14 +554,6 @@ class ProjectRole
                         ->findOneOrCreate();
 
         $this->extracted($projectRole);
-        JsonOutput::error([
-            'getId' => $projectRole->getId(),
-            'getLvl' => $projectRole->getLvl(),
-            'getIsCrud' => $projectRole->getIsCrud(),
-            'getUserId' => $projectRole->getUserId(),
-            'getObjectId' => $projectRole->getObjectId(),
-            'getProjectId' => $projectRole->getProjectId(),
-        ]);
         $projectRole->save();
 
         return $this;

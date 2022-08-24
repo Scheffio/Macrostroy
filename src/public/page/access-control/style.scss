@@ -115,10 +115,12 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         user-select: none;
+                        color: black;
                     }
                     &.selected {
                         transition: .3s;
-                        background-color: $EstiminElementClickedColor;
+                        background-color: $EstiminColor4;
+                        color: white;
                     }
                 }
             }

@@ -219,10 +219,12 @@ body.fixated {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  color: black;
 }
 .wrap .content .users .users__list .users__user-field.selected {
   transition: 0.3s;
-  background-color: #e6e6e6;
+  background-color: #7E99AD;
+  color: white;
 }
 .wrap .content .permissions {
   padding-top: 20px;

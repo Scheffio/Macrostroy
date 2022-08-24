@@ -1,7 +1,7 @@
 // Transfer project name
 function setItemName() {
     if(localStorage.getItem('item-name')) {
-        document.querySelector('.tab-anchor__anchor-name').textContent = `Управление доступом к проекту «${localStorage.getItem('item-name')}»`
+        document.querySelector('.title > p').textContent = `Управление доступом к проекту «${localStorage.getItem('item-name')}»`
     }
 }
 // ===================

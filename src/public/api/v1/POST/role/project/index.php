@@ -1,5 +1,5 @@
 <?php
-// Добавить роль к проекту.
+// Добавление и редактирвоание роли проекта.
 
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
@@ -19,6 +19,7 @@ try {
     $projectId = $request->getRequest('project_id');
 
     ProjectRole::getByMinimumData(lvl: $lvl, projectId: $projectId, objectId: $objectId, userId: $userId)
+                ->setIsCrud($isCrud)
                 ->addOrUpdate();
 
     JsonOutput::success();

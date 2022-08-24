@@ -83,7 +83,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     4 - дом;
     5 - этап )
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        boolean|int
      */
     protected $lvl;
 
@@ -499,12 +499,16 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function setLvl($v)
     {
+//        if ($v !== null) {
+//            if (is_string($v)) {
+//                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+//            } else {
+//                $v = (boolean) $v;
+//            }
+//        }
+
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
         if ($this->lvl !== $v) {
@@ -655,7 +659,7 @@ abstract class ProjectRole implements ActiveRecordInterface
             $this->id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProjectRoleTableMap::translateFieldName('Lvl', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->lvl = (null !== $col) ? (boolean) $col : null;
+            $this->lvl = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProjectRoleTableMap::translateFieldName('IsCrud', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_crud = (null !== $col) ? (boolean) $col : null;
@@ -1579,7 +1583,7 @@ abstract class ProjectRole implements ActiveRecordInterface
                         ->filterByProjectId($this->project_id)
                         ->findOne();
 
-        if ($projectRole->getId() !== null) {
+        if ($projectRole !== null) {
             throw new Exception('Such an entry already exists, use the update');
         }
 

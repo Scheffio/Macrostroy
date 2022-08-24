@@ -96,8 +96,7 @@ class ProjectRole
                          throw new Exception('No project role found');
         $this->roleId = $this->roleObj->getId();
         $this->isCrud = $this->roleObj->getIsCrud();
-        $this->lvl = $this->roleObj->getLvl();
-        $this->lvlName = $this->getLvlName();
+        $this->setLvlByNum($this->roleObj->getLvl());
         $this->userId = $this->roleObj->getUserId();
 
     }
@@ -150,16 +149,33 @@ class ProjectRole
     /** @return string|null Наименование уровня доступа. */
     public function getLvlName(): ?string
     {
-        if ($this->lvlName) return $this->lvlName;
-        elseif (!$this->lvl) return null;
+        return $this->lvlName;
+    }
 
-        return [
-            $this::ATTRIBUTE_LVL_STR_PROJECT,
-            $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
-            $this::ATTRIBUTE_LVL_STR_GROUP,
-            $this::ATTRIBUTE_LVL_STR_HOUSE,
-            $this::ATTRIBUTE_LVL_STR_STAGE,
-        ][$this->lvl - 1];
+    /** @return string|null Наименование уровня доступа но его номеру. */
+    public function getLvlNameByNum(): ?string
+    {
+        return match ($this->lvl) {
+            $this::ATTRIBUTE_LVL_INT_PROJECT => $this::ATTRIBUTE_LVL_STR_PROJECT,
+            $this::ATTRIBUTE_LVL_INT_SUBPROJECT => $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
+            $this::ATTRIBUTE_LVL_INT_GROUP => $this::ATTRIBUTE_LVL_STR_GROUP,
+            $this::ATTRIBUTE_LVL_INT_HOUSE => $this::ATTRIBUTE_LVL_STR_HOUSE,
+            $this::ATTRIBUTE_LVL_INT_STAGE => $this::ATTRIBUTE_LVL_STR_STAGE,
+            default => null
+        };
+    }
+
+    /** @return int|null Номер уровня доступа но его наименованию. */
+    public function getLvlNumByName(): ?int
+    {
+        return match ($this->lvlName) {
+            $this::ATTRIBUTE_LVL_STR_PROJECT => $this::ATTRIBUTE_LVL_INT_PROJECT,
+            $this::ATTRIBUTE_LVL_STR_SUBPROJECT => $this::ATTRIBUTE_LVL_INT_SUBPROJECT,
+            $this::ATTRIBUTE_LVL_STR_GROUP => $this::ATTRIBUTE_LVL_INT_GROUP,
+            $this::ATTRIBUTE_LVL_STR_HOUSE => $this::ATTRIBUTE_LVL_INT_HOUSE,
+            $this::ATTRIBUTE_LVL_STR_STAGE => $this::ATTRIBUTE_LVL_INT_STAGE,
+            default => null
+        };
     }
 
     /** @return int|null ID проекта. */
@@ -247,8 +263,10 @@ class ProjectRole
     }
 
     /**
+     * Используется для установки уровня доступа ($lvl, $lvlName), либо по номеру, либо по наименованию.
      * @param int|string $lvl Уровень доступа.
      * @return ProjectRole
+     * @throws Exception
      */
     public function setLvl(int|string $lvl): ProjectRole
     {
@@ -258,34 +276,73 @@ class ProjectRole
     }
 
     /**
+     * Испольвуется для установки уровня доступа ($lvl, $lvlName) по номеру.
      * @param int $lvlNum Номер уровня доступа (ATTRIBUTE_LVL_INT_).
      * @return ProjectRole
+     * @throws Exception
      */
     public function setLvlByNum(int $lvlNum): ProjectRole
     {
-        if ($this->lvl === $lvlNum) return $this;
-
-        switch ($lvlNum) {
-            case 1: break;
-            case 2: break;
-            case 3: break;
-            case 4: break;
-            case 5: break;
-            default: throw new Exception('');
+        if ($this->lvl !== $lvlNum) {
+            $this->lvl = $lvlNum;
+            $this->setLvlNameByInt($lvlNum);
         }
 
         return $this;
     }
 
     /**
-     * @param string $lvlName Наименование уровня доступа (ATTRIBUTE_LVL_STR_).
+     * Испольвуется для установки уровня доступа ($lvl, $lvlName) по наименованию.
+     * @param string $lvlName Наименование уровня доступа.
      * @return ProjectRole
+     * @throws Exception
      */
     public function setLvlByName(string $lvlName): ProjectRole
     {
-        if ($this->lvl !== $lvlName) {
-            $this->lvl = $lvlName;
+        if ($this->lvlName !== $lvlName) {
+            $this->lvlName = $lvlName;
+            $this->setLvlByStr($lvlName);
         }
+
+        return  $this;
+    }
+
+    /**
+     * Испольвуется для установки уровня доступа ($lvl) по наименованию.
+     * @param string $lvlName Наименование уровня доступа (ATTRIBUTE_LVL_STR_).
+     * @return ProjectRole
+     * @throws Exception
+     */
+    public function setLvlByStr(string $lvlName): ProjectRole
+    {
+        $this->lvl = match ($lvlName) {
+            $this::ATTRIBUTE_LVL_STR_PROJECT => $this::ATTRIBUTE_LVL_INT_PROJECT,
+            $this::ATTRIBUTE_LVL_STR_SUBPROJECT => $this::ATTRIBUTE_LVL_INT_SUBPROJECT,
+            $this::ATTRIBUTE_LVL_STR_GROUP => $this::ATTRIBUTE_LVL_INT_GROUP,
+            $this::ATTRIBUTE_LVL_STR_HOUSE => $this::ATTRIBUTE_LVL_INT_HOUSE,
+            $this::ATTRIBUTE_LVL_STR_STAGE => $this::ATTRIBUTE_LVL_INT_STAGE,
+            default => throw new Exception('Incorrect level value'),
+        };
+
+        return $this;
+    }
+
+    /**
+     * Испольвуется для установки уровня доступа ($lvlName) по номеру.
+     * @param int $lvlNum Номер уровня доступа.
+     * @return ProjectRole
+     * @throws Exception
+     */
+    public function setLvlNameByInt(int $lvlNum): ProjectRole
+    {
+        $this->lvlName = match ($lvlNum) {
+            $this::ATTRIBUTE_LVL_INT_PROJECT => $this::ATTRIBUTE_LVL_STR_PROJECT,
+            $this::ATTRIBUTE_LVL_INT_SUBPROJECT => $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
+            $this::ATTRIBUTE_LVL_INT_GROUP => $this::ATTRIBUTE_LVL_STR_GROUP,
+            $this::ATTRIBUTE_LVL_INT_HOUSE => $this::ATTRIBUTE_LVL_STR_HOUSE,
+            $this::ATTRIBUTE_LVL_INT_STAGE => $this::ATTRIBUTE_LVL_STR_STAGE,
+            default => throw new Exception('Incorrect level value'),
+        };
 
         return $this;
     }

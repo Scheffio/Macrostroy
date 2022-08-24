@@ -141,7 +141,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->lvl = true;
-        $this->is_crud = false;
+        $this->is_crud = null;
     }
 
     /**
@@ -415,7 +415,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * Get the [is_crud] column value.
      * Доступен ли CRUD объекта
-     * @return boolean
+     * @return boolean|null
      */
     public function getIsCrud()
     {
@@ -425,7 +425,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * Get the [is_crud] column value.
      * Доступен ли CRUD объекта
-     * @return boolean
+     * @return boolean|null
      */
     public function isCrud()
     {
@@ -522,7 +522,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * Доступен ли CRUD объекта
-     * @param bool|integer|string $v The new value
+     * @param bool|integer|string|null $v The new value
      * @return $this The current object (for fluent API support)
      */
     public function setIsCrud($v)

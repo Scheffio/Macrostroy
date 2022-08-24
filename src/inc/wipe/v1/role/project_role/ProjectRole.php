@@ -4,6 +4,7 @@ namespace wipe\inc\v1\role\project_role;
 
 use DB\RoleQuery;
 use Exception;
+use DB\Base\ProjectRole as BaseProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -40,6 +41,9 @@ class ProjectRole
 
     /** @var int|null ID роли проекта. */
     private ?int $roleId = null;
+
+    /** @var BaseProjectRole|null Объект роли проекта.  */
+    private ?BaseProjectRole $roleObj = null;
 
     /** @var int|null Номер уровня доступа. */
     private ?int $lvl = null;
@@ -83,15 +87,24 @@ class ProjectRole
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function applyDefaultValuesByRoleId(): void
     {
-        $role = RoleQuery::create()->findPk($this->roleId);
+        $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
+                         throw new Exception('No project role found');
+        $this->roleId = $this->roleObj->getId();
+        $this->isCrud = $this->roleObj->getIsCrud();
+        $this->userId = $this->roleObj->getUserId();
+
     }
 
     private function applyDefaultValuesByUserId(): void
     {
 
     }
+
     #region Access Control Functions
     /** @return bool Разрешен ли CRUD объекта. */
     public function isAccessCrud(): bool
@@ -150,6 +163,12 @@ class ProjectRole
     public function getUserRole(): ?UserRole
     {
         return $this->userRole;
+    }
+
+    /** @return BaseProjectRole|null Объект роли проекта. */
+    public function getRoleObj(): ?BaseProjectRole
+    {
+        return $this->roleObj;
     }
     #endregion Functions
 
@@ -264,6 +283,19 @@ class ProjectRole
     {
         if ($this->userRole->getRoleId() !== $userRole->getRoleId()) {
             $this->userRole = $userRole;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param BaseProjectRole $projectRole Объект роли проекта.
+     * @return ProjectRole
+     */
+    public function setProjectRole(BaseProjectRole $projectRole): ProjectRole
+    {
+        if ($this->roleObj->getId() !== $projectRole->getId()) {
+            $this->roleObj = $projectRole;
         }
 
         return $this;

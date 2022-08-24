@@ -449,12 +449,31 @@ class ProjectRole
     }
     #endregion
 
+    public static function getByProjectRoleId() {}
+
+    public static function getByMinimumData() {}
+
     #region CRUD Functions
+    /**
+     * Поиск и заполнение свойств класса, в соотвествие с ранее переданными данными, иначе ошибка.
+     * @return ProjectRole
+     * @throws Exception
+     */
+    public function searchOrThrow(): ProjectRole
+    {
+        if ($this->roleId) $this->applyDefaultValuesByRoleId();
+        else $this->applyDefaultValuesBySearch();
+
+        if (!$this->roleObj) throw new Exception('No project role found');
+
+        return $this;
+    }
+
     /**
      * Добавление новой роли в проект.
      * @throws PropelException
      */
-    private function insert(): ProjectRole
+    public function add(): ProjectRole
     {
         $role = new DbProjectRole();
 
@@ -473,25 +492,31 @@ class ProjectRole
      * Обновление роли проекта.
      * @throws Exception
      */
-    private function update(): ProjectRole
+    public function update(): ProjectRole
     {
-        if (!$this->roleObj) {
-            if ($this->projectId) $this->applyDefaultValuesByRoleId();
-            else $this->applyDefaultValuesBySearch();
+        if (!$this->roleObj) $this->searchOrThrow();
 
-            if (!$this->roleObj) throw new Exception('No project role found');
-        }
+        if ($this->lvl) $this->roleObj->setLvl($this->lvl);
+        if ($this->isCrud) $this->roleObj->setIsCrud($this->isCrud);
+        if ($this->userId) $this->roleObj->setUserId($this->userId);
+        if ($this->objectId) $this->roleObj->setObjectId($this->objectId);
+        if ($this->projectId) $this->roleObj->setProjectId($this->projectId);
 
-        if ($thi)
+        $this->roleObj->save();
 
         return $this;
     }
 
     /**
      * Удаление роли проекта.
+     * @throws Exception
      */
-    private function delete(): ProjectRole
+    public function delete(): ProjectRole
     {
+        if (!$this->roleObj) $this->searchOrThrow();
+
+        $this->roleObj->delete();
+
         return $this;
     }
     #endregion

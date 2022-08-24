@@ -1,0 +1,310 @@
+AWSTATS DATA FILE 7.6 (build 20161204)
+# If you remove this file, all statistics for date 202208 will be lost/reset.
+# Last config file used to build this data file was /etc/awstats/awstats.artemy.net.conf.
+
+# Position (offset in bytes) in this file for beginning of each section for
+# direct I/O access. If you made changes somewhere in this file, you should
+# also remove completely the MAP section (AWStats will rewrite it at next
+# update).
+BEGIN_MAP 28
+POS_GENERAL 1993                
+POS_TIME 2681                
+POS_VISITOR 3450                
+POS_DAY 3759                
+POS_DOMAIN 3913                
+POS_LOGIN 4146                
+POS_ROBOT 4301                
+POS_WORMS 4465                
+POS_EMAILSENDER 4596                
+POS_EMAILRECEIVER 4739                
+POS_SESSION 4815                
+POS_SIDER 4952                
+POS_FILETYPES 6716                
+POS_DOWNLOADS 6996                
+POS_OS 7044                
+POS_BROWSER 7155                
+POS_SCREENSIZE 7276                
+POS_UNKNOWNREFERER 7350                
+POS_UNKNOWNREFERERBROWSER 7474                
+POS_ORIGIN 7593                
+POS_SEREFERRALS 7737                
+POS_PAGEREFS 7881                
+POS_SEARCHWORDS 8291                
+POS_KEYWORDS 8443                
+POS_MISC 2344                
+POS_ERRORS 8502                
+POS_CLUSTER 4002                
+POS_SIDER_404 8667                
+END_MAP
+
+# LastLine    = Date of last record processed - Last record line number in last log - Last record offset in last log - Last record signature value
+# FirstTime   = Date of first visit for history file
+# LastTime    = Date of last visit for history file
+# LastUpdate  = Date of last update - Nb of parsed records - Nb of parsed old records - Nb of parsed new records - Nb of parsed corrupted - Nb of parsed dropped
+# TotalVisits = Number of visits
+# TotalUnique = Number of unique visitors
+# MonthHostsKnown   = Number of hosts known
+# MonthHostsUnKnown = Number of hosts unknown
+BEGIN_GENERAL 8
+LastLine 20220823174615 5168 1327499 14945206067597
+FirstTime 20220823110401
+LastTime 20220823173718
+LastUpdate 20220824095532 5168 0 5166 1 1
+TotalVisits 3                   
+TotalUnique 3                   
+MonthHostsKnown 0                   
+MonthHostsUnknown 3                   
+END_GENERAL
+
+# Misc ID - Pages - Hits - Bandwidth
+BEGIN_MISC 10
+JavascriptDisabled 0 0 0
+WindowsMediaPlayerSupport 0 0 0
+DirectorSupport 0 0 0
+QuickTimeSupport 0 0 0
+PDFSupport 0 0 0
+RealPlayerSupport 0 0 0
+JavaEnabled 0 0 0
+AddToFavourites 0 11 0
+FlashSupport 0 0 0
+TotalMisc 0 0 0
+END_MISC
+
+# Hour - Pages - Hits - Bandwidth - Not viewed Pages - Not viewed Hits - Not viewed Bandwidth
+BEGIN_TIME 24
+0 0 0 0 0 0 0
+1 0 0 0 0 0 0
+2 0 0 0 0 0 0
+3 0 0 0 0 0 0
+4 0 0 0 0 0 0
+5 0 0 0 0 0 0
+6 0 0 0 0 0 0
+7 0 0 0 0 0 0
+8 0 0 0 0 0 0
+9 0 0 0 0 0 0
+10 0 0 0 0 0 0
+11 15 71 376443 42 60 21858
+12 211 533 5975258 92 120 182908
+13 591 1503 12900425 184 196 126393
+14 133 215 1601966 52 53 20152
+15 301 1434 12060191 131 147 114942
+16 174 625 5271893 77 81 160915
+17 69 90 593534 38 38 21779
+18 0 0 0 0 0 0
+19 0 0 0 0 0 0
+20 0 0 0 0 0 0
+21 0 0 0 0 0 0
+22 0 0 0 0 0 0
+23 0 0 0 0 0 0
+END_TIME
+
+# Host - Pages - Hits - Bandwidth - Last visit date - [Start date of last visit] - [Last page of last visit]
+# [Start date of last visit] and [Last page of last visit] are saved only if session is not finished
+# The 10 first Hits must be first (order not required for others)
+BEGIN_VISITOR 3
+31.31.194.145 606 751 6542836 20220823173718 20220823120222 /phpmyadmin/index.php
+78.155.191.46 566 2328 20241390 20220823172743 20220823110401 /access-control
+195.190.102.38 322 1392 11995484 20220823171304 20220823110549 /api/v1/user/
+END_VISITOR
+
+# Date - Pages - Hits - Bandwidth - Visits
+BEGIN_DAY 1
+20220823 1494 4471 38779710 3
+END_DAY
+
+# Domain - Pages - Hits - Bandwidth
+# The 10 first Pages must be first (order not required for others)
+BEGIN_DOMAIN 1
+ip 1494 4471 38779710
+END_DOMAIN
+
+# Cluster ID - Pages - Hits - Bandwidth
+BEGIN_CLUSTER 0
+END_CLUSTER
+
+# Login - Pages - Hits - Bandwidth - Last visit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_LOGIN 0
+END_LOGIN
+
+# Robot ID - Hits - Bandwidth - Last visit - Hits on robots.txt
+# The 10 first Hits must be first (order not required for others)
+BEGIN_ROBOT 1
+curl 16 249848 20220823165357 0
+END_ROBOT
+
+# Worm ID - Hits - Bandwidth - Last visit
+# The 5 first Hits must be first (order not required for others)
+BEGIN_WORMS 0
+END_WORMS
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first Hits must be first (order not required for others)
+BEGIN_EMAILSENDER 0
+END_EMAILSENDER
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first hits must be first (order not required for others)
+BEGIN_EMAILRECEIVER 0
+END_EMAILRECEIVER
+
+# Session range - Number of visits
+BEGIN_SESSION 0
+END_SESSION
+
+# URL - Pages - Bandwidth - Entry - Exit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_SIDER 47
+/phpmyadmin/index.php 157 484196 1 0
+/phpmyadmin/ajax.php 126 273333 0 0
+/phpmyadmin/sql.php 124 1204487 0 0
+/static/header/style.css.map 113 90513 0 0
+/style.css.map 109 227166 0 0
+/access-control 90 156426 0 0
+/access-control/style.css.map 71 83002 0 0
+/ 67 165868 2 0
+/api/v1/users 67 104523 0 0
+/phpmyadmin/navigation.php 56 211762 0 0
+/phpmyadmin/tbl_replace.php 34 88313 0 0
+/artemy/clear_users_throttling 20 21944 0 0
+/action-history 39 96448 0 0
+/api/v1/role 50 23975 0 0
+/MAIN_PAGE/ 40 94301 0 0
+/auth 8 11206 0 0
+/profile 5 5245 0 0
+/action-history/style.css.map 11 11660 0 0
+/phpmyadmin/import.php 2 19154 0 0
+/phpmyadmin/phpmyadmin.css.php 44 929830 0 0
+/api/v1/register 9 5153 0 0
+/api/v1/test 1 458 0 0
+/phpmyadmin/tbl_row_action.php 4 19088 0 0
+/api/v1/roles 4 1904 0 0
+/phpmyadmin/tbl_structure.php 10 88895 0 0
+/auth/reset_password/send_email_confirmation/index.php 3 4158 0 0
+/auth/reset_password/change_password 1 1182 0 0
+/volumes 12 12640 0 0
+/api/v1/login 7 4162 0 0
+/phpmyadmin/tbl_addfield.php 4 23740 0 0
+/api/v1/reset/password/change_password 1 600 0 0
+/action-history/ 3 7545 0 0
+/users 30 31745 0 0
+/phpmyadmin/js/messages.php 18 186392 0 0
+/api/v1/reset/password/send_email_confirmation 3 1602 0 0
+/phpmyadmin/db_structure.php 14 126521 0 0
+/phpmyadmin/js/whitelist.php 10 8186 0 0
+/api/v1/confirm_email_and_create_password 3 913 0 0
+/auth/create_account 38 30397 0 0
+/phpmyadmin/ 1 3522 0 0
+/phpmyadmin/db_import.php 2 17617 0 0
+/api/v1/user 23 23723 0 0
+/api/v1/admin/create_account/ 6 2276 0 0
+/MAIN_PAGE/style.css.map 18 31761 0 0
+/api/v1/role/add 2 1051 0 0
+/api/v1/user/ 21 16021 0 0
+/style.scss 13 41392 0 0
+END_SIDER
+
+# Files type - Hits - Bandwidth - Bandwidth without compression - Bandwidth after compression
+BEGIN_FILETYPES 11
+map 322 444102 0 0
+scss 13 41392 0 0
+svg 1028 1206855 0 0
+Unknown 413 535297 0 0
+gif 2 1853 0 0
+css 760 1703655 0 0
+js 523 3399101 0 0
+png 403 469807 0 0
+php 608 3685672 0 0
+html 138 289533 0 0
+jpg 261 27002443 0 0
+END_FILETYPES
+
+# Downloads - Hits - Bandwidth
+BEGIN_DOWNLOADS 0
+END_DOWNLOADS
+
+# OS ID - Hits
+BEGIN_OS ID - Hits - Pages 3
+linux 1692 829
+win10 2650 536
+Unknown 129 129
+END_OS
+
+# Browser ID - Hits - Pages
+BEGIN_BROWSER 3
+chrome102.0.5005.167 2650 536
+chrome104.0.0.0 1692 829
+Unknown 129 129
+END_BROWSER
+
+# Screen size - Hits
+BEGIN_SCREENSIZE 0
+END_SCREENSIZE
+
+# Unknown referer OS - Last visit date
+BEGIN_UNKNOWNREFERER 1
+PostmanRuntime/7.29.2 20220823171810
+END_UNKNOWNREFERER
+
+# Unknown referer Browser - Last visit date
+BEGIN_UNKNOWNREFERERBROWSER 1
+PostmanRuntime/7.29.2 20220823171810
+END_UNKNOWNREFERERBROWSER
+
+# Origin - Pages - Hits 
+BEGIN_ORIGIN 6
+From0 1145 1211
+From1 0 0
+From2 0 0
+From3 41 125
+From4 308 3135
+From5 0 0
+END_ORIGIN
+
+# Search engine referers ID - Pages - Hits
+BEGIN_SEREFERRALS 0
+END_SEREFERRALS
+
+# External page referers - Pages - Hits
+# The 10 first Pages must be first (order not required for others)
+BEGIN_PAGEREFS 4
+https://click.mail.ru 41 41
+http://cv1535181.vps.regruhosting.ru/phpmyadmin/themes/pmahomme/jquery/jquery-ui.css 0 6
+http://cv1535181.vps.regruhosting.ru/phpmyadmin/phpmyadmin.css.php 0 20
+https://cv1535181.vps.regruhosting.ru/phpmyadmin/phpmyadmin.css.php 0 58
+END_PAGEREFS
+
+# Search keyphrases - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_SEARCHWORDS 0
+END_SEARCHWORDS
+
+# Search keywords - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_KEYWORDS 0
+END_KEYWORDS
+
+# Errors - Hits - Bandwidth
+BEGIN_ERRORS 7
+400 4 1825
+403 477 141104
+302 15 12642
+404 45 13585
+301 1 536
+422 74 34421
+500 32 167870
+END_ERRORS
+
+# URL with 404 errors - Hits - Last URL referrer
+BEGIN_SIDER_404 10
+/awsstat/ 1 -
+/action-history 1 https://artemy.net/MAIN_PAGE/
+/webstat/ 1 -
+/action-history/style.css 3 https://artemy.net/action-history/
+/action-history/js/script.js 2 https://artemy.net/action-history
+/api/v1/confirm_email_and_create_password 2 -
+/auth/reset_password/create_account 1 -
+/static/icons/sorter/sorter-default.svg 31 http://artemy.net/MAIN_PAGE/
+/auth/icons/avatar.jpg 2 https://artemy.net/access-control/style.css
+/awstat/ 1 -
+END_SIDER_404

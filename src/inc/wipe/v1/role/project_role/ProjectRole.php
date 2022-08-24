@@ -449,9 +449,25 @@ class ProjectRole
     }
     #endregion
 
-    public static function getByProjectRoleId() {}
+    #region Static Getter Functions
+    /**
+     * Получить объект класса через статический метод, используя ID роли проекта.
+     * @throws Exception
+     */
+    public static function getByProjectRoleId(int $projectRoleId): ProjectRole
+    {
+        return new ProjectRole(roleId: $projectRoleId);
+    }
 
-    public static function getByMinimumData() {}
+    /**
+     * Получить объект класса через статический метод, используя минимально необъодимые данные для поиска.
+     * @throws Exception
+     */
+    public static function getByMinimumData(int|string $lvl, int $projectId, int $objectId, int $userId): ProjectRole
+    {
+        return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId);
+    }
+    #endregion
 
     #region CRUD Functions
     /**

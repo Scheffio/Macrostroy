@@ -96,6 +96,8 @@ class ProjectRole
                          throw new Exception('No project role found');
         $this->roleId = $this->roleObj->getId();
         $this->isCrud = $this->roleObj->getIsCrud();
+        $this->lvl = $this->roleObj->getLvl();
+        $this->lvlName = $this->getLvlName();
         $this->userId = $this->roleObj->getUserId();
 
     }
@@ -121,7 +123,15 @@ class ProjectRole
         return $this->isCrud ?: throw new Exception('No access to CRUD the object');
     }
 
-    pu
+    /**
+     * Равносилен ли CRUD пользователя NULL.
+     * Т.е. пользователю еще не назначали роль для данного проекта.
+     * @throws Exception
+     */
+    public function isNullCrud(): bool
+    {
+        return $this->isCrud === null;
+    }
     #endregion
 
     #region Getter Default Values Functions
@@ -140,7 +150,16 @@ class ProjectRole
     /** @return string|null Наименование уровня доступа. */
     public function getLvlName(): ?string
     {
-        return $this->lvlName;
+        if ($this->lvlName) return $this->lvlName;
+        elseif (!$this->lvl) return null;
+
+        return [
+            $this::ATTRIBUTE_LVL_STR_PROJECT,
+            $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
+            $this::ATTRIBUTE_LVL_STR_GROUP,
+            $this::ATTRIBUTE_LVL_STR_HOUSE,
+            $this::ATTRIBUTE_LVL_STR_STAGE,
+        ][$this->lvl - 1];
     }
 
     /** @return int|null ID проекта. */
@@ -244,8 +263,15 @@ class ProjectRole
      */
     public function setLvlByNum(int $lvlNum): ProjectRole
     {
-        if ($this->lvl !== $lvlNum) {
-            $this->lvl = $lvlNum;
+        if ($this->lvl === $lvlNum) return $this;
+
+        switch ($lvlNum) {
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
+            default: throw new Exception('');
         }
 
         return $this;

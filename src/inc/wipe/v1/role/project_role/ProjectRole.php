@@ -76,6 +76,7 @@ class ProjectRole
      * @param int|string $lvl Номер уровня доступа.
      * @param int|null $projectId ID проекта.
      * @param int|null $objectId ID объекта (проект, подпроект, группа, дом, этап).
+     * @param bool $search Нужно ли искать ранее созданную запись с переданными параметрами.
      * @throws Exception
      */
     function __construct(
@@ -83,14 +84,18 @@ class ProjectRole
         ?int $userId = null,
         int|string $lvl = 1,
         ?int $projectId = null,
-        ?int $objectId = null)
+        ?int $objectId = null,
+        bool $search = false)
     {
         $this->roleId = $roleId;
         $this->userId = $userId;
         $this->projectId = $projectId;
         $this->objectId = $objectId;
         $this->setLvl($lvl);
-        $this->applyDefaultValuesBySearch();
+
+        if ($search) {
+            $this->applyDefaultValuesBySearch();
+        }
     }
 
     #region Apply Default Values Functions
@@ -456,7 +461,7 @@ class ProjectRole
      */
     public static function getByProjectRoleId(int $projectRoleId): ProjectRole
     {
-        return new ProjectRole(roleId: $projectRoleId);
+        return new ProjectRole(roleId: $projectRoleId, search: true);
     }
 
     /**
@@ -465,7 +470,7 @@ class ProjectRole
      */
     public static function getByMinimumData(int|string $lvl, int $projectId, int $objectId, int $userId): ProjectRole
     {
-        return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId);
+        return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId, search: true);
     }
     #endregion
 
@@ -536,6 +541,11 @@ class ProjectRole
         $this->roleObj->delete();
 
         return $this;
+    }
+
+    public function addOrUpdate(): ProjectRole
+    {
+        $role =
     }
     #endregion
 }

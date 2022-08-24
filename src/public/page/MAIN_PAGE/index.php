@@ -14,10 +14,12 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
     <title>Estimin - Главная</title>
+    <?php require __DIR__ . "/../../../inc/timur/header-styles.php" ?>
 </head>
 
 <body class="body">
     <!-- HEADER -->
+    <?php require __DIR__ . "/../../../inc/timur/header.php" ?>
     <!-- ================= -->
     <div class="wrap">
         <div class="tabs-controller">

@@ -474,9 +474,9 @@ class ProjectRole
     {
         return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId, search: true);
     }
-    #endregion
 
-    
+//    public static function getAllUserByProjectId()
+    #endregion
 
     #region CRUD Functions
     /**

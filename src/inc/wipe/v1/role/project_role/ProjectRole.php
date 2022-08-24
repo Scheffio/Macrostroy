@@ -67,8 +67,8 @@ class ProjectRole
     private ?UserRole $userRole = null;
 
     /**
-     * @param int|null $roleId
-     * @param int|null $userId
+     * @param int|null $roleId ID роли проекта.
+     * @param int|null $userId ID пользователя.
      * @param int|null $lvl
      * @param bool|null $isCrud
      * @param int|null $projectId
@@ -83,48 +83,31 @@ class ProjectRole
         ?int $projectId = null,
         ?int $objectId = null)
     {
+        $this->roleId = $roleId;
+        $this->userId = $userId;
+        $this->lvl = $lvl;
+        $this->isCrud = $isCrud;
+        $this->projectId = $projectId;
+        $this->objectId = $objectId;
+
         if ($roleId && $userId) {
-            $this->roleId = $roleId;
             $this->applyDefaultValuesByRoleId();
-            $this->userId = $userId;
             $this->applyDefaultValuesByUserId();
         }
         elseif ($roleId) {
-            $this->roleId = $roleId;
             $this->applyDefaultValuesByRoleId();
         }
         elseif ($userId) {
-            $this->userId = $userId;
-            $this->applyDefaultValuesByUserId();
-        }
-
-
-    }
-
-    /**
-     * @param int|null $roleId ID роли проекта.
-     * @param int|null $userId ID пользователя.
-     * @throws Exception
-     */
-    function __construct1(?int $roleId = null, ?int $userId = null)
-    {
-        if ($roleId && $userId) {
-            $this->roleId = $roleId;
-            $this->applyDefaultValuesByRoleId();
-            $this->userId = $userId;
-            $this->applyDefaultValuesByUserId();
-        }
-        elseif ($roleId) {
-            $this->roleId = $roleId;
-            $this->applyDefaultValuesByRoleId();
-        }
-        elseif ($userId) {
-            $this->userId = $userId;
             $this->applyDefaultValuesByUserId();
         }
     }
 
     #region Apply Default Values Functions
+    private function applyDefaultValuesBySearch(): void
+    {
+
+    }
+
     /**
      * Заполнение свойств класса, используя ID роли проекта.
      * @throws Exception
@@ -312,17 +295,10 @@ class ProjectRole
     /**
      * @param bool|null $isCrud Разрешен ли CRUD объекта.
      * @return ProjectRole
-     * @throws Exception
      */
     public function setIsCrud(?bool $isCrud): ProjectRole
     {
         if ($this->isCrud !== $isCrud) {
-            if ($this->userRole &&
-                $this->userRole->isManageUsers() &&
-                $isCrud !== true) {
-                throw new Exception('Unable to edit administrator access');
-            }
-
             $this->isCrud = $isCrud;
         }
 

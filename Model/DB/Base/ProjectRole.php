@@ -21,6 +21,7 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use wipe\inc\v1\role\user_role\UserRole;
 
 /**
  * Base class that represents a row from the 'project_role' table.
@@ -1566,9 +1567,15 @@ abstract class ProjectRole implements ActiveRecordInterface
      * Code to be run before inserting to database
      * @param ConnectionInterface|null $con
      * @return bool
+     * @throws Exception
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
+        $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
+        $isFalse = $this->is_crud === false;
+
+        if ($isAdmin && $isFalse) throw new Exception('Unable to edit administrator access');
+
         return true;
     }
 
@@ -1585,9 +1592,15 @@ abstract class ProjectRole implements ActiveRecordInterface
      * Code to be run before updating the object in database
      * @param ConnectionInterface|null $con
      * @return bool
+     * @throws Exception
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
+        $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
+        $isFalse = $this->is_crud === false;
+
+        if ($isAdmin && $isFalse) throw new Exception('Unable to edit administrator access');
+
         return true;
     }
 

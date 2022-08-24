@@ -18,16 +18,8 @@ try {
     $objectId = $request->getRequest('object_id');
     $projectId = $request->getRequest('project_id');
 
-    ProjectRole::getByMinimumData(lvl: $lvl, projectId: $projectId, objectId: $objectId, userId: $userId);
-
-//    $projectRole = new ProjectRole();
-//    $projectRole
-//        ->setLvl($lvl)
-//        ->setIsCrud($isCrud)
-//        ->setUserId($userId)
-//        ->setObjectId($objectId)
-//        ->setProjectId($projectId)
-//        ->add();
+    ProjectRole::getByMinimumData(lvl: $lvl, projectId: $projectId, objectId: $objectId, userId: $userId)
+                ->addOrUpdate();
 
     JsonOutput::success();
 } catch (Exception $e) {

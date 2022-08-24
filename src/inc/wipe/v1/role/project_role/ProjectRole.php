@@ -8,6 +8,7 @@ use DB\Base\ProjectRoleQuery;
 use DB\ProjectRole as DbProjectRole;
 use DB\ProjectRoleQuery as DbProjectRoleQuery;
 use DB\Base\ProjectRole as BaseProjectRole;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -49,7 +50,7 @@ class ProjectRole
     /** @var BaseProjectRole|null Объект роли проекта.  */
     private ?BaseProjectRole $roleObj = null;
 
-    /** @var int|null Номер уровня доступа. */
+    /** @var int Номер уровня доступа. */
     private int $lvl = 1;
 
     /** @var string|null Наименование уровня доступа. */
@@ -519,12 +520,7 @@ class ProjectRole
     {
         if (!$this->roleObj) $this->searchOrThrow();
 
-        if ($this->lvl) $this->roleObj->setLvl($this->lvl);
-        if ($this->isCrud) $this->roleObj->setIsCrud($this->isCrud);
-        if ($this->userId) $this->roleObj->setUserId($this->userId);
-        if ($this->objectId) $this->roleObj->setObjectId($this->objectId);
-        if ($this->projectId) $this->roleObj->setProjectId($this->projectId);
-
+        $this->extracted();
         $this->roleObj->save();
 
         return $this;
@@ -543,9 +539,36 @@ class ProjectRole
         return $this;
     }
 
+    /**
+     * Добавление или обновление роли проекта.
+     * @throws PropelException
+     */
     public function addOrUpdate(): ProjectRole
     {
-        $role =
+        $this->roleObj = ProjectRoleQuery::create()
+                            ->filterByLvl($this->lvl)
+                            ->filterByUserId($this->userId)
+                            ->filterByObjectId($this->objectId)
+                            ->filterByProjectId($this->projectId)
+                            ->findOneOrCreate();
+
+        $this->extracted();
+        $this->roleObj->save();
+
+        return $this;
     }
     #endregion
+
+    /**
+     * Назначение знечений с проверкой на их наличие, для свойства класса $roleObj.
+     * @return void
+     */
+    public function extracted(): void
+    {
+        if ($this->lvl) $this->roleObj->setLvl($this->lvl);
+        if ($this->isCrud !== null) $this->roleObj->setIsCrud($this->isCrud);
+        if ($this->userId !== null) $this->roleObj->setUserId($this->userId);
+        if ($this->objectId !== null) $this->roleObj->setObjectId($this->objectId);
+        if ($this->projectId !== null) $this->roleObj->setProjectId($this->projectId);
+    }
 }

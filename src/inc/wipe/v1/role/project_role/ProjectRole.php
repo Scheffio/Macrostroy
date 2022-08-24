@@ -52,7 +52,7 @@ class ProjectRole
     private ?string $lvlName = null;
 
     /** @var bool|null Разрешен ли CRUD объекта. */
-    private bool $isCrud = false;
+    private ?bool $isCrud = null;
 
     /** @var int|null ID проекта. */
     private ?int $projectId = null;
@@ -106,8 +106,8 @@ class ProjectRole
     }
 
     #region Access Control Functions
-    /** @return bool Разрешен ли CRUD объекта. */
-    public function isAccessCrud(): bool
+    /** @return bool|null Разрешен ли CRUD объекта. */
+    public function isAccessCrud(): ?bool
     {
         return $this->isCrud;
     }
@@ -120,6 +120,8 @@ class ProjectRole
     {
         return $this->isCrud ?: throw new Exception('No access to CRUD the object');
     }
+
+    pu
     #endregion
 
     #region Getter Default Values Functions

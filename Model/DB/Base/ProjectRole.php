@@ -75,11 +75,11 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * The value for the lvl field.
      * Уровень
-( 1 - проекта;
-2 - подпроект;
-3 - группа;
-4 - дом;
-5 - этап )
+    ( 1 - проекта;
+    2 - подпроект;
+    3 - группа;
+    4 - дом;
+    5 - этап )
      * Note: this column has a database default value of: true
      * @var        boolean
      */
@@ -88,8 +88,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * The value for the is_crud field.
      * Доступен ли CRUD объекта
-     * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        boolean|null
      */
     protected $is_crud;
 
@@ -141,7 +140,6 @@ abstract class ProjectRole implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->lvl = true;
-        $this->is_crud = null;
     }
 
     /**
@@ -385,11 +383,11 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * Get the [lvl] column value.
      * Уровень
-( 1 - проекта;
-2 - подпроект;
-3 - группа;
-4 - дом;
-5 - этап )
+    ( 1 - проекта;
+    2 - подпроект;
+    3 - группа;
+    4 - дом;
+    5 - этап )
      * @return boolean
      */
     public function getLvl()
@@ -400,11 +398,11 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * Get the [lvl] column value.
      * Уровень
-( 1 - проекта;
-2 - подпроект;
-3 - группа;
-4 - дом;
-5 - этап )
+    ( 1 - проекта;
+    2 - подпроект;
+    3 - группа;
+    4 - дом;
+    5 - этап )
      * @return boolean
      */
     public function isLvl()
@@ -489,11 +487,11 @@ abstract class ProjectRole implements ActiveRecordInterface
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * Уровень
-( 1 - проекта;
-2 - подпроект;
-3 - группа;
-4 - дом;
-5 - этап )
+    ( 1 - проекта;
+    2 - подпроект;
+    3 - группа;
+    4 - дом;
+    5 - этап )
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -621,13 +619,9 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->lvl !== true) {
-                return false;
-            }
-
-            if ($this->is_crud !== false) {
-                return false;
-            }
+        if ($this->lvl !== true) {
+            return false;
+        }
 
         // otherwise, everything was equal, so return TRUE
         return true;
@@ -645,7 +639,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param bool $rehydrate Whether this object is being re-hydrated from the database.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @return int next starting column
@@ -908,7 +902,7 @@ abstract class ProjectRole implements ActiveRecordInterface
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . ProjectRoleTableMap::COL_ID . ')');
         }
 
-         // check the columns in natural order for more readable SQL queries
+        // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(ProjectRoleTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
@@ -1209,7 +1203,7 @@ abstract class ProjectRole implements ActiveRecordInterface
         return $this;
     }
 
-     /**
+    /**
      * Populate the current object from a string, using a given parser format
      * <code>
      * $book = new Book();
@@ -1556,7 +1550,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preSave(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -1566,7 +1560,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postSave(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before inserting to database
@@ -1575,7 +1569,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -1585,7 +1579,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before updating the object in database
@@ -1594,7 +1588,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -1604,7 +1598,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postUpdate(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
     /**
      * Code to be run before deleting the object in database
@@ -1613,7 +1607,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preDelete(?ConnectionInterface $con = null): bool
     {
-                return true;
+        return true;
     }
 
     /**
@@ -1623,7 +1617,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postDelete(?ConnectionInterface $con = null): void
     {
-            }
+    }
 
 
     /**

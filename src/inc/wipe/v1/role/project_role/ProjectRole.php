@@ -216,7 +216,7 @@ class ProjectRole
         };
     }
 
-    /** @return int|null Номер уровня доступа но его наименованию. */
+    /** @return int|null Номер уровня доступа по его наименованию. */
     public function getLvlNumByName(): ?int
     {
         return match ($this->lvlName) {
@@ -475,9 +475,15 @@ class ProjectRole
         return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId, search: true);
     }
 
-    public static function getAllUserByProjectId(): array
+    /**
+     * @throws Exception
+     */
+    public static function getAllUsers(int $projectId, int $objectId, int|string $lvl): array
     {
-
+        $projectRole = new ProjectRole();
+        $projectRole->projectId = $projectId;
+        $projectRole->objectId = $objectId;
+        $projectRole->setLvl($lvl);
     }
     #endregion
 

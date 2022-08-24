@@ -62,15 +62,51 @@ body.fixated {
   flex-direction: column;
   margin-top: 80px;
 }
-.wrap .tabs-controller {
+.wrap .title {
   display: flex;
   width: clamp(768px, 90vw, 1555px);
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: flex-end;
   gap: 50px;
   padding-bottom: 10px;
   position: relative;
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
 }
-.wrap .tabs-controller::after {
+.wrap .title p {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+}
+.wrap .title .back {
+  margin: 0;
+  position: relative;
+  text-decoration: none;
+  color: black;
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+.wrap .title .back::before {
+  content: "";
+  display: block;
+  height: 8px;
+  width: 8px;
+  background-color: transparent;
+  border-left: 2px solid black;
+  border-bottom: 2px solid black;
+  position: absolute;
+  top: 35%;
+  left: -15px;
+  transform: rotate(45deg);
+  transition: 0.3s;
+}
+.wrap .title .back:hover::before {
+  transition: 0.3s;
+  left: -10px;
+}
+.wrap .title::after {
   content: "";
   display: block;
   width: clamp(768px, 90vw, 1555px);
@@ -80,22 +116,6 @@ body.fixated {
   left: 0;
   background-color: #d6d6d7;
   border-radius: 2px;
-}
-.wrap .tabs-controller .tabs-controller__tab-anchor {
-  display: flex;
-  align-items: center;
-}
-.wrap .tabs-controller .tabs-controller__tab-anchor .tab-anchor__anchor-name {
-  order: 0;
-  text-decoration: none;
-  color: black;
-  font-family: "Jost", sans-serif;
-  font-size: 24px;
-  font-weight: 500;
-}
-.wrap .tabs-controller .tabs-controller__tab-anchor .tab-anchor__anchor-name.selected {
-  font-size: 36px;
-  font-weight: 700;
 }
 .wrap .content {
   display: flex;

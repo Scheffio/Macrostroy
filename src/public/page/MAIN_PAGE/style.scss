@@ -44,151 +44,136 @@
             }
         }
     }
-
     .tabs-container {
-        margin-top: 40px;
-        width: clamp(768px, 90vw, 1555px);
-        display: flex;
-        justify-content: center;
-
-        .tabs_container__tab-element {
+        .tabs-container__tab-element {
             display: none;
-
-            .tab-header {
+            .grid {
                 display: flex;
-                width: clamp(768px, 90vw, 1555px);
-
-                .tab-header__element {
-                    @include TabAnchorName;
-                    display: flex;
-                    height: 60px;
-                    align-items: center;
-                    justify-content: center;
-                    user-select: none;
-
-                    p {
-                        margin: 0;
-                    }
-
-                    .sorter {
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-top: 40px;
+                max-width: 1555px;
+            
+                .grid__header {
+                    display: grid;
+                    grid-template-rows: 1fr;
+                    grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                    gap: 0px;
+                    height: 100%;
+                    .header__element {
+                        @include TabAnchorName;
                         display: flex;
-                        flex-direction: column;
+                        height: 60px;
+                        align-items: center;
                         justify-content: center;
-                        gap: 2px;
-                        margin-right: 8px;
-
-                        img {
-                            &:nth-child(1) {
-                                transform: rotate(180deg);
-                                margin-right: 0.7px;
+                        user-select: none;
+                        padding: 0px 10px;
+                        &:first-child {
+                            justify-content: flex-start;
+                            padding-left: 27px;
+                        }
+                        p{
+                            margin: 0;
+                        }
+                        .sorter {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            gap: 2px;
+                            margin-right: 8px;
+        
+                            img {
+                                &:nth-child(1) {
+                                    transform: rotate(180deg);
+                                    margin-right: 0.7px;
+                                }
+        
+                                &:hover {
+                                    cursor: pointer;
+                                }
                             }
-
-                            &:hover {
-                                cursor: pointer;
+                        }
+                    }
+                }
+        
+                .grid__body {
+                    .grid-row {
+                        display: grid;
+                        grid-template-rows: 1fr;
+                        grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                        height: 100%;
+                        flex-direction: column;
+                        &:nth-child(odd) {
+                            background-color: #F4F4F4;
+                        }
+        
+                        &:last-child {
+                            border-bottom-left-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }
+                        .grid-column {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 60px;
+                            @include TabText;
+                            box-sizing: border-box;
+        
+                            &.name {
+                                justify-content: flex-start;
+                                padding-left: 27px;
+                            }
+                            &.cancel {
+                                color: $EstiminSaturate-8;
+                                opacity: .4;
+                                text-decoration: underline;
+                                transition: .3s;
+                                &:hover {
+                                    transition: .3s;
+                                    opacity: .9;
+                                }
+                            }
+                            &.status {
+                                position: relative;
+        
+                                &::before {
+                                    content: '';
+                                    display: block;
+                                    width: 10px;
+                                    height: 10px;
+                                    background-color: $EstiminBlank;
+                                    border-radius: 100%;
+                                    position: absolute;
+                                    left: 25px;
+                                    top: 45%;
+                                }
+        
+                                &.active::before {
+                                    background-color: $EstiminSuccessful;
+                                }
+        
+                                &.closed::before {
+                                    background-color: $EstiminClosed;
+                                }
+        
+                                &.deleted::before {
+                                    background-color: $EstiminDeleted;
+                                }
+                                &.stoped::before {
+                                    background-color: $EstiminStoped;
+                                }
+                            }
+                            p {
+                                margin: 0;
+                                padding: 0px 5px;
                             }
                         }
-                    }
-
-                    &:nth-child(1) {
-                        justify-content: flex-start;
-                        width: clamp(200px, 40vw, 550px);
-                    }
-
-                    &:nth-child(4) {
-                        width: clamp(100px, 40vw, 320px);
-                    }
-
-                    &:nth-child(5) {
-                        width: clamp(100px, 40vw, 220px);
-                    }
-
-                    &:nth-child(2),
-                    &:nth-child(3) {
-                        width: clamp(100px, 40vw, 190px);
-                    }
-                }
-            }
-
-            .grid-row {
-                display: flex;
-                width: clamp(768px, 90vw, 1555px);
-                height: 60px;
-
-                &:nth-child(even) {
-                    background-color: #F4F4F4;
-                }
-
-                &:first-child {
-                    border-top-left-radius: 10px;
-                    border-top-right-radius: 10px;
-                }
-
-                &:last-child {
-                    border-bottom-left-radius: 10px;
-                    border-bottom-right-radius: 10px;
-                }
-
-                .grid-column {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    @include TabText;
-                    box-sizing: border-box;
-
-                    &.status {
-                        position: relative;
-
-                        &::before {
-                            content: '';
-                            display: block;
-                            width: 10px;
-                            height: 10px;
-                            background-color: $EstiminBlank;
-                            border-radius: 100%;
-                            position: absolute;
-                            left: 25px;
-                            top: 45%;
-                        }
-
-                        &.active::before {
-                            background-color: $EstiminSuccessful;
-                        }
-
-                        &.closed::before {
-                            background-color: $EstiminClosed;
-                        }
-
-                        &.deleted::before {
-                            background-color: $EstiminDeleted;
-                        }
-                        &.stoped::before {
-                            background-color: $EstiminStoped;
-                        }
-                    }
-
-                    &:nth-child(1) {
-                        justify-content: flex-start;
-                        width: clamp(200px, 40vw, 550px);
-                        padding-left: 27px;
-                    }
-
-                    &:nth-child(4) {
-                        width: clamp(100px, 40vw, 320px);
-                    }
-
-                    &:nth-child(5) {
-                        width: clamp(100px, 40vw, 220px);
-                    }
-
-                    &:nth-child(2),
-                    &:nth-child(3) {
-                        width: clamp(100px, 40vw, 190px);
                     }
                 }
             }
         }
-
-        .tabs_container__tab-element:target {
+        .tabs-container__tab-element:target {
             display: block;
         }
     }

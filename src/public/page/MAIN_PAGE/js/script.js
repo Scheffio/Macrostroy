@@ -31,7 +31,7 @@ anchors.forEach((elem) => {
 
 // Table Generator
 
-const whereToCreate = document.querySelectorAll('.tabs_container__tab-element')
+const whereToCreate = document.querySelector('.grid__body')
 
 const table = {
     createElement(element, elementClass, elementModificator, elementContent) {
@@ -68,87 +68,14 @@ const table = {
 
 // ======================
 
-// Sorter Buttons 
-
-const sorter = {
-    sorters: document.querySelectorAll('.sorter > img'),
-    defaultPath: "../../static/icons/sorter/sorter-default.svg",
-    clickedPath: "../../static/icons/sorter/sorter-clicked.svg",
-    // задаю пути и элементы
-    reset() {
-        this.sorters.forEach((sorter) => {
-            sorter.classList.remove('selected')
-            sorter.src = this.defaultPath
-            // ты знаешь что это
-        })
-    },
-    SorterClick(sorter) {
-        this.reset()
-        sorter.classList.add('selected')
-        sorter.src = this.clickedPath
-        //  ага
-    }
-}
-
-document.querySelectorAll('.sorter > img').forEach((elem) => elem.addEventListener('click', (elem) => {
-    sorter.SorterClick(elem.path[0])
-}))
-document.querySelectorAll('.sorter > img').forEach((elem) => {
-    elem.addEventListener('dblclick', () => {
-        sorter.reset()
-    })
-})
-
-// =======================
-
-// Status color checker
-
-const ColorChecker = {
-    reset() {
-        document.querySelectorAll('.status').forEach((statusElements) => {
-            statusElements.classList.remove('active', 'closed', 'deleted')
-        })
-    },
-    NameChecker() {
-        document.querySelectorAll('.status').forEach((statusElements) => {
-            if (statusElements.children[0].textContent == "В процессе") {
-                statusElements.classList.add('active')
-                statusElements.classList.remove('closed')
-                statusElements.classList.remove('stoped')
-                statusElements.classList.remove('deleted')
-            } else if (statusElements.children[0].textContent == "Завершён") {
-                statusElements.classList.add('closed')
-                statusElements.classList.remove('active')
-                statusElements.classList.remove('stoped')
-                statusElements.classList.remove('deleted')
-            } else if (statusElements.children[0].textContent == "Заморожен") {
-                statusElements.classList.add('stoped')
-                statusElements.classList.remove('active')
-                statusElements.classList.remove('deleted')
-                statusElements.classList.remove('closed')
-            } else if (statusElements.children[0].textContent == "Удалён") {
-                statusElements.classList.add('deleted')
-                statusElements.classList.remove('active')
-                statusElements.classList.remove('stoped')
-                statusElements.classList.remove('closed')
-            }
-        })
-    }
-}
-
-// ColorChecker.keywords.forEach((elem) => {
-//     Object.keys(elem).forEach((item) => console.log(elem[item]))
-// })
-
-
-// ========================
 
 // Default page loader
 
 function PageLoader(page, ammountOfRows) {
     history.pushState('', '', page)
+    document.querySelector(`${page} > .grid > .grid__body`).innerHTML = ""
     for(let i = 0; i < ammountOfRows; i++) {
-        document.querySelector(page).append(table.generate(ammountOfRows))
+        document.querySelector(`${page} > .grid > .grid__body`).append(table.generate(ammountOfRows))
     }
     ColorChecker.NameChecker()
 }
@@ -159,7 +86,7 @@ function UrlSplitter(){
 }
 
 window.addEventListener('hashchange', () => {
-    PageLoader(UrlSplitter(), 3)
+    PageLoader(UrlSplitter(), 4)
 })
 
 // ======================
@@ -386,8 +313,7 @@ document.addEventListener('contextmenu', (elem) => {CCM.getClick(elem)})
 
 
 // Это производственные мелочи
-PageLoader("#cities", 3)
+PageLoader("#cities", 4)
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-table.generate(3)
 ColorChecker.NameChecker()

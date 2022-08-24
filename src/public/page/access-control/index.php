@@ -14,18 +14,16 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
     <title>Estimin - Главная</title>
-    <?php require __DIR__ . "/../../../inc/timur/header-styles.php" ?>
+    
 </head>
 
 <body class="body">
     <!-- HEADER -->
-    <?php require __DIR__ . "/../../../inc/timur/header.php" ?>
     <!-- ================= -->
     <div class="wrap">
-        <div class="tabs-controller">
-            <div class="tabs-controller__tab-anchor">
-                <p class="tab-anchor__anchor-name selected">Управление доступом к проекту «ЖК Рыбное»</p>
-            </div>
+        <div class="title">
+            <p>История действий</p>
+            <a href="../MAIN_PAGE/" class="back">Назад</a>
         </div>
         <div class="content">
             <div class="users">
@@ -64,7 +62,7 @@
         </div>
     </div>
 
-    <script src="../../static/js/titleChecker.js"></script>
+    <script src="../../static/js/main.js"></script>
     <script src="js/script.js"></script>
 </body>
 

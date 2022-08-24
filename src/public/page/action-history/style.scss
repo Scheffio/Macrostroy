@@ -7,13 +7,23 @@
     margin-top: 80px;
     width: 100%;
 
-    .tabs-controller {
+    .title {
         display: flex;
         width: clamp(768px, 90vw, 1555px);
-        justify-content: flex-start;
+        justify-content: space-between;
+        align-items: flex-end;
         gap: 50px;
         padding-bottom: 10px;
         position: relative;
+        @include TabAnchorName;
+        p {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .back {
+           @include BackBtn;
+        }
 
         &::after {
             content: '';
@@ -26,118 +36,95 @@
             background-color: $EstiminUnderlineColor;
             border-radius: 2px;
         }
-
-        .tabs-controller__tab-anchor {
-            display: flex;
-            align-items: center;
-
-            .tab-anchor__anchor-name {
-                order: 0;
-                text-decoration: none;
-                color: black;
+    }
+    .grid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 40px;
+        max-width: 1555px;
+    
+        .grid__header {
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: minmax(200px, 470px) minmax(110px, 220px) repeat(3, minmax(110px, 280px)) minmax(80px, 110px);
+            gap: 0px;
+            height: 100%;
+            .header__element {
                 @include TabAnchorName;
-                p {
+                display: flex;
+                height: 60px;
+                align-items: center;
+                justify-content: center;
+                user-select: none;
+                padding: 0px 10px;
+                &:first-child {
+                    justify-content: flex-start;
+                    padding-left: 27px;
+                }
+                p{
                     margin: 0;
                 }
+                .sorter {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 2px;
+                    margin-right: 8px;
 
-                &.selected {
-                    font-size: 36px;
-                    font-weight: 700;
+                    img {
+                        &:nth-child(1) {
+                            transform: rotate(180deg);
+                            margin-right: 0.7px;
+                        }
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
                 }
             }
         }
-    }
 
-    .tabs-container {
-        margin-top: 40px;
-        width: clamp(768px, 90vw, 1555px);
-        display: flex;
-        justify-content: center;
-
-        .tabs_container__tab-element {
-            display: none;
-
-            .tab-header {
-                display: flex;
-                width: clamp(768px, 90vw, 1555px);
-
-                .tab-header__element {
-                    @include TabAnchorName;
-                    display: flex;
-                    height: 60px;
-                    align-items: center;
-                    justify-content: center;
-                    user-select: none;
-
-                    p {
-                        margin: 0;
-                    }
-
-                    .sorter {
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        gap: 2px;
-                        margin-right: 8px;
-
-                        img {
-                            &:nth-child(1) {
-                                transform: rotate(180deg);
-                                margin-right: 0.7px;
-                            }
-
-                            &:hover {
-                                cursor: pointer;
-                            }
-                        }
-                    }
-
-                    &:nth-child(1) {
-                        justify-content: flex-start;
-                        width: clamp(200px, 40vw, 550px);
-                    }
-
-                    &:nth-child(4) {
-                        width: clamp(100px, 40vw, 320px);
-                    }
-
-                    &:nth-child(5) {
-                        width: clamp(100px, 40vw, 220px);
-                    }
-
-                    &:nth-child(2),
-                    &:nth-child(3) {
-                        width: clamp(100px, 40vw, 190px);
-                    }
-                }
-            }
-
+        .grid__body {
             .grid-row {
-                display: flex;
-                width: clamp(768px, 90vw, 1555px);
-                height: 60px;
-
-                &:nth-child(even) {
+                display: grid;
+                grid-template-rows: 1fr;
+                grid-template-columns: minmax(200px, 470px) minmax(110px, 220px) repeat(3, minmax(110px, 280px)) minmax(80px, 110px);
+                gap: 0px;
+                height: 100%;
+                flex-direction: column;
+                &:nth-child(odd) {
                     background-color: #F4F4F4;
-                }
-
-                &:first-child {
-                    border-top-left-radius: 10px;
-                    border-top-right-radius: 10px;
                 }
 
                 &:last-child {
                     border-bottom-left-radius: 10px;
                     border-bottom-right-radius: 10px;
                 }
-
                 .grid-column {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    height: 60px;
                     @include TabText;
                     box-sizing: border-box;
 
+                    &.name {
+                        justify-content: flex-start;
+                        padding-left: 27px;
+                    }
+                    &.cancel {
+                        color: $EstiminSaturate-8;
+                        opacity: .4;
+                        text-decoration: underline;
+                        transition: .3s;
+                        &:hover {
+                            transition: .3s;
+                            opacity: .9;
+                        }
+                    }
                     &.status {
                         position: relative;
 
@@ -168,31 +155,18 @@
                             background-color: $EstiminStoped;
                         }
                     }
-
-                    &:nth-child(1) {
-                        justify-content: flex-start;
-                        width: clamp(200px, 40vw, 550px);
-                        padding-left: 27px;
-                    }
-
-                    &:nth-child(4) {
-                        width: clamp(100px, 40vw, 320px);
-                    }
-
-                    &:nth-child(5) {
-                        width: clamp(100px, 40vw, 220px);
-                    }
-
-                    &:nth-child(2),
-                    &:nth-child(3) {
-                        width: clamp(100px, 40vw, 190px);
+                    p {
+                        margin: 0;
+                        padding: 0px 5px;
                     }
                 }
             }
         }
-
-        .tabs_container__tab-element:target {
-            display: block;
-        }
+    }
+    .history-duration-alert {
+        @include TabText;
+        opacity: .5;
+        margin-top: 15px;
+        user-select: none;
     }
 }

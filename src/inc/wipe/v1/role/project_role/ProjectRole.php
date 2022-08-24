@@ -476,7 +476,23 @@ class ProjectRole
     }
     #endregion
 
+    
+
     #region CRUD Functions
+    /**
+     * Назначение знечений с проверкой на их наличие, для свойства класса $roleObj.
+     * @param BaseProjectRole $object
+     * @return void
+     */
+    private function extracted(BaseProjectRole &$object): void
+    {
+        if ($this->lvl) $object->setLvl($this->lvl);
+        if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
+        if ($this->userId !== null) $object->setUserId($this->userId);
+        if ($this->objectId !== null) $object->setObjectId($this->objectId);
+        if ($this->projectId !== null) $object->setProjectId($this->projectId);
+    }
+
     /**
      * Поиск и заполнение свойств класса, в соотвествие с ранее переданными данными, иначе ошибка.
      * @return ProjectRole
@@ -559,18 +575,4 @@ class ProjectRole
         return $this;
     }
     #endregion
-
-    /**
-     * Назначение знечений с проверкой на их наличие, для свойства класса $roleObj.
-     * @param BaseProjectRole $object
-     * @return void
-     */
-    public function extracted(BaseProjectRole &$object): void
-    {
-        if ($this->lvl) $object->setLvl($this->lvl);
-        if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
-        if ($this->userId !== null) $object->setUserId($this->userId);
-        if ($this->objectId !== null) $object->setObjectId($this->objectId);
-        if ($this->projectId !== null) $object->setProjectId($this->projectId);
-    }
 }

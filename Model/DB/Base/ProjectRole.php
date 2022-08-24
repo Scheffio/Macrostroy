@@ -3,6 +3,7 @@
 namespace DB\Base;
 
 use \Exception;
+use inc\artemy\v1\json_output\JsonOutput;
 use \PDO;
 use DB\Project as ChildProject;
 use DB\ProjectQuery as ChildProjectQuery;
@@ -1596,7 +1597,9 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
+        echo 'preUpdate ';
         if ($this->is_crud) {
+            echo 'if ($this->is_crud) ';
             $isAdmin = UserRole::getByUserId($this->user_id)->isManageUsers();
             $isFalse = $this->is_crud === false;
 

@@ -450,21 +450,37 @@ class ProjectRole
     #endregion
 
     #region CRUD Functions
-
-
+    /**
+     * Добавление новой роли в проект.
+     * @throws PropelException
+     */
     private function insert(): ProjectRole
     {
         $role = new DbProjectRole();
-        $role->setUserId($this->userId);
-        $role->setObjectId($this->objectId);
-        $role->setProjectId($this->projectId);
+
+        $role
+            ->setLvl($this->lvl)
+            ->setIsCrud($this->isCrud)
+            ->setUserId($this->userId)
+            ->setObjectId($this->objectId)
+            ->setProjectId($this->projectId)
+            ->save();
 
         return $this;
     }
 
+    /**
+     * Обновление роли проекта.
+     * @throws Exception
+     */
     private function update(): ProjectRole
     {
-        
+        if (!$this->roleObj) {
+            if ($this->projectId) $this->applyDefaultValuesByRoleId();
+            else $this->applyDefaultValuesBySearch();
+        }
+
+        if ($this->isCrud)
 
         return $this;
     }

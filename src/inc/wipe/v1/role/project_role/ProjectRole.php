@@ -2,9 +2,13 @@
 
 namespace wipe\inc\v1\role\project_role;
 
+use DB\Base\ProjectRoleQuery;
+use DB\ProjectRoleQuery as DbProjectRoleQuery;
 use DB\RoleQuery;
 use Exception;
 use DB\Base\ProjectRole as BaseProjectRole;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -69,43 +73,55 @@ class ProjectRole
     /**
      * @param int|null $roleId ID роли проекта.
      * @param int|null $userId ID пользователя.
-     * @param int|null $lvl
-     * @param bool|null $isCrud
-     * @param int|null $projectId
-     * @param int|null $objectId
+     * @param int|string|null $lvl Номер уровня доступа.
+     * @param int|null $projectId ID проекта.
+     * @param int|null $objectId ID объекта (проект, подпроект, группа, дом, этап).
      * @throws Exception
      */
     function __construct(
         ?int $roleId = null,
         ?int $userId = null,
-        ?int $lvl = null,
-        ?bool $isCrud = null,
+        int|string|null $lvl = null,
         ?int $projectId = null,
         ?int $objectId = null)
     {
         $this->roleId = $roleId;
         $this->userId = $userId;
-        $this->lvl = $lvl;
-        $this->isCrud = $isCrud;
         $this->projectId = $projectId;
         $this->objectId = $objectId;
+        $this->setLvl($lvl);
+        $this->applyDefaultValuesBySearch();
+    }
 
-        if ($roleId && $userId) {
-            $this->applyDefaultValuesByRoleId();
-            $this->applyDefaultValuesByUserId();
-        }
-        elseif ($roleId) {
-            $this->applyDefaultValuesByRoleId();
-        }
-        elseif ($userId) {
-            $this->applyDefaultValuesByUserId();
-        }
+    /**
+     * @return DbProjectRoleQuery|Criteria
+     */
+    private function getCriteria(): Criteria|DbProjectRoleQuery
+    {
+        $role = ProjectRoleQuery::create();
+
+        if ($this->roleId) $role->filterById($this->roleId);
+        if ($this->userId) $role->filterByUserId($this->userId);
+        if ($this->lvl) $role->filterByLvl($this->lvl);
+        if ($this->projectId) $role->filterByProjectId($this->projectId);
+        if ($this->objectId) $role->filterByObjectId($this->objectId);
+
+        return $role;
     }
 
     #region Apply Default Values Functions
+    /**
+     * Заполнение свойств класса, используя поиск по переданным первоначально значениям.
+     * @throws Exception
+     */
     private function applyDefaultValuesBySearch(): void
     {
+        $role = $this->getCriteria();
+        $this->roleObj = $role->findOne();
 
+        if ($this->roleObj) {
+            $this->applyDefaultValuesByRoleObj();
+        }
     }
 
     /**
@@ -442,5 +458,15 @@ class ProjectRole
     }
     #endregion
 
+    /**
+     * @throws PropelException
+     */
+    public function update(): ProjectRole
+    {
+        $role = $this->getCriteria();
 
+        $role->findOneOrCreate();
+
+        return $this;
+    }
 }

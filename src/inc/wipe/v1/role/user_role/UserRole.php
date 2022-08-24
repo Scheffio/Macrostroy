@@ -387,12 +387,14 @@ class UserRole
     /**
      * Обновление роли у пользователя.
      * Используются такие свойства класса, как: $userId, $roleId.
-     * @throws PropelException
      * @return UserRole
+     * @throws Exception
+     * @throws PropelException
      */
     public function updateUserRole(): UserRole
     {
-        $user = UsersQuery::create()->findPk($this->userId);
+        $user = UsersQuery::create()->findPk($this->userId) ??
+                throw new Exception('No user found');
 
         if ($user->getRoleId() !== $this->roleId) {
             $user

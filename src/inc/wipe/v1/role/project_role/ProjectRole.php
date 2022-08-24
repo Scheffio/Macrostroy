@@ -75,19 +75,23 @@ class ProjectRole
     {
         if ($roleId && $userId) {
             $this->roleId = $roleId;
+            $this->applyDefaultValuesByRoleId();
             $this->userId = $userId;
-            $this->userRole = new UserRole(userId: $userId);
+            $this->applyDefaultValuesByUserId();
         }
         elseif ($roleId) {
             $this->roleId = $roleId;
+            $this->applyDefaultValuesByRoleId();
         }
         elseif ($userId) {
             $this->userId = $userId;
-            $this->userRole = new UserRole(userId: $userId);
+            $this->applyDefaultValuesByUserId();
         }
     }
 
+    #region Apply Default Values Functions
     /**
+     * Заполнение свойств класса, используя ID роли проекта.
      * @throws Exception
      */
     private function applyDefaultValuesByRoleId(): void
@@ -97,14 +101,19 @@ class ProjectRole
         $this->roleId = $this->roleObj->getId();
         $this->isCrud = $this->roleObj->getIsCrud();
         $this->setLvlByNum($this->roleObj->getLvl());
+        $this->objectId = $this->roleObj->getObjectId();
         $this->userId = $this->roleObj->getUserId();
-
     }
 
+    /**
+     * Заполнение свойств класса, используя ID польователя.
+     * @throws Exception
+     */
     private function applyDefaultValuesByUserId(): void
     {
-
+        $this->userRole = new UserRole(userId: $this->userId);
     }
+    #endregion
 
     #region Access Control Functions
     /** @return bool|null Разрешен ли CRUD объекта. */
@@ -212,12 +221,15 @@ class ProjectRole
     #region Setter Default Values Functions
     /**
      * @param int $userId ID пользователя.
+     * @param bool $flag Необходимо ли обновлять свойства пользователя, в соответствие с ID пользователя.
      * @return ProjectRole
+     * @throws Exception
      */
-    public function setUserId(int $userId): ProjectRole
+    public function setUserId(int $userId, bool $flag = false): ProjectRole
     {
         if ($this->userId !== $userId) {
             $this->userId = $userId;
+            $this->applyDefaultValuesByUserId();
         }
 
         return $this;
@@ -255,8 +267,10 @@ class ProjectRole
      */
     public function setIsCrud(bool $isCrud): ProjectRole
     {
-        if ($this->isCrud !== $isCrud) {
+        if ($this->isCrud !== $isCrud && !$this->userRole) {
             $this->isCrud = $isCrud;
+        } elseif ($this->isCrud !== $isCrud && $this->userRole) {
+            
         }
 
         return $this;

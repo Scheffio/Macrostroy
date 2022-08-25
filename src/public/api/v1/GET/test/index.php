@@ -28,10 +28,18 @@ try {
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
     $users = UsersQuery::create()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    RoleTableMap::COL_MANAGE_USERS,
+                    ProjectRoleTableMap::COL_IS_CRUD,
+                ])
                 ->leftJoinRole()
-                ->leftJoinProjectRole()
-                ->addJoinCondition(name: ProjectRoleTableMap::COL_OBJECT_ID, clause: ProjectRoleTableMap::TABLE_NAME, value: $objectId)
-                ->toString();
+                ->leftJoinProjectRole(ProjectRoleTableMap::TABLE_NAME)
+                ->addJoinCondition(name: ProjectRoleTableMap::TABLE_NAME, clause: ProjectRoleTableMap::COL_LVL.'=?', value: $lvl)
+                ->addJoinCondition(name: ProjectRoleTableMap::TABLE_NAME, clause: ProjectRoleTableMap::COL_OBJECT_ID.'=?', value: $objectId)
+                ->find()
+                ->getData();
 
     JsonOutput::success($users);
 } catch (PropelException|Exception $e) {

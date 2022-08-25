@@ -37,10 +37,15 @@ try {
                     ProjectRoleTableMap::COL_IS_CRUD,
                 ])
                 ->leftJoinRole()
-                ->useProjectRoleQuery('project_role', 'inner join')
-                    ->filterByLvl($lvl)
-                    ->filterByObjectId($objectId)
-                ->endUse()
+                ->leftJoinProjectRole(ProjectRoleTableMap::TABLE_NAME)
+                    ->addJoinCondition(
+                        name: ProjectRoleTableMap::TABLE_NAME,
+                        clause: ProjectRoleTableMap::COL_LVL.'=?',
+                        value: $lvl)
+                    ->addJoinCondition(
+                        name: ProjectRoleTableMap::TABLE_NAME,
+                        clause: ProjectRoleTableMap::COL_OBJECT_ID.'=?',
+                        value: $objectId)
                 ->find()
                 ->getData();
 

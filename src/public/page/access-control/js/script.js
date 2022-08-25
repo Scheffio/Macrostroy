@@ -1,9 +1,10 @@
-fetch("/api/v1/users", "lvl: 1", "object_id: 1", "project_id: 1", {
+let obj = {lvl: 1, object_id: 1, project_id: 1}
+fetch("/api/v1/users".search = new URLSearchParams(obj).toString(), {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json'
-      },
-    //   body: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
+      }
+    // body: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
 })
 .then(function(res) {
     return res.json();

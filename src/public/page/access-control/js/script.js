@@ -3,7 +3,7 @@ fetch("/api/v1/users", {
     headers: {
         'Content-Type': 'application/json'
       },
-      head: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
+      body: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
 })
 .then(function(res) {
     return res.json();

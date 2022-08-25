@@ -40,16 +40,16 @@ try {
                 ->find()
                 ->getData();
 
-//    $users = array_map(function ($value) {
-//        return [
-//            'id' => $value['users.id'],
-//            'name' => $value['users.username'],
-//            'isAdmin' => (bool)$value['users.manage_users'],
-//            'isCrud' => $value['users.is_crud'] === null ?
-//                        $value['users.is_crud'] :
-//                        (bool)$value['users.is_crud'],
-//        ];
-//    }, $users);
+    foreach ($users as &$user) {
+        $user = [
+            'id' => $user['users.id'],
+            'name' => $user['users.username'],
+            'isAdmin' => (bool)$user['role.manage_users'],
+            'isCrud' => is_null($user['project_role.is_crud']) ?
+                        $user['project_role.is_crud'] :
+                        (bool)$user['project_role.is_crud'],
+        ];
+    };
 
     JsonOutput::success($users);
 } catch (PropelException|Exception $e) {

@@ -32,18 +32,23 @@ try {
 
     $projectRoleAlias = 'project_role_alis';
     $projectRole = ProjectRoleQuery::create()
+                    ->addSelfSelectColumns()
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
                     ->filterByProjectId($projectId);
 
     $users = UsersQuery::create()
-        ->leftJoinRole()
-        ->withColumn(ProjectRoleTableMap::COL_USER_ID)
-        ->addSelectQuery($projectRole, $projectRoleAlias)
-        ->addJoin(UsersTableMap::COL_ID, $projectRoleAlias.'.user_id', Criteria::LEFT_JOIN)
-        ->toString();
-//        ->find()
-//        ->getData();
+
+        ->addSelectQuery($projectRole,"a")
+        ->addAlias("b", UsersTableMap::COL_ID)
+        ->addJoin('a.user_id','b', Criteria::LEFT_JOIN)
+//        ->leftJoinRole()
+//        ->withColumn(ProjectRoleTableMap::COL_USER_ID)
+//        ->addSelectQuery($projectRole, $projectRoleAlias)
+//        ->addJoin(UsersTableMap::COL_ID, $projectRoleAlias.'.user_id', Criteria::LEFT_JOIN)
+//        ->toString();
+        ->find()
+        ->getData();
 
 //    $users = UsersQuery::create()
 //                ->select([

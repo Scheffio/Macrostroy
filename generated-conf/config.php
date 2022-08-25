@@ -23,4 +23,4 @@ $manager->setConfiguration(array (
 ));
 $serviceContainer->setConnectionManager($manager);
 $serviceContainer->setDefaultDatasource('default');
-require_once __DIR__ . '/./loadDatabase.php';
+require_once __DIR__ . '/loadDatabase.php';

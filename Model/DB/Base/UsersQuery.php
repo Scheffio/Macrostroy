@@ -82,7 +82,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\RoleQuery|\DB\ProjectRoleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUsers|null findOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query
- * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match is found
+ * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match123 is found
  *
  * @method     ChildUsers|null findOneById(int $id) Return the first ChildUsers filtered by the id column
  * @method     ChildUsers|null findOneByEmail(string $email) Return the first ChildUsers filtered by the email column

@@ -76,7 +76,6 @@ class ProjectRole
      * @param int|null $roleId ID роли проекта.
      * @param int|null $userId ID пользователя.
      * @param int|string $lvl Номер уровня доступа.
-     * @param int|null $projectId ID проекта.
      * @param int|null $objectId ID объекта (проект, подпроект, группа, дом, этап).
      * @param bool $search Нужно ли искать ранее созданную запись с переданными параметрами.
      * @throws Exception
@@ -85,13 +84,11 @@ class ProjectRole
         ?int $roleId = null,
         ?int $userId = null,
         int|string $lvl = 1,
-        ?int $projectId = null,
         ?int $objectId = null,
         bool $search = false)
     {
         $this->roleId = $roleId;
         $this->userId = $userId;
-        $this->projectId = $projectId;
         $this->objectId = $objectId;
         $this->setLvl($lvl);
 
@@ -112,7 +109,6 @@ class ProjectRole
         if ($this->roleId) $role->filterById($this->roleId);
         if ($this->userId) $role->filterByUserId($this->userId);
         if ($this->lvl) $role->filterByLvl($this->lvl);
-        if ($this->projectId) $role->filterByProjectId($this->projectId);
         if ($this->objectId) $role->filterByObjectId($this->objectId);
 
         $this->roleObj = $role->findOne();
@@ -505,7 +501,6 @@ class ProjectRole
         if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
         if ($this->userId !== null) $object->setUserId($this->userId);
         if ($this->objectId !== null) $object->setObjectId($this->objectId);
-        if ($this->projectId !== null) $object->setProjectId($this->projectId);
     }
 
     /**
@@ -536,7 +531,6 @@ class ProjectRole
             ->setIsCrud($this->isCrud)
             ->setUserId($this->userId)
             ->setObjectId($this->objectId)
-            ->setProjectId($this->projectId)
             ->save();
 
         $this->roleId = $role->getId();
@@ -586,9 +580,9 @@ class ProjectRole
                         ->filterByLvl($this->lvl)
                         ->filterByUserId($this->userId)
                         ->filterByObjectId($this->objectId)
-                        ->filterByProjectId($this->projectId)
                         ->findOneOrCreate();
 
+        JsonOutput::success($projectRole->getId());
         $this->extracted($projectRole);
         $projectRole->save();
 

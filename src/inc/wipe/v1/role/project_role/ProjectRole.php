@@ -582,7 +582,7 @@ class ProjectRole
                         ->filterByObjectId($this->objectId)
                         ->findOneOrCreate();
 
-        JsonOutput::success($projectRole->getId());
+//        JsonOutput::success($projectRole->getId());
         $this->extracted($projectRole);
         $projectRole->save();
 

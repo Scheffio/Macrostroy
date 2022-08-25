@@ -24,8 +24,8 @@ try {
     }
 
     $request = new Request();
-    $object_id = $request->getQueryOrThrow('object_id');
-    $project_id = $request->getQueryOrThrow('project_id');
+    $objectId = $request->getQueryOrThrow('object_id');
+    $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
     $users = UsersQuery::create()
@@ -33,12 +33,24 @@ try {
                     UsersTableMap::COL_ID,
                     UsersTableMap::COL_USERNAME,
                     RoleTableMap::COL_MANAGE_USERS,
-                    ProjectRoleTableMap::COL_IS_CRUD
+                    ProjectRoleTableMap::COL_IS_CRUD,
                 ])
                 ->leftJoinRole()
                 ->leftJoinProjectRole()
+                ->useProjectRoleQuery()
+                    ->filterByLvl($lvl)
+                    ->filterByObjectId($objectId)
+                    ->filterByProjectId($projectId)
+                ->endUse()
                 ->find()
                 ->getData();
+
+    JsonOutput::success([
+        '$object_id' => $objectId,
+        '$project_id' => $projectId,
+        '$lvl' => $lvl,
+        '$users' => $users,
+    ]);
 
     foreach ($users as &$user) {
         $user = [

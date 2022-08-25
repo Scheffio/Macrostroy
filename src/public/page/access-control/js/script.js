@@ -2,34 +2,36 @@ fetch("/api/v1/users", {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      head: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
 })
 .then(function(res) {
     return res.json();
 })
 .then(function(json) {
-    json.data.forEach((elem) => {
-        Object.values(elem).forEach((item) => {
-            if(item != "" && typeof item == "string") {
-                document.querySelector('.users__list').appendChild(users.createElement('div', 'users__user-field', '', `<p>${item}</p>`))
-            }
-        })
-    })
+    console.log(json);
+    // json.data.forEach((elem) => {
+    //     Object.values(elem).forEach((item) => {
+    //         if(item != "" && typeof item == "string") {
+    //             document.querySelector('.users__list').appendChild(users.createElement('div', 'users__user-field', '', `<p>${item}</p>`))
+    //         }
+    //     })
+    // })
 
-    const selectableUsers = {
-        users: document.querySelectorAll('.users__user-field'),
-        click(elem) {
-            this.reset()
-            elem.classList.toggle('selected')
-        },
-        reset() {
-            this.users.forEach((elem) => {
-                elem.classList.remove('selected')
-            })
-        }
-    }
+    // const selectableUsers = {
+    //     users: document.querySelectorAll('.users__user-field'),
+    //     click(elem) {
+    //         this.reset()
+    //         elem.classList.toggle('selected')
+    //     },
+    //     reset() {
+    //         this.users.forEach((elem) => {
+    //             elem.classList.remove('selected')
+    //         })
+    //     }
+    // }
 
-    document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
+    // document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 })
 
 

@@ -27,7 +27,6 @@ try {
 
     $request = new Request();
     $objectId = $request->getQueryOrThrow('object_id');
-//    $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
     $users = UsersQuery::create()
@@ -41,7 +40,6 @@ try {
                 ->useProjectRoleQuery('project_role', 'inner join')
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
-                    ->filterByProjectId($projectId)
                 ->endUse()
                 ->find()
                 ->getData();

@@ -7,6 +7,7 @@ use DB\Map\ProjectRoleTableMap;
 use DB\Map\RoleTableMap;
 use DB\Map\UsersTableMap;
 use inc\artemy\v1\request\Request;
+use Propel\Runtime\ActiveQuery\Criteria;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
@@ -29,16 +30,20 @@ try {
     $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
+    $projectRoleAlias = 'project_role_alis';
     $projectRole = ProjectRoleQuery::create()
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
-                    ->filterByProjectId($projectId)
-                    ->find();
+                    ->filterByProjectId($projectId);
 
     $users = UsersQuery::create()
         ->leftJoinRole()
-        ->leftJoinWith($projectRole)
+        ->withColumn(ProjectRoleTableMap::COL_USER_ID)
+        ->addSelectQuery($projectRole, $projectRoleAlias)
+        ->addJoin(UsersTableMap::COL_ID, $projectRoleAlias.'.user_id', Criteria::LEFT_JOIN)
         ->toString();
+//        ->find()
+//        ->getData();
 
 //    $users = UsersQuery::create()
 //                ->select([

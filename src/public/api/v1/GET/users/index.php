@@ -1,6 +1,7 @@
 <?php
 //Вывод пользователей.
 
+use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\RoleTableMap;
@@ -28,39 +29,56 @@ try {
     $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
-    $users = UsersQuery::create()
-                ->select([
-                    UsersTableMap::COL_ID,
-                    UsersTableMap::COL_USERNAME,
-                    RoleTableMap::COL_MANAGE_USERS,
-                    ProjectRoleTableMap::COL_IS_CRUD,
-                ])
-                ->leftJoinRole()
-                ->addSelectQuery()
-                ->useProjectRoleQuery('project_role', 'inner join')
+    $projectRole = ProjectRoleQuery::create()
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
-                    ->filterByProjectId($projectId)
-                ->endUse()
-                ->find()
-                ->getData();
+                    ->filterByProjectId($projectId);
 
-    foreach ($users as &$user) {
-        $isAdmin = (bool)$user['role.manage_users'];
+    $users = UsersQuery::create()
+//        ->select([
+//            UsersTableMap::COL_ID,
+//            UsersTableMap::COL_USERNAME,
+//            RoleTableMap::COL_MANAGE_USERS,
+//            ProjectRoleTableMap::COL_IS_CRUD,
+//        ])
+        ->withColumn(UsersTableMap::COL_ID)
+        ->addSelectQuery($projectRole, UsersTableMap::COL_ID, false)
+        ->leftJoinRole()
+        ->toString();
 
-        if ($isAdmin) $isCrud = true;
-        else {
-            $isCrud = $user['project_role.is_crud'];
-            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
-        }
+//    $users = UsersQuery::create()
+//                ->select([
+//                    UsersTableMap::COL_ID,
+//                    UsersTableMap::COL_USERNAME,
+//                    RoleTableMap::COL_MANAGE_USERS,
+//                    ProjectRoleTableMap::COL_IS_CRUD,
+//                ])
+//                ->leftJoinRole()
+//                ->addSelectQuery()
+//                ->useProjectRoleQuery('project_role', 'inner join')
+//                    ->filterByLvl($lvl)
+//                    ->filterByObjectId($objectId)
+//                    ->filterByProjectId($projectId)
+//                ->endUse()
+//                ->find()
+//                ->getData();
 
-        $user = [
-            'id' => $user['users.id'],
-            'name' => $user['users.username'],
-            'isCrud' => $isCrud,
-            'isAdmin' => $isAdmin,
-        ];
-    };
+//    foreach ($users as &$user) {
+//        $isAdmin = (bool)$user['role.manage_users'];
+//
+//        if ($isAdmin) $isCrud = true;
+//        else {
+//            $isCrud = $user['project_role.is_crud'];
+//            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
+//        }
+//
+//        $user = [
+//            'id' => $user['users.id'],
+//            'name' => $user['users.username'],
+//            'isCrud' => $isCrud,
+//            'isAdmin' => $isAdmin,
+//        ];
+//    };
 
     JsonOutput::success($users);
 } catch (PropelException|Exception $e) {

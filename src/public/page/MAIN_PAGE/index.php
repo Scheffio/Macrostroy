@@ -13,8 +13,8 @@
     <meta name="msapplication-TileColor" content="#00aba9">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
-    <title>Estimin - Главная</title>
     <?php require __DIR__ . "/../../../inc/timur/header-styles.php" ?>
+    <title>Estimin - Главная</title>
 </head>
 
 <body class="body">
@@ -27,6 +27,9 @@
                 <a href="#cities" class="tab-anchor__anchor-name selected">Города</a>
             </div>
             <div class="tabs-controller__tab-anchor">
+                <a href="#areas" class="tab-anchor__anchor-name">Районы</a>
+            </div>
+            <div class="tabs-controller__tab-anchor">
                 <a href="#residential-complexes" class="tab-anchor__anchor-name">ЖК</a>
             </div>
             <div class="tabs-controller__tab-anchor">
@@ -34,7 +37,7 @@
             </div>
             <div class="tabs-controller__tab-anchor">
                 <a href="#stages" class="tab-anchor__anchor-name">Этапы</a>
-            </div>
+            </div> 
         </div>
         <div class="tabs-container">
             <div id="cities" class="tabs-container__tab-element">
@@ -200,6 +203,60 @@
                 </div>
             </div>
             <div id="stages" class="tabs-container__tab-element">
+                <div class="grid">
+                    <div class="grid__header">
+                        <div class="header__element">
+                            <div class="sorter">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по убыванию">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по возрастанию">
+                            </div>
+                            <p>Название</p>
+                        </div>
+                        <div class="header__element">
+                            <div class="sorter">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по убыванию">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по возрастанию">
+                            </div>
+                            <p>Статус</p>
+                        </div>
+                        <div class="header__element">
+                            <div class="sorter">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по убыванию">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по возрастанию">
+                            </div>
+                            <p>Доступ</p>
+                        </div>
+                        <div class="header__element">
+                            <div class="sorter">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по убыванию">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по возрастанию">
+                            </div>
+                            <p>Последнее изменение</p>
+                        </div>
+                        <div class="header__element">
+                            <div class="sorter">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по убыванию">
+                                <img src="../../static/icons/sorter/sorter-default.svg"
+                                    alt="Кнопка сортировки по возрастанию">
+                            </div>
+                            <p>Общая стоимость</p>
+                        </div>
+                    </div>
+                    <div class="grid__body">
+
+                    </div>
+                </div>
+            </div>
+            <div id="areas" class="tabs-container__tab-element">
                 <div class="grid">
                     <div class="grid__header">
                         <div class="header__element">

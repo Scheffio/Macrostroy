@@ -9,14 +9,26 @@ const anchorCheker = {
             anchor.style.order = 0
         })
     },
-    anchorCheck(anchor) {
+    anchorCheck(anchor, target) {
         // чекер якорей
-        if (!anchor.children[0].classList.contains('selected')) {
-            // Если у ребёнка внутри якоря нету класса | этого 
-            // то мы ему даём класс и выталкиваем на первое место
-            this.anchorReset()
-            anchor.style.order = -1
-            anchor.children[0].classList.add('selected')
+        if(anchor != '') {
+            if (!anchor.children[0].classList.contains('selected')) {
+                // Если у ребёнка внутри якоря нету класса | этого 
+                // то мы ему даём класс и выталкиваем на первое место
+                this.anchorReset()
+                anchor.style.order = -1
+                anchor.children[0].classList.add('selected')
+            }
+        }
+
+        if(target != '') {
+            anchors.forEach((elem) => {
+                if(elem.children[0].textContent == target) {
+                    this.anchorReset()
+                    elem.style.order = -1
+                    elem.children[0].classList.add('selected')
+                }
+            })
         }
     }
 }
@@ -48,10 +60,23 @@ const table = {
         return create
         // элементо-генератор
     },
+    urlCheck() {
+        if(UrlSplitter() == "#cities") {
+            return "Калининград"
+        }else if (UrlSplitter() == "#residential-complexes") {
+            return "ЖК Рыбное"
+        }else if (UrlSplitter() == "#houses") {
+            return "Дом 1"
+        }else if (UrlSplitter() == "#stages") {
+            return "Заливка бетона"
+        }else if (UrlSplitter() == "#areas") {
+            return "Ленинский р-н"
+        }
+    },
     generate(rows) {
         for (let i = 0; i < rows; i++) {
             let row = this.createElement('div', 'grid-row', '', '')
-            let name = this.createElement('div', 'grid-column', 'name', "<p>Калининград</p>")
+            let name = this.createElement('div', 'grid-column', 'name', `${this.urlCheck()}`)
             let status = this.createElement('div', 'grid-column', 'status', '<p>В процессе</p>')
             let access = this.createElement('div', 'grid-column', 'access', '<p>Открытый</p>')
             let lastChange = this.createElement('div', 'grid-column', 'lastChange', '<p>Иван</p>')
@@ -72,7 +97,7 @@ const table = {
 // Default page loader
 
 function PageLoader(page, ammountOfRows) {
-    history.pushState('', '', page)
+    window.location = page
     document.querySelector(`${page} > .grid > .grid__body`).innerHTML = ""
     for(let i = 0; i < ammountOfRows; i++) {
         document.querySelector(`${page} > .grid > .grid__body`).append(table.generate(ammountOfRows))
@@ -81,8 +106,7 @@ function PageLoader(page, ammountOfRows) {
 }
 
 function UrlSplitter(){
-    let url = document.URL
-    return url.slice(url.indexOf("#"))
+    return document.URL.slice(document.URL.indexOf("#"))
 }
 
 window.addEventListener('hashchange', () => {
@@ -171,7 +195,21 @@ const CCM = {
         }
     },
     contextMenu_open(elementRow) {
-        console.log(elementRow);
+        if(UrlSplitter() == "#cities") {
+            PageLoader('#areas', 4)
+            anchorCheker.anchorCheck('','Районы')
+        }else if(UrlSplitter() == "#areas") {
+            PageLoader("#residential-complexes")
+            anchorCheker.anchorCheck('','ЖК')
+        }else if (UrlSplitter() == "#residential-complexes") {
+            PageLoader('#houses', 4)
+            anchorCheker.anchorCheck('','Дома')
+        }else if(UrlSplitter() == "#houses") {
+            PageLoader("#stages", 4)
+            anchorCheker.anchorCheck('','Этапы')
+        }else if (UrlSplitter() == "#stages") {
+            window.location.href = "../access-control/"
+        }
     },
     contextMenu_copy(elementRow) {
         if(this.listOfItems.children[1].classList.contains('disabled')) {

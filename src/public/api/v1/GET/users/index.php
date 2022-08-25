@@ -32,18 +32,12 @@ try {
     $projectRole = ProjectRoleQuery::create()
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
-                    ->filterByProjectId($projectId);
+                    ->filterByProjectId($projectId)
+                    ->find();
 
     $users = UsersQuery::create()
-//        ->select([
-//            UsersTableMap::COL_ID,
-//            UsersTableMap::COL_USERNAME,
-//            RoleTableMap::COL_MANAGE_USERS,
-//            ProjectRoleTableMap::COL_IS_CRUD,
-//        ])
-        ->withColumn(UsersTableMap::COL_ID)
-        ->addSelectQuery($projectRole, UsersTableMap::COL_ID, false)
         ->leftJoinRole()
+        ->leftJoinWith($projectRole)
         ->toString();
 
 //    $users = UsersQuery::create()

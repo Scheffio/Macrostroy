@@ -476,14 +476,14 @@ class ProjectRole
     }
 
     /**
+     * Получить объект класса через статический метод с свойствами по умолчанию.
+     * Т.е. свойства класса выставлены по умолчанию в соответсвенно с БД или равны NULL.
+     * @return ProjectRole
      * @throws Exception
      */
-    public static function getAllUsers(int $projectId, int $objectId, int|string $lvl): array
+    public static function getDefault(): ProjectRole
     {
-        $projectRole = new ProjectRole();
-        $projectRole->projectId = $projectId;
-        $projectRole->objectId = $objectId;
-        $projectRole->setLvl($lvl);
+        return new ProjectRole();
     }
     #endregion
 

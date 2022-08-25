@@ -224,6 +224,8 @@ body.fixated {
 .wrap .content .users .users__list .users__user-field.selected {
   transition: 0.3s;
   background-color: #7E99AD;
+}
+.wrap .content .users .users__list .users__user-field.selected p {
   color: white;
 }
 .wrap .content .permissions {

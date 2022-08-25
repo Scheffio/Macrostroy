@@ -27,62 +27,41 @@ try {
 
     $request = new Request();
     $objectId = $request->getQueryOrThrow('object_id');
-    $projectId = $request->getQueryOrThrow('project_id');
+//    $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
-    $projectRoleAlias = 'project_role_alis';
-    $projectRole = ProjectRoleQuery::create()
-                    ->addSelfSelectColumns()
+    $users = UsersQuery::create()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    RoleTableMap::COL_MANAGE_USERS,
+                    ProjectRoleTableMap::COL_IS_CRUD,
+                ])
+                ->leftJoinRole()
+                ->useProjectRoleQuery('project_role', 'inner join')
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
-                    ->filterByProjectId($projectId);
+                    ->filterByProjectId($projectId)
+                ->endUse()
+                ->find()
+                ->getData();
 
-    $users = UsersQuery::create()
-        ->addSelectQuery($projectRole,"a")
-        ->addAlias("b", UsersTableMap::COL_ID)
-        ->addJoin('a.user_id',UsersTableMap::COL_ID, Criteria::LEFT_JOIN)
-        ->leftJoinRole()
-//        ->leftJoinRole()
-//        ->withColumn(ProjectRoleTableMap::COL_USER_ID)
-//        ->addSelectQuery($projectRole, $projectRoleAlias)
-//        ->addJoin(UsersTableMap::COL_ID, $projectRoleAlias.'.user_id', Criteria::LEFT_JOIN)
-        ->toString();
-//        ->find()
-//        ->getData();
+    foreach ($users as &$user) {
+        $isAdmin = (bool)$user['role.manage_users'];
 
-//    $users = UsersQuery::create()
-//                ->select([
-//                    UsersTableMap::COL_ID,
-//                    UsersTableMap::COL_USERNAME,
-//                    RoleTableMap::COL_MANAGE_USERS,
-//                    ProjectRoleTableMap::COL_IS_CRUD,
-//                ])
-//                ->leftJoinRole()
-//                ->addSelectQuery()
-//                ->useProjectRoleQuery('project_role', 'inner join')
-//                    ->filterByLvl($lvl)
-//                    ->filterByObjectId($objectId)
-//                    ->filterByProjectId($projectId)
-//                ->endUse()
-//                ->find()
-//                ->getData();
+        if ($isAdmin) $isCrud = true;
+        else {
+            $isCrud = $user['project_role.is_crud'];
+            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
+        }
 
-//    foreach ($users as &$user) {
-//        $isAdmin = (bool)$user['role.manage_users'];
-//
-//        if ($isAdmin) $isCrud = true;
-//        else {
-//            $isCrud = $user['project_role.is_crud'];
-//            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
-//        }
-//
-//        $user = [
-//            'id' => $user['users.id'],
-//            'name' => $user['users.username'],
-//            'isCrud' => $isCrud,
-//            'isAdmin' => $isAdmin,
-//        ];
-//    };
+        $user = [
+            'id' => $user['users.id'],
+            'name' => $user['users.username'],
+            'isCrud' => $isCrud,
+            'isAdmin' => $isAdmin,
+        ];
+    };
 
     JsonOutput::success($users);
 } catch (PropelException|Exception $e) {

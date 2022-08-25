@@ -38,17 +38,17 @@ try {
                     ->filterByProjectId($projectId);
 
     $users = UsersQuery::create()
-
         ->addSelectQuery($projectRole,"a")
         ->addAlias("b", UsersTableMap::COL_ID)
-        ->addJoin('a.user_id','b', Criteria::LEFT_JOIN)
+        ->addJoin('a.user_id',UsersTableMap::COL_ID, Criteria::LEFT_JOIN)
+        ->leftJoinRole()
 //        ->leftJoinRole()
 //        ->withColumn(ProjectRoleTableMap::COL_USER_ID)
 //        ->addSelectQuery($projectRole, $projectRoleAlias)
 //        ->addJoin(UsersTableMap::COL_ID, $projectRoleAlias.'.user_id', Criteria::LEFT_JOIN)
-//        ->toString();
-        ->find()
-        ->getData();
+        ->toString();
+//        ->find()
+//        ->getData();
 
 //    $users = UsersQuery::create()
 //                ->select([

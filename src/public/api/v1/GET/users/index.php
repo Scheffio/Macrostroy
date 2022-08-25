@@ -36,6 +36,7 @@ try {
                     ProjectRoleTableMap::COL_IS_CRUD,
                 ])
                 ->leftJoinRole()
+                ->addSelectQuery()
                 ->useProjectRoleQuery('project_role', 'inner join')
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
@@ -43,8 +44,6 @@ try {
                 ->endUse()
                 ->find()
                 ->getData();
-
-    JsonOutput::success($users);
 
     foreach ($users as &$user) {
         $isAdmin = (bool)$user['role.manage_users'];

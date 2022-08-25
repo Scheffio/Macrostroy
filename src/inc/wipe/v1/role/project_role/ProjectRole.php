@@ -110,10 +110,11 @@ class ProjectRole
         if ($this->userId) $role->filterByUserId($this->userId);
         if ($this->lvl) $role->filterByLvl($this->lvl);
         if ($this->objectId) $role->filterByObjectId($this->objectId);
+        $role = $role->findOne();
 
-        $this->roleObj = $role->findOne();
-
-        if ($this->roleObj) {
+        if ($role !== null) {
+            $this->roleObj = $role;
+            $this->roleId = $role->getId();
             $this->applyDefaultValuesByRoleObj();
         }
     }
@@ -135,7 +136,6 @@ class ProjectRole
      */
     private function applyDefaultValuesByRoleObj(): void
     {
-        $this->roleId = $this->roleObj->getId();
         $this->isCrud = $this->roleObj->getIsCrud();
         $this->setLvlByNum($this->roleObj->getLvl());
         $this->objectId = $this->roleObj->getObjectId();
@@ -575,15 +575,18 @@ class ProjectRole
         if ($this->isCrud === null) {
             $this->delete();
         }
+        else {
+            if (!$this->roleObj) {
+                $this->roleObj = ProjectRoleQuery::create()
+                    ->filterByLvl($this->lvl)
+                    ->filterByUserId($this->userId)
+                    ->filterByObjectId($this->objectId)
+                    ->findOneOrCreate();
+            }
 
-        $projectRole = ProjectRoleQuery::create()
-                        ->filterByLvl($this->lvl)
-                        ->filterByUserId($this->userId)
-                        ->filterByObjectId($this->objectId)
-                        ->findOneOrCreate();
-
-        $this->extracted($projectRole);
-        $projectRole->save();
+            $this->extracted($this->roleObj);
+            $this->roleObj->save();
+        }
 
         return $this;
     }

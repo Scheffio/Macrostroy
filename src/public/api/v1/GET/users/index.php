@@ -36,8 +36,7 @@ try {
                     ProjectRoleTableMap::COL_IS_CRUD,
                 ])
                 ->leftJoinRole()
-                ->leftJoinProjectRole()
-                ->useProjectRoleQuery()
+                ->useProjectRoleQuery('project_role', 'inner join')
                     ->filterByLvl($lvl)
                     ->filterByObjectId($objectId)
                     ->filterByProjectId($projectId)
@@ -45,21 +44,22 @@ try {
                 ->find()
                 ->getData();
 
-    JsonOutput::success([
-        '$object_id' => $objectId,
-        '$project_id' => $projectId,
-        '$lvl' => $lvl,
-        '$users' => $users,
-    ]);
+    JsonOutput::success($users);
 
     foreach ($users as &$user) {
+        $isAdmin = (bool)$user['role.manage_users'];
+
+        if ($isAdmin) $isCrud = true;
+        else {
+            $isCrud = $user['project_role.is_crud'];
+            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
+        }
+
         $user = [
             'id' => $user['users.id'],
             'name' => $user['users.username'],
-            'isAdmin' => (bool)$user['role.manage_users'],
-            'isCrud' => is_null($user['project_role.is_crud']) ?
-                        $user['project_role.is_crud'] :
-                        (bool)$user['project_role.is_crud'],
+            'isCrud' => $isCrud,
+            'isAdmin' => $isAdmin,
         ];
     };
 

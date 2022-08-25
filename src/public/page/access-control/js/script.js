@@ -1,9 +1,9 @@
-fetch("/api/v1/users", {
+fetch("/api/v1/users", "lvl: 1", "object_id: 1", "project_id: 1", {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
+    //   body: JSON.stringify({lvl: 1, object_id: 1, project_id: 1})
 })
 .then(function(res) {
     return res.json();

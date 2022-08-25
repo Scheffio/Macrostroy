@@ -25,19 +25,12 @@ try {
 
     $request = new Request();
     $objectId = $request->getQueryOrThrow('object_id');
-    $projectId = $request->getQueryOrThrow('project_id');
     $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
 
     $users = UsersQuery::create()
-                ->addSelfSelectColumns()
-                ->addSelectQuery(
-                    ProjectRoleQuery::create()
-                    ->filterByLvl($lvl)
-                    ->filterByObjectId($objectId),
-                    'projectRole'
-                )
-                ->addJoin('projectRole.user_id', UsersTableMap::COL_ID, Criteria::LEFT_JOIN)
                 ->leftJoinRole()
+                ->leftJoinProjectRole()
+                ->addJoinCondition(name: ProjectRoleTableMap::COL_OBJECT_ID, clause: ProjectRoleTableMap::TABLE_NAME, value: $objectId)
                 ->toString();
 
     JsonOutput::success($users);

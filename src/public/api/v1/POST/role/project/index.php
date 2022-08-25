@@ -10,15 +10,14 @@ $request = new Request();
 
 try {
     UserRole::getByUserId()->isManageUsersOrThrow();
-    $request->checkRequestVariablesOrError('lvl', 'is_crud', 'project_id', 'object_id', 'user_id');
+    $request->checkRequestVariablesOrError('lvl', 'is_crud', 'object_id', 'user_id');
 
     $lvl = $request->getRequest('lvl');
     $isCrud = $request->getRequest('is_crud');
     $userId = $request->getRequest('user_id');
     $objectId = $request->getRequest('object_id');
-    $projectId = $request->getRequest('project_id');
 
-    ProjectRole::getByMinimumData(lvl: $lvl, projectId: $projectId, objectId: $objectId, userId: $userId)
+    ProjectRole::getByMinimumData(lvl: $lvl, objectId: $objectId, userId: $userId)
                 ->setIsCrud($isCrud)
                 ->addOrUpdate();
 

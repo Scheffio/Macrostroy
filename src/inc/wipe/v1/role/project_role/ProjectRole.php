@@ -459,6 +459,8 @@ class ProjectRole
     #region Static Getter Functions
     /**
      * Получить объект класса через статический метод, используя ID роли проекта.
+     * @param int $projectRoleId ID роли проекта.
+     * @return ProjectRole
      * @throws Exception
      */
     public static function getByProjectRoleId(int $projectRoleId): ProjectRole
@@ -468,11 +470,15 @@ class ProjectRole
 
     /**
      * Получить объект класса через статический метод, используя минимально необъодимые данные для поиска.
+     * @param int|string $lvl Уровень достпа.
+     * @param int $objectId ID объекта (проект, подпроект, группа, дом, этап).
+     * @param int $userId ID пользователя.
+     * @return ProjectRole
      * @throws Exception
      */
-    public static function getByMinimumData(int|string $lvl, int $projectId, int $objectId, int $userId): ProjectRole
+    public static function getByMinimumData(int|string $lvl, int $objectId, int $userId): ProjectRole
     {
-        return new ProjectRole(userId: $userId, lvl: $lvl, projectId: $projectId, objectId: $objectId, search: true);
+        return new ProjectRole(userId: $userId, lvl: $lvl, objectId: $objectId, search: true);
     }
 
     /**
@@ -568,9 +574,14 @@ class ProjectRole
     /**
      * Добавление или обновление роли проекта.
      * @throws PropelException
+     * @throws Exception
      */
     public function addOrUpdate(): ProjectRole
     {
+        if ($this->isCrud === null) {
+            $this->delete();
+        }
+
         $projectRole = ProjectRoleQuery::create()
                         ->filterByLvl($this->lvl)
                         ->filterByUserId($this->userId)

@@ -2254,7 +2254,7 @@ abstract class Users implements ActiveRecordInterface
     public function getProjectRolesJoinProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProjectRoleQuery::create(null, $criteria);
-        $query->joinWith('Project', $joinBehavior);
+        $query->joinWith('project', $joinBehavior);
 
         return $this->getProjectRoles($query, $con);
     }

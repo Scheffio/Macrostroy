@@ -11,7 +11,7 @@ $serviceContainer->initDatabaseMaps(array (
     5 => '\\DB\\Map\\MaterialTableMap',
     6 => '\\DB\\Map\\MaterialVersionTableMap',
     7 => '\\DB\\Map\\ProjectRoleTableMap',
-    8 => '\\DB\\Map\\ProjectRoleVersionTableMap',
+//    8 => '\\DB\\Map\\ProjectRoleVersionTableMap',
     9 => '\\DB\\Map\\ProjectTableMap',
     10 => '\\DB\\Map\\ProjectVersionTableMap',
     11 => '\\DB\\Map\\RoleTableMap',

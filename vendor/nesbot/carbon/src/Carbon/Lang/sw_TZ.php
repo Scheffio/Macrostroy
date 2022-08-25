@@ -11,7 +11,7 @@
 
 /*
  * Authors:
- * - Kamusi Project Martin Benjamin locales@kamusi.org
+ * - Kamusi project Martin Benjamin locales@kamusi.org
  */
 return array_replace_recursive(require __DIR__.'/sw.php', [
     'formats' => [

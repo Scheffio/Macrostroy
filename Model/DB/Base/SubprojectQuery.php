@@ -49,15 +49,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubprojectQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildSubprojectQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildSubprojectQuery leftJoinProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the Project relation
- * @method     ChildSubprojectQuery rightJoinProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Project relation
- * @method     ChildSubprojectQuery innerJoinProject($relationAlias = null) Adds a INNER JOIN clause to the query using the Project relation
+ * @method     ChildSubprojectQuery leftJoinProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the project relation
+ * @method     ChildSubprojectQuery rightJoinProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the project relation
+ * @method     ChildSubprojectQuery innerJoinProject($relationAlias = null) Adds a INNER JOIN clause to the query using the project relation
  *
- * @method     ChildSubprojectQuery joinWithProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Project relation
+ * @method     ChildSubprojectQuery joinWithProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the project relation
  *
- * @method     ChildSubprojectQuery leftJoinWithProject() Adds a LEFT JOIN clause and with to the query using the Project relation
- * @method     ChildSubprojectQuery rightJoinWithProject() Adds a RIGHT JOIN clause and with to the query using the Project relation
- * @method     ChildSubprojectQuery innerJoinWithProject() Adds a INNER JOIN clause and with to the query using the Project relation
+ * @method     ChildSubprojectQuery leftJoinWithProject() Adds a LEFT JOIN clause and with to the query using the project relation
+ * @method     ChildSubprojectQuery rightJoinWithProject() Adds a RIGHT JOIN clause and with to the query using the project relation
+ * @method     ChildSubprojectQuery innerJoinWithProject() Adds a INNER JOIN clause and with to the query using the project relation
  *
  * @method     ChildSubprojectQuery leftJoinGroups($relationAlias = null) Adds a LEFT JOIN clause to the query using the Groups relation
  * @method     ChildSubprojectQuery rightJoinGroups($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Groups relation
@@ -645,7 +645,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
-     * Filter the query by a related \DB\Project object
+     * Filter the query by a related \DB\project object
      *
      * @param \DB\Project|ObjectCollection $project The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -674,7 +674,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
-     * Adds a JOIN clause to the query using the Project relation
+     * Adds a JOIN clause to the query using the project relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -684,7 +684,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     public function joinProject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Project');
+        $relationMap = $tableMap->getRelation('project');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -699,14 +699,14 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Project');
+            $this->addJoinObject($join, 'project');
         }
 
         return $this;
     }
 
     /**
-     * Use the Project relation Project object
+     * Use the project relation project object
      *
      * @see useQuery()
      *
@@ -720,11 +720,11 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     {
         return $this
             ->joinProject($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Project', '\DB\ProjectQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'project', '\DB\ProjectQuery');
     }
 
     /**
-     * Use the Project relation Project object
+     * Use the project relation project object
      *
      * @param callable(\DB\ProjectQuery):\DB\ProjectQuery $callable A function working on the related query
      *
@@ -749,7 +749,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         return $this;
     }
     /**
-     * Use the relation to Project table for an EXISTS query.
+     * Use the relation to project table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -761,11 +761,11 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     public function useProjectExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('Project', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('project', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the relation to Project table for a NOT EXISTS query.
+     * Use the relation to project table for a NOT EXISTS query.
      *
      * @see useProjectExistsQuery()
      *
@@ -776,7 +776,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     public function useProjectNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('Project', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('project', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \DB\Groups object

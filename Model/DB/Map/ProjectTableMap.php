@@ -48,7 +48,7 @@ class ProjectTableMap extends TableMap
     /**
      * The PHP name of this class (PascalCase)
      */
-    public const TABLE_PHP_NAME = 'Project';
+    public const TABLE_PHP_NAME = 'project';
 
     /**
      * The related Propel class for this table
@@ -58,7 +58,7 @@ class ProjectTableMap extends TableMap
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'DB.Project';
+    public const CLASS_DEFAULT = 'DB.project';
 
     /**
      * The total number of columns
@@ -159,25 +159,25 @@ class ProjectTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Project.Id' => 'ID',
+        'project.Id' => 'ID',
         'id' => 'ID',
         'project.id' => 'ID',
         'ProjectTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
         'Name' => 'NAME',
-        'Project.Name' => 'NAME',
+        'project.Name' => 'NAME',
         'name' => 'NAME',
         'project.name' => 'NAME',
         'ProjectTableMap::COL_NAME' => 'NAME',
         'COL_NAME' => 'NAME',
         'Status' => 'STATUS',
-        'Project.Status' => 'STATUS',
+        'project.Status' => 'STATUS',
         'status' => 'STATUS',
         'project.status' => 'STATUS',
         'ProjectTableMap::COL_STATUS' => 'STATUS',
         'COL_STATUS' => 'STATUS',
         'IsAvailable' => 'IS_AVAILABLE',
-        'Project.IsAvailable' => 'IS_AVAILABLE',
+        'project.IsAvailable' => 'IS_AVAILABLE',
         'isAvailable' => 'IS_AVAILABLE',
         'project.isAvailable' => 'IS_AVAILABLE',
         'ProjectTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
@@ -185,13 +185,13 @@ class ProjectTableMap extends TableMap
         'is_available' => 'IS_AVAILABLE',
         'project.is_available' => 'IS_AVAILABLE',
         'Version' => 'VERSION',
-        'Project.Version' => 'VERSION',
+        'project.Version' => 'VERSION',
         'version' => 'VERSION',
         'project.version' => 'VERSION',
         'ProjectTableMap::COL_VERSION' => 'VERSION',
         'COL_VERSION' => 'VERSION',
         'VersionCreatedAt' => 'VERSION_CREATED_AT',
-        'Project.VersionCreatedAt' => 'VERSION_CREATED_AT',
+        'project.VersionCreatedAt' => 'VERSION_CREATED_AT',
         'versionCreatedAt' => 'VERSION_CREATED_AT',
         'project.versionCreatedAt' => 'VERSION_CREATED_AT',
         'ProjectTableMap::COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
@@ -199,7 +199,7 @@ class ProjectTableMap extends TableMap
         'version_created_at' => 'VERSION_CREATED_AT',
         'project.version_created_at' => 'VERSION_CREATED_AT',
         'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'Project.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'project.VersionCreatedBy' => 'VERSION_CREATED_BY',
         'versionCreatedBy' => 'VERSION_CREATED_BY',
         'project.versionCreatedBy' => 'VERSION_CREATED_BY',
         'ProjectTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
@@ -207,7 +207,7 @@ class ProjectTableMap extends TableMap
         'version_created_by' => 'VERSION_CREATED_BY',
         'project.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
-        'Project.VersionComment' => 'VERSION_COMMENT',
+        'project.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
         'project.versionComment' => 'VERSION_COMMENT',
         'ProjectTableMap::COL_VERSION_COMMENT' => 'VERSION_COMMENT',
@@ -227,7 +227,7 @@ class ProjectTableMap extends TableMap
     {
         // attributes
         $this->setName('project');
-        $this->setPhpName('Project');
+        $this->setPhpName('project');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\DB\\Project');
         $this->setPackage('DB');
@@ -367,7 +367,7 @@ class ProjectTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Project object, last column rank)
+     * @return array (project object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
@@ -506,9 +506,9 @@ class ProjectTableMap extends TableMap
     }
 
     /**
-     * Performs a DELETE on the database, given a Project or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a project or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Project object or primary key or array of primary keys
+     * @param mixed $values Criteria or project object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -558,9 +558,9 @@ class ProjectTableMap extends TableMap
     }
 
     /**
-     * Performs an INSERT on the database, given a Project or Criteria object.
+     * Performs an INSERT on the database, given a project or Criteria object.
      *
-     * @param mixed $criteria Criteria or Project object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or project object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -575,7 +575,7 @@ class ProjectTableMap extends TableMap
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Project object
+            $criteria = $criteria->buildCriteria(); // build Criteria from project object
         }
 
         if ($criteria->containsKey(ProjectTableMap::COL_ID) && $criteria->keyContainsValue(ProjectTableMap::COL_ID) ) {

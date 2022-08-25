@@ -264,7 +264,7 @@ class SubprojectTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Project', '\\DB\\Project', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('project', '\\DB\\Project', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':project_id',

@@ -1302,7 +1302,7 @@ abstract class Subproject implements ActiveRecordInterface
                         $key = 'project';
                         break;
                     default:
-                        $key = 'Project';
+                        $key = 'project';
                 }
 
                 $result[$key] = $this->aProject->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);

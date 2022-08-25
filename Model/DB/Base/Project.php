@@ -208,7 +208,7 @@ abstract class Project implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of DB\Base\Project object.
+     * Initializes internal state of DB\Base\project object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -303,9 +303,9 @@ abstract class Project implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Project</code> instance.  If
-     * <code>obj</code> is an instance of <code>Project</code>, delegates to
-     * <code>equals(Project)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>project</code> instance.  If
+     * <code>obj</code> is an instance of <code>project</code>, delegates to
+     * <code>equals(project)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -1225,10 +1225,10 @@ abstract class Project implements ActiveRecordInterface
      */
     public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['Project'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['project'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Project'][$this->hashCode()] = true;
+        $alreadyDumpedObjects['project'][$this->hashCode()] = true;
         $keys = ProjectTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
@@ -1552,7 +1552,7 @@ abstract class Project implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \DB\Project (or compatible) type.
+     * @param object $copyObj An object of \DB\project (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1889,13 +1889,13 @@ abstract class Project implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Project is new, it will return
-     * an empty collection; or if this Project has previously
+     * Otherwise if this project is new, it will return
+     * an empty collection; or if this project has previously
      * been saved, it will retrieve related ProjectRoles from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Project.
+     * actually need in project.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
@@ -1915,13 +1915,13 @@ abstract class Project implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Project is new, it will return
-     * an empty collection; or if this Project has previously
+     * Otherwise if this project is new, it will return
+     * an empty collection; or if this project has previously
      * been saved, it will retrieve related ProjectRoles from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Project.
+     * actually need in project.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object

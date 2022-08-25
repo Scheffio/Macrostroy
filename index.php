@@ -13,7 +13,7 @@ use inc\artemy\v1\router\Router;
 use inc\artemy\v1\router\RouterParser;
 
 require "vendor/autoload.php";
-//require "generated-conf/config.php";
+require "generated-conf/config.php";
 
 DevelopmentMode::on();
 setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');

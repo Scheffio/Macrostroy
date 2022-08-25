@@ -51,15 +51,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectVersionQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildProjectVersionQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildProjectVersionQuery leftJoinProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the Project relation
- * @method     ChildProjectVersionQuery rightJoinProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Project relation
- * @method     ChildProjectVersionQuery innerJoinProject($relationAlias = null) Adds a INNER JOIN clause to the query using the Project relation
+ * @method     ChildProjectVersionQuery leftJoinProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the project relation
+ * @method     ChildProjectVersionQuery rightJoinProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the project relation
+ * @method     ChildProjectVersionQuery innerJoinProject($relationAlias = null) Adds a INNER JOIN clause to the query using the project relation
  *
- * @method     ChildProjectVersionQuery joinWithProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Project relation
+ * @method     ChildProjectVersionQuery joinWithProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the project relation
  *
- * @method     ChildProjectVersionQuery leftJoinWithProject() Adds a LEFT JOIN clause and with to the query using the Project relation
- * @method     ChildProjectVersionQuery rightJoinWithProject() Adds a RIGHT JOIN clause and with to the query using the Project relation
- * @method     ChildProjectVersionQuery innerJoinWithProject() Adds a INNER JOIN clause and with to the query using the Project relation
+ * @method     ChildProjectVersionQuery leftJoinWithProject() Adds a LEFT JOIN clause and with to the query using the project relation
+ * @method     ChildProjectVersionQuery rightJoinWithProject() Adds a RIGHT JOIN clause and with to the query using the project relation
+ * @method     ChildProjectVersionQuery innerJoinWithProject() Adds a INNER JOIN clause and with to the query using the project relation
  *
  * @method     \DB\ProjectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -761,7 +761,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \DB\Project object
+     * Filter the query by a related \DB\project object
      *
      * @param \DB\Project|ObjectCollection $project The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -790,7 +790,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
     }
 
     /**
-     * Adds a JOIN clause to the query using the Project relation
+     * Adds a JOIN clause to the query using the project relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -800,7 +800,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
     public function joinProject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Project');
+        $relationMap = $tableMap->getRelation('project');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -815,14 +815,14 @@ abstract class ProjectVersionQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Project');
+            $this->addJoinObject($join, 'project');
         }
 
         return $this;
     }
 
     /**
-     * Use the Project relation Project object
+     * Use the project relation project object
      *
      * @see useQuery()
      *
@@ -836,11 +836,11 @@ abstract class ProjectVersionQuery extends ModelCriteria
     {
         return $this
             ->joinProject($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Project', '\DB\ProjectQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'project', '\DB\ProjectQuery');
     }
 
     /**
-     * Use the Project relation Project object
+     * Use the project relation project object
      *
      * @param callable(\DB\ProjectQuery):\DB\ProjectQuery $callable A function working on the related query
      *
@@ -865,7 +865,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the relation to Project table for an EXISTS query.
+     * Use the relation to project table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -877,11 +877,11 @@ abstract class ProjectVersionQuery extends ModelCriteria
      */
     public function useProjectExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('Project', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('project', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the relation to Project table for a NOT EXISTS query.
+     * Use the relation to project table for a NOT EXISTS query.
      *
      * @see useProjectExistsQuery()
      *
@@ -892,7 +892,7 @@ abstract class ProjectVersionQuery extends ModelCriteria
      */
     public function useProjectNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('Project', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('project', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result

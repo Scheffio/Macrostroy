@@ -17,7 +17,7 @@ if ($user === null) header("Location: /auth");
 <body>
     <div class="wrap">
         <h1>Добро пожаловать.</h1>
-        <h1>Для создания аккаунта к почте <?= $user->getEmail() ?>, пожалуйста, введите пароль.</h1>
+        <h2>Для создания аккаунта к почте <?= $user->getEmail() ?>, пожалуйста, введите пароль.</h2>
         <form action="" class="form">
             <label>
                 <input type="password" required class="form__input" placeholder="Введите пароль">

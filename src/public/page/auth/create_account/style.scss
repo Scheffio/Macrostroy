@@ -1,13 +1,14 @@
 @import "../../../static/additional";
 
-body {
-    background-color: red;
-}
-
 .wrap {
+    padding-left: 100px;
     h1 {
         @include MainTitle;
-        color: red;
+        margin: 0;
+    }
+    h2 {
+        @include InputRegularText;
+        margin: 0
     }
     .form {
         display: flex;
@@ -34,11 +35,12 @@ body {
                     @include InputRegularText;
                 }
             }
-            .login-button {
-                @include Button($EstiminBackground2, white, 155px, 40px);
-                &:hover {
-                    background-color: $EstiminBackground5;
-                }
+        }
+        
+        .login-button {
+            @include Button($EstiminBackground2, white, 155px, 40px);
+            &:hover {
+                background-color: $EstiminBackground5;
             }
         }
     }

@@ -2,11 +2,13 @@
 namespace wipe\inc\v1\objects;
 
 use DB\Base\ProjectQuery;
+use DB\Map\ProjectTableMap;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\ObjectInterface;
 use \DB\Project AS DbProject;
 use DB\Base\Project as BaseProject;
+use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Project extends Objects implements ObjectInterface
 {
@@ -83,10 +85,21 @@ class Project extends Objects implements ObjectInterface
         return $this;
     }
 
+    /**
+     * @return Project
+     * @throws NoProjectFoundException
+     */
     public function update(): Project
     {
-//        $this->projectObj = ProjectQuery::create()->filterByStatus($this::AT)
-        
+        $this->projectObj = ProjectQuery::create()
+                                ->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED)
+                                ->findPk($this->id) ??
+                                throw new NoProjectFoundException();
+
+        if ($this->name) $this->projectObj->setName($this->name);
+        if ($this->status) $this->projectObj->setStatus($this->status);
+        if ($this->is_available) $this->projectObj->setIsAvailable($this->is_available);
+
         return $this;
     }
 

@@ -7,6 +7,15 @@ $("form").on("submit", function () {
             selector: params.get('selector'),
             password: $("form input:last").text()
         })
+    }).then(function (data) {
+        return data.json();
+    }).then(function (json) {
+        if (json.action === "success") {
+            document.location = "/auth";
+        }
+        else {
+            throw new Error();
+        }
     });
 });
 //# sourceMappingURL=script_module.js.map

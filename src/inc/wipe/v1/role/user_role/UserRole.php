@@ -7,6 +7,7 @@ use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
 use Exception;
 use inc\artemy\v1\auth\Auth;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 
 class UserRole

@@ -12,14 +12,14 @@ class Project extends Objects implements ObjectInterface
     private ?BaseProject $projectObj = null;
 
     /**
-     * Заполнение свойств класса, используя ID роли.
+     * Заполнение свойств класса, используя ID проекта.
      * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {
         $this->projectObj = ProjectQuery::create()->findPk($this->id)
                             ?? throw new NoFindObjectException();
-        $this->applyDefaultValuesByObj();
+        $this->applyDefaultValuesByObj($this->projectObj);
     }
 
     /** @return BaseProject|null Объект проекта. */

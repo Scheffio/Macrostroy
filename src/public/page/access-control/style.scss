@@ -47,6 +47,7 @@
             gap: 15px;
             padding-top: 20px;
             position: relative;
+            max-height: 600px;
             &::-webkit-scrollbar {
                 width: 8px;
             }
@@ -94,7 +95,7 @@
                 }
             }
             .users__list {
-                max-height: 750px;
+                max-height: 760px;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 20px;
@@ -215,8 +216,9 @@
             }
             .admin-alert {
                 position: absolute;
-                bottom: 200px;
-                left: 100px;
+                bottom: 150px;
+                left: 19px;
+                @include InputRegularText;
             }
         }
     }

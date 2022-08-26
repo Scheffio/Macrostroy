@@ -15,6 +15,15 @@ fetch(url).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
     })
+    json.data.forEach((elem) => {
+        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
+    })
+    json.data.forEach((elem) => {
+        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
+    })
+    json.data.forEach((elem) => {
+        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
+    })
     
     usersList.children[0].classList.add('selected')
 

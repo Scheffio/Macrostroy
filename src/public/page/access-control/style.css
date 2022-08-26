@@ -129,6 +129,7 @@ body.fixated {
   gap: 15px;
   padding-top: 20px;
   position: relative;
+  max-height: 600px;
 }
 .wrap .content .users::-webkit-scrollbar {
   width: 8px;
@@ -191,7 +192,7 @@ body.fixated {
   font-weight: 400;
 }
 .wrap .content .users .users__list {
-  max-height: 750px;
+  max-height: 760px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -333,6 +334,9 @@ body.fixated {
 }
 .wrap .content .permissions .admin-alert {
   position: absolute;
-  bottom: 200px;
-  left: 100px;
+  bottom: 150px;
+  left: 19px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }/*# sourceMappingURL=style.css.map */

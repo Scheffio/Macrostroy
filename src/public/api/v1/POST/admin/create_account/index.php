@@ -13,6 +13,8 @@ use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\UserRole;
 
+var_dump(UsersQuery::create()->findOneById($this->userId));
+
 try {
     UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
 } catch (Exception $e) {

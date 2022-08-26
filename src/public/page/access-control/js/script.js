@@ -29,6 +29,7 @@ fetch(url).then((elem) => {
                             if(elem.classList.contains('disabled')) {
                                 crudCheckbox.setAttribute('disabled', true)
                                 watchCheckbox.setAttribute('disabled', true)
+                                document.querySelector('.admin-alert').classList.add("enabled")
                             }
                         })
                     }else {
@@ -37,6 +38,7 @@ fetch(url).then((elem) => {
                             if(!elem.classList.contains('disabled')) {
                                 crudCheckbox.removeAttribute('disabled')
                                 watchCheckbox.removeAttribute('disabled')
+                                document.querySelector('.admin-alert').classList.remove("enabled")
                             }
                         })
                     }

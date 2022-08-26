@@ -36,9 +36,11 @@ fetch(url).then((elem) => {
 
     document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 
-    // usersList.forEach((elem) => {
-
-    // })
+    usersList.childNodes.forEach((elem) => {
+        if(elem != ' ') {
+            console.log(elem);
+        }
+    })
 
 })
 

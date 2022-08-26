@@ -11,6 +11,7 @@ use DB\Base\ProjectRole as BaseProjectRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use JetBrains\PhpStorm\NoReturn;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -102,6 +103,7 @@ class ProjectRole
     #region Apply Default Values Functions
     /**
      * Заполнение свойств класса, используя поиск по переданным первоначально значениям.
+     * @return void
      * @throws Exception
      */
     private function applyDefaultValuesBySearch(): void
@@ -123,6 +125,7 @@ class ProjectRole
 
     /**
      * Заполнение свойств класса, используя ID роли проекта.
+     * @return void
      * @throws NoProjectFoundException
      * @throws Exception
      */
@@ -135,6 +138,11 @@ class ProjectRole
 
     /**
      * Заполнение свойств класса, используя объект роли проекта.
+     * @throws Exception
+     */
+
+    /**
+     * @return void
      * @throws Exception
      */
     private function applyDefaultValuesByRoleObj(): void
@@ -202,8 +210,11 @@ class ProjectRole
         return $this->lvlName;
     }
 
-    /** @return string|null Наименование уровня доступа но его номеру. */
-    public function getLvlNameByNum(): ?string
+    /**
+     * @return string Наименование уровня доступа но его номеру.
+     * @throws IncorrectLvlException
+     */
+    public function getLvlNameByNum(): string
     {
         return match ($this->lvl) {
             $this::ATTRIBUTE_LVL_INT_PROJECT => $this::ATTRIBUTE_LVL_STR_PROJECT,
@@ -211,12 +222,15 @@ class ProjectRole
             $this::ATTRIBUTE_LVL_INT_GROUP => $this::ATTRIBUTE_LVL_STR_GROUP,
             $this::ATTRIBUTE_LVL_INT_HOUSE => $this::ATTRIBUTE_LVL_STR_HOUSE,
             $this::ATTRIBUTE_LVL_INT_STAGE => $this::ATTRIBUTE_LVL_STR_STAGE,
-            default => null
+            default => throw new IncorrectLvlException()
         };
     }
 
-    /** @return int|null Номер уровня доступа по его наименованию. */
-    public function getLvlNumByName(): ?int
+    /**
+     * @return int Номер уровня доступа по его наименованию.
+     * @throws IncorrectLvlException
+     */
+    public function getLvlNumByName(): int
     {
         return match ($this->lvlName) {
             $this::ATTRIBUTE_LVL_STR_PROJECT => $this::ATTRIBUTE_LVL_INT_PROJECT,
@@ -224,7 +238,7 @@ class ProjectRole
             $this::ATTRIBUTE_LVL_STR_GROUP => $this::ATTRIBUTE_LVL_INT_GROUP,
             $this::ATTRIBUTE_LVL_STR_HOUSE => $this::ATTRIBUTE_LVL_INT_HOUSE,
             $this::ATTRIBUTE_LVL_STR_STAGE => $this::ATTRIBUTE_LVL_INT_STAGE,
-            default => null
+            default => throw new IncorrectLvlException()
         };
     }
 
@@ -334,14 +348,13 @@ class ProjectRole
     /**
      * Испольвуется для установки уровня доступа ($lvl, $lvlName) по номеру.
      * @param int $lvlNum Номер уровня доступа (ATTRIBUTE_LVL_INT_).
-     * @return ProjectRole
-     * @throws Exception
+     * @throws IncorrectLvlException
      */
     public function setLvlByNum(int $lvlNum): ProjectRole
     {
         if ($this->lvl !== $lvlNum) {
             $this->lvl = $lvlNum;
-            $this->setLvlNameByInt($lvlNum);
+            $this->setLvlNameByInt();
         }
 
         return $this;
@@ -351,13 +364,13 @@ class ProjectRole
      * Испольвуется для установки уровня доступа ($lvl, $lvlName) по наименованию.
      * @param string $lvlName Наименование уровня доступа.
      * @return ProjectRole
-     * @throws Exception
+     * @throws IncorrectLvlException
      */
     public function setLvlByName(string $lvlName): ProjectRole
     {
         if ($this->lvlName !== $lvlName) {
             $this->lvlName = $lvlName;
-            $this->setLvlByStr($lvlName);
+            $this->setLvlByStr();
         }
 
         return  $this;
@@ -365,40 +378,24 @@ class ProjectRole
 
     /**
      * Испольвуется для установки уровня доступа ($lvl) по наименованию.
-     * @param string $lvlName Наименование уровня доступа (ATTRIBUTE_LVL_STR_).
      * @return ProjectRole
-     * @throws Exception
+     * @throws IncorrectLvlException
      */
-    public function setLvlByStr(string $lvlName): ProjectRole
+    public function setLvlByStr(): ProjectRole
     {
-        $this->lvl = match ($lvlName) {
-            $this::ATTRIBUTE_LVL_STR_PROJECT => $this::ATTRIBUTE_LVL_INT_PROJECT,
-            $this::ATTRIBUTE_LVL_STR_SUBPROJECT => $this::ATTRIBUTE_LVL_INT_SUBPROJECT,
-            $this::ATTRIBUTE_LVL_STR_GROUP => $this::ATTRIBUTE_LVL_INT_GROUP,
-            $this::ATTRIBUTE_LVL_STR_HOUSE => $this::ATTRIBUTE_LVL_INT_HOUSE,
-            $this::ATTRIBUTE_LVL_STR_STAGE => $this::ATTRIBUTE_LVL_INT_STAGE,
-            default => throw new Exception('Incorrect level value'),
-        };
+        $this->lvl = $this->getLvlNumByName();
 
         return $this;
     }
 
     /**
      * Испольвуется для установки уровня доступа ($lvlName) по номеру.
-     * @param int $lvlNum Номер уровня доступа.
      * @return ProjectRole
-     * @throws Exception
+     * @throws IncorrectLvlException
      */
-    public function setLvlNameByInt(int $lvlNum): ProjectRole
+    public function setLvlNameByInt(): ProjectRole
     {
-        $this->lvlName = match ($lvlNum) {
-            $this::ATTRIBUTE_LVL_INT_PROJECT => $this::ATTRIBUTE_LVL_STR_PROJECT,
-            $this::ATTRIBUTE_LVL_INT_SUBPROJECT => $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
-            $this::ATTRIBUTE_LVL_INT_GROUP => $this::ATTRIBUTE_LVL_STR_GROUP,
-            $this::ATTRIBUTE_LVL_INT_HOUSE => $this::ATTRIBUTE_LVL_STR_HOUSE,
-            $this::ATTRIBUTE_LVL_INT_STAGE => $this::ATTRIBUTE_LVL_STR_STAGE,
-            default => throw new Exception('Incorrect level value'),
-        };
+        $this->lvlName = $this->getLvlNameByNum();
 
         return $this;
     }
@@ -509,14 +506,14 @@ class ProjectRole
     /**
      * Поиск и заполнение свойств класса, в соотвествие с ранее переданными данными, иначе ошибка.
      * @return ProjectRole
-     * @throws Exception
+     * @throws NoProjectFoundException
      */
     public function searchOrThrow(): ProjectRole
     {
         if ($this->roleId) $this->applyDefaultValuesByRoleId();
         else $this->applyDefaultValuesBySearch();
 
-        if (!$this->roleObj) throw new Exception('No project role found');
+        if (!$this->roleObj) throw new NoProjectFoundException();
 
         return $this;
     }

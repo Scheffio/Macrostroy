@@ -28,6 +28,7 @@ fetch(url).then((elem) => {
                     if(elem.tagName == 'DIV') {
                         if(json.data[i].id == elem.children[0].dataset.id) {
                             let findedItem = json.data[i]
+                            console.log(findedItem);
                             if(findedItem.isCrud == true) {
                                 crudCheckbox.checked = true
                             }else if(json.data[i].isCrud == false) {

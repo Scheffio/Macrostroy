@@ -27,9 +27,13 @@ fetch(url).then((elem) => {
                 usersList.childNodes.forEach((elem) => {
                     if(elem.tagName == 'DIV') {
                         if(json.data[i].id == elem.children[0].dataset.id) {
-                            console.log("success", json.data[i].id, elem.children[0].dataset.id);
-                        }else {
-                            console.log("fail", json.data[i].id, elem.children[0].dataset.id);
+                            console.log(json.data[i].id, elem.children[0]);
+                            if(json.data[i].isCrud == true || json.data[i].isAdmin == true) {
+                                crudCheckbox.checked = true
+                                console.log(json.data[i]);
+                            }else if(json.data[i].isCrud == false) {
+                                watchCheckbox.checked = true
+                            }
                         }
                     }
                 })

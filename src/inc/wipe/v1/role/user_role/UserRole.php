@@ -8,6 +8,11 @@ use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageObjectsException;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageVolumes;
+use wipe\inc\v1\role\user_role\exception\NoAccessObjectViewException;
+use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class UserRole
@@ -63,16 +68,18 @@ class UserRole
     }
 
     #region Apply Default Values Functions
+
     /**
      * Заполнение свойств класса, используя ID пользователя.
      * Получение и присваивание ID роли (roleId).
      * @return void
-     * @throws Exception
+     * @throws NoUserFoundException
+     * @throws NoRoleFoundException
      */
     private function applyDefaultValuesByUserId(): void
     {
         $user = UsersQuery::create()->findPk($this->userId) ??
-                throw new Exception('No user found');
+                throw new NoUserFoundException();
         $this->roleId = $user->getRoleId();
 
         $this->applyDefaultValuesByRoleId();
@@ -82,12 +89,12 @@ class UserRole
      * Заполнение свойств класса, используя ID роли.
      * Получение и присваивание объекта роли ($roleObj).
      * @return void
-     * @throws Exception
+     * @throws NoRoleFoundException
      */
     private function applyDefaultValuesByRoleId(): void
     {
         $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                         throw new Exception('No role found');
+                         throw new NoRoleFoundException();
         $this->applyDefaultValuesByRoleObj();
     }
 
@@ -141,29 +148,29 @@ class UserRole
 
     /**
      * @return bool Просмотр объектов разрешен, иначе ошибка.
-     * @throws Exception
+     * @throws NoAccessObjectViewException
      */
     public function isObjectViewerOrThrow(): bool
     {
-        return $this->objectViewer ?: throw new Exception('No access to object view');
+        return $this->objectViewer ?: throw new NoAccessObjectViewException();
     }
 
     /**
      * @return bool CRUD объектов разрешен, иначе ошибка.
-     * @throws Exception
+     * @throws NoAccessManageObjectsException
      */
     public function isManageObjectsOrThrow(): bool
     {
-        return $this->manageObjects ?: throw new Exception('No access to manage objects');
+        return $this->manageObjects ?: throw new NoAccessManageObjectsException();
     }
 
     /**
      * @return bool CRUD объемов разрешен, иначе ошибка.
-     * @throws Exception
+     * @throws NoAccessManageVolumes
      */
     public function isManageVolumesOrThrow(): bool
     {
-        return $this->manageVolumes ?: throw new Exception('No access to manage volumes');
+        return $this->manageVolumes ?: throw new NoAccessManageVolumes();
     }
 
     /**
@@ -177,11 +184,11 @@ class UserRole
 
     /**
      * @return bool CRUD учетными записями разрешен, иначе ошибка.
-     * @throws Exception
+     * @throws NoAccessManageUsersException
      */
     public function isManageUsersOrThrow(): bool
     {
-        return $this->manageUsers ?: throw new Exception('No access to manage users');
+        return $this->manageUsers ?: throw new NoAccessManageUsersException();
     }
     #endregion
 

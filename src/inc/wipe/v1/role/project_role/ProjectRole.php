@@ -123,6 +123,7 @@ class ProjectRole
     /**
      * Заполнение свойств класса, используя ID роли проекта.
      * @throws NoProjectFoundException
+     * @throws Exception
      */
     private function applyDefaultValuesByRoleId(): void
     {

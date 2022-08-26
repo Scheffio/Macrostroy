@@ -15,7 +15,10 @@ fetch(url).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
         if(elem.isCrud || elem.isAdmin) {
+            console.log(elem, elem.isCrud, elem.isAdmin);
             crudCheckbox.checked = true
+        }else {
+            crudCheckbox.checked = false
         }
     })
     

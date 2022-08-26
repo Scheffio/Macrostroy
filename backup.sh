@@ -4,9 +4,9 @@ echo "script started";
 sudo mysqldump macrostroy_db > /var/www/www-root/data/www/artemy.net/mysql_backup_"$now".sql &&
 echo "mysql backup completed"
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net add --all &&
-echo "added all";
+echo "files added";
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net commit -m "miss server backup `date`" --all --author="Miss Server <server@artemy.net>" &&
-echo "committed all";
+echo "all files committed";
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net push -u origin main &&
 echo "pushed origin main";
 echo "script executed";

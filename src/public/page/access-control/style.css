@@ -248,6 +248,9 @@ body.fixated {
 .wrap .content .permissions .permission {
   padding-bottom: 15px;
 }
+.wrap .content .permissions .permission.disabled {
+  opacity: 0.5;
+}
 .wrap .content .permissions .permission .permission__checkbox {
   margin-top: 5px;
   display: flex;

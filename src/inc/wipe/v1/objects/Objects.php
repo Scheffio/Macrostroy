@@ -102,6 +102,7 @@ class Objects
     }
 
     /**
+     *
      * @param string|null $name
      * @return Objects
      */

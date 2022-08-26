@@ -8,6 +8,7 @@ use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class UserRole
 {
@@ -397,13 +398,13 @@ class UserRole
      * Обновление роли у пользователя.
      * Используются такие свойства класса, как: $userId, $roleId.
      * @return UserRole
-     * @throws Exception
+     * @throws NoUserFoundException
      * @throws PropelException
      */
     public function updateUserRole(): UserRole
     {
         $user = UsersQuery::create()->findPk($this->userId) ??
-                throw new Exception('No user found');
+                throw new NoUserFoundException();
 
         if ($user->getRoleId() !== $this->roleId) {
             $user

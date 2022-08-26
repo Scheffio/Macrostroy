@@ -25,6 +25,7 @@ try {
                     RoleTableMap::COL_NAME
                 ])
                 ->leftJoinRole()
+                ->filterByIsAvailable(1)
                 ->findPk($user_id) ?: throw new Exception('No user found');
 
     JsonOutput::success([

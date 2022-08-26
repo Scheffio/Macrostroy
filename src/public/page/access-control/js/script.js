@@ -16,9 +16,6 @@ fetch(url).then((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
     })
     
-    usersList.children[0].classList.add('selected')
-    selectableUsers.click(usersList)
-
     const selectableUsers = {
         users: document.querySelectorAll('.users__user-field'),
         click(elem) {
@@ -43,7 +40,8 @@ fetch(url).then((elem) => {
             })
         }
     }
-
+    
+    selectableUsers.click(usersList.children[0])
     document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 })
 

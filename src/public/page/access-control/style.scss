@@ -145,6 +145,9 @@
             padding-left: 19px;
             .permission {
                 padding-bottom: 15px;
+                &.disabled {
+                    opacity: .5;
+                }
                 .permission__checkbox {
                     margin-top: 5px;
                     display: flex;
@@ -219,6 +222,12 @@
                 bottom: 150px;
                 left: 19px;
                 @include InputRegularText;
+                transition: .3s;
+                opacity: 0;
+                &.enabled {
+                    opacity: 1;
+                    transition: .3s;
+                }
             }
         }
     }

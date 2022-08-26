@@ -11,6 +11,7 @@ use DB\Base\ProjectRole as BaseProjectRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use JetBrains\PhpStorm\NoReturn;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -121,12 +122,12 @@ class ProjectRole
 
     /**
      * Заполнение свойств класса, используя ID роли проекта.
-     * @throws Exception
+     * @throws NoProjectFoundException
      */
     private function applyDefaultValuesByRoleId(): void
     {
         $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                         throw new Exception('No project role found');
+                         throw new NoProjectFoundException();
         $this->applyDefaultValuesByRoleObj();
     }
 

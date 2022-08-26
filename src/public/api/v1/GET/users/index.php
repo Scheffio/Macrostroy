@@ -48,6 +48,7 @@ try {
                         name: ProjectRoleTableMap::TABLE_NAME,
                         clause: ProjectRoleTableMap::COL_OBJECT_ID.'=?',
                         value: $objectId)
+                ->filterByIsAvailable(1)
                 ->find()
                 ->getData();
 

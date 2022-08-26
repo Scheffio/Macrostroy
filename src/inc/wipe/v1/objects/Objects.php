@@ -24,7 +24,7 @@ class Objects
     /** @var string|null Наименование объекта. */
     protected ?string $name = null;
 
-    /** @var string|null Статус объекта (в процессе, завершен, удален). */
+    /** @var string|null Статус разработки объекта (в процессе, завершен, удален). */
     protected ?string $status = null;
 
     /** @var bool|null Доступ к объекту (пуличный, приватный). */
@@ -79,7 +79,7 @@ class Objects
         return $this->name;
     }
 
-    /** @return string|null  Статус объекта (в процессе, завершен, удален). */
+    /** @return string|null  Статус разработки объекта (в процессе, завершен, удален). */
     public function getStatus(): ?string
     {
         return $this->status;
@@ -102,8 +102,8 @@ class Objects
     }
 
     /**
-     *
-     * @param string|null $name
+     * Присваивание свойству класса наименование объекта.
+     * @param string|null $name Наименование объекта.
      * @return Objects
      */
     public function setName(?string $name): Objects
@@ -116,7 +116,8 @@ class Objects
     }
 
     /**
-     * @param string $status
+     * Присваивание свойству класса статус разработки объекта.
+     * @param string $status Наименование статуса разработки (self::ATTRIBUTE_STATUS_).
      * @return Objects
      * @throws IncorrectStatusException
      */

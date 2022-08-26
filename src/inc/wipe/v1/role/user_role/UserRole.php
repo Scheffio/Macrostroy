@@ -49,9 +49,10 @@ class UserRole
     private bool $manageUsers = false;
 
     /**
-     * @param int|null $userId
-     * @param int|null $roleId
-     * @throws Exception
+     * @param int|null $userId ID пользователя.
+     * @param int|null $roleId ID роли.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     function __construct(?int $userId = null, ?int $roleId = null)
     {
@@ -70,7 +71,6 @@ class UserRole
     }
 
     #region Apply Default Values Functions
-
     /**
      * Заполнение свойств класса, используя ID пользователя.
      * Получение и присваивание ID роли (roleId).

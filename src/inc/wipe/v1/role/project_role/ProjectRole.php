@@ -6,14 +6,13 @@ use Exception;
 use DB\RoleQuery;
 use DB\Base\ProjectRoleQuery;
 use DB\ProjectRole as DbProjectRole;
-use DB\ProjectRoleQuery as DbProjectRoleQuery;
 use DB\Base\ProjectRole as BaseProjectRole;
-use inc\artemy\v1\json_output\JsonOutput;
-use JetBrains\PhpStorm\NoReturn;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
+use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
@@ -81,7 +80,9 @@ class ProjectRole
      * @param int|string $lvl Номер уровня доступа.
      * @param int|null $objectId ID объекта (проект, подпроект, группа, дом, этап).
      * @param bool $search Нужно ли искать ранее созданную запись с переданными параметрами.
-     * @throws Exception
+     * @throws IncorrectLvlException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     function __construct(
         ?int $roleId = null,
@@ -104,7 +105,9 @@ class ProjectRole
     /**
      * Заполнение свойств класса, используя поиск по переданным первоначально значениям.
      * @return void
-     * @throws Exception
+     * @throws IncorrectLvlException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     private function applyDefaultValuesBySearch(): void
     {
@@ -126,8 +129,10 @@ class ProjectRole
     /**
      * Заполнение свойств класса, используя ID роли проекта.
      * @return void
+     * @throws IncorrectLvlException
      * @throws NoProjectFoundException
-     * @throws Exception
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     private function applyDefaultValuesByRoleId(): void
     {
@@ -138,12 +143,10 @@ class ProjectRole
 
     /**
      * Заполнение свойств класса, используя объект роли проекта.
-     * @throws Exception
-     */
-
-    /**
      * @return void
-     * @throws Exception
+     * @throws IncorrectLvlException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     private function applyDefaultValuesByRoleObj(): void
     {
@@ -156,7 +159,9 @@ class ProjectRole
 
     /**
      * Заполнение свойств класса, используя ID польователя.
-     * @throws Exception
+     * @return void
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     private function applyDefaultValuesByUserId(): void
     {
@@ -335,8 +340,7 @@ class ProjectRole
     /**
      * Используется для установки уровня доступа ($lvl, $lvlName), либо по номеру, либо по наименованию.
      * @param int|string $lvl Уровень доступа.
-     * @return ProjectRole
-     * @throws Exception
+     * @throws IncorrectLvlException
      */
     public function setLvl(int|string $lvl): ProjectRole
     {
@@ -495,7 +499,7 @@ class ProjectRole
      * @param BaseProjectRole $object
      * @return void
      */
-    private function extracted(BaseProjectRole &$object): void
+    private function extracted(BaseProjectRole $object): void
     {
         if ($this->lvl) $object->setLvl($this->lvl);
         if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
@@ -506,7 +510,10 @@ class ProjectRole
     /**
      * Поиск и заполнение свойств класса, в соотвествие с ранее переданными данными, иначе ошибка.
      * @return ProjectRole
+     * @throws IncorrectLvlException
      * @throws NoProjectFoundException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public function searchOrThrow(): ProjectRole
     {

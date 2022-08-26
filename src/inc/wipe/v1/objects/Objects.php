@@ -1,7 +1,9 @@
 <?php
 namespace wipe\inc\v1\objects;
 
+use DB\Base\Groups as BaseGroup;
 use DB\Base\Project as BaseProject;
+use DB\Base\Subproject as BaseSubproject;
 
 class Objects
 {
@@ -10,7 +12,7 @@ class Objects
     protected ?string $status = null;
     protected ?bool $is_available = null;
 
-    protected function applyByObj(BaseProject&$obj): void
+    protected function applyByObj(BaseProject|BaseSubproject|BaseGroup| &$obj): void
     {
 
     }

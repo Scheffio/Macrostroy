@@ -24,7 +24,15 @@ fetch(url).then((elem) => {
             this.reset()
             elem.classList.toggle('selected')
             for(let i = 0; i < json.data.length; i++) {
-                console.log(json.data[i])
+                usersList.childNodes.forEach((elem) => {
+                    if(elem.tagName == 'DIV') {
+                        if(json.data[i].id == elem.children[0].dataset.id) {
+                            console.log("success", json.data[i].id, elem.children[0].dataset.id);
+                        }else {
+                            console.log("fail", json.data[i].id, elem.children[0].dataset.id);
+                        }
+                    }
+                })
             }
         },
         reset() {

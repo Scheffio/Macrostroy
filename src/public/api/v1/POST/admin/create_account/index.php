@@ -15,9 +15,9 @@ use wipe\inc\v1\role\user_role\UserRole;
 
 try {
     UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
+} catch (Error $e) {
 } catch (Exception $e) {
-    echo $e->getMessage();
-    JsonOutput::error("Роль не роль иди домой");
+    JsonOutput::error($e);
 }
 
 

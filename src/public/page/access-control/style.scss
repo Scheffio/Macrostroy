@@ -47,7 +47,7 @@
             gap: 15px;
             padding-top: 20px;
             position: relative;
-            max-height: 600px;
+            max-height: 760px;
             &::-webkit-scrollbar {
                 width: 8px;
             }
@@ -95,7 +95,7 @@
                 }
             }
             .users__list {
-                max-height: 760px;
+                max-height: 750px;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 20px;

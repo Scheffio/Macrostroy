@@ -2375,19 +2375,22 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        if ($this->id && $this->role_id) {
-            $isAdmin = UserRole::getByUserId($this->role_id)->isManageUsers();
+        $columns = $this->getModifiedColumns();
+        $newRole = in_array(UsersTableMap::COL_ROLE_ID, $columns);
+
+        if ($newRole) {
+            $isAdmin = UserRole::getByUserId()->isManageUsers();
 
             if ($isAdmin) {
                 $projectRole = ProjectRoleQuery::create()->findByUserId($this->id);
 
-                foreach ($projectRole as $role) {
+                foreach ($projectRole as &$role) {
                     $role->setIsCrud(true);
                     $role->save();
                 }
             }
         }
-
+        
         return true;
     }
 

@@ -129,7 +129,7 @@ body.fixated {
   gap: 15px;
   padding-top: 20px;
   position: relative;
-  max-height: 600px;
+  max-height: 760px;
 }
 .wrap .content .users::-webkit-scrollbar {
   width: 8px;
@@ -192,7 +192,7 @@ body.fixated {
   font-weight: 400;
 }
 .wrap .content .users .users__list {
-  max-height: 760px;
+  max-height: 750px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

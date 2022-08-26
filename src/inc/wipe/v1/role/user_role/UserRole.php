@@ -1,12 +1,14 @@
 <?php
 namespace wipe\inc\v1\role\user_role;
 
-use Exception;
 use DB\Role as DBRole;
 use DB\Base\Role as BaseRole;
 use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
+use Delight\Db\Throwable\Error;
+use Exception;
 use inc\artemy\v1\auth\Auth;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 
 class UserRole
@@ -57,9 +59,11 @@ class UserRole
             $this->userId = $userId ?: Auth::getUser()->id();
             $this->applyDefaultValuesByUserId();
         }
+        var_dump($userId);
     }
 
     #region Apply Default Values Functions
+
     /**
      * Заполнение свойств класса, используя ID пользователя.
      * Получение и присваивание ID роли (roleId).
@@ -68,8 +72,10 @@ class UserRole
      */
     private function applyDefaultValuesByUserId(): void
     {
-        $user = UsersQuery::create()->findPk($this->userId) ??
-                throw new Exception('No user found');
+        $user = UsersQuery::create()->findPk($this->userId);
+//        if ($user === null) {
+//            throw new Error('No user found');
+//        }
         $this->roleId = $user->getRoleId();
 
         $this->applyDefaultValuesByRoleId();

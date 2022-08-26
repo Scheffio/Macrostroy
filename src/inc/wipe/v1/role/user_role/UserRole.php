@@ -80,7 +80,7 @@ class UserRole
      */
     private function applyDefaultValuesByUserId(): void
     {
-        $user = UsersQuery::create()->findPk($this->userId) ??
+        $user = UsersQuery::create()->filterByIsAvailable(1)->findPk($this->userId) ??
                 throw new NoUserFoundException();
         $this->roleId = $user->getRoleId();
 

@@ -42,7 +42,7 @@
                     <div class="permission__checkbox">
                         <div class="all">
                             <input type="radio" name="access-radio" id="all">
-                            <label for="public">Все разрешения</label>
+                            <label for="all">Все разрешения</label>
                         </div>
                     </div>
                     <p class="permission__description">Пользователь с таким разрешением имеет доступ ко всем CRUD -

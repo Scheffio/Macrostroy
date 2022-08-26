@@ -1,4 +1,6 @@
 const usersList = document.querySelector('.users__list')
+const crudCheckbox = document.querySelector('#all')
+const watchCheckbox = document.querySelector('#watch')
 
 let url = new URL('https://artemy.net/api/v1/users')
 let obj = {
@@ -12,11 +14,8 @@ fetch(url).then((elem) => {
 }).then((json) => {
     let allusers = json.data
     json.data.forEach((elem) => {
-        for(let item in elem) {
-            console.log(item, elem, elem[item]);
-        }
+        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
     })
-    // usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${json.data[i].id}">${item}</p>`))
     
     usersList.children[0].classList.add('selected')
 
@@ -39,9 +38,7 @@ fetch(url).then((elem) => {
         if(elem.tagName == 'DIV') {
             if(elem.classList.contains('selected')) {
                 if(json.data[0].id == elem.children[0].dataset.id) {
-                    console.log("success", json.data[0].id, elem.children[0].dataset.id);
-                }else {
-                    console.log("fail", json.data[0].id, elem.children[0].dataset.id);
+                    
                 }
             }
         }

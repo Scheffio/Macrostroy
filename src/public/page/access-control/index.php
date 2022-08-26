@@ -41,7 +41,7 @@
                 <div class="permission">
                     <div class="permission__checkbox">
                         <div class="all">
-                            <input type="radio" name="access-radio" id="public">
+                            <input type="radio" name="access-radio" id="all">
                             <label for="public">Все разрешения</label>
                         </div>
                     </div>

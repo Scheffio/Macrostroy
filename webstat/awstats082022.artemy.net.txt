@@ -8,33 +8,33 @@ AWSTATS DATA FILE 7.6 (build 20161204)
 # update).
 BEGIN_MAP 28
 POS_GENERAL 1993                
-POS_TIME 2679                
-POS_VISITOR 7116                
-POS_DAY 7422                
-POS_DOMAIN 3298                
-POS_LOGIN 3531                
-POS_ROBOT 3686                
-POS_WORMS 3850                
-POS_EMAILSENDER 3981                
-POS_EMAILRECEIVER 4124                
-POS_SESSION 7537                
-POS_SIDER 7710                
-POS_FILETYPES 4259                
-POS_DOWNLOADS 4540                
-POS_OS 4588                
-POS_BROWSER 4713                
-POS_SCREENSIZE 4879                
-POS_UNKNOWNREFERER 4953                
-POS_UNKNOWNREFERERBROWSER 5077                
-POS_ORIGIN 5196                
-POS_SEREFERRALS 5340                
-POS_PAGEREFS 5484                
-POS_SEARCHWORDS 5984                
-POS_KEYWORDS 6136                
-POS_MISC 2342                
-POS_ERRORS 6195                
-POS_CLUSTER 3387                
-POS_SIDER_404 6362                
+POS_TIME 2680                
+POS_VISITOR 7513                
+POS_DAY 7878                
+POS_DOMAIN 3319                
+POS_LOGIN 3552                
+POS_ROBOT 3707                
+POS_WORMS 3906                
+POS_EMAILSENDER 4037                
+POS_EMAILRECEIVER 4180                
+POS_SESSION 8023                
+POS_SIDER 8228                
+POS_FILETYPES 4315                
+POS_DOWNLOADS 4599                
+POS_OS 4647                
+POS_BROWSER 4808                
+POS_SCREENSIZE 4991                
+POS_UNKNOWNREFERER 5065                
+POS_UNKNOWNREFERERBROWSER 5189                
+POS_ORIGIN 5308                
+POS_SEREFERRALS 5452                
+POS_PAGEREFS 5596                
+POS_SEARCHWORDS 6097                
+POS_KEYWORDS 6249                
+POS_MISC 2343                
+POS_ERRORS 6308                
+POS_CLUSTER 3408                
+POS_SIDER_404 6484                
 END_MAP
 
 # LastLine    = Date of last record processed - Last record line number in last log - Last record offset in last log - Last record signature value
@@ -46,28 +46,28 @@ END_MAP
 # MonthHostsKnown   = Number of hosts known
 # MonthHostsUnKnown = Number of hosts unknown
 BEGIN_GENERAL 8
-LastLine 20220824174452 1818 447111 8564561672784
+LastLine 20220825191406 3788 889674 11244782542279
 FirstTime 20220823110401
-LastTime 20220824174101
-LastUpdate 20220825113222 1818 0 1813 5 0
-TotalVisits 11                  
-TotalUnique 3                   
+LastTime 20220825191406
+LastUpdate 20220826095329 3788 0 3782 5 1
+TotalVisits 19                  
+TotalUnique 5                   
 MonthHostsKnown 0                   
-MonthHostsUnknown 3                   
+MonthHostsUnknown 5                   
 END_GENERAL
 
 # Misc ID - Pages - Hits - Bandwidth
 BEGIN_MISC 10
-WindowsMediaPlayerSupport 0 0 0
-RealPlayerSupport 0 0 0
-QuickTimeSupport 0 0 0
-PDFSupport 0 0 0
-AddToFavourites 0 21 0
-JavaEnabled 0 0 0
-TotalMisc 0 0 0
 DirectorSupport 0 0 0
-JavascriptDisabled 0 0 0
+TotalMisc 0 0 0
+JavaEnabled 0 0 0
+PDFSupport 0 0 0
+QuickTimeSupport 0 0 0
 FlashSupport 0 0 0
+AddToFavourites 0 36 0
+RealPlayerSupport 0 0 0
+WindowsMediaPlayerSupport 0 0 0
+JavascriptDisabled 0 0 0
 END_MISC
 
 # Hour - Pages - Hits - Bandwidth - Not viewed Pages - Not viewed Hits - Not viewed Bandwidth
@@ -83,15 +83,15 @@ BEGIN_TIME 24
 8 0 0 0 0 0 0
 9 0 0 0 0 0 0
 10 124 170 1148586 21 22 7230
-11 25 81 410798 45 63 22728
-12 218 540 5984696 111 146 191873
-13 717 1629 13457309 190 203 128423
-14 145 227 1666909 53 54 20442
-15 406 1589 12988941 156 172 127492
-16 518 1602 14209825 237 252 216561
-17 104 169 1317148 59 60 28159
-18 0 0 0 0 0 0
-19 0 0 0 0 0 0
+11 63 129 652836 66 86 32790
+12 1014 1508 8787457 173 211 214420
+13 983 2335 18556264 288 305 163984
+14 737 1216 8416530 185 198 82060
+15 446 1629 13221871 178 197 132117
+16 601 1865 17135194 386 413 273387
+17 154 354 3024585 102 107 41197
+18 9 9 17699 3 4 1160
+19 2 2 4302 1 1 290
 20 0 0 0 0 0 0
 21 0 0 0 0 0 0
 22 0 0 0 0 0 0
@@ -101,7 +101,7 @@ END_TIME
 # Domain - Pages - Hits - Bandwidth
 # The 10 first Pages must be first (order not required for others)
 BEGIN_DOMAIN 1
-ip 2257 6007 51184212
+ip 4133 9217 70965324
 END_DOMAIN
 
 # Cluster ID - Pages - Hits - Bandwidth
@@ -115,8 +115,9 @@ END_LOGIN
 
 # Robot ID - Hits - Bandwidth - Last visit - Hits on robots.txt
 # The 10 first Hits must be first (order not required for others)
-BEGIN_ROBOT 1
+BEGIN_ROBOT 2
 curl 16 249848 20220823165357 0
+TelegramBot 1 166 20220825171111 0
 END_ROBOT
 
 # Worm ID - Hits - Bandwidth - Last visit
@@ -136,17 +137,17 @@ END_EMAILRECEIVER
 
 # Files type - Hits - Bandwidth - Bandwidth without compression - Bandwidth after compression
 BEGIN_FILETYPES 11
-css 957 2158325 0 0
-php 1188 7182086 0 0
-js 666 3676258 0 0
-gif 2 1853 0 0
-scss 13 41392 0 0
-jpg 331 34498591 0 0
-Unknown 505 610248 0 0
-html 187 408608 0 0
-png 491 572867 0 0
-map 364 506326 0 0
-svg 1303 1527658 0 0
+jpg 453 46359937 0 0
+html 244 545224 0 0
+scss 46 151315 0 0
+png 667 776635 0 0
+php 2539 10634539 0 0
+gif 3 1896 0 0
+js 939 5838058 0 0
+Unknown 771 904077 0 0
+svg 1730 2059101 0 0
+map 533 739645 0 0
+css 1292 2954897 0 0
 END_FILETYPES
 
 # Downloads - Hits - Bandwidth
@@ -154,20 +155,23 @@ BEGIN_DOWNLOADS 0
 END_DOWNLOADS
 
 # OS ID - Hits
-BEGIN_OS ID - Hits - Pages 4
-Unknown 182 182
-win10 3219 627
-macosx 45 11
-linux 2561 1437
+BEGIN_OS ID - Hits - Pages 6
+macosx 143 22
+linuxandroid 607 78
+linux 4264 2829
+ios_iphone 6 1
+Unknown 313 313
+win10 3884 890
 END_OS
 
 # Browser ID - Hits - Pages
-BEGIN_BROWSER 5
-chrome104.0.5112.102 27 8
+BEGIN_BROWSER 6
 safari15.6.1 24 6
-chrome102.0.5005.167 3084 590
-chrome104.0.0.0 2690 1471
-Unknown 182 182
+chrome102.0.5005.167 4169 889
+chrome104.0.0.0 4678 2916
+Unknown 313 313
+chrome104.0.5112.102 27 8
+safari13.0.3 6 1
 END_BROWSER
 
 # Screen size - Hits
@@ -176,21 +180,21 @@ END_SCREENSIZE
 
 # Unknown referer OS - Last visit date
 BEGIN_UNKNOWNREFERER 1
-PostmanRuntime/7.29.2 20220824164402
+PostmanRuntime/7.29.2 20220825142852
 END_UNKNOWNREFERER
 
 # Unknown referer Browser - Last visit date
 BEGIN_UNKNOWNREFERERBROWSER 1
-PostmanRuntime/7.29.2 20220824164402
+PostmanRuntime/7.29.2 20220825142852
 END_UNKNOWNREFERERBROWSER
 
 # Origin - Pages - Hits 
 BEGIN_ORIGIN 6
-From0 1826 1893
+From0 3545 3662
 From1 0 0
 From2 0 0
-From3 41 145
-From4 390 3969
+From3 41 183
+From4 547 5372
 From5 0 0
 END_ORIGIN
 
@@ -202,10 +206,10 @@ END_SEREFERRALS
 # The 10 first Pages must be first (order not required for others)
 BEGIN_PAGEREFS 5
 https://click.mail.ru 41 41
-https://cv1535181.vps.regruhosting.ru/phpmyadmin/phpmyadmin.css.php 0 72
-https://cv1535181.vps.regruhosting.ru/phpmyadmin/themes/pmahomme/jquery/jquery-ui.css 0 6
 http://cv1535181.vps.regruhosting.ru/phpmyadmin/phpmyadmin.css.php 0 20
 http://cv1535181.vps.regruhosting.ru/phpmyadmin/themes/pmahomme/jquery/jquery-ui.css 0 6
+https://cv1535181.vps.regruhosting.ru/phpmyadmin/themes/pmahomme/jquery/jquery-ui.css 0 7
+https://cv1535181.vps.regruhosting.ru/phpmyadmin/phpmyadmin.css.php 0 109
 END_PAGEREFS
 
 # Search keyphrases - Number of search
@@ -219,105 +223,122 @@ BEGIN_KEYWORDS 0
 END_KEYWORDS
 
 # Errors - Hits - Bandwidth
-BEGIN_ERRORS 7
+BEGIN_ERRORS 8
 301 1 536
-404 45 13585
-500 36 169610
-302 24 17152
-403 678 199394
-400 12 5525
-422 118 56798
+403 931 296635
+404 62 19743
+500 257 216825
+400 20 8804
+422 159 80401
+499 1 0
+302 27 19027
 END_ERRORS
 
 # URL with 404 errors - Hits - Last URL referrer
-BEGIN_SIDER_404 10
-/action-history/js/script.js 2 https://artemy.net/action-history
-/action-history 1 https://artemy.net/MAIN_PAGE/
-/api/v1/confirm_email_and_create_password 2 -
-/auth/icons/avatar.jpg 2 https://artemy.net/access-control/style.css
-/static/icons/sorter/sorter-default.svg 31 http://artemy.net/MAIN_PAGE/
-/auth/reset_password/create_account 1 -
-/webstat/ 1 -
-/action-history/style.css 3 https://artemy.net/action-history/
-/awstat/ 1 -
+BEGIN_SIDER_404 16
+/api/v1/users 1 https://artemy.net/access-control
+/access-control/api/v1/users 1 -
+/version 1 -
 /awsstat/ 1 -
+/api/v1/confirm_email_and_create_password 2 -
+/static/icons/sorter/sorter-default.svg 31 http://artemy.net/MAIN_PAGE/
+/action-history/js/script.js 2 https://artemy.net/action-history
+/webstat/ 1 -
+/access-control/lvl=1&object_id=1&project_id=1 3 https://artemy.net/access-control
+/awstat/ 1 -
+/auth/icons/avatar.jpg 3 https://artemy.net/access-control/style.css
+/access-control/lvl=1&object_id=1 4 https://artemy.net/access-control
+/auth/reset_password/create_account 1 -
+/action-history/style.css 3 https://artemy.net/action-history/
+/access-control/users 6 -
+/action-history 1 https://artemy.net/MAIN_PAGE/
 END_SIDER_404
 
 # Host - Pages - Hits - Bandwidth - Last visit date - [Start date of last visit] - [Last page of last visit]
 # [Start date of last visit] and [Last page of last visit] are saved only if session is not finished
 # The 10 first Hits must be first (order not required for others)
-BEGIN_VISITOR 3
-31.31.194.145 1186 1352 10068035 20220824174101 20220824151603 /phpmyadmin/js/messages.php
-78.155.191.46 645 2715 24142641 20220824170725 20220824154229 /
-195.190.102.38 426 1940 16973536 20220824165655 20220824160916 /access-control
+BEGIN_VISITOR 5
+31.31.194.145 2537 2791 15355096 20220825191406 20220825115429 /phpmyadmin/index.php
+78.155.191.46 796 3367 29774360 20220825171916
+195.190.102.38 733 2798 22999180 20220825165815
+37.19.211.48 43 193 2358716 20220825181820 20220825181820 /api/v1/roles
+188.65.242.7 24 68 477972 20220825143610
 END_VISITOR
 
 # Date - Pages - Hits - Bandwidth - Visits
-BEGIN_DAY 2
+BEGIN_DAY 3
 20220823 1494 4471 38779710 3
 20220824 763 1536 12404502 8
+20220825 1876 3210 19781112 8
 END_DAY
 
 # Session range - Number of visits
-BEGIN_SESSION 4
-1h+ 4
-30s-2mn 1
+BEGIN_SESSION 7
 0s-30s 1
-5mn-15mn 2
+1h+ 8
+30s-2mn 2
+30mn-1h 1
+15mn-30mn 1
+5mn-15mn 3
+2mn-5mn 1
 END_SESSION
 
 # URL - Pages - Bandwidth - Entry - Exit
 # The 10 first Pages must be first (order not required for others)
-BEGIN_SIDER 51
-/phpmyadmin/index.php 291 809942 2 1
-/phpmyadmin/ajax.php 282 599233 0 0
-/phpmyadmin/sql.php 214 2060434 1 0
-/static/header/style.css.map 132 105732 0 0
-/phpmyadmin/navigation.php 116 445957 0 0
-/style.css.map 113 235513 0 0
-/access-control 108 185837 0 1
-/phpmyadmin/phpmyadmin.css.php 102 2156124 0 1
-/ 83 199952 5 0
-/MAIN_PAGE/ 73 179292 0 0
-/artemy/clear_users_throttling 20 21944 0 0
-/auth/reset_password/change_password 1 1182 0 0
-/phpmyadmin/import.php 2 19154 0 0
-/action-history/style.css.map 12 12760 0 0
-/phpmyadmin/js/whitelist.php 16 13148 0 0
-/api/v1/confirm_email_and_create_password 3 913 0 0
-/auth/site.webmanifest 1 604 0 0
-/phpmyadmin/tbl_replace.php 50 130132 0 0
-/api/v1/user 23 23723 0 0
-/volumes 13 13689 0 0
-/api/v1/users 67 104523 0 0
-/api/v1/register 9 5153 0 0
-/phpmyadmin/tbl_sql.php 2 10794 0 0
-/api/v1/reset/password/send_email_confirmation 3 1602 0 0
-/access-control/style.css.map 71 83002 0 0
-/api/v1/roles 5 2380 0 0
-/api/v1/admin/create_account/ 6 2276 0 0
+BEGIN_SIDER 55
+/phpmyadmin/lint.php 798 586142 0 0
+/phpmyadmin/index.php 430 1131695 2 1
+/phpmyadmin/ajax.php 392 829047 0 0
+/phpmyadmin/sql.php 322 2911528 2 0
+/api/v1/users 200 249187 1 1
+/static/header/style.css.map 190 152190 0 0
+/access-control 168 284297 1 2
+/style.css.map 167 348157 0 0
+/phpmyadmin/navigation.php 156 603815 0 0
+/phpmyadmin/phpmyadmin.css.php 138 2917272 0 1
+/volumes 16 16836 0 0
+/phpmyadmin/tbl_row_action.php 4 19088 0 0
+/api/v1/reset/password/change_password 1 600 0 0
+/phpmyadmin/js/whitelist.php 20 16456 0 0
+/phpmyadmin/tbl_replace.php 76 198370 0 0
+/MAIN_PAGE/ 104 256053 2 2
 /api/v1/role 50 23975 0 0
 /auth/create_account 38 30397 0 0
+/phpmyadmin/js/messages.php 36 350264 0 1
+/phpmyadmin/tbl_sql.php 8 65232 0 0
+/phpmyadmin/tbl_structure.php 68 557336 0 0
+/api/v1/roles 17 7162 1 1
+/style.scss 46 151315 0 1
 /phpmyadmin/ 1 3522 0 0
-/api/v1/role/add 2 1051 0 0
-/phpmyadmin/tbl_addfield.php 4 23740 0 0
-/auth 16 22102 0 0
-/MAIN_PAGE/style.css.map 36 69319 0 0
-/phpmyadmin/db_import.php 2 17617 0 0
-/profile 5 5245 0 0
-/phpmyadmin/js/messages.php 28 277432 0 0
-/action-history/ 3 7545 0 0
-/auth/reset_password/send_email_confirmation/index.php 3 4158 0 0
-/api/v1/reset/password/change_password 1 600 0 0
-/action-history 45 106990 0 1
-/style.scss 13 41392 0 0
-/users 31 32794 0 0
-/phpmyadmin/tbl_structure.php 54 445398 0 0
-/api/v1/login 11 6434 0 0
-/api/v1/test 37 13293 2 3
-/phpmyadmin/tbl_row_action.php 4 19088 0 0
-/phpmyadmin/lint.php 2 1386 0 0
-/phpmyadmin/db_structure.php 16 148349 0 0
-/api/v1/role/project 16 5817 1 0
 /api/v1/user/ 21 16021 0 1
+/phpmyadmin/import.php 48 180579 0 0
+/auth/site.webmanifest 7 3000 0 0
+/auth/style.css.map 1 1005 0 0
+/phpmyadmin/tbl_addfield.php 4 23740 0 0
+/users 36 38039 0 0
+/api/v1/login 13 7760 0 0
+/api/v1/role/add 2 1051 0 0
+/access-control/ 1 1641 0 0
+/ 108 258166 7 1
+/action-history 48 111808 0 1
+/api/v1/admin/create_account/ 6 2276 0 0
+/profile 7 7343 0 0
+/action-history/style.css.map 12 12760 0 0
+/auth/reset_password/change_password 1 1182 0 0
+/artemy/clear_users_throttling 20 21944 0 0
+/api/v1/role/project 18 6553 1 1
+/MAIN_PAGE/style.css.map 41 79749 0 0
+/api/v1/reset/password/send_email_confirmation 3 1602 0 0
+/api/v1/confirm_email_and_create_password 3 913 0 0
+/phpmyadmin/tbl_relation.php 4 19289 0 0
+/phpmyadmin/db_import.php 2 17617 0 0
+/api/v1/register 9 5153 0 0
+/phpmyadmin/db_sql_autocomplete.php 14 54562 0 0
+/access-control/style.css.map 122 145784 0 0
+/auth/reset_password/send_email_confirmation/index.php 3 4158 0 0
+/api/v1/test 71 34578 2 3
+/action-history/ 3 7545 0 0
+/auth 19 26506 0 0
+/api/v1/user 24 24191 0 0
+/phpmyadmin/db_structure.php 16 148349 0 0
 END_SIDER

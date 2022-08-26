@@ -11,6 +11,34 @@ class Project extends Objects implements ObjectInterface
 {
     private ?BaseProject $projectObj = null;
 
+    function __construct()
+    {
+
+    }
+
+    #region Apply Default Values Functions
+    /**
+     * Заполнение свойств класса по умолчанию.
+     * @return void
+     */
+    protected function applyByDefaultValues(): void
+    {
+        $this->status = $this::ATTRIBUTE_STATUS_IN_PROCESS;
+        $this->is_available = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
+    }
+
+    /**
+     * Заполнение свойств класса, используя объект.
+     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj
+     * @return void
+     */
+    protected function applyDefaultValuesByObj(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
+    {
+        $this->name = $obj->getName();
+        $this->status = $obj->getStatus();
+        $this->is_available = $obj->getIsAvailable();
+    }
+    #endregion
     /**
      * Заполнение свойств класса, используя ID проекта.
      * @throws NoFindObjectException

@@ -30,8 +30,9 @@ class Objects
     /** @var bool|null Доступ к объекту (пуличный, приватный). */
     protected ?bool $is_available = null;
 
+    #region Apply Default Values Functions
     /**
-     * Заполнение свойств класса о умолчанию.
+     * Заполнение свойств класса по умолчанию.
      * @return void
      */
     protected function applyByDefaultValues(): void
@@ -51,7 +52,9 @@ class Objects
         $this->status = $obj->getStatus();
         $this->is_available = $obj->getIsAvailable();
     }
+    #endregion
 
+    #region Access Control Functions
     /** @return bool|null Доступ к объекту (пуличный, приватный). */
     public function isAvailable(): ?bool
     {
@@ -59,12 +62,23 @@ class Objects
     }
 
     /**
+     * Данный объект является публичным, иначе - ошибка.
      * @throws AccessDeniedException
      */
     public function isAvailableOrThrow(): bool
     {
         return $this->is_available ?: throw new AccessDeniedException();
     }
+
+    /**
+     * Данный объект доступен для редактирования, т.е. статус разработки равен "В процессе", иначе - ошибка.
+     * @throws AccessDeniedException
+     */
+    public function isAccessEditOrThrow(): bool
+    {
+        return $this->status === $this::ATTRIBUTE_STATUS_IN_PROCESS ?: throw new AccessDeniedException();
+    }
+    #endregion
 
     #region Getter Default Values Functions
     /** @return int|null ID объекта. */
@@ -83,6 +97,13 @@ class Objects
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+    #endregion
+
+    #region Static Getter Functions
+    public static function getProject(): Project
+    {
+        return new Project();
     }
     #endregion
 
@@ -133,5 +154,4 @@ class Objects
         return $this;
     }
     #endregion
-
 }

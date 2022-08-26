@@ -177,7 +177,7 @@ class ProjectRole
     }
 
     /**
-     * @return bool CRUD объекта разрешен, иначе ошибка.
+     * @return bool CRUD объекта разрешен, иначе - ошибка.
      * @throws NoAccessCrudException
      */
     public function isAccessCrudOrThrow(): bool

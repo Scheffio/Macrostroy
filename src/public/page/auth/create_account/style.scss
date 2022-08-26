@@ -1,1 +1,24 @@
-@import "../additional";
+@import "../../../static/additional";
+
+form {
+    .form__input {
+        outline: none;
+        border: 0;
+        background-color: transparent;
+        border-bottom: 1px solid $EstiminUnderlineColor;
+        transition: .3s;
+        @include InputRegularText;
+        &.typing {
+            border-bottom: 1px solid $EstiminAccent;
+        }
+        &.error {
+            border-bottom: 1px solid $EstiminDeleted;
+        }
+        &.success {
+            border-bottom: 1px solid $EstiminSuccessful;
+        }
+        &::placeholder {
+            @include InputRegularText;
+        }
+    }
+}

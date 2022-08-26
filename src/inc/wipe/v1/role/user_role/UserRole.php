@@ -149,7 +149,7 @@ class UserRole
     }
 
     /**
-     * @return bool Просмотр объектов разрешен, иначе ошибка.
+     * @return bool Просмотр объектов разрешен, иначе - ошибка.
      * @throws NoAccessObjectViewException
      */
     public function isObjectViewerOrThrow(): bool
@@ -158,7 +158,7 @@ class UserRole
     }
 
     /**
-     * @return bool CRUD объектов разрешен, иначе ошибка.
+     * @return bool CRUD объектов разрешен, иначе - ошибка.
      * @throws NoAccessManageObjectsException
      */
     public function isManageObjectsOrThrow(): bool
@@ -167,7 +167,7 @@ class UserRole
     }
 
     /**
-     * @return bool CRUD объемов разрешен, иначе ошибка.
+     * @return bool CRUD объемов разрешен, иначе - ошибка.
      * @throws NoAccessManageVolumes
      */
     public function isManageVolumesOrThrow(): bool
@@ -176,7 +176,7 @@ class UserRole
     }
 
     /**
-     * @return bool Управление историей разрешено, иначе ошибка.
+     * @return bool Управление историей разрешено, иначе - ошибка.
      * @throws Exception
      */
     public function isManageHistoryOrThrow(): bool
@@ -185,7 +185,7 @@ class UserRole
     }
 
     /**
-     * @return bool CRUD учетными записями разрешен, иначе ошибка.
+     * @return bool CRUD учетными записями разрешен, иначе - ошибка.
      * @throws NoAccessManageUsersException
      */
     public function isManageUsersOrThrow(): bool

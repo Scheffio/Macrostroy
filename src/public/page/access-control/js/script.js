@@ -37,8 +37,16 @@ fetch(url).then((elem) => {
     document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
 
     usersList.childNodes.forEach((elem) => {
-        if(elem != ' ') {
-            console.log(elem);
+        if(elem.tagName == 'DIV') {
+            if(elem.classList.contains('selected')) {
+                Object.keys(allusers).forEach((id) => {
+                    if(id == elem.children[0].data) {
+                        console.log(1);
+                    }else {
+                        console.log(0, id, elem.children[0].data);
+                    }
+                })
+            }
         }
     })
 

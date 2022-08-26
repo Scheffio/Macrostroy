@@ -14,12 +14,6 @@ fetch(url).then((elem) => {
 }).then((json) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
-        if(elem.isCrud || elem.isAdmin) {
-            console.log(elem, elem.isCrud, elem.isAdmin);
-            crudCheckbox.checked = true
-        }else {
-            crudCheckbox.checked = false
-        }
     })
     
     usersList.children[0].classList.add('selected')
@@ -29,6 +23,11 @@ fetch(url).then((elem) => {
         click(elem) {
             this.reset()
             elem.classList.toggle('selected')
+            for(let elem in json) {
+                for(let item of elem) {
+                    console.log(item, elem, elem[item]);
+                }
+            }
         },
         reset() {
             this.users.forEach((elem) => {

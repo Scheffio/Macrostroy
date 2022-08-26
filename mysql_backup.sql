@@ -323,7 +323,7 @@ CREATE TABLE `role` (
   `manage_users` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD учетными записями',
   PRIMARY KEY (`id`),
   UNIQUE KEY `object_viewer` (`object_viewer`,`manage_objects`,`manage_volumes`,`manage_history`,`manage_users`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,7 +332,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'По умолчанию',0,0,0,0,0),(5,'Админ',1,1,1,1,1),(11,'Бухгалтер',1,0,1,0,0);
+INSERT INTO `role` VALUES (1,'По умолчанию',0,0,0,0,0),(5,'Админ',1,1,1,1,1),(11,'Бухгалтер',1,0,1,0,0),(12,'CRUD',1,1,1,1,0);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -795,7 +795,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'me@artemy.net',NULL,'$2y$10$UeCL67hVly4fBYHOQpQiDuFJe1oKibOUhInL1V2JsC0sOm0ucbScm','Artemy1',0,5,1,1,0,1661160115,1661435682,0,1),(3,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,NULL,0,0),(11,'scheffio@bk.ru',NULL,'$2y$10$tqUE4Aa5B7og7mu9v8qp1.PO2FiPwAp.eBfAqM/g.Dg6/B4LmkNM6','Scheffio',0,5,1,1,0,1661249739,1661497463,1,1),(16,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,1,1,1,0,1661250790,NULL,0,1),(17,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,1,1,1,0,1661250794,NULL,0,1),(18,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,1,1,1,0,1661250800,NULL,0,1),(19,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(20,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(21,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(30,'test@artemy.net',NULL,'$2y$10$7PKHkf/ejfvWjO4ypTlMKukM/jeR38ZOCuTm11hGMW.e7lyRMrgfC','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(31,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,5,0,1,0,1661256292,NULL,0,1);
+INSERT INTO `users` VALUES (1,'me@artemy.net',NULL,'$2y$10$UeCL67hVly4fBYHOQpQiDuFJe1oKibOUhInL1V2JsC0sOm0ucbScm','Artemy1',0,5,1,1,0,1661160115,1661503862,0,1),(3,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,12,1,1,0,1661162813,NULL,0,0),(11,'scheffio@bk.ru',NULL,'$2y$10$tqUE4Aa5B7og7mu9v8qp1.PO2FiPwAp.eBfAqM/g.Dg6/B4LmkNM6','Scheffio',0,5,1,1,0,1661249739,1661497463,1,1),(16,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,1,1,1,0,1661250790,NULL,0,1),(17,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,1,1,1,0,1661250794,NULL,0,1),(18,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,1,1,1,0,1661250800,NULL,0,1),(19,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(20,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,12,1,1,0,1661250868,NULL,0,1),(21,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,11,1,1,0,1661250873,NULL,0,1),(30,'test@artemy.net',NULL,'$2y$10$7PKHkf/ejfvWjO4ypTlMKukM/jeR38ZOCuTm11hGMW.e7lyRMrgfC','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(31,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,5,0,1,0,1661256292,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

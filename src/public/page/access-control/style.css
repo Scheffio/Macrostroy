@@ -330,4 +330,9 @@ body.fixated {
   background-color: #36393E;
   opacity: 0.2;
   margin-bottom: 20px;
+}
+.wrap .content .permissions .admin-alert {
+  position: absolute;
+  bottom: 200px;
+  left: 100px;
 }/*# sourceMappingURL=style.css.map */

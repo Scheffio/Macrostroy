@@ -25,11 +25,13 @@ fetch(url).then((elem) => {
             elem.classList.toggle('selected')
             for(let i = 0; i < json.data.length; i++) {
                 if(elem.children[0].dataset.id == json.data[i].id) {
-                    // console.log("success", elem.children[0].dataset.id, json.data[i].id);
                     if(json.data[i].isCrud || json.data[i].isAdmin) {
                         crudCheckbox.checked = true
                     }else if (json.data[i].isCrud == false) {
                         watchCheckbox.checked = true
+                    }else if(json.data[i].isCrud == null) {
+                        crudCheckbox.checked = false
+                        watchCheckbox.checked = false
                     }
                 }
             }

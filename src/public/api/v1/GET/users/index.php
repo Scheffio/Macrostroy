@@ -34,6 +34,8 @@ try {
                     UsersTableMap::COL_ID,
                     UsersTableMap::COL_USERNAME,
                     RoleTableMap::COL_MANAGE_USERS,
+                    RoleTableMap::COL_OBJECT_VIEWER,
+                    RoleTableMap::COL_MANAGE_OBJECTS,
                     ProjectRoleTableMap::COL_IS_CRUD,
                 ])
                 ->leftJoinRole()
@@ -55,7 +57,10 @@ try {
         if ($isAdmin) $isCrud = true;
         else {
             $isCrud = $user['project_role.is_crud'];
+
             if (is_int($isCrud)) $isCrud = (bool)$isCrud;
+            elseif ($user['role.manage_objects']) $isCrud = true;
+            elseif ($user['role.object_viewer']) $isCrud = false;
         }
 
         $user = [

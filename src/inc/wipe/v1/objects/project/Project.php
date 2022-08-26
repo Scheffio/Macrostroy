@@ -19,7 +19,7 @@ class Project extends Objects implements ObjectInterface
     {
         $this->projectObj = ProjectQuery::create()->findPk($this->id)
                             ?? throw new NoFindObjectException();
-        $this->app
+        $this->applyDefaultValuesByObj();
     }
 
     /** @return BaseProject|null Объект проекта. */

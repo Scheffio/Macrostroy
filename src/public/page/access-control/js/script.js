@@ -23,6 +23,13 @@ fetch(url).then((elem) => {
             elem.classList.toggle('selected')
             for(let i = 0; i < json.data.length; i++) {
                 if(elem.children[0].dataset.id == json.data[i].id) {
+                    if (json.data[i].isAdmin) {
+                        console.log(json.data[i]);
+                        document.querySelectorAll('.permission').forEach((elem) => {elem.classList.add('disabled')})
+                    }else {
+                        console.log(json.data[i]);
+                        document.querySelectorAll('.permission').forEach((elem) => {elem.classList.remove('disabled')})
+                    }
                     if(json.data[i].isCrud || json.data[i].isAdmin) {
                         crudCheckbox.checked = true
                     }else if (json.data[i].isCrud == false) {

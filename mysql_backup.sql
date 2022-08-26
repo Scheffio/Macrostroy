@@ -323,7 +323,7 @@ CREATE TABLE `role` (
   `manage_users` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD учетными записями',
   PRIMARY KEY (`id`),
   UNIQUE KEY `object_viewer` (`object_viewer`,`manage_objects`,`manage_volumes`,`manage_history`,`manage_users`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

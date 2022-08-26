@@ -8,11 +8,13 @@ use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageHistoryException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageObjectsException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageVolumes;
 use wipe\inc\v1\role\user_role\exception\NoAccessObjectViewException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
+use wipe\inc\v1\role\user_role\exception\NoRoleObjectException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class UserRole
@@ -179,7 +181,7 @@ class UserRole
      */
     public function isManageHistoryOrThrow(): bool
     {
-        return $this->manageHistory ?: throw new Exception('No access to manage history');
+        return $this->manageHistory ?: throw new NoAccessManageHistoryException();
     }
 
     /**
@@ -258,7 +260,8 @@ class UserRole
      * @param bool $flag Необходимо ли обновлять свойства роли, в соответствие с ролью пользователя.
      * Обновляются такие значения как: $roleId, $roleName, $roleObj, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @return UserRole
-     * @throws Exception
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public function setUserId(int $id, bool $flag = true): UserRole
     {
@@ -279,7 +282,7 @@ class UserRole
      * @param bool $flag Необходимо ли обновлять свойства роли под значения переданного ID роли.
      * Обновляются такие значения как: $roleId, $roleName, $roleObj, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @return UserRole
-     * @throws Exception
+     * @throws NoRoleFoundException
      */
     public function setRoleId(int $id, bool $flag = true): UserRole
     {
@@ -426,8 +429,8 @@ class UserRole
      * Добавление новой роли.
      * Используются такие свойства класса, как:
      * $roleName, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
-     * @throws PropelException
      * @return UserRole
+     * @throws PropelException
      */
     public function add(): UserRole
     {
@@ -452,17 +455,16 @@ class UserRole
      * $roleName, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @param bool $isObj Использовать объект роли (true) / ID роли (false).
      * @return UserRole
+     * @throws NoRoleFoundException
+     * @throws NoRoleObjectException
      * @throws PropelException
-     * @throws Exception
      */
     public function update(bool $isObj = false): UserRole
     {
-        if ($isObj && !$this->roleObj) throw new Exception('No role object');
-        elseif (!$isObj && !$this->roleId) throw new Exception('No role ID');
-
-        if (!$isObj) {
+        if ($isObj && !$this->roleObj) throw new NoRoleObjectException();
+        elseif (!$isObj) {
             $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new Exception('No role found');
+                             throw new NoRoleFoundException();
         }
 
         $this->roleObj
@@ -482,20 +484,19 @@ class UserRole
      * Перед удалением функция preDelete заменяется у всех пользователе данною роль на ID номер 1.
      * @param bool $isObj Использовать объект роли (true) / ID роли (false).
      * @return UserRole
-     * @throws Exception
+     * @throws NoRoleFoundException
+     * @throws NoRoleObjectException
      * @throws PropelException
      */
     public function delete(bool $isObj = false): UserRole
     {
-        if ($isObj && !$this->roleObj) throw new Exception('No role object');
-        elseif (!$isObj && !$this->roleId) throw new Exception('No role ID');
-
-        if ($isObj) $this->roleObj->delete();
-        else {
+        if ($isObj && $this->roleObj === null) throw new NoRoleObjectException();
+        elseif (!$isObj) {
             $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new Exception('No role found');
-            $this->roleObj->delete();
+                             throw new NoRoleFoundException();
         }
+
+        $this->roleObj->delete();
 
         return $this;
     }

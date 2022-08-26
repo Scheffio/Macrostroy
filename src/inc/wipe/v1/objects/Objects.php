@@ -110,9 +110,14 @@ class Objects
         return $this->status;
     }
 
-    
+    /**
+     * Фильтрация удаленных объектов.
+     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Запрос.
+     * @param string $colName Наименование колонки с статусом разработки объекта (TableMap).
+     * @return ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery
+     */
     public function getFilterNoDeletedStatusQuery(
-        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery &$obj,
+        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj,
         string $colName
     ): ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery
     {
@@ -122,7 +127,7 @@ class Objects
     /**
      * Получить объект по ID, иначе - ошибка.
      * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Запрос.
-     * @param string $colName Наименование колонки с статусом разработки объекта.
+     * @param string $colName Наименование колонки с статусом разработки объекта (TableMap).
      * @return BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
      * @throws NoProjectFoundException
      */

@@ -92,10 +92,7 @@ class Project extends Objects implements ObjectInterface
      */
     public function update(): Project
     {
-        $this->projectObj = ProjectQuery::create()
-                            ->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED)
-                            ->findPk($this->id) ??
-                            throw new NoProjectFoundException();
+        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
         $this->setUpdateByDefaultValues($this->projectObj);
         $this->projectObj->save();
 
@@ -108,7 +105,7 @@ class Project extends Objects implements ObjectInterface
      */
     public function updateOrCreate(): Project
     {
-        $query = ProjectQuery::create()->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED);
+        $query = $this->getFilterNoDeletedStatusQuery(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
         $this->setFilterByDefaultValues($query);
         $this->projectObj = $query->findOneOrCreate();
 
@@ -135,7 +132,8 @@ class Project extends Objects implements ObjectInterface
 
     public function delete(): Project
     {
-
+        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
+        $this->delete();
 
         return $this;
     }

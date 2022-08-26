@@ -30,7 +30,6 @@ fetch(url).then((elem) => {
                             console.log(json.data[i].id, elem.children[0]);
                             if(json.data[i].isCrud == true || json.data[i].isAdmin == true) {
                                 crudCheckbox.checked = true
-                                console.log(json.data[i]);
                             }else if(json.data[i].isCrud == false) {
                                 watchCheckbox.checked = true
                             }

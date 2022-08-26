@@ -11,6 +11,7 @@ use DB\Base\ProjectRole as BaseProjectRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use JetBrains\PhpStorm\NoReturn;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -164,11 +165,11 @@ class ProjectRole
 
     /**
      * @return bool CRUD объекта разрешен, иначе ошибка.
-     * @throws Exception
+     * @throws NoAccessCrudException
      */
     public function isAccessCrudOrThrow(): bool
     {
-        return $this->isCrud ?: throw new Exception('No access to CRUD the object');
+        return $this->isCrud ?: throw new NoAccessCrudException();
     }
 
     /**

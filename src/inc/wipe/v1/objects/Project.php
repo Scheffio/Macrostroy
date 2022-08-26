@@ -68,6 +68,7 @@ class Project extends Objects implements ObjectInterface
 
     #region CRUD User Role Functions
     /**
+     * Создание проекта.
      * @return Project
      * @throws PropelException
      */
@@ -86,6 +87,7 @@ class Project extends Objects implements ObjectInterface
     }
 
     /**
+     * Редактирование проекта.
      * @return Project
      * @throws NoProjectFoundException
      * @throws PropelException
@@ -100,6 +102,7 @@ class Project extends Objects implements ObjectInterface
     }
 
     /**
+     * Редактирование или создание проекта.
      * @return Project
      * @throws PropelException
      */
@@ -116,6 +119,7 @@ class Project extends Objects implements ObjectInterface
     }
 
     /**
+     * Редактирование проекта по объекту.
      * @return Project
      * @throws NoProjectFoundException
      * @throws PropelException
@@ -130,6 +134,11 @@ class Project extends Objects implements ObjectInterface
         return $this;
     }
 
+    /**
+     * Удаление проекта.
+     * @return Project
+     * @throws NoProjectFoundException
+     */
     public function delete(): Project
     {
         $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
@@ -138,8 +147,18 @@ class Project extends Objects implements ObjectInterface
         return $this;
     }
 
+    /**
+     * Удаление проекта по объекту.
+     * @return Project
+     * @throws NoProjectFoundException
+     * @throws PropelException
+     */
     public function deleteByObj(): Project
     {
+        if ($this->projectObj === null) throw new NoProjectFoundException();
+
+        $this->projectObj->delete();
+
         return $this;
     }
     #endregion

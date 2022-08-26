@@ -1,6 +1,11 @@
 <?php
 namespace wipe\inc\v1\objects;
 
+use DB\Map\GroupsTableMap;
+use DB\Map\HouseTableMap;
+use DB\Map\ProjectTableMap;
+use DB\Map\StageTableMap;
+use DB\Map\SubprojectTableMap;
 use DB\ProjectQuery;
 use DB\Base\HouseQuery;
 use DB\Base\StageQuery;
@@ -13,6 +18,7 @@ use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Objects
 {
@@ -104,9 +110,21 @@ class Objects
         return $this->status;
     }
 
-    public function getSearchByidOrThrow(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj): BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+    public function getFilterNoDeletedStatusQuery(
+        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery &$obj,
+        string $colName
+    ): ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery
     {
+        return $obj->where($colName . '!=?', $this::ATTRIBUTE_STATUS_DELETED);
+    }
 
+    public function getSearchByIdOrThrow(
+        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj,
+        string $colName
+    ): BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+    {
+        $this->getFilterNoDeletedStatusQuery($obj, $colName);
+        return $obj->findPk($this->id) ?? throw new NoProjectFoundException();
     }
     #endregion
 

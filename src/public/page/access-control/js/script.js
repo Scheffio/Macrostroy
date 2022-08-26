@@ -23,10 +23,8 @@ fetch(url).then((elem) => {
         click(elem) {
             this.reset()
             elem.classList.toggle('selected')
-            for(let elem in json) {
-                for(let item of elem) {
-                    console.log(item, elem, elem[item]);
-                }
+            for(let item in json) {
+                console.log(item);
             }
         },
         reset() {

@@ -1,6 +1,8 @@
 <?php
 namespace wipe\inc\v1\objects\projects;
 
+use DB\Base\ProjectQuery;
+use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\objects\interface\ObjectInterface;
 use DB\Base\Project as BaseProject;
@@ -8,6 +10,17 @@ use DB\Base\Project as BaseProject;
 class Project extends Objects implements ObjectInterface
 {
     private ?BaseProject $projectObj = null;
+
+    /**
+     * Заполнение свойств класса, используя ID роли.
+     * @throws NoFindObjectException
+     */
+    public function applyDefaultValuesById(): void
+    {
+        $this->projectObj = ProjectQuery::create()->findPk($this->id)
+                            ?? throw new NoFindObjectException();
+        $this->app
+    }
 
     /** @return BaseProject|null Объект проекта. */
     public function getProjectObj(): ?BaseProject

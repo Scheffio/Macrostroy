@@ -2,6 +2,8 @@
 namespace wipe\inc\v1\objects\interface;
 
 interface ObjectInterface {
+    public function applyDefaultValuesById();
+
     public function add();
 
     public function update();

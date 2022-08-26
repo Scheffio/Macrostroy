@@ -24,19 +24,14 @@ fetch(url).then((elem) => {
             this.reset()
             elem.classList.toggle('selected')
             for(let i = 0; i < json.data.length; i++) {
-                usersList.childNodes.forEach((elem) => {
-                    if(elem.tagName == 'DIV') {
-                        if(json.data[i].id == elem.children[0].dataset.id) {
-                            let findedItem = json.data[i]
-                            console.log(findedItem);
-                            if(findedItem.isCrud == true) {
-                                crudCheckbox.checked = true
-                            }else if(json.data[i].isCrud == false) {
-                                watchCheckbox.checked = true
-                            }
-                        }
+                if(elem.children[0].dataset.id == json.data[i].id) {
+                    // console.log("success", elem.children[0].dataset.id, json.data[i].id);
+                    if(json.data[i].isCrud || json.data[i].isAdmin) {
+                        crudCheckbox.checked = true
+                    }else if (json.data[i].isCrud == false) {
+                        watchCheckbox.checked = true
                     }
-                })
+                }
             }
         },
         reset() {

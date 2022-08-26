@@ -27,9 +27,8 @@ fetch(url).then((elem) => {
                 usersList.childNodes.forEach((elem) => {
                     if(elem.tagName == 'DIV') {
                         if(json.data[i].id == elem.children[0].dataset.id) {
-                            // console.log(json.data[i].id, elem.children[0]);
-                            if(json.data[i].isCrud == true || json.data[i].isAdmin == true) {
-                                console.log(json.data[i]);
+                            let findedItem = json.data[i]
+                            if(findedItem.isCrud == true) {
                                 crudCheckbox.checked = true
                             }else if(json.data[i].isCrud == false) {
                                 watchCheckbox.checked = true

@@ -18,16 +18,12 @@ if ($user === null) header("Location: /auth");
 <h1>Для создания аккаунта к почте <?= $user->getEmail() ?>, пожалуйста, введите пароль.</h1>
 <form action="">
     <label>
-        Пароль:
-        <input type="password" required class="form__input">
+        <input type="password" required class="form__input" placeholder="Введите пароль">
     </label>
-    <br>
     <label>
-        Повторить пароль:
-        <input type="password" required class="form__input">
+        <input type="password" required class="form__input" placeholder="Повторите пароль">
     </label>
-    <br>
-    <input type="submit">
+    <input type="submit" class="login-button">
 </form>
 </body>
 </html>

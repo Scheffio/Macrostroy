@@ -1,6 +1,8 @@
 <?php
 namespace wipe\inc\v1\objects\interface;
 
+use DB\Base\Project as BaseProject;
+
 interface ObjectInterface {
     public function applyDefaultValuesById();
 
@@ -9,9 +11,5 @@ interface ObjectInterface {
     public function update();
 
     public function delete();
-
-    public function search();
-
-    public function select();
 }
 

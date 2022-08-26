@@ -101,9 +101,14 @@ class Objects
     #endregion
 
     #region Static Getter Functions
-    public static function getProject(): Project
+    /**
+     * @param int|null $id ID проекта.
+     * @return Project
+     * @throws exception\NoFindObjectException
+     */
+    public static function getProject(?int $id): Project
     {
-        return new Project();
+        return new Project(id: $id);
     }
     #endregion
 

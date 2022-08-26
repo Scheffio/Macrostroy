@@ -3,43 +3,30 @@ namespace wipe\inc\v1\objects;
 
 use DB\Base\ProjectQuery;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
-use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\objects\interface\ObjectInterface;
+use \DB\Project AS DbProject;
 use DB\Base\Project as BaseProject;
 
 class Project extends Objects implements ObjectInterface
 {
     private ?BaseProject $projectObj = null;
 
-    function __construct()
+    /**
+     * @param int|null $id ID проекта.
+     * @throws NoFindObjectException
+     */
+    function __construct(?int $id = null)
     {
+        $this->setId($id);
 
+        if ($this->id !== null) {
+            $this->applyDefaultValuesById();
+        }
     }
 
     #region Apply Default Values Functions
     /**
-     * Заполнение свойств класса по умолчанию.
-     * @return void
-     */
-    protected function applyByDefaultValues(): void
-    {
-        $this->status = $this::ATTRIBUTE_STATUS_IN_PROCESS;
-        $this->is_available = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
-    }
-
-    /**
-     * Заполнение свойств класса, используя объект.
-     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj
-     * @return void
-     */
-    protected function applyDefaultValuesByObj(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
-    {
-        $this->name = $obj->getName();
-        $this->status = $obj->getStatus();
-        $this->is_available = $obj->getIsAvailable();
-    }
-    #endregion
-    /**
+     * Получить объект класса через статический метод, используя ID проекта.
      * Заполнение свойств класса, используя ID проекта.
      * @throws NoFindObjectException
      */
@@ -49,7 +36,9 @@ class Project extends Objects implements ObjectInterface
                             ?? throw new NoFindObjectException();
         $this->applyDefaultValuesByObj($this->projectObj);
     }
+    #endregion
 
+    #region Getter And Setter Default Values
     /** @return BaseProject|null Объект проекта. */
     public function getProjectObj(): ?BaseProject
     {
@@ -72,9 +61,24 @@ class Project extends Objects implements ObjectInterface
 
         return $this;
     }
+    #endregion
 
+    #region CRUD User Role Functions
+    /**
+     * @return $this
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     public function add(): Project
     {
+        $this->projectObj = new DbProject();
+        $this->projectObj
+            ->setName($this->name)
+            ->setStatus($this->status)
+            ->setIsAvailable($this->is_available)
+            ->save();
+
+        $this->id = $this->projectObj->getId();
+
         return $this;
     }
 
@@ -87,15 +91,6 @@ class Project extends Objects implements ObjectInterface
     {
         return $this;
     }
-
-    public function search(): Project
-    {
-        return $this;
-    }
-
-    public function select(): Project
-    {
-        return $this;
-    }
+    #endregion
 }
 

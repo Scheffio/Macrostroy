@@ -15,6 +15,11 @@ use inc\artemy\v1\router\RouterParser;
 require "vendor/autoload.php";
 require "generated-conf/config.php";
 
+//if (RouterParser::getFirstUrlCatalog() === "webstat") {
+//    require "webstat/index.html";
+//    die();
+//}
+
 DevelopmentMode::on();
 setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 

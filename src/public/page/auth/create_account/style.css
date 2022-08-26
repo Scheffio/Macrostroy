@@ -56,7 +56,12 @@ body.fixated {
   background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
 }
 
-form .form__input {
+.wrap form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.wrap form .form__input {
   outline: none;
   border: 0;
   background-color: transparent;
@@ -66,27 +71,49 @@ form .form__input {
   font-size: 16px;
   font-weight: 400;
 }
-form .form__input.typing {
+.wrap form .form__input.typing {
   border-bottom: 1px solid #7289DA;
 }
-form .form__input.error {
+.wrap form .form__input.error {
   border-bottom: 1px solid #E47A74;
 }
-form .form__input.success {
+.wrap form .form__input.success {
   border-bottom: 1px solid #8DDE86;
 }
-form .form__input::-moz-placeholder {
+.wrap form .form__input::-moz-placeholder {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
 }
-form .form__input:-ms-input-placeholder {
+.wrap form .form__input:-ms-input-placeholder {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
 }
-form .form__input::placeholder {
+.wrap form .form__input::placeholder {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
+}
+.wrap form .login-button {
+  width: 155px;
+  height: 40px;
+  background-color: #1E2124;
+  color: white;
+  border-radius: 5px;
+  transition: 0.3s;
+  border: 2px solid transparent;
+  outline: 0;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.wrap form .login-button:hover {
+  transition: 0.3s;
+  background-color: white;
+  border: 2px solid #1E2124;
+  color: #1E2124;
+}
+.wrap form .login-button:hover {
+  background-color: #F4F4F4;
 }/*# sourceMappingURL=style.css.map */

@@ -28,17 +28,50 @@ class Objects
     /** @var bool|null Доступ к объекту (пуличный, приватный). */
     protected ?bool $is_available = null;
 
+    /**
+     * Заполнение свойств класса о умолчанию.
+     * @return void
+     */
     protected function applyByDefaultValues(): void
     {
         $this->status = $this::ATTRIBUTE_STATUS_IN_PROCESS;
         $this->is_available = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
     }
 
+    /**
+     * Заполнение свойств класса, используя объект.
+     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj
+     * @return void
+     */
     protected function applyDefaultValuesByObj(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
     {
-        $this->id = $obj->getId();
         $this->name = $obj->getName();
         $this->status = $obj->getStatus();
         $this->is_available = $obj->getIsAvailable();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->getId();
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function isAvailable(): ?bool
+    {
+        return $this->is_available;
+    }
+
+    public function isAvailableOrThrow(): bool
+    {
+//        return $this->is_available ?
     }
 }

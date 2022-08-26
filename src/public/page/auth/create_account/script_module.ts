@@ -3,17 +3,20 @@ $("form").on("submit", function (e) {
     const params = new URLSearchParams(window.location.search)
     fetch("/api/v1/confirm_email_and_create_password", {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(
             {
                 token: params.get('token'),
                 selector: params.get('selector'),
-                password: $("form input:last").text()
+                password: $("form label input:last").val()
             }
         )
     }).then(function (data) {
         return data.json()
     }).then(function (json) {
-        if (json.action === "success") {
+        if (json.status === "success") {
             document.location = "/auth"
         } else {
             throw new Error()

@@ -110,6 +110,7 @@ class Objects
         return $this->status;
     }
 
+    
     public function getFilterNoDeletedStatusQuery(
         ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery &$obj,
         string $colName
@@ -118,12 +119,20 @@ class Objects
         return $obj->where($colName . '!=?', $this::ATTRIBUTE_STATUS_DELETED);
     }
 
+    /**
+     * Получить объект по ID, иначе - ошибка.
+     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Запрос.
+     * @param string $colName Наименование колонки с статусом разработки объекта.
+     * @return BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+     * @throws NoProjectFoundException
+     */
     public function getSearchByIdOrThrow(
         ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj,
         string $colName
     ): BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
     {
         $this->getFilterNoDeletedStatusQuery($obj, $colName);
+
         return $obj->findPk($this->id) ?? throw new NoProjectFoundException();
     }
     #endregion

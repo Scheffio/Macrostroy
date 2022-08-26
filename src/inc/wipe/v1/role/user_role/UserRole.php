@@ -463,8 +463,7 @@ class UserRole
     {
         if ($isObj && !$this->roleObj) throw new NoRoleObjectException();
         elseif (!$isObj) {
-            $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new NoRoleFoundException();
+            $this->applyDefaultValuesByRoleId();
         }
 
         $this->roleObj

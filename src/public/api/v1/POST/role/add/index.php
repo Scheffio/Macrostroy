@@ -30,6 +30,4 @@ try {
 
 } catch (Exception $e) {
     JsonOutput::error($e->getMessage());
-} catch (PropelException $e) {
-    JsonOutput::error();
 }

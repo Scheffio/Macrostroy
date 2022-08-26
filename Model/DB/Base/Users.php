@@ -2390,7 +2390,7 @@ abstract class Users implements ActiveRecordInterface
                 }
             }
         }
-        
+
         return true;
     }
 

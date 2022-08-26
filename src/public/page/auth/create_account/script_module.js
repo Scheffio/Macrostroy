@@ -1,4 +1,5 @@
-$("form").on("submit", function () {
+$("form").on("submit", function (e) {
+    e.preventDefault();
     const params = new URLSearchParams(window.location.search);
     fetch("/api/v1/confirm_email_and_create_password", {
         method: 'POST',

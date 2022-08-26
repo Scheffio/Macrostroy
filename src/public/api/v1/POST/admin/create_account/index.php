@@ -15,7 +15,6 @@ use wipe\inc\v1\role\user_role\UserRole;
 
 try {
     UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
-} catch (Error $e) {
 } catch (Exception $e) {
     JsonOutput::error($e);
 }

@@ -12,7 +12,6 @@ try {
     $role = RoleQuery::create()->findPk($role_id)->toArray() ?: throw new Error('No role found');
 
     JsonOutput::success($role);
-} catch (Error $e) {
+} catch (Exception|Error $e) {
     JsonOutput::error($e->getMessage());
-} catch (Exception $e) {
 }

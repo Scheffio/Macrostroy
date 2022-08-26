@@ -1,13 +1,12 @@
 <?php
 namespace wipe\inc\v1\role\user_role;
 
+use Exception;
 use DB\Role as DBRole;
 use DB\Base\Role as BaseRole;
 use DB\Base\RoleQuery;
 use DB\Base\UsersQuery;
-use Exception;
 use inc\artemy\v1\auth\Auth;
-use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 
 class UserRole
@@ -61,7 +60,6 @@ class UserRole
     }
 
     #region Apply Default Values Functions
-
     /**
      * Заполнение свойств класса, используя ID пользователя.
      * Получение и присваивание ID роли (roleId).

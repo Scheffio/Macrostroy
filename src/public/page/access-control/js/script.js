@@ -12,15 +12,7 @@ url.search = new URLSearchParams(obj).toString()
 fetch(url).then((elem) => {
     return elem.json()
 }).then((json) => {
-    json.data.forEach((elem) => {
-        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
-    })
-    json.data.forEach((elem) => {
-        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
-    })
-    json.data.forEach((elem) => {
-        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
-    })
+    console.log(json);
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
     })

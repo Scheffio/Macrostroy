@@ -2,6 +2,7 @@
 namespace wipe\inc\v1\objects;
 
 use DB\Base\ProjectQuery;
+use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\ObjectInterface;
 use \DB\Project AS DbProject;
@@ -65,8 +66,8 @@ class Project extends Objects implements ObjectInterface
 
     #region CRUD User Role Functions
     /**
-     * @return $this
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @return Project
+     * @throws PropelException
      */
     public function add(): Project
     {
@@ -84,10 +85,22 @@ class Project extends Objects implements ObjectInterface
 
     public function update(): Project
     {
+//        $this->projectObj = ProjectQuery::create()->filterByStatus($this::AT)
+        
+        return $this;
+    }
+
+    public function updateByObj(): Project
+    {
         return $this;
     }
 
     public function delete(): Project
+    {
+        return $this;
+    }
+
+    public function deleteByObj(): Project
     {
         return $this;
     }

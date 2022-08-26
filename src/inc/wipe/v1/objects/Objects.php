@@ -11,12 +11,12 @@ use wipe\inc\v1\objects\exception\IncorrectStatusException;
 
 class Objects
 {
-    private const ATTRIBUTE_STATUS_IN_PROCESS = 'in_process';
-    private const ATTRIBUTE_STATUS_COMPLETED = 'completed';
-    private const ATTRIBUTE_STATUS_DELETED = 'deleted';
+    public const ATTRIBUTE_STATUS_IN_PROCESS = 'in_process';
+    public const ATTRIBUTE_STATUS_COMPLETED = 'completed';
+    public const ATTRIBUTE_STATUS_DELETED = 'deleted';
 
-    private const ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS = true;
-    private const ATTRIBUTE_IS_AVAILABLE_PRIVATE_ACCESS = false;
+    public const ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS = true;
+    public const ATTRIBUTE_IS_AVAILABLE_PRIVATE_ACCESS = false;
 
     /** @var int|null ID объекта. */
     protected ?int $id = null;

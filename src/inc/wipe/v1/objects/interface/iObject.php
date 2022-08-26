@@ -10,6 +10,10 @@ interface ObjectInterface {
 
     public function update();
 
+    public function updateByObj();
+
     public function delete();
+
+    public function deleteByObj();
 }
 

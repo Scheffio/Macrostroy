@@ -1,34 +1,44 @@
 @import "../../../static/additional";
 
+body {
+    background-color: red;
+}
+
 .wrap {
-    form {
+    h1 {
+        @include MainTitle;
+        color: red;
+    }
+    .form {
         display: flex;
         flex-direction: column;
         gap: 25px;
-        .form__input {
-            outline: none;
-            border: 0;
-            background-color: transparent;
-            border-bottom: 1px solid $EstiminUnderlineColor;
-            transition: .3s;
-            @include InputRegularText;
-            &.typing {
-                border-bottom: 1px solid $EstiminAccent;
-            }
-            &.error {
-                border-bottom: 1px solid $EstiminDeleted;
-            }
-            &.success {
-                border-bottom: 1px solid $EstiminSuccessful;
-            }
-            &::placeholder {
+        label{
+            .form__input {
+                outline: none;
+                border: 0;
+                background-color: transparent;
+                border-bottom: 1px solid $EstiminUnderlineColor;
+                transition: .3s;
                 @include InputRegularText;
+                &.typing {
+                    border-bottom: 1px solid $EstiminAccent;
+                }
+                &.error {
+                    border-bottom: 1px solid $EstiminDeleted;
+                }
+                &.success {
+                    border-bottom: 1px solid $EstiminSuccessful;
+                }
+                &::placeholder {
+                    @include InputRegularText;
+                }
             }
-        }
-        .login-button {
-            @include Button($EstiminBackground2, white, 155px, 40px);
-            &:hover {
-                background-color: $EstiminBackground5;
+            .login-button {
+                @include Button($EstiminBackground2, white, 155px, 40px);
+                &:hover {
+                    background-color: $EstiminBackground5;
+                }
             }
         }
     }

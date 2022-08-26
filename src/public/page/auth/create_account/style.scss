@@ -2,18 +2,21 @@
 
 .wrap {
     padding-left: 100px;
+    padding-top: 400px;
     h1 {
         @include MainTitle;
         margin: 0;
     }
     h2 {
         @include InputRegularText;
-        margin: 0
+        margin: 0;
+        width: 350px;
     }
     .form {
         display: flex;
         flex-direction: column;
         gap: 25px;
+        padding-top: 20px;
         label{
             .form__input {
                 outline: none;

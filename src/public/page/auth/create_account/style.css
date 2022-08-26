@@ -58,6 +58,7 @@ body.fixated {
 
 .wrap {
   padding-left: 100px;
+  padding-top: 400px;
 }
 .wrap h1 {
   font-family: "Jost", sans-serif;
@@ -70,11 +71,13 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
   margin: 0;
+  width: 350px;
 }
 .wrap .form {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  padding-top: 20px;
 }
 .wrap .form label .form__input {
   outline: none;

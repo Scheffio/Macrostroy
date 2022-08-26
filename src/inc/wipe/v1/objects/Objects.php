@@ -1,6 +1,11 @@
 <?php
 namespace wipe\inc\v1\objects;
 
+use DB\ProjectQuery;
+use DB\Base\HouseQuery;
+use DB\Base\StageQuery;
+use DB\Base\GroupsQuery;
+use DB\Base\SubprojectQuery;
 use DB\Base\Stage as BaseStage;
 use DB\Base\House as BaseHouse;
 use DB\Base\Groups as BaseGroup;
@@ -80,7 +85,7 @@ class Objects
     }
     #endregion
 
-    #region Getter Default Values Functions
+    #region Getter Functions
     /** @return int|null ID объекта. */
     public function getId(): ?int
     {
@@ -97,6 +102,11 @@ class Objects
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+
+    public function getSearchByidOrThrow(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj): BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+    {
+
     }
     #endregion
 
@@ -157,6 +167,31 @@ class Objects
         }
 
         return $this;
+    }
+
+    /**
+     * Заполнение свойств класса.
+     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj Объект.
+     * @return void
+     */
+    protected function setUpdateByDefaultValues(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
+    {
+        if ($this->name) $obj->setName($this->name);
+        if ($this->status) $obj->setStatus($this->status);
+        if ($this->is_available) $obj->setIsAvailable($this->is_available);
+    }
+
+    /**
+     * Заполнение фильтрации запроса.
+     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Объект запроса.
+     * @return void
+     */
+    protected function setFilterByDefaultValues(ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery &$obj): void
+    {
+        if ($this->id) $obj->filterById($this->id);
+        if ($this->name) $obj->filterByName($this->name);
+        if ($this->status) $obj->filterByStatus($this->status);
+        if ($this->is_available) $obj->filterByIsAvailable($this->is_available);
     }
     #endregion
 }

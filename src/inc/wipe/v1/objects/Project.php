@@ -88,28 +88,55 @@ class Project extends Objects implements ObjectInterface
     /**
      * @return Project
      * @throws NoProjectFoundException
+     * @throws PropelException
      */
     public function update(): Project
     {
         $this->projectObj = ProjectQuery::create()
-                                ->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED)
-                                ->findPk($this->id) ??
-                                throw new NoProjectFoundException();
-
-        if ($this->name) $this->projectObj->setName($this->name);
-        if ($this->status) $this->projectObj->setStatus($this->status);
-        if ($this->is_available) $this->projectObj->setIsAvailable($this->is_available);
+                            ->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED)
+                            ->findPk($this->id) ??
+                            throw new NoProjectFoundException();
+        $this->setUpdateByDefaultValues($this->projectObj);
+        $this->projectObj->save();
 
         return $this;
     }
 
+    /**
+     * @return Project
+     * @throws PropelException
+     */
+    public function updateOrCreate(): Project
+    {
+        $query = ProjectQuery::create()->where(ProjectTableMap::COL_STATUS . '!=?', $this::ATTRIBUTE_STATUS_DELETED);
+        $this->setFilterByDefaultValues($query);
+        $this->projectObj = $query->findOneOrCreate();
+
+        $this->setUpdateByDefaultValues($this->projectObj);
+        $this->projectObj->save();
+
+        return $this;
+    }
+
+    /**
+     * @return Project
+     * @throws NoProjectFoundException
+     * @throws PropelException
+     */
     public function updateByObj(): Project
     {
+        if ($this->projectObj === null) throw new NoProjectFoundException();
+
+        $this->setUpdateByDefaultValues($this->projectObj);
+        $this->projectObj->save();
+
         return $this;
     }
 
     public function delete(): Project
     {
+
+
         return $this;
     }
 

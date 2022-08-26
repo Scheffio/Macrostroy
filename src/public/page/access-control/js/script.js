@@ -12,14 +12,12 @@ fetch(url).then((elem) => {
 }).then((json) => {
     let allusers = json.data
     json.data.forEach((elem) => {
-        Object.values(elem).forEach((item, i) => {
-            console.log(elem);
-            if (item != "" && typeof item == "string") {
-                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${i}">${item}</p>`))
-            }
-        })
+        for(let item in elem) {
+            console.log(item, elem, elem[item]);
+        }
     })
-
+    // usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${json.data[i].id}">${item}</p>`))
+    
     usersList.children[0].classList.add('selected')
 
     const selectableUsers = {
@@ -40,17 +38,16 @@ fetch(url).then((elem) => {
     usersList.childNodes.forEach((elem) => {
         if(elem.tagName == 'DIV') {
             if(elem.classList.contains('selected')) {
-                Object.keys(allusers).forEach((id) => {
-                    // console.log(allusers);
-                    // if(id == elem.children[0].dataset.id) {
-                    //     console.log(id, elem.children[0].dataset.id);
-                    // }
-                })
+                if(json.data[0].id == elem.children[0].dataset.id) {
+                    console.log("success", json.data[0].id, elem.children[0].dataset.id);
+                }else {
+                    console.log("fail", json.data[0].id, elem.children[0].dataset.id);
+                }
             }
         }
     })
-
 })
+
 
 // Transfer project name
 function setItemName() {

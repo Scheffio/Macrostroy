@@ -1,3 +1,5 @@
+const usersList = document.querySelector('.users__list')
+
 let url = new URL('https://artemy.net/api/v1/users')
 let obj = {
     lvl: 1,
@@ -8,13 +10,16 @@ url.search = new URLSearchParams(obj).toString()
 fetch(url).then((elem) => {
     return elem.json()
 }).then((json) => {
+    let allusers = json.data
     json.data.forEach((elem) => {
-        Object.values(elem).forEach((item) => {
+        Object.values(elem).forEach((item, i) => {
             if (item != "" && typeof item == "string") {
-                document.querySelector('.users__list').appendChild(users.createElement('div', 'users__user-field', '', `<p>${item}</p>`))
+                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${i - 1}">${item}</p>`))
             }
         })
     })
+
+    usersList.children[0].classList.add('selected')
 
     const selectableUsers = {
         users: document.querySelectorAll('.users__user-field'),
@@ -30,6 +35,10 @@ fetch(url).then((elem) => {
     }
 
     document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
+
+    // usersList.forEach((elem) => {
+
+    // })
 
 })
 
@@ -75,7 +84,7 @@ document.querySelectorAll('.users__user-field').forEach((elem) => {
 })
 // ===================
 
-const users = {
+const userGenerator = {
     createElement(element, elementClass, elementModificator, elementContent) {
         let create = document.createElement(`${element}`)
         if (elementClass != '' && elementModificator != '') {

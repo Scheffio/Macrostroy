@@ -1,7 +1,7 @@
 #!/bin/bash
-now=$(date +'%S:%M:%H %m.%d.%Y');
 echo "script started";
 sudo mysqldump macrostroy_db > /var/www/www-root/data/www/artemy.net/mysql_backup.sql &&
+sed '/^--/d' mysql_backup.sql &&
 echo "mysql backup completed"
 git --git-dir=/var/www/www-root/data/www/artemy.net/.git --work-tree=/var/www/www-root/data/www/artemy.net add --all &&
 echo "files added";

@@ -12,12 +12,12 @@ url.search = new URLSearchParams(obj).toString()
 fetch(url).then((elem) => {
     return elem.json()
 }).then((json) => {
-    console.log(json);
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`))
     })
     
     usersList.children[0].classList.add('selected')
+    selectableUsers.click(usersList)
 
     const selectableUsers = {
         users: document.querySelectorAll('.users__user-field'),
@@ -45,16 +45,6 @@ fetch(url).then((elem) => {
     }
 
     document.querySelectorAll('.users__user-field').forEach((elem) => {elem.addEventListener('click', () => {selectableUsers.click(elem)})})
-
-    // usersList.childNodes.forEach((elem) => {
-    //     if(elem.tagName == 'DIV') {
-    //         if(elem.classList.contains('selected')) {
-    //             if(json.data[0].id == elem.children[0].dataset.id) {
-    //                 if(json)
-    //             }
-    //         }
-    //     }
-    // })
 })
 
 

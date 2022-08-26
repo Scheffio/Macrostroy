@@ -1,5 +1,5 @@
 <?php
-namespace wipe\inc\v1\objects\projects;
+namespace wipe\inc\v1\objects;
 
 use DB\Base\ProjectQuery;
 use wipe\inc\v1\objects\exception\NoFindObjectException;

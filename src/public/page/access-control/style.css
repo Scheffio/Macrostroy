@@ -339,4 +339,10 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
+  transition: 0.3s;
+  opacity: 0;
+}
+.wrap .content .permissions .admin-alert.enabled {
+  opacity: 1;
+  transition: 0.3s;
 }/*# sourceMappingURL=style.css.map */

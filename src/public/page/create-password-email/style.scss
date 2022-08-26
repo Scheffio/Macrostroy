@@ -1,1 +1,11 @@
 @import "../../static/additional";
+
+.title {
+    @include TabAnchorName;
+    text-align: center;
+}
+
+.about {
+    @include InputRegularText;
+    text-align: center;
+}

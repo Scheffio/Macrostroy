@@ -13,8 +13,9 @@ fetch(url).then((elem) => {
     let allusers = json.data
     json.data.forEach((elem) => {
         Object.values(elem).forEach((item, i) => {
+            console.log(elem);
             if (item != "" && typeof item == "string") {
-                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${i - 1}">${item}</p>`))
+                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${i}">${item}</p>`))
             }
         })
     })
@@ -40,11 +41,10 @@ fetch(url).then((elem) => {
         if(elem.tagName == 'DIV') {
             if(elem.classList.contains('selected')) {
                 Object.keys(allusers).forEach((id) => {
-                    if(id == elem.children[0].data) {
-                        console.log(1);
-                    }else {
-                        console.log(0, id, elem.children[0].data);
-                    }
+                    // console.log(allusers);
+                    // if(id == elem.children[0].dataset.id) {
+                    //     console.log(id, elem.children[0].dataset.id);
+                    // }
                 })
             }
         }

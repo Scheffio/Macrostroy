@@ -7,6 +7,24 @@ class Project implements ObjectInterface
 {
     private $projectObj = null;
 
+    /**
+     * @return null
+     */
+    public function getProjectObj()
+    {
+        return $this->projectObj;
+    }
+
+    /**
+     * @param null $projectObj
+     */
+    public function setProjectObj($projectObj): void
+    {
+        $this->projectObj = $projectObj;
+    }
+
+
+
     public function add(): Project
     {
         return $this;

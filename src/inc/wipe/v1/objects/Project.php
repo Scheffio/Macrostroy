@@ -4,6 +4,7 @@ namespace wipe\inc\v1\objects;
 use DB\Base\ProjectQuery;
 use DB\Map\ProjectTableMap;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\ObjectInterface;
 use \DB\Project AS DbProject;
@@ -22,9 +23,8 @@ class Project extends Objects implements ObjectInterface
     {
         $this->setId($id);
 
-        if ($this->id !== null) {
-            $this->applyDefaultValuesById();
-        }
+        if ($this->id === null) $this->applyByDefaultValues();
+        else $this->applyDefaultValuesById();
     }
 
     #region Apply Default Values Functions

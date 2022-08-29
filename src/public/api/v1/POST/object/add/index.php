@@ -4,6 +4,7 @@
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
+use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -16,10 +17,21 @@ try {
         throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
-    $lvl = $request->getRequestOrThrow('lvl');
+    $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_available');
+
+    $lvl = $request->getRequest('lvl');
+    $name = $request->getRequest('name');
+    $status = $request->getRequest('status');
+    $isAvailable = $request->getRequest('is_available');
 
     switch ($lvl) {
-        case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT: break;
+        case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:
+            Objects::getProject()
+                ->setName($name)
+                ->setStatus($status)
+                ->setIsAvailable($isAvailable)
+                ->add();
+            break;
         default: throw new IncorrectLvlException();
     }
 

@@ -18,6 +18,7 @@ use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Objects
@@ -146,9 +147,9 @@ class Objects
     /**
      * @param int|null $id ID проекта.
      * @return Project
-     * @throws exception\NoFindObjectException
+     * @throws NoFindObjectException
      */
-    public static function getProject(?int $id): Project
+    public static function getProject(?int $id = null): Project
     {
         return new Project(id: $id);
     }
@@ -196,6 +197,20 @@ class Objects
                 $status === $this::ATTRIBUTE_STATUS_COMPLETED ||
                 $status === $this::ATTRIBUTE_STATUS_DELETED) $this->status = $status;
             else throw new IncorrectStatusException();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Присваивание свойству класса доступа к объекту.
+     * @param bool $is_available Доступ к объекту (пуличный, приватный).
+     * @return Objects
+     */
+    public function setIsAvailable(bool $is_available = true): Objects
+    {
+        if ($this->is_available !== $is_available) {
+            $this->is_available = $is_available;
         }
 
         return $this;

@@ -186,6 +186,7 @@ const CCM = {
         let posX = 0
         let posY = 0
 
+        console.log(window.innerHeight, e.pageY, window.innerHeight-e.pageY);
         console.log(window.innerWidth, e.pageX, window.innerWidth-e.pageX);
 
         if(e.pageX || e.pageY) {
@@ -196,7 +197,17 @@ const CCM = {
             this.contextMenu.style.left = `${posX}px`
             if (window.innerWidth - e.pageX < 300) {
                 this.contextMenu.style.top = `${posY}px`
-                this.contextMenu.left = `${posX - 290}px`
+                this.contextMenu.style.left = `${posX - 290}px`
+            }
+            if(window.innerHeight - e.pageY < -133) {
+                if (window.innerWidth - e.pageX < 300) {
+                    this.contextMenu.style.left = `${posX - 290}px`
+                }else {
+                    this.contextMenu.style.left = `${posX}px`
+                }
+                this.contextMenu.style.top = `${posY - 200}px`
+            }else {
+                this.contextMenu.style.top = `${posY}px`
             }
         }
     },
@@ -361,3 +372,7 @@ PageLoader("#cities", 15)
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 ColorChecker.NameChecker()
+
+window.onresize = () => {
+    CCM.showMenu('hide')
+}

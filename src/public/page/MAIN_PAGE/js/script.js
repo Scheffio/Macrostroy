@@ -186,12 +186,17 @@ const CCM = {
         let posX = 0
         let posY = 0
 
-        if(e) {
+        if(e.pageX || e.pageY) {
             posX = e.pageX + 20
             posY = e.pageY - 50
 
             this.contextMenu.style.top = `${posY}px`
             this.contextMenu.style.left = `${posX}px`
+            console.log(e.pageX, e.pageY, e.clientX);
+            if(e.pageX >= 1400) {
+                this.contextMenu.style.top = `${posY}px`
+                this.contextMenu.style.left = `${posX-290}px`
+            }
         }
     },
     contextMenu_open(elementRow) {
@@ -351,7 +356,7 @@ document.addEventListener('contextmenu', (elem) => {CCM.getClick(elem)})
 
 
 // Это производственные мелочи
-PageLoader("#cities", 4)
+PageLoader("#cities", 15)
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 ColorChecker.NameChecker()

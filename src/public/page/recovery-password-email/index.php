@@ -319,13 +319,12 @@
                                                                     <h1 class="title">
                                                                         Здравствуйте!</h1>
                                                                     <p class="about">
-                                                                    Забыли пароль? Придумайте, а затем
-                                                                        введите Ваш, нажав на кнопку ниже.</p>
+                                                                    Забыли пароль? Нажмите на кнопку ниже, чтобы перейти на страницу ввода нового пароля.</p>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="padding-top: 20px, text-align: center;" >
-                                                                    <a href="" class="link">Изменить пароль</a>
+                                                                <td style="padding-top: 20px; text-align: center;" >
+                                                                    <a href="" class="link-btn">Изменить пароль</a>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -344,13 +343,13 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="padding:0;Margin:0">
+                                                                <td style="padding:0;Margin:0; text-align:center">
                                                                     <p class="about">
                                                                         Помните, ссылка работает лишь 24 часа.</p>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>
+                                                                <td style="font-style: italic; padding-top: 20px;">
                                                                     <p class="about">Не работает кнопка? Скопируйте ссылку и вставьте в окно браузера:</p>
                                                                 </td>
                                                             </tr>

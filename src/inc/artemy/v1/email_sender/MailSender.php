@@ -598,6 +598,7 @@ class MailSender
             border-width: 0 !important;
             padding: 10px 20px 10px 20px !important;
         }
+        @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
         @media only screen and (max-width:600px) {
 
@@ -786,99 +787,100 @@ class MailSender
             table.es-social td {
                 display: inline-block !important
             }
+            
+
+            * {
+                box-sizing: border-box;
+                -webkit-user-drag: none;
+              }
+              
+              a,
+              button {
+                cursor: pointer;
+              }
+              
+              body,
+              html {
+                margin: 0;
+                padding: 0;
+              }
+              
+              body.fixated {
+                overflow: hidden;
+              }
+              
+              *::-webkit-scrollbar {
+                width: 6px;
+              }
+              
+              *::-webkit-scrollbar-track {
+                border-radius: 0px;
+                background-color: #F4F4F4;
+              }
+              
+              *::-webkit-scrollbar-track:hover {
+                background-color: #F4F4F4;
+              }
+              
+              *::-webkit-scrollbar-track:active {
+                background-color: #EBE9E9;
+              }
+              
+              *::-webkit-scrollbar-thumb {
+                border-radius: 0px;
+                background-color: #36393E;
+              }
+              
+              *::-webkit-scrollbar-thumb:hover {
+                background-color: #36393E;
+              }
+              
+              *::-webkit-scrollbar-thumb:active {
+                background-color: #282B30;
+              }
+              
+              .user-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 100%;
+                background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
+              }
+              
+              .title {
+                font-family: "Jost", sans-serif;
+                font-size: 24px;
+                font-weight: 500;
+                text-align: center;
+                margin: 0;
+              }
+              
+              .about, .link-time {
+                font-family: "Jost", sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                margin: 0;
+              }
+              
+              .link, .link-btn {
+                font-family: "Jost", sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                color: #435969;
+              }
+              
+              .link-btn {
+                border: 2px solid #7E99AD;
+                border-radius: 10px;
+                text-decoration: none;
+                background-color: #7E99AD;
+                color: white;
+                padding: 5px 10px;
+              }
+              
+              .link-time {
+                font-size: 12px;
+              }
         }
-        @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-* {
-  box-sizing: border-box;
-  -webkit-user-drag: none;
-}
-
-a,
-button {
-  cursor: pointer;
-}
-
-body,
-html {
-  margin: 0;
-  padding: 0;
-}
-
-body.fixated {
-  overflow: hidden;
-}
-
-*::-webkit-scrollbar {
-  width: 6px;
-}
-
-*::-webkit-scrollbar-track {
-  border-radius: 0px;
-  background-color: #F4F4F4;
-}
-
-*::-webkit-scrollbar-track:hover {
-  background-color: #F4F4F4;
-}
-
-*::-webkit-scrollbar-track:active {
-  background-color: #EBE9E9;
-}
-
-*::-webkit-scrollbar-thumb {
-  border-radius: 0px;
-  background-color: #36393E;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background-color: #36393E;
-}
-
-*::-webkit-scrollbar-thumb:active {
-  background-color: #282B30;
-}
-
-.user-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
-}
-
-.title {
-  font-family: "Jost", sans-serif;
-  font-size: 24px;
-  font-weight: 500;
-  text-align: center;
-  margin: 0;
-}
-
-.about, .link-time {
-  font-family: "Jost", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0;
-}
-
-.link, .link-btn {
-  font-family: "Jost", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: #435969;
-}
-
-.link-btn {
-  border: 2px solid #7E99AD;
-  border-radius: 10px;
-  text-decoration: none;
-  background-color: #7E99AD;
-  color: white;
-  padding: 5px 10px;
-}
-
-.link-time {
-  font-size: 12px;
-}/*# sourceMappingURL=style.css.map */
     </style>
 </head>
 
@@ -949,7 +951,7 @@ body.fixated {
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
                                                                 <td style="padding:0;Margin:0">
-                                                                    <h1 class="title">
+                                                                    <h1 class="title" style="text-align:center; font-family:"Jost", sans-serif;">
                                                                         Здравствуйте!</h1>
                                                                     <p class="about">
                                                                     Забыли пароль? Нажмите на кнопку ниже, чтобы перейти на страницу ввода нового пароля.</p>
@@ -977,7 +979,7 @@ body.fixated {
                                                             </tr>
                                                             <tr>
                                                                 <td style="padding:0;Margin:0; text-align:center">
-                                                                    <p class="link-time">
+                                                                    <p class="link-time" style="font-size: 12px">
                                                                         Помните, ссылка действует лишь 24 часа.</p>
                                                                 </td>
                                                             </tr>
@@ -1070,7 +1072,7 @@ body.fixated {
         $mail->isSMTP();                                                    //Send using SMTP
         $mail->Host = 'smtp.gmail.com';                                     //Set the SMTP server to send through
         $mail->SMTPAuth = true;                                             //Enable SMTP authentication
-        $mail->Username = 'estimin@gmail.com';                      //SMTP username
+        $mail->Username = 'mailfortestsend@gmail.com';                      //SMTP username
         $mail->Password = 'jeyypzvkfsncddqh';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;                    //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
         $mail->Port = 465;                                                  //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above

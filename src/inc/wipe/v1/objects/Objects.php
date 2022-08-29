@@ -18,6 +18,7 @@ use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
+use Propel\Runtime\Map\TableMap;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
@@ -165,18 +166,25 @@ class Objects
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string
+    public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string|array
     {
         $col = self::getColIdByLvl($lvl);
 
-        return  ProjectQuery::create()
-                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
-                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
-                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
-                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
-                ->where($col.'=?', $objectId)
-                ->findOne()
-                ->getId();
+        return [
+            'TYPE_CAMELNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_CAMELNAME),
+            'TYPE_COLNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_COLNAME),
+            'TYPE_PHPNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_PHPNAME),
+            'TYPE_FIELDNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_FIELDNAME),
+        ];
+
+//        return  ProjectQuery::create()
+//                ->addJoin(ProjectTableMap::COL_ID.ProjectTableMap::getFieldNames(), SubprojectTableMap::COL_PROJECT_ID)
+//                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
+//                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
+//                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
+//                ->where($col.'=?', $objectId)
+//                ->findOne()
+//                ->getId();
 //                ->toString();
     }
 

@@ -5,7 +5,7 @@ use wipe\inc\v1\objects\Objects;
 
 try {
     JsonOutput::success(
-        Objects::getProjectId(1, 1)
+        Objects::getProjectIdByLvlAndId(1, 1)
     );
 } catch (Exception $e) {
     JsonOutput::error([

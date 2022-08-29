@@ -138,16 +138,16 @@ class Subproject extends Objects implements iObject
      * @return Project
      * @throws PropelException
      */
-    public function add(): Project
+    public function add(): Subproject
     {
-        $this->projectObj = new DbProject();
-        $this->projectObj
-            ->setName($this->name)
-            ->setStatus($this->status)
-            ->setIsAvailable($this->isAvailable)
-            ->save();
-
-        $this->id = $this->projectObj->getId();
+//        $this->projectObj = new DbProject();
+//        $this->projectObj
+//            ->setName($this->name)
+//            ->setStatus($this->status)
+//            ->setIsAvailable($this->isAvailable)
+//            ->save();
+//
+//        $this->id = $this->projectObj->getId();
 
         return $this;
     }
@@ -158,11 +158,11 @@ class Subproject extends Objects implements iObject
      * @throws NoProjectFoundException
      * @throws PropelException
      */
-    public function update(): Project
+    public function update(): Subproject
     {
-        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
-        $this->setUpdateByDefaultValues($this->projectObj);
-        $this->projectObj->save();
+//        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
+//        $this->setUpdateByDefaultValues($this->projectObj);
+//        $this->projectObj->save();
 
         return $this;
     }
@@ -172,14 +172,14 @@ class Subproject extends Objects implements iObject
      * @return Project
      * @throws PropelException
      */
-    public function updateOrCreate(): Project
+    public function updateOrCreate(): Subproject
     {
-        $query = $this->getFilterNoDeletedStatusQuery(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
-        $this->setFilterByDefaultValues($query);
-        $this->projectObj = $query->findOneOrCreate();
-
-        $this->setUpdateByDefaultValues($this->projectObj);
-        $this->projectObj->save();
+//        $query = $this->getFilterNoDeletedStatusQuery(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
+//        $this->setFilterByDefaultValues($query);
+//        $this->projectObj = $query->findOneOrCreate();
+//
+//        $this->setUpdateByDefaultValues($this->projectObj);
+//        $this->projectObj->save();
 
         return $this;
     }
@@ -190,12 +190,12 @@ class Subproject extends Objects implements iObject
      * @throws NoProjectFoundException
      * @throws PropelException
      */
-    public function updateByObj(): Project
+    public function updateByObj(): Subproject
     {
-        if ($this->projectObj === null) throw new NoProjectFoundException();
-
-        $this->setUpdateByDefaultValues($this->projectObj);
-        $this->projectObj->save();
+//        if ($this->projectObj === null) throw new NoProjectFoundException();
+//
+//        $this->setUpdateByDefaultValues($this->projectObj);
+//        $this->projectObj->save();
 
         return $this;
     }
@@ -207,10 +207,10 @@ class Subproject extends Objects implements iObject
      * @throws IncorrectStatusException
      * @throws PropelException
      */
-    public function delete(): Project
+    public function delete(): Subproject
     {
-        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+//        $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
+//        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
 
         return $this;
     }
@@ -222,11 +222,11 @@ class Subproject extends Objects implements iObject
      * @throws PropelException
      * @throws IncorrectStatusException
      */
-    public function deleteByObj(): Project
+    public function deleteByObj(): Subproject
     {
-        if ($this->projectObj === null) throw new NoProjectFoundException();
-
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+//        if ($this->projectObj === null) throw new NoProjectFoundException();
+//
+//        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
 
         return $this;
     }

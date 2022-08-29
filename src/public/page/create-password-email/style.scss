@@ -3,9 +3,11 @@
 .title {
     @include TabAnchorName;
     text-align: center;
+    margin: 0;
 }
 
 .about {
     @include InputRegularText;
     text-align: center;
+    margin: 0;
 }

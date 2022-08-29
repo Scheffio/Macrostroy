@@ -1,7 +1,6 @@
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office"
-    style="font-family:arial, 'helvetica neue', helvetica, sans-serif">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
     <meta charset="UTF-8">
@@ -282,8 +281,7 @@
     </style>
 </head>
 
-<body
-    style="width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
+<body>
     <div class="es-wrapper-color" style="background-color:#F6F6F6">
         <!--[if gte mso 9]>
 			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
@@ -350,14 +348,11 @@
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
                                                                 <td style="padding:0;Margin:0">
-                                                                    <h1 class="title"
-                                                                        style="Margin:0;line-height:36px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:30px;font-style:normal;font-weight:normal;color:#333333">
+                                                                    <h1 class="title">
                                                                         Здравствуйте!</h1>
-                                                                    <p class="about"
-                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
+                                                                    <p class="about">
                                                                         Чтобы закончить регистрацию, придумайте, а затем
-                                                                        введите Ваш пароль по ссылке ниже.</p><a href=""
-                                                                        style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#2CB543;font-size:14px">Артемий,
+                                                                        введите Ваш пароль по ссылке ниже.</p><a href="">Артемий,
                                                                         сюда ставить ссылку</a>
                                                                 </td>
                                                             </tr>

@@ -185,6 +185,8 @@ const CCM = {
     setPosition(e) {
         let posX = 0
         let posY = 0
+        let menuWidth = this.contextMenu.offsetWidth;
+        let menuHeight = this.contextMenu
 
         if(e.pageX || e.pageY) {
             posX = e.pageX + 20
@@ -193,10 +195,6 @@ const CCM = {
             this.contextMenu.style.top = `${posY}px`
             this.contextMenu.style.left = `${posX}px`
             console.log(e.pageX, e.pageY, e.clientX);
-            if(e.pageX >= 1400) {
-                this.contextMenu.style.top = `${posY}px`
-                this.contextMenu.style.left = `${posX-290}px`
-            }
         }
     },
     contextMenu_open(elementRow) {

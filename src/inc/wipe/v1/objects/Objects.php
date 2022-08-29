@@ -169,22 +169,17 @@ class Objects
     public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string|array
     {
         $col = self::getColIdByLvl($lvl);
+//        'TYPE_COLNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_COLNAME),
+//        'TYPE_FIELDNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_FIELDNAME),
 
-        return [
-            'TYPE_CAMELNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_CAMELNAME),
-            'TYPE_COLNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_COLNAME),
-            'TYPE_PHPNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_PHPNAME),
-            'TYPE_FIELDNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_FIELDNAME),
-        ];
-
-//        return  ProjectQuery::create()
-//                ->addJoin(ProjectTableMap::COL_ID.ProjectTableMap::getFieldNames(), SubprojectTableMap::COL_PROJECT_ID)
-//                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
-//                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
-//                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
-//                ->where($col.'=?', $objectId)
-//                ->findOne()
-//                ->getId();
+        return  ProjectQuery::create()
+                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
+                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
+                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
+                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
+                ->where($col.'=?', $objectId)
+                ->findOne()
+                ->getId();
 //                ->toString();
     }
 

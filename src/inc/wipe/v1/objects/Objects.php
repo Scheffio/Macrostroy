@@ -154,14 +154,26 @@ class Objects
         return new Project(projectId: $id);
     }
 
-    public static function getProjectId(int $objectId, int|string $lvl): int
+    public static function getProjectId(int $objectId, int|string $lvl): int|string
     {
         return ProjectQuery::create()
+            ->leftJoinSubproject()
             ->useSubprojectQuery()
-                ->leftJoinGroups()
             ->endUse()
-            ->findOne()
+            ->toString()
             ;
+
+//        return ProjectQuery::create()
+//            ->useSubprojectQuery()
+//                ->useGroupsQuery()
+//                    ->useHouseQuery()
+//                        ->useStageQuery()
+//                        ->endUse()
+//                    ->endUse()
+//                ->endUse()
+//            ->endUse()
+//            ->toString()
+//            ;
     }
 
     /**

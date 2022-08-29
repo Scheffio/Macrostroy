@@ -40,7 +40,7 @@ class Objects
     protected ?string $status = null;
 
     /** @var bool|null Доступ к объекту (пуличный, приватный). */
-    protected ?bool $is_available = null;
+    protected ?bool $isAvailable = null;
 
     #region Apply Default Values Functions
     /**
@@ -50,7 +50,7 @@ class Objects
     protected function applyByDefaultValues(): void
     {
         $this->status = $this::ATTRIBUTE_STATUS_IN_PROCESS;
-        $this->is_available = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
+        $this->isAvailable = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
     }
 
     /**
@@ -62,7 +62,7 @@ class Objects
     {
         $this->name = $obj->getName();
         $this->status = $obj->getStatus();
-        $this->is_available = $obj->getIsAvailable();
+        $this->isAvailable = $obj->getIsAvailable();
     }
     #endregion
 
@@ -70,7 +70,7 @@ class Objects
     /** @return bool|null Доступ к объекту (пуличный, приватный). */
     public function isAvailable(): ?bool
     {
-        return $this->is_available;
+        return $this->isAvailable;
     }
 
     /**
@@ -79,7 +79,7 @@ class Objects
      */
     public function isAvailableOrThrow(): bool
     {
-        return $this->is_available ?: throw new AccessDeniedException();
+        return $this->isAvailable ?: throw new AccessDeniedException();
     }
 
     /**
@@ -177,7 +177,7 @@ class Objects
      */
     public function setName(?string $name): Objects
     {
-        if ($this->name !== $name) {
+        if ($name !== null && $this->name !== $name) {
             $this->name = $name;
         }
 
@@ -186,13 +186,13 @@ class Objects
 
     /**
      * Присваивание свойству класса статус разработки объекта.
-     * @param string $status Наименование статуса разработки (self::ATTRIBUTE_STATUS_).
+     * @param string|null $status Наименование статуса разработки (self::ATTRIBUTE_STATUS_).
      * @return Objects
      * @throws IncorrectStatusException
      */
-    public function setStatus(string $status): Objects
+    public function setStatus(?string $status): Objects
     {
-        if ($this->status !== $status) {
+        if ($status !== null && $this->status !== $status) {
             if ($status === $this::ATTRIBUTE_STATUS_IN_PROCESS ||
                 $status === $this::ATTRIBUTE_STATUS_COMPLETED ||
                 $status === $this::ATTRIBUTE_STATUS_DELETED) $this->status = $status;
@@ -204,13 +204,13 @@ class Objects
 
     /**
      * Присваивание свойству класса доступа к объекту.
-     * @param bool $is_available Доступ к объекту (пуличный, приватный).
+     * @param bool|null $isAvailable Доступ к объекту (пуличный, приватный).
      * @return Objects
      */
-    public function setIsAvailable(bool $is_available = true): Objects
+    public function setIsAvailable(?bool $isAvailable = true): Objects
     {
-        if ($this->is_available !== $is_available) {
-            $this->is_available = $is_available;
+        if ($isAvailable !== null && $this->isAvailable !== $isAvailable) {
+            $this->isAvailable = $isAvailable;
         }
 
         return $this;
@@ -225,7 +225,7 @@ class Objects
     {
         if ($this->name) $obj->setName($this->name);
         if ($this->status) $obj->setStatus($this->status);
-        if ($this->is_available) $obj->setIsAvailable($this->is_available);
+        if ($this->isAvailable) $obj->setIsAvailable($this->isAvailable);
     }
 
     /**
@@ -238,7 +238,7 @@ class Objects
         if ($this->id) $obj->filterById($this->id);
         if ($this->name) $obj->filterByName($this->name);
         if ($this->status) $obj->filterByStatus($this->status);
-        if ($this->is_available) $obj->filterByIsAvailable($this->is_available);
+        if ($this->isAvailable) $obj->filterByIsAvailable($this->isAvailable);
     }
     #endregion
 }

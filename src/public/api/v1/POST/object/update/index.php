@@ -13,19 +13,22 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    if (!$user->isManageUsers() && !$user->isManageObjects()) {
-        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
-    }
-
     $id = $request->getRequestOrThrow('id');
     $lvl = $request->getRequestOrThrow('lvl');
-    $name = $request->getRequest('name');
-    $status = $request->getRequest('status');
-    $isAvailable = $request->getRequest('is_available');
+
+    if (!$user->isManageUsers() &&
+        !$user->isManageObjects() &&
+        !ProjectRole::getByMinimumData(lvl: $lvl, objectId: $id, userId: $user->getUserId())->isAccessCrud()) {
+        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+    }
 
     if (is_int($lvl)) {
         $lvl = ProjectRole::getLvlNameByInt($lvl);
     }
+
+    $name = $request->getRequest('name');
+    $status = $request->getRequest('status');
+    $isAvailable = $request->getRequest('is_available');
 
     switch ($lvl) {
         case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:

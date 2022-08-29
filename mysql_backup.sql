@@ -240,7 +240,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert'),(2,'ProjectName1','in_process',1,1,'2022-08-29 09:21:26','1','insert');
+INSERT INTO `project` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert'),(2,'NewNameProject','in_process',1,2,'2022-08-29 09:38:59','1','update');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,7 +302,7 @@ CREATE TABLE `project_version` (
 
 LOCK TABLES `project_version` WRITE;
 /*!40000 ALTER TABLE `project_version` DISABLE KEYS */;
-INSERT INTO `project_version` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert',NULL,NULL),(2,'ProjectName1','in_process',1,1,'2022-08-29 09:21:26','1','insert',NULL,NULL);
+INSERT INTO `project_version` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert',NULL,NULL),(2,'ProjectName1','in_process',1,1,'2022-08-29 09:21:26','1','insert',NULL,NULL),(2,'NewNameProject','in_process',1,2,'2022-08-29 09:38:59','1','update',NULL,NULL);
 /*!40000 ALTER TABLE `project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 

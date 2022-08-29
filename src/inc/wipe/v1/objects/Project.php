@@ -77,7 +77,7 @@ class Project extends Objects implements iObject
         $this->projectObj
             ->setName($this->name)
             ->setStatus($this->status)
-            ->setIsAvailable($this->is_available)
+            ->setIsAvailable($this->isAvailable)
             ->save();
 
         $this->id = $this->projectObj->getId();

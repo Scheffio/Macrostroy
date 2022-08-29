@@ -171,19 +171,14 @@ class Objects
 
         return  ProjectQuery::create()
                 ->select([ProjectTableMap::COL_ID])
-                ->leftJoinSubproject()
                 ->useSubprojectQuery()
-                    ->leftJoinGroups()
+                    ->useGroupsQuery()
+                        ->useHouseQuery()
+                            ->useStageQuery()
+                            ->endUse()
+                        ->endUse()
+                    ->endUse()
                 ->endUse()
-
-//                ->useSubprojectQuery('sub', Criteria::LEFT_JOIN)
-//                    ->useGroupsQuery('gro', Criteria::LEFT_JOIN)
-//                        ->useHouseQuery('hou', Criteria::LEFT_JOIN)
-//                            ->useStageQuery('sta', Criteria::LEFT_JOIN)
-//                            ->endUse()
-//                        ->endUse()
-//                    ->endUse()
-//                ->endUse()
                 ->where($col.'=?', $objectId)
                 ->findOne();
     }

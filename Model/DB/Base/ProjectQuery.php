@@ -787,15 +787,16 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     /**
      * Use the Subproject relation Subproject object
      *
-     * @see useQuery()
-     *
-     * @param string $relationAlias optional alias for the relation,
+     * @param string|null $relationAlias optional alias for the relation,
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DB\SubprojectQuery A secondary query class using the current class as primary query
+     * @return ModelCriteria A secondary query class using the current class as primary query
+     * @throws PropelException
+     * @see useQuery()
+     *
      */
-    public function useSubprojectQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSubprojectQuery(?string $relationAlias = null, string $joinType = Criteria::INNER_JOIN): ModelCriteria
     {
         return $this
             ->joinSubproject($relationAlias, $joinType)

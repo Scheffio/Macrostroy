@@ -3,6 +3,7 @@
 
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
+use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -12,11 +13,9 @@ $request = new Request();
 
 try {
     if ($user->isManageUsers() && $user->isManageObjects()) {
-        throw new \wipe\inc\v1\objects\exception\AccessDeniedException();
+        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
-
-//    UserRole::getByUserId()->isManageUsersOrThrow();
     $lvl = $request->getRequestOrThrow('lvl');
 
     switch ($lvl) {

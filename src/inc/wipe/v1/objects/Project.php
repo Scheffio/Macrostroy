@@ -43,7 +43,7 @@ class Project extends Objects implements iObject
     }
     #endregion
 
-    #region Getter And Setter Default Values
+    #region Getter And Setter Default Values Functions
     /** @return BaseProject|null Объект проекта. */
     public function getProjectObj(): ?BaseProject
     {

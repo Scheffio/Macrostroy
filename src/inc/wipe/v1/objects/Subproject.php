@@ -2,6 +2,7 @@
 namespace wipe\inc\v1\objects;
 
 use DB\Base\ProjectQuery;
+use DB\Base\SubprojectQuery;
 use DB\Map\ProjectTableMap;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
@@ -17,18 +18,22 @@ class Subproject extends Objects implements iObject
     private ?Project $projectObj = null;
     private ?BaseSubproject $subprojectObj = null;
 
+    /**
+     * @param int|null $projectId ID проекта.
+     * @param int|null $subprojectId ID подпроекта.
+     * @throws NoFindObjectException
+     */
     function __construct(?int $projectId = null, ?int $subprojectId = null)
     {
-
-
-
-//        $this->setId($id);
-//        if ($this->id === null) $this->applyByDefaultValues();
-//        else $this->applyDefaultValuesById();
+        if ($subprojectId) {
+            $this->setId($subprojectId);
+            $this->applyDefaultValuesById();
+        } elseif ($projectId) {
+            $this->projectId = $projectId;
+            $this->applyDefaultValuesByProjectId();
+        }
     }
-
     #region Apply Default Values Functions
-
     /**
      * Получить объект класса через статический метод, используя ID проекта.
      * @return void
@@ -36,7 +41,9 @@ class Subproject extends Objects implements iObject
      */
     public function applyDefaultValuesByProjectId(): void
     {
-        $this->projectObj = new Project($this->projectId);
+        if ($this->projectObj === null) {
+            $this->projectObj = new Project($this->projectId);
+        }
     }
 
     /**
@@ -46,37 +53,55 @@ class Subproject extends Objects implements iObject
      */
     public function applyDefaultValuesById(): void
     {
-        $this->subprojectObj = ProjectQuery::create()->findPk($this->id)
-            ?? throw new NoFindObjectException();
-        $this->applyDefaultValuesByObj($this->subprojectObj);
+        if ($this->subprojectObj === null) {
+            $this->subprojectObj =  SubprojectQuery::create()->findPk($this->id)
+                                    ?? throw new NoFindObjectException();
+            $this->applyDefaultValuesByObj($this->subprojectObj);
+        }
     }
     #endregion
 
-    #region Getter And Setter Default Values
-    /** @return BaseProject|null Объект проекта. */
-    public function getProjectObj(): ?BaseProject
+    #region Getter Default Values Functions
+    /** @return BaseSubproject|null Объект подпроекта. */
+    public function getSubprojectObj(): ?BaseSubproject
+    {
+        return $this->subprojectObj;
+    }
+
+    /** @return int|null ID проекта. */
+    public function getProjectId(): ?int
+    {
+        return $this->projectId;
+    }
+
+    /** @return Project|null Объект пректа. */
+    public function getProjectObj(): ?Project
     {
         return $this->projectObj;
     }
+    #endregion
 
+    #region Setter Default Values Functions
     /**
-     * Присваивание свойству класса объект проекта.
+     * Присваивание свойству класса объект подпроекта.
      * И заполняется остальны свойства в соответсвие с значениями переданного объекта.
-     * @param BaseProject|null $projectObj Объект проекта.
-     * @return Project
+     * @param BaseSubproject|null $subprojectObj Объект подпроекта.
+     * @return Subproject
      */
-    public function setProjectObj(?BaseProject $projectObj): Project
+    public function setSubprojectObj(?BaseSubproject $subprojectObj): Subproject
     {
-        if ($projectObj !== null &&
-            $this->projectObj->getId() === $projectObj->getId()) {
+        if ($subprojectObj !== null &&
+            $this->subprojectObj->getId() === $subprojectObj->getId()) {
             return $this;
         }
 
-        $this->projectObj = $projectObj;
-        $this->applyDefaultValuesByObj($this->projectObj);
+        $this->subprojectObj = $subprojectObj;
+        $this->applyDefaultValuesByObj($this->subprojectObj);
 
         return $this;
     }
+
+    
     #endregion
 
     #region CRUD User Role Functions

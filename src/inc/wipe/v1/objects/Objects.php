@@ -151,7 +151,7 @@ class Objects
      */
     public static function getProject(?int $id = null): Project
     {
-        return new Project(id: $id);
+        return new Project(projectId: $id);
     }
     #endregion
 

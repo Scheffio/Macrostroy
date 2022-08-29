@@ -1,0 +1,17 @@
+@import "../../static/additional";
+
+.title {
+    @include TabAnchorName;
+    text-align: center;
+    margin: 0;
+}
+
+.about {
+    @include InputRegularText;
+    margin: 0;
+}
+
+.link {
+    @include InputRegularText;
+    color: $EstiminTextLogoColor;
+}

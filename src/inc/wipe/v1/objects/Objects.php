@@ -16,6 +16,7 @@ use DB\Base\House as BaseHouse;
 use DB\Base\Groups as BaseGroup;
 use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
@@ -170,14 +171,19 @@ class Objects
 
         return  ProjectQuery::create()
                 ->select([ProjectTableMap::COL_ID])
+                ->leftJoinSubproject()
                 ->useSubprojectQuery()
-                    ->useGroupsQuery()
-                        ->useHouseQuery()
-                            ->useStageQuery()
-                            ->endUse()
-                        ->endUse()
-                    ->endUse()
+                    ->leftJoinGroups()
                 ->endUse()
+
+//                ->useSubprojectQuery('sub', Criteria::LEFT_JOIN)
+//                    ->useGroupsQuery('gro', Criteria::LEFT_JOIN)
+//                        ->useHouseQuery('hou', Criteria::LEFT_JOIN)
+//                            ->useStageQuery('sta', Criteria::LEFT_JOIN)
+//                            ->endUse()
+//                        ->endUse()
+//                    ->endUse()
+//                ->endUse()
                 ->where($col.'=?', $objectId)
                 ->findOne();
     }

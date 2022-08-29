@@ -9,6 +9,7 @@
             <div class="menu__element"><a href="../users">Пользователи</a></div>
             <div class="menu__element"><a href="../volumes">Объёмы</a></div>
             <div class="menu__element"><a href="../profile">Профиль</a></div>
+            <div class="menu__element"><a href="../action-history">История</a></div>
         </div>
     </div>
     <div class="right-navigation-block">

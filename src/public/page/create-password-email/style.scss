@@ -8,6 +8,11 @@
 
 .about {
     @include InputRegularText;
-    text-align: center;
     margin: 0;
+}
+
+.link {
+    @include InputRegularText;
+    color: $EstiminTextLogoColor;
+    margin-top: 20px !important;
 }

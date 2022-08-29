@@ -221,14 +221,7 @@ class ProjectRole
      */
     public function getLvlNameByNum(): string
     {
-        return match ($this->lvl) {
-            $this::ATTRIBUTE_LVL_INT_PROJECT => $this::ATTRIBUTE_LVL_STR_PROJECT,
-            $this::ATTRIBUTE_LVL_INT_SUBPROJECT => $this::ATTRIBUTE_LVL_STR_SUBPROJECT,
-            $this::ATTRIBUTE_LVL_INT_GROUP => $this::ATTRIBUTE_LVL_STR_GROUP,
-            $this::ATTRIBUTE_LVL_INT_HOUSE => $this::ATTRIBUTE_LVL_STR_HOUSE,
-            $this::ATTRIBUTE_LVL_INT_STAGE => $this::ATTRIBUTE_LVL_STR_STAGE,
-            default => throw new IncorrectLvlException()
-        };
+        return $this::getLvlNameByInt($this->lvl);
     }
 
     /**
@@ -237,14 +230,7 @@ class ProjectRole
      */
     public function getLvlNumByName(): int
     {
-        return match ($this->lvlName) {
-            $this::ATTRIBUTE_LVL_STR_PROJECT => $this::ATTRIBUTE_LVL_INT_PROJECT,
-            $this::ATTRIBUTE_LVL_STR_SUBPROJECT => $this::ATTRIBUTE_LVL_INT_SUBPROJECT,
-            $this::ATTRIBUTE_LVL_STR_GROUP => $this::ATTRIBUTE_LVL_INT_GROUP,
-            $this::ATTRIBUTE_LVL_STR_HOUSE => $this::ATTRIBUTE_LVL_INT_HOUSE,
-            $this::ATTRIBUTE_LVL_STR_STAGE => $this::ATTRIBUTE_LVL_INT_STAGE,
-            default => throw new IncorrectLvlException()
-        };
+        return $this::getLvlByStr($this->lvlName);
     }
 
     /** @return int|null ID проекта. */
@@ -457,6 +443,39 @@ class ProjectRole
     #endregion
 
     #region Static Getter Functions
+    /**
+     * @return string Наименование уровня доступа но его номеру.
+     * @throws IncorrectLvlException
+     */
+    public static function getLvlNameByInt(int $lvl): string
+    {
+        return match ($lvl) {
+            self::ATTRIBUTE_LVL_INT_PROJECT => self::ATTRIBUTE_LVL_STR_PROJECT,
+            self::ATTRIBUTE_LVL_INT_SUBPROJECT => self::ATTRIBUTE_LVL_STR_SUBPROJECT,
+            self::ATTRIBUTE_LVL_INT_GROUP => self::ATTRIBUTE_LVL_STR_GROUP,
+            self::ATTRIBUTE_LVL_INT_HOUSE => self::ATTRIBUTE_LVL_STR_HOUSE,
+            self::ATTRIBUTE_LVL_INT_STAGE => self::ATTRIBUTE_LVL_STR_STAGE,
+            default => throw new IncorrectLvlException()
+        };
+    }
+
+    /**
+     * @param string $lvl Наименование уровня доступа.
+     * @return int Номер уровня доступа по его наименованию.
+     * @throws IncorrectLvlException
+     */
+    public static function getLvlByStr(string $lvl): int
+    {
+        return match ($lvl) {
+            self::ATTRIBUTE_LVL_STR_PROJECT => self::ATTRIBUTE_LVL_INT_PROJECT,
+            self::ATTRIBUTE_LVL_STR_SUBPROJECT => self::ATTRIBUTE_LVL_INT_SUBPROJECT,
+            self::ATTRIBUTE_LVL_STR_GROUP => self::ATTRIBUTE_LVL_INT_GROUP,
+            self::ATTRIBUTE_LVL_STR_HOUSE => self::ATTRIBUTE_LVL_INT_HOUSE,
+            self::ATTRIBUTE_LVL_STR_STAGE => self::ATTRIBUTE_LVL_INT_STAGE,
+            default => throw new IncorrectLvlException()
+        };
+    }
+
     /**
      * Получить объект класса через статический метод, используя ID роли проекта.
      * @param int $projectRoleId ID роли проекта.

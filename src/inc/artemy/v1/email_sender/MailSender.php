@@ -958,7 +958,7 @@ class MailSender
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="padding: 20px 0px 10px 0px; text-align: center;" >
+                                                                <td style="padding: 20px 0px 10px 0px; text-align: center; border: 2px solid #435969; padding: 20px 0px 10px 0px; border-radius: 10px; background-color: #435969; color: white;" >
                                                                     <a href="' . $link_to_change_password . '" class="link-btn">Изменить пароль</a>
                                                                 </td>
                                                             </tr>
@@ -979,7 +979,7 @@ class MailSender
                                                             </tr>
                                                             <tr>
                                                                 <td style="padding:0;Margin:0; text-align:center">
-                                                                    <p class="link-time" style="font-size: 12px">
+                                                                    <p class="link-time" style="font-size: 12px; margin-bottom: 0px;">
                                                                         Помните, ссылка действует лишь 24 часа.</p>
                                                                 </td>
                                                             </tr>

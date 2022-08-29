@@ -17,7 +17,7 @@ $rememberDuration = (int)(60 * 60 * 24 * 365.25);
 $auth = Auth::getUser();
 
 $request = new Request();
-$request->checkRequestVariablesStrictlOrError("user_email", "user_password");
+$request->checkRequestVariablesStrictOrError("user_email", "user_password");
 try {
     $auth->login($request->getRequest("user_email"), $request->getRequest("user_password"), $rememberDuration);
     JsonOutput::success();

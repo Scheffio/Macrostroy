@@ -263,6 +263,98 @@ class MailSender
                 display: inline-block !important
             }
         }
+        @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body.fixated {
+  overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background-color: #F4F4F4;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #F4F4F4;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #EBE9E9;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #36393E;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #36393E;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #282B30;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
+}
+
+.title {
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
+}
+
+.about, .link-time {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.link, .link-btn {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #435969;
+}
+
+.link-btn {
+  border: 2px solid #7E99AD;
+  border-radius: 10px;
+  text-decoration: none;
+  background-color: #7E99AD;
+  color: white;
+  padding: 5px 10px;
+}
+
+.link-time {
+  font-size: 12px;
+}/*# sourceMappingURL=style.css.map */
     </style>
 </head>
 
@@ -694,6 +786,98 @@ class MailSender
                 display: inline-block !important
             }
         }
+        @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body.fixated {
+  overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background-color: #F4F4F4;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #F4F4F4;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #EBE9E9;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #36393E;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #36393E;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #282B30;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
+}
+
+.title {
+  font-family: "Jost", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
+}
+
+.about, .link-time {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.link, .link-btn {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #435969;
+}
+
+.link-btn {
+  border: 2px solid #7E99AD;
+  border-radius: 10px;
+  text-decoration: none;
+  background-color: #7E99AD;
+  color: white;
+  padding: 5px 10px;
+}
+
+.link-time {
+  font-size: 12px;
+}/*# sourceMappingURL=style.css.map */
     </style>
 </head>
 

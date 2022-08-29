@@ -8,6 +8,7 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use \DB\Project AS DbProject;
+use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
@@ -101,7 +102,34 @@ class Subproject extends Objects implements iObject
         return $this;
     }
 
-    
+    /**
+     * @param int|null $projectId ID прокета.
+     * @return Subproject
+     */
+    public function setProjectId(?int $projectId): Subproject
+    {
+        if ($projectId !== null && $this->projectId !== $projectId) {
+            $this->projectId = $projectId;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Присваивание свойству класса объект проекта.
+     * И заполняется остальны свойства в соответсвие с значениями переданного объекта.
+     * @param BaseProject|null $projectObj Объект проекта.
+     * @return Subproject
+     */
+    public function setProjectObj(?BaseProject $projectObj): Subproject
+    {
+        if ($projectObj !== null &&
+            $this->projectObj->getId() !== $projectObj->getId()) {
+            $this->projectObj->setProjectObj($projectObj);
+        }
+
+        return $this;
+    }
     #endregion
 
     #region CRUD User Role Functions

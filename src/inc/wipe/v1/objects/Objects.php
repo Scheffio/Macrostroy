@@ -154,24 +154,70 @@ class Objects
         return new Project(projectId: $id);
     }
 
-    public static function getProjectBySubProjectId(): void
+    public static function getProjectId(int $objectId, int|string $lvl): int
     {
-
+        return ProjectQuery::create()
+            ->useSubprojectQuery()
+                ->leftJoinGroups()
+            ->endUse()
+            ->findOne()
+            ;
     }
 
-    public static function getProjectBySubProjectId(): void
+    /**
+     * Получить ID проекта, используя ID подпроекта.
+     * @param int $subprojectId ID подпроекта.
+     * @return int ID проекта.
+     * @throws NoFindObjectException
+     */
+    public static function getProjectIdBySubprojectId(int $subprojectId): int
     {
+        $i = SubprojectQuery::create()->findPk($subprojectId)
+            ?? throw new NoFindObjectException();
 
+        return $i->getProjectId();
     }
 
-    public static function getProjectBySubProjectId(): void
+    /**
+     * Получить ID подпроекта, используя ID группы.
+     * @param int $groupId ID группы.
+     * @return int ID подпроекта.
+     * @throws NoFindObjectException
+     */
+    public static function getSubprojectIdByGroupId(int $groupId): int
     {
+        $i = GroupsQuery::create()->findPk($groupId)
+            ?? throw new NoFindObjectException();
 
+        return $i->getSubprojectId();
     }
 
-    public static function getProjectBySubProjectId(): void
+    /**
+     * Получить ID группы, используя ID дома.
+     * @param int $houseId ID дома.
+     * @return int ID группы.
+     * @throws NoFindObjectException
+     */
+    public static function getGroupIdByHouseId(int $houseId): int
     {
+        $i = HouseQuery::create()->findPk($houseId)
+            ?? throw new NoFindObjectException();
 
+        return $i->getGroupId();
+    }
+
+    /**
+     * Получить ID дома, используя ID этапа.
+     * @param int $stageId ID этапа.
+     * @return int ID дома.
+     * @throws NoFindObjectException
+     */
+    public static function getHouseIdByStageId(int $stageId): int
+    {
+        $i = StageQuery::create()->findPk($stageId)
+            ?? throw new NoFindObjectException();
+
+        return $i->getHouseId();
     }
     #endregion
 

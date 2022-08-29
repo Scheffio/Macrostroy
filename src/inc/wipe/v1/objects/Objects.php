@@ -153,6 +153,26 @@ class Objects
     {
         return new Project(projectId: $id);
     }
+
+    public static function getProjectBySubProjectId(): void
+    {
+
+    }
+
+    public static function getProjectBySubProjectId(): void
+    {
+
+    }
+
+    public static function getProjectBySubProjectId(): void
+    {
+
+    }
+
+    public static function getProjectBySubProjectId(): void
+    {
+
+    }
     #endregion
 
     #region Setter Default Values Functions

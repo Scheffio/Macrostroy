@@ -4,6 +4,7 @@
 use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
 use DB\Map\ProjectRoleTableMap;
+use DB\Map\ProjectTableMap;
 use DB\Map\RoleTableMap;
 use DB\Map\UsersTableMap;
 use inc\artemy\v1\request\Request;

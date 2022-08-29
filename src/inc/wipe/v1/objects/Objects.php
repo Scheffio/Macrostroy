@@ -16,10 +16,13 @@ use DB\Base\House as BaseHouse;
 use DB\Base\Groups as BaseGroup;
 use DB\Base\Project as BaseProject;
 use DB\Base\Subproject as BaseSubproject;
+use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
+use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
+use wipe\inc\v1\role\project_role\ProjectRole;
 
 class Objects
 {
@@ -154,19 +157,56 @@ class Objects
         return new Project(projectId: $id);
     }
 
+    /**
+     * @param int $objectId ID объекта.
+     * @param int|string $lvl Уровень доступа.
+     * @return int|string ID проекта, которому принадлежит объект.
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
     public static function getProjectId(int $objectId, int|string $lvl): int|string
     {
-        return ProjectQuery::create()
-            ->useSubprojectQuery()
-                ->useGroupsQuery()
-                    ->useHouseQuery()
-                        ->useStageQuery()
+        $col = self::getColIdByLvl($lvl);
+
+        return  ProjectQuery::create()
+                ->select([ProjectTableMap::COL_ID])
+                ->useSubprojectQuery()
+                    ->useGroupsQuery()
+                        ->useHouseQuery()
+                            ->useStageQuery()
+                            ->endUse()
                         ->endUse()
                     ->endUse()
                 ->endUse()
-            ->endUse()
-            ->toString()
-            ;
+                ->where($col.'=?', $objectId)
+                ->findOne();
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @return string Наименование атрибута, в котором хранится идентификатор родителя.
+     * @throws IncorrectLvlException
+     */
+    public static function getColIdByLvl(int|string $lvl): string
+    {
+        return match ($lvl) {
+            ProjectRole::ATTRIBUTE_LVL_STR_PROJECT,
+            ProjectRole::ATTRIBUTE_LVL_INT_PROJECT => ProjectTableMap::COL_ID,
+
+            ProjectRole::ATTRIBUTE_LVL_STR_SUBPROJECT,
+            ProjectRole::ATTRIBUTE_LVL_INT_SUBPROJECT => SubprojectTableMap::COL_ID,
+
+            ProjectRole::ATTRIBUTE_LVL_STR_GROUP,
+            ProjectRole::ATTRIBUTE_LVL_INT_GROUP => GroupsTableMap::COL_ID,
+
+            ProjectRole::ATTRIBUTE_LVL_STR_HOUSE,
+            ProjectRole::ATTRIBUTE_LVL_INT_HOUSE => HouseTableMap::COL_ID,
+
+            ProjectRole::ATTRIBUTE_LVL_STR_STAGE,
+            ProjectRole::ATTRIBUTE_LVL_INT_STAGE => StageTableMap::COL_ID,
+
+            default => throw new IncorrectLvlException()
+        };
     }
 
     /**

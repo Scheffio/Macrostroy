@@ -1,5 +1,5 @@
 <?php
-// Редактирование объектов.
+// Удаление объектов.
 
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
@@ -13,8 +13,8 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    $id = $request->getRequestOrThrow('id');
-    $lvl = $request->getRequestOrThrow('lvl');
+    $id = $request->getQueryOrThrow('id');
+    $lvl = $request->getQueryOrThrow('lvl');
 
     if (!$user->isManageUsers() &&
         !$user->isManageObjects() &&
@@ -26,18 +26,9 @@ try {
         $lvl = ProjectRole::getLvlNameByInt($lvl);
     }
 
-    $name = $request->getRequest('name');
-    $status = $request->getRequest('status');
-    $isAvailable = $request->getRequest('is_available');
-
     switch ($lvl) {
-        case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:
-            Objects::getProject($id)
-                ->setName($name)
-                ->setStatus($status)
-                ->setIsAvailable($isAvailable)
-                ->updateByObj();
-            break;
+        // Проект
+        case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT: Objects::getProject($id)->deleteByObj(); break;
         default: throw new IncorrectLvlException();
     }
 

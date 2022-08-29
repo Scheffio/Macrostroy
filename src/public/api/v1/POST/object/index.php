@@ -29,6 +29,7 @@ try {
     }
 
     switch ($lvl) {
+        // Проект
         case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:
             Objects::getProject()
                 ->setName($name)

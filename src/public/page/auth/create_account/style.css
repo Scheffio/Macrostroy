@@ -57,7 +57,8 @@ body.fixated {
 }
 
 .wrap {
-  background: url(../../../static/auth/bg/Auth.jpg) no-repeat center;
+  background: url(../../../../../static/auth/bg/Auth.svg) no-repeat;
+  background-size: cover;
   width: 100vw;
   height: 100vh;
   padding-left: 100px;

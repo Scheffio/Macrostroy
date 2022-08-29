@@ -4,6 +4,7 @@ namespace wipe\inc\v1\objects;
 use DB\Base\ProjectQuery;
 use DB\Map\ProjectTableMap;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use \DB\Project AS DbProject;
 use DB\Base\Project as BaseProject;
@@ -49,6 +50,7 @@ class Project extends Objects implements iObject
 
     /**
      * Присваивание свойству класса объект проекта.
+     * И заполняется остальны свойства в соответсвие с значениями переданного объекта.
      * @param BaseProject|null $projectObj Объект проекта.
      * @return Project
      */
@@ -60,6 +62,7 @@ class Project extends Objects implements iObject
         }
 
         $this->projectObj = $projectObj;
+        $this->applyDefaultValuesByObj($this->projectObj);
 
         return $this;
     }
@@ -137,11 +140,13 @@ class Project extends Objects implements iObject
      * Удаление проекта.
      * @return Project
      * @throws NoProjectFoundException
+     * @throws IncorrectStatusException
+     * @throws PropelException
      */
     public function delete(): Project
     {
         $this->projectObj = $this->getSearchByIdOrThrow(ProjectQuery::create(), ProjectTableMap::COL_STATUS);
-        $this->delete();
+        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
 
         return $this;
     }
@@ -151,12 +156,13 @@ class Project extends Objects implements iObject
      * @return Project
      * @throws NoProjectFoundException
      * @throws PropelException
+     * @throws IncorrectStatusException
      */
     public function deleteByObj(): Project
     {
         if ($this->projectObj === null) throw new NoProjectFoundException();
 
-        $this->projectObj->delete();
+        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
 
         return $this;
     }

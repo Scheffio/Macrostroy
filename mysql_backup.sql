@@ -231,7 +231,7 @@ CREATE TABLE `project` (
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +240,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert');
+INSERT INTO `project` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert'),(3,'ProjectName2','deleted',0,2,'2022-08-29 09:56:08','1','delete');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,7 +302,7 @@ CREATE TABLE `project_version` (
 
 LOCK TABLES `project_version` WRITE;
 /*!40000 ALTER TABLE `project_version` DISABLE KEYS */;
-INSERT INTO `project_version` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert',NULL,NULL);
+INSERT INTO `project_version` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert',NULL,NULL),(3,'ProjectName2','in_process',0,1,'2022-08-29 09:55:46','1','insert',NULL,NULL),(3,'ProjectName2','deleted',0,2,'2022-08-29 09:56:08','1','delete',NULL,NULL);
 /*!40000 ALTER TABLE `project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 

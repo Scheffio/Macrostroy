@@ -118,3 +118,9 @@ enter.addEventListener('click', (e) => {
     }
 })
 
+window.onresize = () => {
+    console.log(windowHeight);
+    if(windowHeight < 900) {
+
+    }
+}

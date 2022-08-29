@@ -119,8 +119,17 @@ enter.addEventListener('click', (e) => {
 })
 
 window.onresize = () => {
-    console.log(windowHeight);
-    if(windowHeight < 900) {
+    if(window.screen.height < 805) {
+        document.querySelector('.logos > img:nth-child(1)').style.display = "none"
+    }else {
+        document.querySelector('.logos > img:nth-child(1)').style.display = "block"
+    }
+}
 
+window.onload = () => {
+    if(window.screen.height < 805) {
+        document.querySelector('.logos > img:nth-child(1)').style.display = "none"
+    }else {
+        document.querySelector('.logos > img:nth-child(1)').style.display = "block"
     }
 }

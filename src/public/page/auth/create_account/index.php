@@ -28,7 +28,6 @@ if ($user === null) header("Location: /auth");
             <input type="submit" class="login-button">
         </form>
     </div>
-    <script src="../script.js"></script>
 </body>
 
 </html>

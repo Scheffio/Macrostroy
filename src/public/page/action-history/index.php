@@ -13,7 +13,7 @@
     <meta name="msapplication-TileColor" content="#00aba9">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="style.css">
-    <title>Estimin - Главная</title>
+    <title>Estimin - История</title>
     <?php require __DIR__ . "/../../../inc/timur/header-styles.php" ?>
 </head>
 
@@ -72,7 +72,7 @@
         <p class="history-duration-alert">Срок существования действия в истории - 3 месяца</p>
     </div>
 
-    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/main.js"></script> 
     <script src="js/script.js"></script>
 </body>
 

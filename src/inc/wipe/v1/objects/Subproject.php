@@ -7,37 +7,48 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use \DB\Project AS DbProject;
-use DB\Base\Project as BaseProject;
+use DB\Base\Subproject as BaseSubproject;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
-class Project extends Objects implements iObject
+class Subproject extends Objects implements iObject
 {
-    private ?BaseProject $projectObj = null;
+    private ?int $projectId = null;
+    private ?Project $projectObj = null;
+    private ?BaseSubproject $subprojectObj = null;
 
-    /**
-     * @param int|null $id ID проекта.
-     * @throws NoFindObjectException
-     */
-    function __construct(?int $id = null)
+    function __construct(?int $projectId = null, ?int $subprojectId = null)
     {
-        $this->setId($id);
 
-        if ($this->id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+
+
+//        $this->setId($id);
+//        if ($this->id === null) $this->applyByDefaultValues();
+//        else $this->applyDefaultValuesById();
     }
 
     #region Apply Default Values Functions
+
     /**
      * Получить объект класса через статический метод, используя ID проекта.
+     * @return void
+     * @throws NoFindObjectException
+     */
+    public function applyDefaultValuesByProjectId(): void
+    {
+        $this->projectObj = new Project($this->projectId);
+    }
+
+    /**
+     * Получить объект класса через статический метод, используя ID подпроекта.
      * Заполнение свойств класса, используя ID проекта.
      * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {
-        $this->projectObj = ProjectQuery::create()->findPk($this->id)
+        $this->subprojectObj = ProjectQuery::create()->findPk($this->id)
             ?? throw new NoFindObjectException();
-        $this->applyDefaultValuesByObj($this->projectObj);
+        $this->applyDefaultValuesByObj($this->subprojectObj);
     }
     #endregion
 

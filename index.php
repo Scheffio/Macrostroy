@@ -60,7 +60,7 @@ if (Router::isApi()) {
         Output::outputError501();
     } catch (Error $e) {
         if (DevelopmentMode::isActive()) {
-            JsonOutput::error($e->getMessage(), \inc\artemy\v1\http_response_code_handler\HTTPResponse::INTERNAL_SERVER_ERROR);
+            JsonOutput::error($e->getMessage(). " | File: " . $e->getFile() . " | Line: " . $e->getLine(), \inc\artemy\v1\http_response_code_handler\HTTPResponse::INTERNAL_SERVER_ERROR);
         } else {
             JsonOutput::error("internal Server Error",
                               \inc\artemy\v1\http_response_code_handler\HTTPResponse::INTERNAL_SERVER_ERROR);

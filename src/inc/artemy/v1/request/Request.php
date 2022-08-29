@@ -109,7 +109,7 @@ class Request
         return true;
     }
 
-    public function checkRequestVariablesStrictNoNullOrError(...$variables): bool
+    public function checkRequestVariablesStrictOrError(...$variables): bool
     {
         $missingVariables = array();
         foreach ($variables as $variable) {

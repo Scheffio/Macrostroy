@@ -16,12 +16,12 @@ class Project extends Objects implements iObject
     private ?BaseProject $projectObj = null;
 
     /**
-     * @param int|null $id ID проекта.
+     * @param int|null $projectId ID проекта.
      * @throws NoFindObjectException
      */
-    function __construct(?int $id = null)
+    function __construct(?int $projectId = null)
     {
-        $this->setId($id);
+        $this->setId($projectId);
 
         if ($this->id === null) $this->applyByDefaultValues();
         else $this->applyDefaultValuesById();
@@ -35,9 +35,11 @@ class Project extends Objects implements iObject
      */
     public function applyDefaultValuesById(): void
     {
-        $this->projectObj = ProjectQuery::create()->findPk($this->id)
-                            ?? throw new NoFindObjectException();
-        $this->applyDefaultValuesByObj($this->projectObj);
+        if ($this->projectObj === null) {
+            $this->projectObj = ProjectQuery::create()->findPk($this->id)
+                                ?? throw new NoFindObjectException();
+            $this->applyDefaultValuesByObj($this->projectObj);
+        }
     }
     #endregion
 

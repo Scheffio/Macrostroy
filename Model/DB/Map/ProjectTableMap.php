@@ -250,27 +250,49 @@ class ProjectTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('ProjectRole', '\\DB\\ProjectRole', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':project_id',
-    1 => ':id',
-  ),
-), null, null, 'ProjectRoles', false);
-        $this->addRelation('Subproject', '\\DB\\Subproject', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':project_id',
-    1 => ':id',
-  ),
-), null, null, 'Subprojects', false);
-        $this->addRelation('ProjectVersion', '\\DB\\ProjectVersion', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'ProjectVersions', false);
+//        $this->addRelation(
+//            'ProjectRole',
+//            '\\DB\\ProjectRole',
+//            RelationMap::ONE_TO_MANY, array (
+//                0 =>
+//                  array (
+//                    0 => ':project_id',
+//                    1 => ':id',
+//                  ),
+//            ),
+//            null,
+//            null,
+//            'ProjectRoles',
+//            false);
+
+        $this->addRelation(
+            'Subproject',
+            '\\DB\\Subproject',
+            RelationMap::ONE_TO_MANY, array (
+                      0 =>
+                      array (
+                        0 => ':project_id',
+                        1 => ':id',
+                      ),
+                    ),
+            null,
+            null, 'Subprojects',
+            false);
+
+        $this->addRelation(
+            'ProjectVersion',
+            '\\DB\\ProjectVersion',
+            RelationMap::ONE_TO_MANY, array (
+                      0 =>
+                      array (
+                        0 => ':id',
+                        1 => ':id',
+                      ),
+                    ),
+            'CASCADE',
+            null,
+            'ProjectVersions',
+            false);
     }
 
     /**

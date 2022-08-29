@@ -157,23 +157,16 @@ class Objects
     public static function getProjectId(int $objectId, int|string $lvl): int|string
     {
         return ProjectQuery::create()
-            ->leftJoinSubproject()
             ->useSubprojectQuery()
+                ->useGroupsQuery()
+                    ->useHouseQuery()
+                        ->useStageQuery()
+                        ->endUse()
+                    ->endUse()
+                ->endUse()
             ->endUse()
             ->toString()
             ;
-
-//        return ProjectQuery::create()
-//            ->useSubprojectQuery()
-//                ->useGroupsQuery()
-//                    ->useHouseQuery()
-//                        ->useStageQuery()
-//                        ->endUse()
-//                    ->endUse()
-//                ->endUse()
-//            ->endUse()
-//            ->toString()
-//            ;
     }
 
     /**

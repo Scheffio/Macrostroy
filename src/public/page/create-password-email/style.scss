@@ -14,5 +14,19 @@
 .link {
     @include InputRegularText;
     color: $EstiminTextLogoColor;
-    margin-top: 20px !important;
+}
+
+.link-btn {
+    @extend .link; 
+    border: 2px solid $EstiminColor4;
+    border-radius: 10px;
+    text-decoration: none;
+    background-color: $EstiminColor4;
+    color: white;
+    padding: 5px 10px;
+}
+
+.link-time {
+    @extend .about;
+    font-size: 12px;
 }

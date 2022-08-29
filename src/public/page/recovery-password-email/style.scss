@@ -25,3 +25,8 @@
     color: white;
     padding: 5px 10px;
 }
+
+.link-time {
+    @extend .about;
+    font-size: 12px;
+}

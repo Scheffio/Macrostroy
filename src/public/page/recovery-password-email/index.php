@@ -323,7 +323,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="padding-top: 20px; text-align: center;" >
+                                                                <td style="padding: 20px 0px 10px 0px; text-align: center;" >
                                                                     <a href="" class="link-btn">Изменить пароль</a>
                                                                 </td>
                                                             </tr>
@@ -344,8 +344,8 @@
                                                             </tr>
                                                             <tr>
                                                                 <td style="padding:0;Margin:0; text-align:center">
-                                                                    <p class="about">
-                                                                        Помните, ссылка работает лишь 24 часа.</p>
+                                                                    <p class="link-time">
+                                                                        Помните, ссылка действует лишь 24 часа.</p>
                                                                 </td>
                                                             </tr>
                                                             <tr>

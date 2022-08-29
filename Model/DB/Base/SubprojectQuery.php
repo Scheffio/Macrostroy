@@ -840,16 +840,15 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     /**
      * Use the Groups relation Groups object
      *
-     * @param string|null $relationAlias optional alias for the relation,
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return ModelCriteria A secondary query class using the current class as primary query
-     * @throws PropelException
-     * @see useQuery()
-     *
+     * @return \DB\GroupsQuery A secondary query class using the current class as primary query
      */
-    public function useGroupsQuery(?string $relationAlias = null, string $joinType = Criteria::INNER_JOIN): ModelCriteria
+    public function useGroupsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinGroups($relationAlias, $joinType)

@@ -82,7 +82,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\GroupsQuery|\DB\StageQuery|\DB\HouseVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildHouse|null findOne(?ConnectionInterface $con = null) Return the first ChildHouse matching the query
- * @method     ChildHouse findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildHouse matching the query, or a new ChildHouse object populated from the query conditions when no match is found
+ * @method     ChildHouse findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildHouse matching the query, or a new ChildHouse object populated from the query conditions when no match123 is found
  *
  * @method     ChildHouse|null findOneById(int $id) Return the first ChildHouse filtered by the id column
  * @method     ChildHouse|null findOneByName(string $name) Return the first ChildHouse filtered by the name column

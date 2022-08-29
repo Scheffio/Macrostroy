@@ -245,6 +245,40 @@
             table.es-social td {
                 display: inline-block !important
             }
+            .title {
+                font-family: "Jost", sans-serif;
+                font-size: 24px;
+                font-weight: 500;
+                text-align: center;
+                margin: 0;
+            }
+
+            .about, .link-time {
+                font-family: "Jost", sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                margin: 0;
+            }
+
+            .link, .link-btn {
+                font-family: "Jost", sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                color: #435969;
+            }
+
+            .link-btn {
+                border: 2px solid #7E99AD;
+                border-radius: 10px;
+                text-decoration: none;
+                background-color: #7E99AD;
+                color: white;
+                padding: 5px 10px;
+            }
+
+            .link-time {
+                font-size: 12px;
+            }
         }
     </style>
 </head>

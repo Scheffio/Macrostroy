@@ -165,22 +165,19 @@ class Objects
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getProjectId(int $objectId, int|string $lvl): int|string
+    public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string
     {
         $col = self::getColIdByLvl($lvl);
 
         return  ProjectQuery::create()
-                ->select([ProjectTableMap::COL_ID])
-                ->useSubprojectQuery()
-                    ->useGroupsQuery()
-                        ->useHouseQuery()
-                            ->useStageQuery()
-                            ->endUse()
-                        ->endUse()
-                    ->endUse()
-                ->endUse()
+                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
+                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
+                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
+                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
                 ->where($col.'=?', $objectId)
-                ->findOne();
+                ->findOne()
+                ->getId();
+//                ->toString();
     }
 
     /**

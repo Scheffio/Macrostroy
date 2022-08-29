@@ -68,7 +68,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\GroupsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildGroupsVersion|null findOne(?ConnectionInterface $con = null) Return the first ChildGroupsVersion matching the query
- * @method     ChildGroupsVersion findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildGroupsVersion matching the query, or a new ChildGroupsVersion object populated from the query conditions when no match is found
+ * @method     ChildGroupsVersion findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildGroupsVersion matching the query, or a new ChildGroupsVersion object populated from the query conditions when no match123 is found
  *
  * @method     ChildGroupsVersion|null findOneById(int $id) Return the first ChildGroupsVersion filtered by the id column
  * @method     ChildGroupsVersion|null findOneByName(string $name) Return the first ChildGroupsVersion filtered by the name column

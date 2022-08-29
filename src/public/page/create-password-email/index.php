@@ -62,17 +62,13 @@
 
             p,
             ul li,
-            ol li,
-            a {
+            ol li {
                 line-height: 150%
             }
 
             h1,
             h2,
-            h3,
-            h1 a,
-            h2 a,
-            h3 a {
+            h3 {
                 line-height: 120%
             }
 
@@ -91,55 +87,27 @@
                 text-align: left
             }
 
-            .es-header-body h1 a,
-            .es-content-body h1 a,
-            .es-footer-body h1 a {
-                text-align: left
-            }
-
-            .es-header-body h2 a,
-            .es-content-body h2 a,
-            .es-footer-body h2 a {
-                font-size: 24px;
-                text-align: left
-            }
-
-            .es-header-body h3 a,
-            .es-content-body h3 a,
-            .es-footer-body h3 a {
-                font-size: 20px;
-                text-align: left
-            }
-
-            .es-menu td a {
-                font-size: 14px 
-            }
-
             .es-header-body p,
             .es-header-body ul li,
-            .es-header-body ol li,
-            .es-header-body a {
-                font-size: 14px 
+            .es-header-body ol li{
+                font-size: 14px
             }
 
             .es-content-body p,
             .es-content-body ul li,
-            .es-content-body ol li,
-            .es-content-body a {
-                font-size: 14px 
+            .es-content-body ol li{
+                font-size: 14px
             }
 
             .es-footer-body p,
             .es-footer-body ul li,
-            .es-footer-body ol li,
-            .es-footer-body a {
-                font-size: 14px 
+            .es-footer-body ol li{
+                font-size: 14px
             }
 
             .es-infoblock p,
             .es-infoblock ul li,
-            .es-infoblock ol li,
-            .es-infoblock a {
+            .es-infoblock ol li{
                 font-size: 12px
             }
 
@@ -354,8 +322,10 @@
                                                                         Чтобы закончить регистрацию, придумайте, а затем
                                                                         введите Ваш пароль по ссылке ниже.</p>
                                                                 </td>
-                                                                <td>
-                                                                <a href="" class="link">Артемий, сюда ставить ссылку</a>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding-top: 20px">
+                                                                    <a href="" class="link">https://artemy.net/auth/create_account?selector=2JxeczIptUEpiPgR&token=VMO4GKHkRiOQeiq7</a>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -375,8 +345,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td style="padding:0;Margin:0">
-                                                                    <p class="about"
-                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
+                                                                    <p class="about">
                                                                         Помните, ссылка работает лишь 24 часа.</p>
                                                                 </td>
                                                             </tr>
@@ -410,8 +379,7 @@
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
                                                                 <td style="padding:0;Margin:0">
-                                                                    <p class="about"
-                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
+                                                                    <p class="about">
                                                                         Внимание! Если вы не запрашивали это письмо,
                                                                         пожалуйста, не переходите по ссылке и не
                                                                         отвечайте на это письмо. Спасибо!</p>

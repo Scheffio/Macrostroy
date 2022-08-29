@@ -1,9 +1,7 @@
 <?php
 namespace wipe\inc\v1\objects\interface;
 
-use DB\Base\Project as BaseProject;
-
-interface ObjectInterface {
+interface iObject {
     public function applyDefaultValuesById();
 
     public function add();

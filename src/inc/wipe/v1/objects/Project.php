@@ -4,14 +4,13 @@ namespace wipe\inc\v1\objects;
 use DB\Base\ProjectQuery;
 use DB\Map\ProjectTableMap;
 use Propel\Runtime\Exception\PropelException;
-use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
-use wipe\inc\v1\objects\interface\ObjectInterface;
 use \DB\Project AS DbProject;
 use DB\Base\Project as BaseProject;
+use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
-class Project extends Objects implements ObjectInterface
+class Project extends Objects implements iObject
 {
     private ?BaseProject $projectObj = null;
 

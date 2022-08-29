@@ -1,5 +1,5 @@
 <?php
-// Добавление объектов.
+// Редактирование объектов.
 
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
@@ -17,9 +17,8 @@ try {
         throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
-    $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_available');
-
-    $lvl = $request->getRequest('lvl');
+    $id = $request->getRequestOrThrow('id');
+    $lvl = $request->getRequestOrThrow('lvl');
     $name = $request->getRequest('name');
     $status = $request->getRequest('status');
     $isAvailable = $request->getRequest('is_available');
@@ -30,11 +29,11 @@ try {
 
     switch ($lvl) {
         case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:
-            Objects::getProject()
+            Objects::getProject($id)
                 ->setName($name)
                 ->setStatus($status)
                 ->setIsAvailable($isAvailable)
-                ->add();
+                ->updateByObj();
             break;
         default: throw new IncorrectLvlException();
     }

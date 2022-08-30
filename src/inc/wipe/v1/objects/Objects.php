@@ -171,13 +171,14 @@ class Objects
 
         return  ProjectQuery::create()
                 ->addSelectColumn(ProjectTableMap::COL_ID)
-                ->leftJoinSubproject()
-                ->addJoin(GroupsTableMap::COL_SUBPROJECT_ID, SubprojectTableMap::COL_ID, Criteria::LEFT_JOIN)
-                ->addJoin(HouseTableMap::COL_GROUP_ID, GroupsTableMap::COL_ID, Criteria::LEFT_JOIN)
-                ->addJoin(StageTableMap::COL_HOUSE_ID, HouseTableMap::COL_ID, Criteria::LEFT_JOIN)
+                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
+                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
+                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
+                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
                 ->where($col.'=?', $objectId)
-                ->findOne()
-                ->toArray(TableMap::TYPE_FIELDNAME)[ProjectTableMap::COL_ID];
+                ->toString();
+//                ->findOne()
+//                ->toArray(TableMap::TYPE_FIELDNAME);
     }
 
     /**

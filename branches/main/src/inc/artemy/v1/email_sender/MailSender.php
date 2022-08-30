@@ -434,13 +434,7 @@ class MailSender
                                                             </tr>
                                                             <tr>
                                                                 <td style="padding: 20px 0px 10px 0px; text-align: center;" >
-                                                                    <div><!--[if mso]>
-  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="' . $link . '" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" strokecolor="#1e3650" fillcolor="#556270">
-    <w:anchorlock/>
-    <center style="color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:bold;">Создать пароль</center>
-  </v:roundrect>
-<![endif]--><a href="' . $link . '"
-style="background-color:#556270;border:1px solid #1e3650;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;mso-hide:all;">Создать пароль</a></div>
+                                                                    <a href="' . $link . '" class="link-btn">!!!!</a>
                                                                 </td>
                                                             </tr>
                                                             <tr>

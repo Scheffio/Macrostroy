@@ -988,7 +988,7 @@ class MailBody
                                                                 <tr>
                                                                     <td style="text-align: center; padding: 20px 0px 10px 0px">
                                                                         <a href="<?= $link_to_change_password ?>"
-                                                                           class="link-btn" style="color:white; border: 2px solid #435969; padding: 10px 5px 10px 5px; border-radius: 10px; background-color: #435969; text-decoration: none;">Изменить пароль</a>
+                                                                           class="link-btn" style="color:white; border: 2px solid #435969; padding: 15px 10px 15px 10px; border-radius: 10px; background-color: #435969; text-decoration: none;"><strong>Изменить пароль</strong></a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>

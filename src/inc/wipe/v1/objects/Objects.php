@@ -1,12 +1,12 @@
 <?php
 namespace wipe\inc\v1\objects;
 
+use DB\Base\ProjectQuery;
 use DB\Map\GroupsTableMap;
 use DB\Map\HouseTableMap;
 use DB\Map\ProjectTableMap;
 use DB\Map\StageTableMap;
 use DB\Map\SubprojectTableMap;
-use DB\ProjectQuery;
 use DB\Base\HouseQuery;
 use DB\Base\StageQuery;
 use DB\Base\GroupsQuery;
@@ -162,25 +162,22 @@ class Objects
     /**
      * @param int $objectId ID объекта.
      * @param int|string $lvl Уровень доступа.
-     * @return int|string ID проекта, которому принадлежит объект.
+     * @return int|string|array
      * @throws IncorrectLvlException
-     * @throws PropelException
      */
     public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string|array
     {
         $col = self::getColIdByLvl($lvl);
-//        'TYPE_COLNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_COLNAME),
-//        'TYPE_FIELDNAME' => ProjectTableMap::getFieldNames(TableMap::TYPE_FIELDNAME),
 
         return  ProjectQuery::create()
-                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
-                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
-                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
-                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
+                ->addSelectColumn(ProjectTableMap::COL_ID)
+                ->leftJoinSubproject()
+                ->addJoin(GroupsTableMap::COL_SUBPROJECT_ID, SubprojectTableMap::COL_ID, Criteria::LEFT_JOIN)
+                ->addJoin(HouseTableMap::COL_GROUP_ID, GroupsTableMap::COL_ID, Criteria::LEFT_JOIN)
+                ->addJoin(StageTableMap::COL_HOUSE_ID, HouseTableMap::COL_ID, Criteria::LEFT_JOIN)
                 ->where($col.'=?', $objectId)
                 ->findOne()
-                ->getId();
-//                ->toString();
+                ->toArray(TableMap::TYPE_FIELDNAME)[ProjectTableMap::COL_ID];
     }
 
     /**

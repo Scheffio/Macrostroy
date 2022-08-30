@@ -109,6 +109,13 @@ class Request
         return true;
     }
 
+    /**
+     * Строго проверяет на наличие всех переменных в теле метода. Если был передан null - не считает ключ как
+     * переданный параметр.
+     *
+     * @param ...$variables
+     * @return bool
+     */
     public function checkRequestVariablesStrictOrError(...$variables): bool
     {
         $missingVariables = array();
@@ -194,9 +201,5 @@ class Request
     public static function getArray() :array
     {
         return self::$method_body + self::$get_body;
-    }
-
-    public function isManageUsersOrThrow(string $string)
-    {
     }
 }

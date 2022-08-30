@@ -22,18 +22,4 @@ $("form").on("submit", function (e) {
         }
     });
 });
-
-const inputs = document.querySelectorAll('.form__input')
-inputs.forEach((input) => {
-    input.addEventListener('focus', () => {
-        input.classList.toggle('typing')
-        inputs.forEach((elem) => {
-            elem.classList.remove('error')
-        })
-    })
-    input.addEventListener('blur', () => {
-        input.classList.toggle('typing')
-    })
-})
-
 //# sourceMappingURL=script_module.js.map

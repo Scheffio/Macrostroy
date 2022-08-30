@@ -978,8 +978,7 @@ class MailBody
                                                                 <tr>
                                                                     <td style="padding:0;Margin:0">
                                                                         <h1 class="title"
-                                                                            style="text-align:center; font-family:" Jost
-                                                                        ", sans-serif;">
+                                                                            style="text-align:center">
                                                                         Здравствуйте!</h1>
                                                                         <p class="about">
                                                                             Забыли пароль? Нажмите на кнопку ниже, чтобы
@@ -987,9 +986,9 @@ class MailBody
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="padding: 20px 0px 10px 0px; text-align: center; border: 2px solid #435969; padding: 20px 0px 10px 0px; border-radius: 10px; background-color: #435969; color: white;">
+                                                                    <td style="text-align: center; padding: 20px 0px 10px 0px">
                                                                         <a href="<?= $link_to_change_password ?>"
-                                                                           class="link-btn">Изменить пароль</a>
+                                                                           class="link-btn" style="color:white; border: 2px solid #435969; padding: 10px 5px 10px 5px; border-radius: 10px; background-color: #435969; text-decoration: none;">Изменить пароль</a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>

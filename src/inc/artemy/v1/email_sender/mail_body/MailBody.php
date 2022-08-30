@@ -1,15 +1,22 @@
 <?php
-namespace inc\artemy\v1\email_sender\mail_bodies;
+
+namespace inc\artemy\v1\email_sender\mail_body;
+
 
 class MailBody
 {
-    public static function getRecoveryBody($mail_receiver, $link_to_change_password): bool
+    public static function getRecoverySubject(): string
+    {
+        return "Ваш аккаунт был создан администратором";
+    }
+
+    public static function getRecoveryBody($mail_receiver, $link): string
     {
         ob_start();
         ?>
         <!DOCTYPE html
-            PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-            "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
         <head>
@@ -38,8 +45,10 @@ class MailBody
                 </o:OfficeDocumentSettings>
             </xml>
             <![endif]-->
-            <link rel="stylesheet" href="style.css">
+            <link rel="stylesheet" href="/static/create-password-email/style.css">
             <style type="text/css">
+                @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
                 #outlook a {
                     padding: 0;
                 }
@@ -72,8 +81,6 @@ class MailBody
                     border-width: 0 !important;
                     padding: 10px 20px 10px 20px !important;
                 }
-
-                @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
                 @media only screen and (max-width: 600px) {
 
@@ -263,7 +270,6 @@ class MailBody
                         display: inline-block !important
                     }
 
-
                     * {
                         box-sizing: border-box;
                         -webkit-user-drag: none;
@@ -390,11 +396,11 @@ class MailBody
                                                                 <tr>
                                                                     <td align="center"
                                                                         style="padding:0;Margin:0;font-size:0px"><img
-                                                                            class="adapt-img"
-                                                                            src="https://vyknoa.stripocdn.email/content/guids/4f0ada92-0bdc-47f0-95d7-930fce236f21/images/group_433.png"
-                                                                            alt
-                                                                            style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
-                                                                            width="560"></td>
+                                                                                class="adapt-img"
+                                                                                src="https://vyknoa.stripocdn.email/content/guids/4f0ada92-0bdc-47f0-95d7-930fce236f21/images/group_433.png"
+                                                                                alt
+                                                                                style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
+                                                                                width="560"></td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -426,19 +432,18 @@ class MailBody
                                                                    style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                                 <tr>
                                                                     <td style="padding:0;Margin:0">
-                                                                        <h1 class="title"
-                                                                            style="text-align:center; font-family:" Jost
-                                                                        ", sans-serif;">
-                                                                        Здравствуйте!</h1>
+                                                                        <h1 class="title">
+                                                                            Здравствуйте!</h1>
                                                                         <p class="about">
-                                                                            Забыли пароль? Нажмите на кнопку ниже, чтобы
-                                                                            перейти на страницу ввода нового пароля.</p>
+                                                                            Чтобы закончить регистрацию, придумайте, а
+                                                                            затем введите Ваш пароль, нажав на кнопку
+                                                                            ниже.</p>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="padding: 20px 0px 10px 0px; text-align: center; border: 2px solid #435969; padding: 20px 0px 10px 0px; border-radius: 10px; background-color: #435969; color: white;">
-                                                                        <a href="<?= $link_to_change_password ?>"
-                                                                           class="link-btn">Изменить пароль</a>
+                                                                    <td style="padding: 20px 0px 10px 0px; text-align: center;">
+                                                                        <a href="<?= $link ?>" class="link-btn">Создать
+                                                                            пароль</a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -450,7 +455,7 @@ class MailBody
                                                                                style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                                             <tr>
                                                                                 <td
-                                                                                    style="padding:0;Margin:0;border-bottom:1px solid #cccccc;background:unset;height:1px;width:100%;margin:0px">
+                                                                                        style="padding:0;Margin:0;border-bottom:1px solid #cccccc;background:unset;height:1px;width:100%;margin:0px">
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
@@ -458,8 +463,7 @@ class MailBody
                                                                 </tr>
                                                                 <tr>
                                                                     <td style="padding:0;Margin:0; text-align:center">
-                                                                        <p class="link-time"
-                                                                           style="font-size: 12px; margin-bottom: 0px;">
+                                                                        <p class="link-time">
                                                                             Помните, ссылка действует лишь 24 часа.</p>
                                                                     </td>
                                                                 </tr>
@@ -471,7 +475,7 @@ class MailBody
                                                                 </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <a class="link"><?= $link_to_change_password ?></a>
+                                                                        <a class="link"><?= $link ?></a>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -513,11 +517,11 @@ class MailBody
                                                                 <tr>
                                                                     <td align="center"
                                                                         style="padding:0;Margin:0;font-size:0px"><img
-                                                                            class="adapt-img"
-                                                                            src="https://vyknoa.stripocdn.email/content/guids/CABINET_178360a27f573d2f39290607640eb447/images/group_435.png"
-                                                                            alt
-                                                                            style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
-                                                                            width="560"></td>
+                                                                                class="adapt-img"
+                                                                                src="https://vyknoa.stripocdn.email/content/guids/CABINET_178360a27f573d2f39290607640eb447/images/group_435.png"
+                                                                                alt
+                                                                                style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
+                                                                                width="560"></td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -538,5 +542,10 @@ class MailBody
         </html>
         <?php
         return ob_get_clean();
+    }
+
+    public static function getRecoveryAltBody($mail_receiver, $link): string
+    {
+        return "Ваш аккаунт был создан администратором. Перейдите по ссылке и придумайте пароль. Ссылка действует только 24 часа. \n$link";
     }
 }

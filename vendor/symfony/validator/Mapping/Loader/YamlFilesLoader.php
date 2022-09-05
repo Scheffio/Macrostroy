@@ -24,7 +24,7 @@ class YamlFilesLoader extends FilesLoader
     /**
      * {@inheritdoc}
      */
-    public function getFileLoaderInstance(string $file): LoaderInterface
+    public function getFileLoaderInstance(string $file)
     {
         return new YamlFileLoader($file);
     }

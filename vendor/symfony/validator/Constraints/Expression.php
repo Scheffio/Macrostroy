@@ -28,25 +28,25 @@ class Expression extends Constraint
 {
     public const EXPRESSION_FAILED_ERROR = '6b3befbc-2f01-4ddf-be21-b57898905284';
 
-    protected const ERROR_NAMES = [
+    protected static $errorNames = [
         self::EXPRESSION_FAILED_ERROR => 'EXPRESSION_FAILED_ERROR',
     ];
-
-    /**
-     * @deprecated since Symfony 6.1, use const ERROR_NAMES instead
-     */
-    protected static $errorNames = self::ERROR_NAMES;
 
     public $message = 'This value is not valid.';
     public $expression;
     public $values = [];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param string|ExpressionObject|array $expression The expression to evaluate or an array of options
+     */
     public function __construct(
-        string|ExpressionObject|array|null $expression,
+        $expression,
         string $message = null,
         array $values = null,
         array $groups = null,
-        mixed $payload = null,
+        $payload = null,
         array $options = []
     ) {
         if (!class_exists(ExpressionLanguage::class)) {
@@ -55,6 +55,8 @@ class Expression extends Constraint
 
         if (\is_array($expression)) {
             $options = array_merge($expression, $options);
+        } elseif (!\is_string($expression) && !$expression instanceof ExpressionObject) {
+            throw new \TypeError(sprintf('"%s": Expected argument $expression to be either a string, an instance of "%s" or an array, got "%s".', __METHOD__, ExpressionObject::class, get_debug_type($expression)));
         } else {
             $options['value'] = $expression;
         }
@@ -68,7 +70,7 @@ class Expression extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOption(): ?string
+    public function getDefaultOption()
     {
         return 'expression';
     }
@@ -76,7 +78,7 @@ class Expression extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getRequiredOptions(): array
+    public function getRequiredOptions()
     {
         return ['expression'];
     }
@@ -84,7 +86,7 @@ class Expression extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getTargets(): string|array
+    public function getTargets()
     {
         return [self::CLASS_CONSTRAINT, self::PROPERTY_CONSTRAINT];
     }
@@ -92,7 +94,7 @@ class Expression extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function validatedBy(): string
+    public function validatedBy()
     {
         return 'validator.expression';
     }

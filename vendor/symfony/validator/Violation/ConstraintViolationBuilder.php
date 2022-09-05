@@ -26,26 +26,33 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
 {
-    private ConstraintViolationList $violations;
-    private string|\Stringable $message;
-    private array $parameters;
-    private mixed $root;
-    private mixed $invalidValue;
-    private string $propertyPath;
-    private TranslatorInterface $translator;
-    private ?string $translationDomain;
-    private ?int $plural = null;
-    private ?Constraint $constraint;
-    private ?string $code = null;
-    private mixed $cause = null;
+    private $violations;
+    private $message;
+    private $parameters;
+    private $root;
+    private $invalidValue;
+    private $propertyPath;
+    private $translator;
+    private $translationDomain;
+    private $plural;
+    private $constraint;
+    private $code;
 
-    public function __construct(ConstraintViolationList $violations, ?Constraint $constraint, string|\Stringable $message, array $parameters, mixed $root, ?string $propertyPath, mixed $invalidValue, TranslatorInterface $translator, string $translationDomain = null)
+    /**
+     * @var mixed
+     */
+    private $cause;
+
+    /**
+     * @param string $message The error message as a string or a stringable object
+     */
+    public function __construct(ConstraintViolationList $violations, ?Constraint $constraint, $message, array $parameters, $root, $propertyPath, $invalidValue, TranslatorInterface $translator, $translationDomain = null)
     {
         $this->violations = $violations;
         $this->message = $message;
         $this->parameters = $parameters;
         $this->root = $root;
-        $this->propertyPath = $propertyPath ?? '';
+        $this->propertyPath = $propertyPath;
         $this->invalidValue = $invalidValue;
         $this->translator = $translator;
         $this->translationDomain = $translationDomain;
@@ -55,7 +62,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function atPath(string $path): static
+    public function atPath(string $path)
     {
         $this->propertyPath = PropertyPath::append($this->propertyPath, $path);
 
@@ -65,7 +72,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setParameter(string $key, string $value): static
+    public function setParameter(string $key, string $value)
     {
         $this->parameters[$key] = $value;
 
@@ -75,7 +82,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setParameters(array $parameters): static
+    public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
 
@@ -85,7 +92,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setTranslationDomain(string $translationDomain): static
+    public function setTranslationDomain(string $translationDomain)
     {
         $this->translationDomain = $translationDomain;
 
@@ -95,7 +102,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setInvalidValue(mixed $invalidValue): static
+    public function setInvalidValue($invalidValue)
     {
         $this->invalidValue = $invalidValue;
 
@@ -105,7 +112,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setPlural(int $number): static
+    public function setPlural(int $number)
     {
         $this->plural = $number;
 
@@ -115,7 +122,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setCode(?string $code): static
+    public function setCode(?string $code)
     {
         $this->code = $code;
 
@@ -125,7 +132,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setCause(mixed $cause): static
+    public function setCause($cause)
     {
         $this->cause = $cause;
 

@@ -2,6 +2,10 @@
 
 namespace ext;
 
+use DB\Base\ObjGroupQuery;
+use DB\Base\ObjHouseQuery;
+use DB\Base\ObjProjectQuery;
+use DB\Base\ObjSubprojectQuery;
 use DB\Base\ProjectRoleQuery;
 use InvalidArgumentException;
 use DB\Base\UserRole as BaseUserRole;
@@ -86,7 +90,7 @@ class DB
      */
     public static function deleteProjectChildren(int $id): void
     {
-        $i = BaseObjProject::create()->filterByProjectId($id)->find();
+        $i = ObjSubprojectQuery::create()->filterByProjectId($id)->find();
 
         foreach ($i as &$item) {
             $item = self::getExtObjSubproject($item);
@@ -95,22 +99,52 @@ class DB
     }
 
     /**
-     * Удаление дочерних элементов проекта.
-     * @param int $id ID проекта.
+     * Удаление дочерних элементов подпроекта.
+     * @param int $id ID подпроекта.
      * @return void
      * @throws PropelException
      */
     public static function deleteSubprojectChildren(int $id): void
     {
-        $i = ProjectRoleQuery::create()->filterByProjectId($id)->find();
+        $i = ObjGroupQuery::create()->filterBySubprojectId($id)->find();
 
         foreach ($i as &$item) {
-            $item = self::getExtObjSubproject($item);
+            $item = self::getExtObjGroup($item);
             $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
         }
     }
 
-    
+    /**
+     * Удаление дочерних элементов группы.
+     * @param int $id ID группы.
+     * @return void
+     * @throws PropelException
+     */
+    public static function deleteGroupChildren(int $id): void
+    {
+        $i = ObjHouseQuery::create()->filterByGroupId($id)->find();
+
+        foreach ($i as &$item) {
+            $item = self::getExtObjHouse($item);
+            $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
+        }
+    }
+
+    /**
+     * Удаление дочерних элементов дома.
+     * @param int $id ID дома.
+     * @return void
+     * @throws PropelException
+     */
+    public static function deleteHouseChildren(int $id): void
+    {
+        $i = ObjHouseQuery::create()->filterByGroupId($id)->find();
+
+        foreach ($i as &$item) {
+            $item = self::getExtObjStage($item);
+            $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
+        }
+    }
     #endregion
 
     #region ExtVol

@@ -47,11 +47,6 @@ abstract class Constraint
     /**
      * Maps error codes to the names of their constants.
      */
-    protected const ERROR_NAMES = [];
-
-    /**
-     * @deprecated since Symfony 6.1, use protected const ERROR_NAMES instead
-     */
     protected static $errorNames = [];
 
     /**
@@ -71,19 +66,15 @@ abstract class Constraint
     /**
      * Returns the name of the given error code.
      *
+     * @return string
+     *
      * @throws InvalidArgumentException If the error code does not exist
      */
-    public static function getErrorName(string $errorCode): string
+    public static function getErrorName(string $errorCode)
     {
-        if (isset(static::ERROR_NAMES[$errorCode])) {
-            return static::ERROR_NAMES[$errorCode];
-        }
-
         if (!isset(static::$errorNames[$errorCode])) {
             throw new InvalidArgumentException(sprintf('The error code "%s" does not exist for constraint of type "%s".', $errorCode, static::class));
         }
-
-        trigger_deprecation('symfony/validator', '6.1', 'The "%s::$errorNames" property is deprecated, use protected const ERROR_NAMES instead.', static::class);
 
         return static::$errorNames[$errorCode];
     }
@@ -117,7 +108,7 @@ abstract class Constraint
      *                                       array, but getDefaultOption() returns
      *                                       null
      */
-    public function __construct(mixed $options = null, array $groups = null, mixed $payload = null)
+    public function __construct($options = null, array $groups = null, $payload = null)
     {
         unset($this->groups); // enable lazy initialization
 
@@ -132,7 +123,7 @@ abstract class Constraint
         }
     }
 
-    protected function normalizeOptions(mixed $options): array
+    protected function normalizeOptions($options): array
     {
         $normalizedOptions = [];
         $defaultOption = $this->getDefaultOption();
@@ -192,9 +183,11 @@ abstract class Constraint
      * this method will be called at most once per constraint instance and
      * option name.
      *
+     * @param mixed $value The value to set
+     *
      * @throws InvalidOptionsException If an invalid option name is given
      */
-    public function __set(string $option, mixed $value)
+    public function __set(string $option, $value)
     {
         if ('groups' === $option) {
             $this->groups = (array) $value;
@@ -212,9 +205,11 @@ abstract class Constraint
      * this method will be called at most once per constraint instance and
      * option name.
      *
+     * @return mixed
+     *
      * @throws InvalidOptionsException If an invalid option name is given
      */
-    public function __get(string $option): mixed
+    public function __get(string $option)
     {
         if ('groups' === $option) {
             $this->groups = [self::DEFAULT_GROUP];
@@ -225,7 +220,10 @@ abstract class Constraint
         throw new InvalidOptionsException(sprintf('The option "%s" does not exist in constraint "%s".', $option, static::class), [$option]);
     }
 
-    public function __isset(string $option): bool
+    /**
+     * @return bool
+     */
+    public function __isset(string $option)
     {
         return 'groups' === $option;
     }

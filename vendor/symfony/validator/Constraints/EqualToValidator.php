@@ -22,7 +22,7 @@ class EqualToValidator extends AbstractComparisonValidator
     /**
      * {@inheritdoc}
      */
-    protected function compareValues(mixed $value1, mixed $value2): bool
+    protected function compareValues($value1, $value2)
     {
         return $value1 == $value2;
     }
@@ -30,7 +30,7 @@ class EqualToValidator extends AbstractComparisonValidator
     /**
      * {@inheritdoc}
      */
-    protected function getErrorCode(): ?string
+    protected function getErrorCode()
     {
         return EqualTo::NOT_EQUAL_ERROR;
     }

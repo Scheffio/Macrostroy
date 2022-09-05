@@ -39,7 +39,7 @@ class EnableAutoMapping extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getTargets(): string|array
+    public function getTargets()
     {
         return [self::PROPERTY_CONSTRAINT, self::CLASS_CONSTRAINT];
     }

@@ -1,6 +1,7 @@
 <?php
 namespace ext;
 
+use DB\Base\ObjSubprojectQuery;
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Connection\ConnectionInterface;
 

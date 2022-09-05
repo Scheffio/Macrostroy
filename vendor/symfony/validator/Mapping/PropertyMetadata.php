@@ -46,11 +46,11 @@ class PropertyMetadata extends MemberMetadata
     /**
      * {@inheritdoc}
      */
-    public function getPropertyValue(mixed $object): mixed
+    public function getPropertyValue($object)
     {
         $reflProperty = $this->getReflectionMember($object);
 
-        if ($reflProperty->hasType() && !$reflProperty->isInitialized($object)) {
+        if (\PHP_VERSION_ID >= 70400 && $reflProperty->hasType() && !$reflProperty->isInitialized($object)) {
             // There is no way to check if a property has been unset or if it is uninitialized.
             // When trying to access an uninitialized property, __get method is triggered.
 
@@ -62,7 +62,7 @@ class PropertyMetadata extends MemberMetadata
 
             try {
                 return $reflProperty->getValue($object);
-            } catch (\Error) {
+            } catch (\Error $e) {
                 return null;
             }
         }
@@ -73,7 +73,7 @@ class PropertyMetadata extends MemberMetadata
     /**
      * {@inheritdoc}
      */
-    protected function newReflectionMember(object|string $objectOrClassName): \ReflectionMethod|\ReflectionProperty
+    protected function newReflectionMember($objectOrClassName)
     {
         $originalClass = \is_string($objectOrClassName) ? $objectOrClassName : \get_class($objectOrClassName);
 
@@ -85,6 +85,9 @@ class PropertyMetadata extends MemberMetadata
             }
         }
 
-        return new \ReflectionProperty($objectOrClassName, $this->getName());
+        $member = new \ReflectionProperty($objectOrClassName, $this->getName());
+        $member->setAccessible(true);
+
+        return $member;
     }
 }

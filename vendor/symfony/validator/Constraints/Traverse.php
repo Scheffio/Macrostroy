@@ -24,7 +24,10 @@ class Traverse extends Constraint
 {
     public $traverse = true;
 
-    public function __construct(bool|array $traverse = null)
+    /**
+     * @param bool|array|null $traverse
+     */
+    public function __construct($traverse = null)
     {
         if (\is_array($traverse) && \array_key_exists('groups', $traverse)) {
             throw new ConstraintDefinitionException(sprintf('The option "groups" is not supported by the constraint "%s".', __CLASS__));
@@ -36,7 +39,7 @@ class Traverse extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOption(): ?string
+    public function getDefaultOption()
     {
         return 'traverse';
     }
@@ -44,7 +47,7 @@ class Traverse extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getTargets(): string|array
+    public function getTargets()
     {
         return self::CLASS_CONSTRAINT;
     }

@@ -37,81 +37,109 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ExecutionContext implements ExecutionContextInterface
 {
-    private ValidatorInterface $validator;
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
 
     /**
      * The root value of the validated object graph.
+     *
+     * @var mixed
      */
-    private mixed $root;
+    private $root;
 
-    private TranslatorInterface $translator;
-    private ?string $translationDomain;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string|null
+     */
+    private $translationDomain;
 
     /**
      * The violations generated in the current context.
+     *
+     * @var ConstraintViolationList
      */
-    private ConstraintViolationList $violations;
+    private $violations;
 
     /**
      * The currently validated value.
+     *
+     * @var mixed
      */
-    private mixed $value = null;
+    private $value;
 
     /**
      * The currently validated object.
+     *
+     * @var object|null
      */
-    private ?object $object = null;
+    private $object;
 
     /**
      * The property path leading to the current value.
+     *
+     * @var string
      */
-    private string $propertyPath = '';
+    private $propertyPath = '';
 
     /**
      * The current validation metadata.
+     *
+     * @var MetadataInterface|null
      */
-    private ?MetadataInterface $metadata = null;
+    private $metadata;
 
     /**
      * The currently validated group.
+     *
+     * @var string|null
      */
-    private ?string $group = null;
+    private $group;
 
     /**
      * The currently validated constraint.
+     *
+     * @var Constraint|null
      */
-    private ?Constraint $constraint = null;
+    private $constraint;
 
     /**
      * Stores which objects have been validated in which group.
      *
      * @var bool[][]
      */
-    private array $validatedObjects = [];
+    private $validatedObjects = [];
 
     /**
      * Stores which class constraint has been validated for which object.
      *
      * @var bool[]
      */
-    private array $validatedConstraints = [];
+    private $validatedConstraints = [];
 
     /**
      * Stores which objects have been initialized.
      *
      * @var bool[]
      */
-    private array $initializedObjects = [];
+    private $initializedObjects;
 
     /**
      * @var \SplObjectStorage<object, string>
      */
-    private \SplObjectStorage $cachedObjectsRefs;
+    private $cachedObjectsRefs;
 
     /**
+     * @param mixed $root The root value of the validated object graph
+     *
      * @internal Called by {@link ExecutionContextFactory}. Should not be used in user code.
      */
-    public function __construct(ValidatorInterface $validator, mixed $root, TranslatorInterface $translator, string $translationDomain = null)
+    public function __construct(ValidatorInterface $validator, $root, TranslatorInterface $translator, string $translationDomain = null)
     {
         $this->validator = $validator;
         $this->root = $root;
@@ -124,7 +152,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setNode(mixed $value, ?object $object, MetadataInterface $metadata = null, string $propertyPath)
+    public function setNode($value, ?object $object, MetadataInterface $metadata = null, string $propertyPath)
     {
         $this->value = $value;
         $this->object = $object;
@@ -203,7 +231,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoot(): mixed
+    public function getRoot()
     {
         return $this->root;
     }
@@ -211,7 +239,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         if ($this->value instanceof LazyProperty) {
             return $this->value->getPropertyValue();
@@ -223,7 +251,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getObject(): ?object
+    public function getObject()
     {
         return $this->object;
     }

@@ -11,14 +11,10 @@
 
 namespace Symfony\Component\Validator\Validator;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface;
-use Symfony\Component\Validator\Mapping\MetadataInterface;
 use Symfony\Component\Validator\ObjectInitializerInterface;
 
 /**
@@ -49,7 +45,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function startContext(mixed $root = null): ContextualValidatorInterface
+    public function startContext($root = null)
     {
         return new RecursiveContextualValidator(
             $this->contextFactory->createContext($this, $root),
@@ -62,7 +58,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function inContext(ExecutionContextInterface $context): ContextualValidatorInterface
+    public function inContext(ExecutionContextInterface $context)
     {
         return new RecursiveContextualValidator(
             $context,
@@ -75,7 +71,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getMetadataFor(mixed $object): MetadataInterface
+    public function getMetadataFor($object)
     {
         return $this->metadataFactory->getMetadataFor($object);
     }
@@ -83,7 +79,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function hasMetadataFor(mixed $object): bool
+    public function hasMetadataFor($object)
     {
         return $this->metadataFactory->hasMetadataFor($object);
     }
@@ -91,7 +87,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function validate(mixed $value, Constraint|array $constraints = null, string|GroupSequence|array $groups = null): ConstraintViolationListInterface
+    public function validate($value, $constraints = null, $groups = null)
     {
         return $this->startContext($value)
             ->validate($value, $constraints, $groups)
@@ -101,7 +97,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function validateProperty(object $object, string $propertyName, string|GroupSequence|array $groups = null): ConstraintViolationListInterface
+    public function validateProperty(object $object, string $propertyName, $groups = null)
     {
         return $this->startContext($object)
             ->validateProperty($object, $propertyName, $groups)
@@ -111,7 +107,7 @@ class RecursiveValidator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function validatePropertyValue(object|string $objectOrClass, string $propertyName, mixed $value, string|GroupSequence|array $groups = null): ConstraintViolationListInterface
+    public function validatePropertyValue($objectOrClass, string $propertyName, $value, $groups = null)
     {
         // If a class name is passed, take $value as root
         return $this->startContext(\is_object($objectOrClass) ? $objectOrClass : $value)

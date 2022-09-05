@@ -23,7 +23,7 @@ class DivisibleByValidator extends AbstractComparisonValidator
     /**
      * {@inheritdoc}
      */
-    protected function compareValues(mixed $value1, mixed $value2): bool
+    protected function compareValues($value1, $value2)
     {
         if (!is_numeric($value1)) {
             throw new UnexpectedValueException($value1, 'numeric');
@@ -55,7 +55,7 @@ class DivisibleByValidator extends AbstractComparisonValidator
     /**
      * {@inheritdoc}
      */
-    protected function getErrorCode(): ?string
+    protected function getErrorCode()
     {
         return DivisibleBy::NOT_DIVISIBLE_BY;
     }

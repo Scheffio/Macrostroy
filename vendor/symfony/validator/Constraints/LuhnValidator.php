@@ -31,9 +31,13 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 class LuhnValidator extends ConstraintValidator
 {
     /**
-     * {@inheritdoc}
+     * Validates a credit card number with the Luhn algorithm.
+     *
+     * @param mixed $value
+     *
+     * @throws UnexpectedTypeException when the given credit card number is no string
      */
-    public function validate(mixed $value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof Luhn) {
             throw new UnexpectedTypeException($constraint, Luhn::class);
@@ -45,7 +49,7 @@ class LuhnValidator extends ConstraintValidator
 
         // Work with strings only, because long numbers are represented as floats
         // internally and don't work with strlen()
-        if (!\is_string($value) && !$value instanceof \Stringable) {
+        if (!\is_string($value) && !(\is_object($value) && method_exists($value, '__toString'))) {
             throw new UnexpectedValueException($value, 'string');
         }
 

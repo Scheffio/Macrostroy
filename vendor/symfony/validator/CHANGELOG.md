@@ -1,23 +1,6 @@
 CHANGELOG
 =========
 
-6.1
----
-
- * Add the `fields` option to the `Unique` constraint, to define which collection keys should be checked for uniqueness
- * Deprecate `Constraint::$errorNames`, use `Constraint::ERROR_NAMES` instead
- * Deprecate constraint `ExpressionLanguageSyntax`, use `ExpressionSyntax` instead
- * Add method `__toString()` to `ConstraintViolationInterface` & `ConstraintViolationListInterface`
- * Allow creating constraints with required arguments
-
-6.0
----
-
- * Remove the `allowEmptyString` option from the `Length` constraint
- * Remove the `NumberConstraintTrait` trait
- * `ValidatorBuilder::enableAnnotationMapping()` does not accept a Doctrine annotation reader anymore
- * `ValidatorBuilder::enableAnnotationMapping()` won't automatically setup a Doctrine annotation reader anymore
-
 5.4
 ---
 

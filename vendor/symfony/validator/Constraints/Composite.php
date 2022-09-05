@@ -51,7 +51,7 @@ abstract class Composite extends Constraint
      * cached. When constraints are loaded from the cache, no more group
      * checks need to be done.
      */
-    public function __construct(mixed $options = null, array $groups = null, mixed $payload = null)
+    public function __construct($options = null, array $groups = null, $payload = null)
     {
         parent::__construct($options, $groups, $payload);
 
@@ -129,15 +129,17 @@ abstract class Composite extends Constraint
 
     /**
      * Returns the name of the property that contains the nested constraints.
+     *
+     * @return string
      */
-    abstract protected function getCompositeOption(): string;
+    abstract protected function getCompositeOption();
 
     /**
      * @internal Used by metadata
      *
      * @return Constraint[]
      */
-    public function getNestedConstraints(): array
+    public function getNestedConstraints()
     {
         /* @var Constraint[] $nestedConstraints */
         return $this->{$this->getCompositeOption()};

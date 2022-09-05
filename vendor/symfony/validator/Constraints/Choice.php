@@ -26,16 +26,11 @@ class Choice extends Constraint
     public const TOO_FEW_ERROR = '11edd7eb-5872-4b6e-9f12-89923999fd0e';
     public const TOO_MANY_ERROR = '9bd98e49-211c-433f-8630-fd1c2d0f08c3';
 
-    protected const ERROR_NAMES = [
+    protected static $errorNames = [
         self::NO_SUCH_CHOICE_ERROR => 'NO_SUCH_CHOICE_ERROR',
         self::TOO_FEW_ERROR => 'TOO_FEW_ERROR',
         self::TOO_MANY_ERROR => 'TOO_MANY_ERROR',
     ];
-
-    /**
-     * @deprecated since Symfony 6.1, use const ERROR_NAMES instead
-     */
-    protected static $errorNames = self::ERROR_NAMES;
 
     public $choices;
     public $callback;
@@ -51,15 +46,15 @@ class Choice extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOption(): ?string
+    public function getDefaultOption()
     {
         return 'choices';
     }
 
     public function __construct(
-        string|array $options = [],
+        $options = [],
         array $choices = null,
-        callable|string $callback = null,
+        $callback = null,
         bool $multiple = null,
         bool $strict = null,
         int $min = null,
@@ -68,11 +63,11 @@ class Choice extends Constraint
         string $multipleMessage = null,
         string $minMessage = null,
         string $maxMessage = null,
-        array $groups = null,
-        mixed $payload = null
+        $groups = null,
+        $payload = null
     ) {
         if (\is_array($options) && $options && array_is_list($options)) {
-            $choices ??= $options;
+            $choices = $choices ?? $options;
             $options = [];
         }
         if (null !== $choices) {

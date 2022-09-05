@@ -35,7 +35,7 @@ class Cascade extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function getTargets(): string|array
+    public function getTargets()
     {
         return self::CLASS_CONSTRAINT;
     }

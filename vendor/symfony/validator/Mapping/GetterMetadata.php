@@ -65,7 +65,7 @@ class GetterMetadata extends MemberMetadata
     /**
      * {@inheritdoc}
      */
-    public function getPropertyValue(mixed $object): mixed
+    public function getPropertyValue($object)
     {
         return $this->newReflectionMember($object)->invoke($object);
     }
@@ -73,7 +73,7 @@ class GetterMetadata extends MemberMetadata
     /**
      * {@inheritdoc}
      */
-    protected function newReflectionMember(object|string $objectOrClassName): \ReflectionMethod|\ReflectionProperty
+    protected function newReflectionMember($objectOrClassName)
     {
         return new \ReflectionMethod($objectOrClassName, $this->getName());
     }

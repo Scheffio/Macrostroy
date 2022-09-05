@@ -6,7 +6,10 @@ $request = new \inc\artemy\v1\request\Request();
 
 $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("file"));
 
-if ($file === null) die(404);
+if ($file === null) {
+    http_response_code(404);
+    die(404);
+}
 
 if (str_starts_with($file->getContentType(), "image/")) {
     //если картинка - присвоить content type

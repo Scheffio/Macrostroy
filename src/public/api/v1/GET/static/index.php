@@ -6,7 +6,7 @@ $request = new \inc\artemy\v1\request\Request();
 
 $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("file"));
 
-if ($file === null) JsonOutput::error("File not found");
+if ($file === null) die(404);
 
 if (str_starts_with($file->getContentType(), "image/")) {
     //если картинка - присвоить content type

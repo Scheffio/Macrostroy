@@ -2,56 +2,32 @@
 
 namespace wipe\inc\v1\role\project_role;
 
+use DB\Base\UsersQuery;
+use DB\Map\ProjectRoleTableMap;
+use DB\Map\UserRoleTableMap;
+use DB\Map\UsersTableMap;
 use Exception;
-use DB\RoleQuery;
 use DB\Base\ProjectRoleQuery;
-use DB\ProjectRole as DbProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\project_role\enum\eLvlInt;
+use wipe\inc\v1\role\project_role\enum\eLvlStr;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
+use ext\DB;
+use ext\ProjectRole as ExtProjectRole;
 
 class ProjectRole
 {
-    /** @var int Номер уровня доступа - проект. */
-    public const ATTRIBUTE_LVL_INT_PROJECT = 1;
-
-    /** @var int Номер уровня доступа - подпроект. */
-    public const ATTRIBUTE_LVL_INT_SUBPROJECT = 2;
-
-    /** @var int Номер уровня доступа - группа. */
-    public const ATTRIBUTE_LVL_INT_GROUP = 3;
-
-    /** @var int Номер уровня доступа - дом. */
-    public const ATTRIBUTE_LVL_INT_HOUSE = 4;
-
-    /** @var int Номер уровня доступа - этап. */
-    public const ATTRIBUTE_LVL_INT_STAGE = 5;
-
-    /** @var string Наименование уровня доступа - проект. */
-    public const ATTRIBUTE_LVL_STR_PROJECT = 'project';
-
-    /** @var string Наименование уровня доступа - подпроект. */
-    public const ATTRIBUTE_LVL_STR_SUBPROJECT = 'subproject';
-
-    /** @var string Наименование уровня доступа - группа. */
-    public const ATTRIBUTE_LVL_STR_GROUP = 'group';
-
-    /** @var string Наименование уровня доступа - дом. */
-    public const ATTRIBUTE_LVL_STR_HOUSE = 'house';
-
-    /** @var string Наименование уровня доступа - этап. */
-    public const ATTRIBUTE_LVL_STR_STAGE = 'stage';
-
     /** @var int|null ID роли проекта. */
     private ?int $roleId = null;
 
-    /** @var BaseProjectRole|null Объект роли проекта.  */
-    private ?BaseProjectRole $roleObj = null;
+    /** @var ExtProjectRole|BaseProjectRole|null Объект роли проекта.  */
+    private null|ExtProjectRole|BaseProjectRole $roleObj = null;
 
     /** @var int Номер уровня доступа. */
     private int $lvl = 1;
@@ -89,11 +65,13 @@ class ProjectRole
         ?int $userId = null,
         int|string $lvl = 1,
         ?int $objectId = null,
+        ?int $projectId = null,
         bool $search = false)
     {
         $this->roleId = $roleId;
         $this->userId = $userId;
         $this->objectId = $objectId;
+        $this->projectId = $projectId;
         $this->setLvl($lvl);
 
         if ($search) {
@@ -117,11 +95,13 @@ class ProjectRole
         if ($this->userId) $role->filterByUserId($this->userId);
         if ($this->lvl) $role->filterByLvl($this->lvl);
         if ($this->objectId) $role->filterByObjectId($this->objectId);
+        if ($this->projectId) $role->filterByProjectId($this->projectId);
+
         $role = $role->findOne();
 
         if ($role !== null) {
-            $this->roleObj = $role;
             $this->roleId = $role->getId();
+            $this->roleObj = DB::getExtProjectRole($role);
             $this->applyDefaultValuesByRoleObj();
         }
     }
@@ -136,8 +116,9 @@ class ProjectRole
      */
     private function applyDefaultValuesByRoleId(): void
     {
-        $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
+        $this->roleObj = ProjectRoleQuery::create()->findPk($this->roleId) ??
                          throw new NoProjectFoundException();
+        $this->roleObj = DB::getExtProjectRole($this->roleObj);
         $this->applyDefaultValuesByRoleObj();
     }
 
@@ -325,11 +306,16 @@ class ProjectRole
 
     /**
      * Используется для установки уровня доступа ($lvl, $lvlName), либо по номеру, либо по наименованию.
-     * @param int|string $lvl Уровень доступа.
+     * @param int|string|eLvlInt|eLvlStr $lvl Уровень доступа.
+     * @return ProjectRole
      * @throws IncorrectLvlException
      */
-    public function setLvl(int|string $lvl): ProjectRole
+    public function setLvl(int|string|eLvlInt|eLvlStr $lvl): ProjectRole
     {
+        if (!is_int($lvl) && !is_string($lvl)) {
+            $lvl = $lvl->value;
+        }
+
         return  is_int($lvl)
                 ? $this->setLvlByNum($lvl)
                 : $this->setLvlByName($lvl);
@@ -444,17 +430,18 @@ class ProjectRole
 
     #region Static Getter Functions
     /**
+     * @param int $lvl Номер уровня доступа.
      * @return string Наименование уровня доступа но его номеру.
      * @throws IncorrectLvlException
      */
     public static function getLvlNameByInt(int $lvl): string
     {
         return match ($lvl) {
-            self::ATTRIBUTE_LVL_INT_PROJECT => self::ATTRIBUTE_LVL_STR_PROJECT,
-            self::ATTRIBUTE_LVL_INT_SUBPROJECT => self::ATTRIBUTE_LVL_STR_SUBPROJECT,
-            self::ATTRIBUTE_LVL_INT_GROUP => self::ATTRIBUTE_LVL_STR_GROUP,
-            self::ATTRIBUTE_LVL_INT_HOUSE => self::ATTRIBUTE_LVL_STR_HOUSE,
-            self::ATTRIBUTE_LVL_INT_STAGE => self::ATTRIBUTE_LVL_STR_STAGE,
+            eLvlInt::PROJECT->value => eLvlStr::PROJECT->value,
+            eLvlInt::SUBPROJECT->value => eLvlStr::SUBPROJECT->value,
+            eLvlInt::GROUP->value => eLvlStr::GROUP->value,
+            eLvlInt::HOUSE->value => eLvlStr::HOUSE->value,
+            eLvlInt::STAGE->value => eLvlStr::STAGE->value,
             default => throw new IncorrectLvlException()
         };
     }
@@ -467,11 +454,11 @@ class ProjectRole
     public static function getLvlByStr(string $lvl): int
     {
         return match ($lvl) {
-            self::ATTRIBUTE_LVL_STR_PROJECT => self::ATTRIBUTE_LVL_INT_PROJECT,
-            self::ATTRIBUTE_LVL_STR_SUBPROJECT => self::ATTRIBUTE_LVL_INT_SUBPROJECT,
-            self::ATTRIBUTE_LVL_STR_GROUP => self::ATTRIBUTE_LVL_INT_GROUP,
-            self::ATTRIBUTE_LVL_STR_HOUSE => self::ATTRIBUTE_LVL_INT_HOUSE,
-            self::ATTRIBUTE_LVL_STR_STAGE => self::ATTRIBUTE_LVL_INT_STAGE,
+            eLvlStr::PROJECT->value => eLvlInt::PROJECT->value,
+            eLvlStr::SUBPROJECT->value => eLvlInt::SUBPROJECT->value,
+            eLvlStr::GROUP->value => eLvlInt::GROUP->value,
+            eLvlStr::HOUSE->value => eLvlInt::HOUSE->value,
+            eLvlStr::STAGE->value => eLvlInt::STAGE->value,
             default => throw new IncorrectLvlException()
         };
     }
@@ -512,18 +499,140 @@ class ProjectRole
     }
     #endregion
 
+    #region Static Select Functions
+    /**
+     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
+     * @param int $lvl Уровень доступа.
+     * @param int $projectId ID проекта.
+     * @return array
+     * @throws PropelException
+     */
+    public static function getCrudUsersObject(int $lvl, int $projectId): array
+    {
+        return  self::formArrayWithUserCrud(
+                    self::mergingUserDataById(
+                        self::getUsersOnQuery($lvl, $projectId)
+                    )
+                );
+    }
+
+    /**
+     * @param int $lvl Уровень доступа.
+     * @param int $projectId ID проекта.
+     * @return array
+     * @throws PropelException
+     */
+    private static function getUsersOnQuery(int $lvl, int $projectId): array
+    {
+        return  UsersQuery::create()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    UserRoleTableMap::COL_MANAGE_USERS,
+                    UserRoleTableMap::COL_OBJECT_VIEWER,
+                    UserRoleTableMap::COL_MANAGE_OBJECTS,
+                    ProjectRoleTableMap::COL_IS_CRUD,
+                    ProjectRoleTableMap::COL_LVL,
+                    ProjectRoleTableMap::COL_OBJECT_ID,
+                    ProjectRoleTableMap::COL_PROJECT_ID,
+                ])
+                ->leftJoinUserRole()
+                ->leftJoinProjectRole()
+                ->addJoinCondition(
+                    name: 'ProjectRole',
+                    clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
+                    value: $projectId
+                )
+                ->filterByIsAvailable(1)
+                ->where(ProjectRoleTableMap::COL_LVL . '<=?', $lvl)
+                ->_or()
+                ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL')
+                ->find()
+                ->getData();
+    }
+
+    /**
+     * Объединение данных пользователя по его ID.
+     * @param array $users массив данных пользователей.
+     * @return array
+     */
+    private static function mergingUserDataById(array $users): array
+    {
+        $result = [];
+
+        foreach ($users as $user) {
+            $userId = $user['users.id'];
+
+            if (!array_key_exists($userId, $result)) {
+                $result[$userId] = [
+                    'user' => [
+                        'id' => $user['users.id'],
+                        'name' => $user['users.username'],
+                        'manageUsers' => (bool) $user['user_role.manage_users'],
+                        'objectViewer' => (bool) $user['user_role.object_viewer'],
+                        'manageObjects' => (bool) $user['user_role.manage_objects'],
+                    ],
+                    'crud' => []
+                ];
+            }
+
+
+            $result[$userId]['crud'][] = [
+                'lvl' => $user['project_role.lvl'],
+                'isCrud' => $user['project_role.is_crud'],
+                'object_id' => $user['project_role.object_id'],
+            ];
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Формирование массива с пользователями для вывода на странице "Управение достуа".
+     * @param array $users Массив данных о пользователе, после фукции self::mergingUserDataById.
+     * @return array
+     */
+    private static function formArrayWithUserCrud(array $users): array
+    {
+        foreach ($users as &$user) {
+            if ($user['user']['manageUsers']) {
+                $isCrud = true;
+                $isAdmin = true;
+            } else {
+                $isAdmin = false;
+                $isCrud = array_pop($user['crud'])['isCrud'];
+
+                if (is_int($isCrud)) $isCrud = (bool)$isCrud;
+                elseif ($user['user']['manageObjects']) $isCrud = true;
+                elseif ($user['user']['objectViewer']) $isCrud = false;
+            }
+
+            $user = [
+                'id' => $user['user']['id'],
+                'name' => $user['user']['name'],
+                'isCrud' => $isCrud,
+                'isAdmin' => $isAdmin,
+            ];
+        }
+
+        return array_values($users);
+    }
+    #endregion
+
     #region CRUD Functions
     /**
      * Назначение знечений с проверкой на их наличие, для свойства класса $roleObj.
-     * @param BaseProjectRole $object
+     * @param ExtProjectRole|BaseProjectRole $object
      * @return void
      */
-    private function extracted(BaseProjectRole $object): void
+    private function extracted(ExtProjectRole|BaseProjectRole $object): void
     {
         if ($this->lvl) $object->setLvl($this->lvl);
         if ($this->isCrud !== null) $object->setIsCrud($this->isCrud);
         if ($this->userId !== null) $object->setUserId($this->userId);
         if ($this->objectId !== null) $object->setObjectId($this->objectId);
+        if ($this->projectId !== null) $object->setProjectId($this->projectId);
     }
 
     /**
@@ -550,7 +659,7 @@ class ProjectRole
      */
     public function add(): ProjectRole
     {
-        $role = new DbProjectRole();
+        $role = new ExtProjectRole();
 
         $role
             ->setLvl($this->lvl)
@@ -608,6 +717,7 @@ class ProjectRole
                     ->filterByUserId($this->userId)
                     ->filterByObjectId($this->objectId)
                     ->findOneOrCreate();
+                $this->roleObj = DB::getExtProjectRole($this->roleObj);
             }
 
             $this->extracted($this->roleObj);

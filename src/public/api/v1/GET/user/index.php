@@ -2,7 +2,7 @@
 //Вывод пользователя.
 
 use DB\Base\UsersQuery;
-use DB\Map\RoleTableMap;
+use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
 use inc\artemy\v1\request\Request;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -21,10 +21,10 @@ try {
                     UsersTableMap::COL_USERNAME,
                     UsersTableMap::COL_PHONE,
                     UsersTableMap::COL_EMAIL,
-                    RoleTableMap::COL_ID,
-                    RoleTableMap::COL_NAME
+                    UserRoleTableMap::COL_ID,
+                    UserRoleTableMap::COL_NAME
                 ])
-                ->leftJoinRole()
+                ->leftJoinUserRole()
                 ->filterByIsAvailable(1)
                 ->findPk($user_id) ?: throw new Exception('No user found');
 
@@ -34,8 +34,8 @@ try {
         'phone' => $user['users.phone'],
         'email' => $user['users.email'],
         'role' => [
-            'id' => $user['role.id'],
-            'name' => $user['role.name'],
+            'id' => $user['user_role.id'],
+            'name' => $user['user_role.name'],
         ],
     ]);
 } catch (PropelException|Exception $e) {

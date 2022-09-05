@@ -11,10 +11,10 @@ return [
     'propel' => [
         'paths' => [
             // The directory where Propel expects to find your `schema.xml` file.
-            'schemaDir' => '/home/valeria/PhpstormProjects/macrostroy',
+            // 'schemaDir' => '/home/valeria/PhpstormProjects/macrostroy',
 
             // The directory where Propel should output generated object model classes.
-            'phpDir' => '/home/valeria/PhpstormProjects/macrostroy/Model/',
+            // 'phpDir' => '/home/valeria/PhpstormProjects/macrostroy/Model/',
         ],
         /*
         'database' => [

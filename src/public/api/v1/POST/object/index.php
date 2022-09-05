@@ -5,6 +5,7 @@ use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\Objects;
+use wipe\inc\v1\role\project_role\enum\eLvlInt;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -17,30 +18,53 @@ try {
         throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
-    $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_available');
+    $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_public');
 
     $lvl = $request->getRequest('lvl');
     $name = $request->getRequest('name');
     $status = $request->getRequest('status');
-    $isAvailable = $request->getRequest('is_available');
+    $isPublic = $request->getRequest('is_public');
+    $parentId = null;
 
-    if (is_int($lvl)) {
-        $lvl = ProjectRole::getLvlNameByInt($lvl);
+    if (is_string($lvl)) {
+        $lvl = ProjectRole::getLvlByStr($lvl);
+    }
+
+    if ($lvl !== eLvlInt::PROJECT->value) {
+        $parentId = $request->getRequestOrThrow('parent_id');
     }
 
     switch ($lvl) {
         // Проект
-        case ProjectRole::ATTRIBUTE_LVL_STR_PROJECT:
+        case eLvlInt::PROJECT->value:
             Objects::getProject()
                 ->setName($name)
                 ->setStatus($status)
-                ->setIsAvailable($isAvailable)
+                ->setIsPublic($isPublic)
                 ->add();
+            break;
+        // Подпроект
+        case eLvlInt::SUBPROJECT->value:
+            Objects::getSubproject()
+                ->setName($name)
+                ->setStatus($status)
+                ->setIsPublic($isPublic)
+                ->setProjectId($parentId)
+                ->add();
+            break;
+        // Группа
+        case eLvlInt::GROUP->value:
+            break;
+        // Дом
+        case eLvlInt::HOUSE->value:
+            break;
+        // Этап
+        case eLvlInt::STAGE->value:
             break;
         default: throw new IncorrectLvlException();
     }
 
     JsonOutput::success();
 } catch (Exception $e) {
-    JsonOutput::success($e->getMessage());
+    JsonOutput::error($e->getMessage());
 }

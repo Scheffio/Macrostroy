@@ -1,7 +1,7 @@
 <?php
 //Вывод роли.
 
-use DB\Base\RoleQuery;
+use DB\Base\UserRoleQuery;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Map\TableMap;
 use wipe\inc\v1\role\user_role\UserRole;
@@ -12,7 +12,7 @@ try {
 
     $role_id = (new Request())->getQueryOrThrow('role_id');
 
-    $role = RoleQuery::create()->findPk($role_id)->toArray(TableMap::TYPE_FIELDNAME)
+    $role = UserRoleQuery::create()->findPk($role_id)->toArray(TableMap::TYPE_FIELDNAME)
             ?: throw new Error('No role found');
 
     JsonOutput::success($role);

@@ -26,12 +26,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectRoleQuery orderByIsCrud($order = Criteria::ASC) Order by the is_crud column
  * @method     ChildProjectRoleQuery orderByObjectId($order = Criteria::ASC) Order by the object_id column
  * @method     ChildProjectRoleQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildProjectRoleQuery orderByProjectId($order = Criteria::ASC) Order by the project_id column
  *
  * @method     ChildProjectRoleQuery groupById() Group by the id column
  * @method     ChildProjectRoleQuery groupByLvl() Group by the lvl column
  * @method     ChildProjectRoleQuery groupByIsCrud() Group by the is_crud column
  * @method     ChildProjectRoleQuery groupByObjectId() Group by the object_id column
  * @method     ChildProjectRoleQuery groupByUserId() Group by the user_id column
+ * @method     ChildProjectRoleQuery groupByProjectId() Group by the project_id column
  *
  * @method     ChildProjectRoleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildProjectRoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,38 +53,52 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProjectRoleQuery rightJoinWithUsers() Adds a RIGHT JOIN clause and with to the query using the Users relation
  * @method     ChildProjectRoleQuery innerJoinWithUsers() Adds a INNER JOIN clause and with to the query using the Users relation
  *
- * @method     \DB\UsersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildProjectRoleQuery leftJoinObjProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjProject relation
+ * @method     ChildProjectRoleQuery rightJoinObjProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjProject relation
+ * @method     ChildProjectRoleQuery innerJoinObjProject($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjProject relation
+ *
+ * @method     ChildProjectRoleQuery joinWithObjProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjProject relation
+ *
+ * @method     ChildProjectRoleQuery leftJoinWithObjProject() Adds a LEFT JOIN clause and with to the query using the ObjProject relation
+ * @method     ChildProjectRoleQuery rightJoinWithObjProject() Adds a RIGHT JOIN clause and with to the query using the ObjProject relation
+ * @method     ChildProjectRoleQuery innerJoinWithObjProject() Adds a INNER JOIN clause and with to the query using the ObjProject relation
+ *
+ * @method     \DB\UsersQuery|\DB\ObjProjectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProjectRole|null findOne(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query
- * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no match123 is found
+ * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no match is found
  *
  * @method     ChildProjectRole|null findOneById(int $id) Return the first ChildProjectRole filtered by the id column
- * @method     ChildProjectRole|null findOneByLvl(boolean $lvl) Return the first ChildProjectRole filtered by the lvl column
- * @method     ChildProjectRole|null findOneByIsCrud(boolean $is_crud) Return the first ChildProjectRole filtered by the is_crud column
+ * @method     ChildProjectRole|null findOneByLvl(int $lvl) Return the first ChildProjectRole filtered by the lvl column
+ * @method     ChildProjectRole|null findOneByIsCrud(int $is_crud) Return the first ChildProjectRole filtered by the is_crud column
  * @method     ChildProjectRole|null findOneByObjectId(int $object_id) Return the first ChildProjectRole filtered by the object_id column
- * @method     ChildProjectRole|null findOneByUserId(int $user_id) Return the first ChildProjectRole filtered by the user_id column *
+ * @method     ChildProjectRole|null findOneByUserId(int $user_id) Return the first ChildProjectRole filtered by the user_id column
+ * @method     ChildProjectRole|null findOneByProjectId(int $project_id) Return the first ChildProjectRole filtered by the project_id column *
 
  * @method     ChildProjectRole requirePk($key, ?ConnectionInterface $con = null) Return the ChildProjectRole by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectRole requireOne(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProjectRole requireOneById(int $id) Return the first ChildProjectRole filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectRole requireOneByLvl(boolean $lvl) Return the first ChildProjectRole filtered by the lvl column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProjectRole requireOneByIsCrud(boolean $is_crud) Return the first ChildProjectRole filtered by the is_crud column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProjectRole requireOneByLvl(int $lvl) Return the first ChildProjectRole filtered by the lvl column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProjectRole requireOneByIsCrud(int $is_crud) Return the first ChildProjectRole filtered by the is_crud column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectRole requireOneByObjectId(int $object_id) Return the first ChildProjectRole filtered by the object_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProjectRole requireOneByUserId(int $user_id) Return the first ChildProjectRole filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProjectRole requireOneByProjectId(int $project_id) Return the first ChildProjectRole filtered by the project_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProjectRole[]|Collection find(?ConnectionInterface $con = null) Return ChildProjectRole objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildProjectRole> find(?ConnectionInterface $con = null) Return ChildProjectRole objects based on current ModelCriteria
  * @method     ChildProjectRole[]|Collection findById(int $id) Return ChildProjectRole objects filtered by the id column
  * @psalm-method Collection&\Traversable<ChildProjectRole> findById(int $id) Return ChildProjectRole objects filtered by the id column
- * @method     ChildProjectRole[]|Collection findByLvl(boolean $lvl) Return ChildProjectRole objects filtered by the lvl column
- * @psalm-method Collection&\Traversable<ChildProjectRole> findByLvl(boolean $lvl) Return ChildProjectRole objects filtered by the lvl column
- * @method     ChildProjectRole[]|Collection findByIsCrud(boolean $is_crud) Return ChildProjectRole objects filtered by the is_crud column
- * @psalm-method Collection&\Traversable<ChildProjectRole> findByIsCrud(boolean $is_crud) Return ChildProjectRole objects filtered by the is_crud column
+ * @method     ChildProjectRole[]|Collection findByLvl(int $lvl) Return ChildProjectRole objects filtered by the lvl column
+ * @psalm-method Collection&\Traversable<ChildProjectRole> findByLvl(int $lvl) Return ChildProjectRole objects filtered by the lvl column
+ * @method     ChildProjectRole[]|Collection findByIsCrud(int $is_crud) Return ChildProjectRole objects filtered by the is_crud column
+ * @psalm-method Collection&\Traversable<ChildProjectRole> findByIsCrud(int $is_crud) Return ChildProjectRole objects filtered by the is_crud column
  * @method     ChildProjectRole[]|Collection findByObjectId(int $object_id) Return ChildProjectRole objects filtered by the object_id column
  * @psalm-method Collection&\Traversable<ChildProjectRole> findByObjectId(int $object_id) Return ChildProjectRole objects filtered by the object_id column
  * @method     ChildProjectRole[]|Collection findByUserId(int $user_id) Return ChildProjectRole objects filtered by the user_id column
  * @psalm-method Collection&\Traversable<ChildProjectRole> findByUserId(int $user_id) Return ChildProjectRole objects filtered by the user_id column
+ * @method     ChildProjectRole[]|Collection findByProjectId(int $project_id) Return ChildProjectRole objects filtered by the project_id column
+ * @psalm-method Collection&\Traversable<ChildProjectRole> findByProjectId(int $project_id) Return ChildProjectRole objects filtered by the project_id column
  * @method     ChildProjectRole[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildProjectRole> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -182,7 +198,7 @@ abstract class ProjectRoleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, lvl, is_crud, object_id, user_id FROM project_role WHERE id = :p0';
+        $sql = 'SELECT id, lvl, is_crud, object_id, user_id, project_id FROM project_role WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -324,23 +340,37 @@ abstract class ProjectRoleQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByLvl(true); // WHERE lvl = true
-     * $query->filterByLvl('yes'); // WHERE lvl = true
+     * $query->filterByLvl(1234); // WHERE lvl = 1234
+     * $query->filterByLvl(array(12, 34)); // WHERE lvl IN (12, 34)
+     * $query->filterByLvl(array('min' => 12)); // WHERE lvl > 12
      * </code>
      *
-     * @param bool|string $lvl The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param mixed $lvl The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByLvl($lvl = null, ?string $comparison = null)
     {
-        if (is_string($lvl)) {
-            $lvl = in_array(strtolower($lvl), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_array($lvl)) {
+            $useMinMax = false;
+            if (isset($lvl['min'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_LVL, $lvl['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($lvl['max'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_LVL, $lvl['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
         $this->addUsingAlias(ProjectRoleTableMap::COL_LVL, $lvl, $comparison);
@@ -353,23 +383,37 @@ abstract class ProjectRoleQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByIsCrud(true); // WHERE is_crud = true
-     * $query->filterByIsCrud('yes'); // WHERE is_crud = true
+     * $query->filterByIsCrud(1234); // WHERE is_crud = 1234
+     * $query->filterByIsCrud(array(12, 34)); // WHERE is_crud IN (12, 34)
+     * $query->filterByIsCrud(array('min' => 12)); // WHERE is_crud > 12
      * </code>
      *
-     * @param bool|string $isCrud The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param mixed $isCrud The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByIsCrud($isCrud = null, ?string $comparison = null)
     {
-        if (is_string($isCrud)) {
-            $isCrud = in_array(strtolower($isCrud), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_array($isCrud)) {
+            $useMinMax = false;
+            if (isset($isCrud['min'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_IS_CRUD, $isCrud['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($isCrud['max'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_IS_CRUD, $isCrud['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
         $this->addUsingAlias(ProjectRoleTableMap::COL_IS_CRUD, $isCrud, $comparison);
@@ -461,6 +505,51 @@ abstract class ProjectRoleQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(ProjectRoleTableMap::COL_USER_ID, $userId, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the project_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByProjectId(1234); // WHERE project_id = 1234
+     * $query->filterByProjectId(array(12, 34)); // WHERE project_id IN (12, 34)
+     * $query->filterByProjectId(array('min' => 12)); // WHERE project_id > 12
+     * </code>
+     *
+     * @see       filterByObjProject()
+     *
+     * @param mixed $projectId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByProjectId($projectId = null, ?string $comparison = null)
+    {
+        if (is_array($projectId)) {
+            $useMinMax = false;
+            if (isset($projectId['min'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_PROJECT_ID, $projectId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($projectId['max'])) {
+                $this->addUsingAlias(ProjectRoleTableMap::COL_PROJECT_ID, $projectId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ProjectRoleTableMap::COL_PROJECT_ID, $projectId, $comparison);
 
         return $this;
     }
@@ -598,6 +687,140 @@ abstract class ProjectRoleQuery extends ModelCriteria
     public function useUsersNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Users', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjProject object
+     *
+     * @param \DB\ObjProject|ObjectCollection $objProject The related object(s) to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjProject($objProject, ?string $comparison = null)
+    {
+        if ($objProject instanceof \DB\ObjProject) {
+            return $this
+                ->addUsingAlias(ProjectRoleTableMap::COL_PROJECT_ID, $objProject->getId(), $comparison);
+        } elseif ($objProject instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            $this
+                ->addUsingAlias(ProjectRoleTableMap::COL_PROJECT_ID, $objProject->toKeyValue('PrimaryKey', 'Id'), $comparison);
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjProject() only accepts arguments of type \DB\ObjProject or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjProject relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjProject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjProject');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjProject');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjProject relation ObjProject object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjProjectQuery A secondary query class using the current class as primary query
+     */
+    public function useObjProjectQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjProject($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjProject', '\DB\ObjProjectQuery');
+    }
+
+    /**
+     * Use the ObjProject relation ObjProject object
+     *
+     * @param callable(\DB\ObjProjectQuery):\DB\ObjProjectQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjProjectQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjProjectQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjProject table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjProjectQuery The inner query object of the EXISTS statement
+     */
+    public function useObjProjectExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjProject', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjProject table for a NOT EXISTS query.
+     *
+     * @see useObjProjectExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjProjectQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjProjectNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjProject', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result

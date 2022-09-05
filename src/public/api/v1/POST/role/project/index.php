@@ -3,6 +3,7 @@
 
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
+use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -17,8 +18,12 @@ try {
     $userId = $request->getRequest('user_id');
     $objectId = $request->getRequest('object_id');
 
+    Objects::checkAccessEditObjectOrThrow($lvl, $objectId);
+    $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objectId);
+
     ProjectRole::getByMinimumData(lvl: $lvl, objectId: $objectId, userId: $userId)
                 ->setIsCrud($isCrud)
+                ->setProjectId($projectId)
                 ->addOrUpdate();
 
     JsonOutput::success();

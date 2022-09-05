@@ -1,0 +1,470 @@
+@import "../../../static/additional";
+
+.wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 80px;
+    width: 100%;
+
+    .tabs-controller {
+        display: flex;
+        width: clamp(768px, 90vw, 1555px);
+        justify-content: flex-start;
+        gap: 50px;
+        padding-bottom: 25px;
+        position: relative;
+
+        &::after {
+            content: '';
+            display: block;
+            width: clamp(768px, 90vw, 1555px);
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background-color: $EstiminUnderlineColor;
+            border-radius: 2px;
+        }
+
+        .tabs-controller__tab-anchor {
+            display: flex;
+            align-items: center;
+
+            .tab-anchor__anchor-name {
+                order: 0;
+                text-decoration: none;
+                color: black;
+                @include TabAnchorName;
+
+                &.selected {
+                    font-size: 36px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+    .tabs-container {
+        .tabs-container__tab-element {
+            display: none;
+            .grid {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-top: 40px;
+                max-width: 1555px;
+            
+                .grid__header {
+                    display: grid;
+                    grid-template-rows: 1fr;
+                    grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                    gap: 0px;
+                    height: 100%;
+                    .header__element {
+                        @include TabAnchorName;
+                        display: flex;
+                        height: 60px;
+                        align-items: center;
+                        justify-content: center;
+                        user-select: none;
+                        padding: 0px 10px;
+                        &:first-child {
+                            justify-content: flex-start;
+                            padding-left: 27px;
+                        }
+                        p{
+                            margin: 0;
+                        }
+                        .sorter {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            gap: 2px;
+                            margin-right: 8px;
+        
+                            img {
+                                &:nth-child(1) {
+                                    transform: rotate(180deg);
+                                    margin-right: 0.7px;
+                                }
+        
+                                &:hover {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
+        
+                .grid__body {
+                    .grid-row {
+                        display: grid;
+                        grid-template-rows: 1fr;
+                        grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                        height: 100%;
+                        flex-direction: column;
+                        &:nth-child(odd) {
+                            background-color: #F4F4F4;
+                        }
+        
+                        &:last-child {
+                            border-bottom-left-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }
+                        .grid-column {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 60px;
+                            @include TabText;
+                            box-sizing: border-box;
+        
+                            &.name {
+                                justify-content: flex-start;
+                                padding-left: 27px;
+                            }
+                            &.cancel {
+                                color: $EstiminSaturate-8;
+                                opacity: .4;
+                                text-decoration: underline;
+                                transition: .3s;
+                                &:hover {
+                                    transition: .3s;
+                                    opacity: .9;
+                                }
+                            }
+                            &.status {
+                                position: relative;
+        
+                                &::before {
+                                    content: '';
+                                    display: block;
+                                    width: 10px;
+                                    height: 10px;
+                                    background-color: $EstiminBlank;
+                                    border-radius: 100%;
+                                    position: absolute;
+                                    left: 25px;
+                                    top: 45%;
+                                }
+        
+                                &.active::before {
+                                    background-color: $EstiminSuccessful;
+                                }
+        
+                                &.closed::before {
+                                    background-color: $EstiminClosed;
+                                }
+        
+                                &.deleted::before {
+                                    background-color: $EstiminDeleted;
+                                }
+                                &.stoped::before {
+                                    background-color: $EstiminStoped;
+                                }
+                            }
+                            p {
+                                margin: 0;
+                                padding: 0px 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .tab-header {
+            display: flex;
+            justify-content: center
+        }
+        .info {
+            @include InputRegularText;
+            text-align: center;
+            margin: 0px 0px 20px 0px;
+        }
+        .users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            height: auto;
+            width: clamp(768px, 90vw, 1660px);
+            .users__users-field {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: clamp(185px, 80vw, 220px);
+                height: 49px;
+                border-radius: 10px;
+                background-color: $EstiminBackground5;
+                p {
+                    @include inputPlaceholder;
+                    user-select: none;
+                }
+            }
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 132px;
+            margin: 20px 0px 15px 0px;
+            .search-bar__input-wrap {
+                position: relative;
+                &::before {
+                    content: '';
+                    background: url(../../static/auth/icons/search-icon.svg);
+                    display: block;
+                    width: 24px;
+                    height: 24px;
+                    position: absolute;
+                    top: 25%;
+                    left: 11px;
+                    cursor: pointer;
+                }
+                input {
+                    width: clamp(460px, 80vw, 640px);
+                    height: 44px;
+                    background-color: $EstiminBackground2;
+                    outline: 0;
+                    border: none;
+                    border-radius: 10px;
+                    padding: 0 50px;
+                    color: white;
+                    @include InputRegularText;
+                    &::placeholder {
+                        @include InputRegularText;
+                    }
+                }
+            }
+        }
+        .tabs-container__tab-element:target {
+            display: block;
+        }
+    }
+}
+
+@keyframes showModal {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hideModal {
+    0% {
+        display: flex;
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;  
+    }
+    100% {
+        display: none;
+    }
+}
+
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: .3s;
+    opacity: 0;
+    &.opened {
+        display: flex;
+        animation: showModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    &.closed {
+        animation: hideModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    .modal-wrap {
+        background-color: white;
+        width: 540px;
+        height: 495px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        top: -1000px;
+        transition: .6s;
+        &.opened {
+            transition: .6s;
+            top: 0px;
+        }
+        &.closed {
+            transition: .6s;
+            top: -1000px;
+        }
+        span {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            transition: .3s;
+            right: 20px;
+            &::before{
+                content: '';
+                display: block;
+                width: 15px;
+                height: 2px;
+                background-color: black;
+                transform: rotate(-45deg);
+                position: absolute;
+            }
+            &::after {
+                content: '';
+                display: block;
+                width: 15px;
+                height: 2px;
+                background-color: black;
+                transform: rotate(45deg);
+                position: absolute;
+            }
+            &:hover {
+                cursor: pointer;
+                opacity: .6;
+                transition: .3s;
+            }
+        }
+        .modal-header {
+            position: relative;
+            .title {
+                @include MainTitle;
+            }
+        }
+        .modal-body {
+            form {
+                gap: 30px;
+                display: flex;
+                flex-direction: column;
+                .modal-body__name {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(405px, 50px);
+                    }
+                    &::before {
+                        content: 'Название';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__name.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -25px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__status {
+                    margin-top: 30px;
+                    select {
+                        background-color: white;
+                        @include Input(250px, 45px);
+                    }
+                    position: relative;
+                    &::before {
+                        content: 'Статус';
+                        display: block;
+                        position: absolute;
+                        top: -20px;
+                        left: 10px;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        padding: 0px 5px;
+                    }
+                }
+                .modal-body__access {
+                    label {
+                        @include inputPlaceholder;
+                    }
+                    .checkboxes {
+                        margin-top: 5px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        justify-content: flex;
+                        gap: 5px;
+                        label {
+                            @include InputRegularText;
+                            user-select: none;
+                        }
+                        .public,
+                        .private {
+                            display: flex;
+                            align-items: center;
+                            label {
+                                user-select: none;
+                            }
+                            input[type="radio"] {
+                                position: absolute;
+                                z-index: -1;
+                                opacity: 0;
+                                &:checked+label::after {
+                                    content: '';
+                                    display: block;
+                                    width: 12px;
+                                    height: 12px;
+                                    position: absolute;
+                                    top: 5.5px;
+                                    left: 4px;
+                                    background-color: black;
+                                }
+                                &:checked+label::before{
+                                    content: '';
+                                    width: 1em;
+                                    height: 1em;
+                                    display: block;
+                                }
+                                &+label {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    position: relative;
+                                    &::before {
+                                        content: '';
+                                        display: inline-block;
+                                        width: 1em;
+                                        height: 1em;
+                                        flex-shrink: 0;
+                                        flex-grow: 0;
+                                        border: 2px solid black;
+                                        margin-right: 0.5em;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .modal-footer {
+            margin-top: 30px;
+            button {
+                @include Button($EstiminColor4, $EstiminColor8, 140px, 40px)
+            }
+        }
+    }
+}

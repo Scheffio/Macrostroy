@@ -4,6 +4,8 @@ namespace inc\artemy\v1\output;
 
 use Delight\Db\Throwable\Error;
 use DOMDocument;
+use ext\UserRole;
+use inc\artemy\v1\auth\Auth;
 use inc\artemy\v1\development_mode\DevelopmentMode;
 use inc\artemy\v1\http_response_code_handler\HTTPResponse;
 use inc\artemy\v1\json_output\JsonOutput;
@@ -17,7 +19,7 @@ class Output
 
     /**
      * @throws FileNotFoundException
-     * @throws MethodNotImplementedException
+     * @throws MethodNotImplementedException|Error
      */
     public static function outputApi(): void
     {
@@ -95,7 +97,7 @@ class Output
     }
 
     /**
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException|Error
      */
     public static function outputPage(): void
     {
@@ -122,7 +124,7 @@ class Output
     }
 
     /**
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException|Error
      */
     public static function outputStatic(): void
     {
@@ -249,6 +251,11 @@ class Output
                 $string_to_append .= "    <script defer='1' src=\"script_module.js\" type='module'></script>";
             }
 
+            if (DevelopmentMode::isActive() and empty($_COOKIE["dev_hide"])) {
+                $user = Auth::getUser();
+                $string_to_append .= "    <div id='hide_dev'>ID: {$user->id()} | username: {$user->getUsername()} | email: {$user->getEmail()} | IP: {$user->getIpAddress()} <a style='color: blue' href='#' id='hide_dev_button' onclick='document.cookie=\"dev_hide=1;expires=Fri, 31 Dec 9999 23:59:59 GMT;path=/\"; document.getElementById(\"hide_dev\").innerHTML = \"Удалите cookie dev_hide в браузере чтобы отобразить снова\"; return false;'>скрыть</a></div>";
+            }
+
 
             $template->appendXML($string_to_append);
             $head_tag->appendChild($template);
@@ -260,7 +267,7 @@ class Output
             die();
         }
 
-        if (Router::isStatic() and str_starts_with($mimeType, "image/")) {
+        if (Router::isStatic()) {
             readfile($filename);
             die();
         }
@@ -270,7 +277,7 @@ class Output
         die();
     }
 
-    #[NoReturn] public static function outputError404()
+    #[NoReturn] public static function outputError404(): void
     {
         http_response_code(404);
 
@@ -291,7 +298,7 @@ class Output
         }
     }
 
-    #[NoReturn] public static function outputError501()
+    #[NoReturn] public static function outputError501(): void
     {
         http_response_code(501);
 

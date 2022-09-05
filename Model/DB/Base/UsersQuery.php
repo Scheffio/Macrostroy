@@ -59,15 +59,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUsersQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildUsersQuery leftJoinRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the Role relation
- * @method     ChildUsersQuery rightJoinRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Role relation
- * @method     ChildUsersQuery innerJoinRole($relationAlias = null) Adds a INNER JOIN clause to the query using the Role relation
+ * @method     ChildUsersQuery leftJoinUserRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRole relation
+ * @method     ChildUsersQuery rightJoinUserRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRole relation
+ * @method     ChildUsersQuery innerJoinUserRole($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRole relation
  *
- * @method     ChildUsersQuery joinWithRole($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Role relation
+ * @method     ChildUsersQuery joinWithUserRole($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserRole relation
  *
- * @method     ChildUsersQuery leftJoinWithRole() Adds a LEFT JOIN clause and with to the query using the Role relation
- * @method     ChildUsersQuery rightJoinWithRole() Adds a RIGHT JOIN clause and with to the query using the Role relation
- * @method     ChildUsersQuery innerJoinWithRole() Adds a INNER JOIN clause and with to the query using the Role relation
+ * @method     ChildUsersQuery leftJoinWithUserRole() Adds a LEFT JOIN clause and with to the query using the UserRole relation
+ * @method     ChildUsersQuery rightJoinWithUserRole() Adds a RIGHT JOIN clause and with to the query using the UserRole relation
+ * @method     ChildUsersQuery innerJoinWithUserRole() Adds a INNER JOIN clause and with to the query using the UserRole relation
  *
  * @method     ChildUsersQuery leftJoinProjectRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProjectRole relation
  * @method     ChildUsersQuery rightJoinProjectRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProjectRole relation
@@ -79,10 +79,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery rightJoinWithProjectRole() Adds a RIGHT JOIN clause and with to the query using the ProjectRole relation
  * @method     ChildUsersQuery innerJoinWithProjectRole() Adds a INNER JOIN clause and with to the query using the ProjectRole relation
  *
- * @method     \DB\RoleQuery|\DB\ProjectRoleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\UserRoleQuery|\DB\ProjectRoleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUsers|null findOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query
- * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match123 is found
+ * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match is found
  *
  * @method     ChildUsers|null findOneById(int $id) Return the first ChildUsers filtered by the id column
  * @method     ChildUsers|null findOneByEmail(string $email) Return the first ChildUsers filtered by the email column
@@ -91,8 +91,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsers|null findOneByUsername(string $username) Return the first ChildUsers filtered by the username column
  * @method     ChildUsers|null findOneByStatus(int $status) Return the first ChildUsers filtered by the status column
  * @method     ChildUsers|null findOneByRoleId(int $role_id) Return the first ChildUsers filtered by the role_id column
- * @method     ChildUsers|null findOneByVerified(boolean $verified) Return the first ChildUsers filtered by the verified column
- * @method     ChildUsers|null findOneByResettable(boolean $resettable) Return the first ChildUsers filtered by the resettable column
+ * @method     ChildUsers|null findOneByVerified(int $verified) Return the first ChildUsers filtered by the verified column
+ * @method     ChildUsers|null findOneByResettable(int $resettable) Return the first ChildUsers filtered by the resettable column
  * @method     ChildUsers|null findOneByRolesMask(int $roles_mask) Return the first ChildUsers filtered by the roles_mask column
  * @method     ChildUsers|null findOneByRegistered(int $registered) Return the first ChildUsers filtered by the registered column
  * @method     ChildUsers|null findOneByLastLogin(int $last_login) Return the first ChildUsers filtered by the last_login column
@@ -109,8 +109,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsers requireOneByUsername(string $username) Return the first ChildUsers filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByStatus(int $status) Return the first ChildUsers filtered by the status column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByRoleId(int $role_id) Return the first ChildUsers filtered by the role_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOneByVerified(boolean $verified) Return the first ChildUsers filtered by the verified column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOneByResettable(boolean $resettable) Return the first ChildUsers filtered by the resettable column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneByVerified(int $verified) Return the first ChildUsers filtered by the verified column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUsers requireOneByResettable(int $resettable) Return the first ChildUsers filtered by the resettable column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByRolesMask(int $roles_mask) Return the first ChildUsers filtered by the roles_mask column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByRegistered(int $registered) Return the first ChildUsers filtered by the registered column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUsers requireOneByLastLogin(int $last_login) Return the first ChildUsers filtered by the last_login column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -133,10 +133,10 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildUsers> findByStatus(int $status) Return ChildUsers objects filtered by the status column
  * @method     ChildUsers[]|Collection findByRoleId(int $role_id) Return ChildUsers objects filtered by the role_id column
  * @psalm-method Collection&\Traversable<ChildUsers> findByRoleId(int $role_id) Return ChildUsers objects filtered by the role_id column
- * @method     ChildUsers[]|Collection findByVerified(boolean $verified) Return ChildUsers objects filtered by the verified column
- * @psalm-method Collection&\Traversable<ChildUsers> findByVerified(boolean $verified) Return ChildUsers objects filtered by the verified column
- * @method     ChildUsers[]|Collection findByResettable(boolean $resettable) Return ChildUsers objects filtered by the resettable column
- * @psalm-method Collection&\Traversable<ChildUsers> findByResettable(boolean $resettable) Return ChildUsers objects filtered by the resettable column
+ * @method     ChildUsers[]|Collection findByVerified(int $verified) Return ChildUsers objects filtered by the verified column
+ * @psalm-method Collection&\Traversable<ChildUsers> findByVerified(int $verified) Return ChildUsers objects filtered by the verified column
+ * @method     ChildUsers[]|Collection findByResettable(int $resettable) Return ChildUsers objects filtered by the resettable column
+ * @psalm-method Collection&\Traversable<ChildUsers> findByResettable(int $resettable) Return ChildUsers objects filtered by the resettable column
  * @method     ChildUsers[]|Collection findByRolesMask(int $roles_mask) Return ChildUsers objects filtered by the roles_mask column
  * @psalm-method Collection&\Traversable<ChildUsers> findByRolesMask(int $roles_mask) Return ChildUsers objects filtered by the roles_mask column
  * @method     ChildUsers[]|Collection findByRegistered(int $registered) Return ChildUsers objects filtered by the registered column
@@ -548,7 +548,7 @@ abstract class UsersQuery extends ModelCriteria
      * $query->filterByRoleId(array('min' => 12)); // WHERE role_id > 12
      * </code>
      *
-     * @see       filterByRole()
+     * @see       filterByUserRole()
      *
      * @param mixed $roleId The value to use as filter.
      *              Use scalar values for equality.
@@ -588,23 +588,37 @@ abstract class UsersQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByVerified(true); // WHERE verified = true
-     * $query->filterByVerified('yes'); // WHERE verified = true
+     * $query->filterByVerified(1234); // WHERE verified = 1234
+     * $query->filterByVerified(array(12, 34)); // WHERE verified IN (12, 34)
+     * $query->filterByVerified(array('min' => 12)); // WHERE verified > 12
      * </code>
      *
-     * @param bool|string $verified The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param mixed $verified The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByVerified($verified = null, ?string $comparison = null)
     {
-        if (is_string($verified)) {
-            $verified = in_array(strtolower($verified), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_array($verified)) {
+            $useMinMax = false;
+            if (isset($verified['min'])) {
+                $this->addUsingAlias(UsersTableMap::COL_VERIFIED, $verified['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($verified['max'])) {
+                $this->addUsingAlias(UsersTableMap::COL_VERIFIED, $verified['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
         $this->addUsingAlias(UsersTableMap::COL_VERIFIED, $verified, $comparison);
@@ -617,23 +631,37 @@ abstract class UsersQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByResettable(true); // WHERE resettable = true
-     * $query->filterByResettable('yes'); // WHERE resettable = true
+     * $query->filterByResettable(1234); // WHERE resettable = 1234
+     * $query->filterByResettable(array(12, 34)); // WHERE resettable IN (12, 34)
+     * $query->filterByResettable(array('min' => 12)); // WHERE resettable > 12
      * </code>
      *
-     * @param bool|string $resettable The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param mixed $resettable The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByResettable($resettable = null, ?string $comparison = null)
     {
-        if (is_string($resettable)) {
-            $resettable = in_array(strtolower($resettable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_array($resettable)) {
+            $useMinMax = false;
+            if (isset($resettable['min'])) {
+                $this->addUsingAlias(UsersTableMap::COL_RESETTABLE, $resettable['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($resettable['max'])) {
+                $this->addUsingAlias(UsersTableMap::COL_RESETTABLE, $resettable['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
         }
 
         $this->addUsingAlias(UsersTableMap::COL_RESETTABLE, $resettable, $comparison);
@@ -843,46 +871,46 @@ abstract class UsersQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \DB\Role object
+     * Filter the query by a related \DB\UserRole object
      *
-     * @param \DB\Role|ObjectCollection $role The related object(s) to use as filter
+     * @param \DB\UserRole|ObjectCollection $userRole The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByRole($role, ?string $comparison = null)
+    public function filterByUserRole($userRole, ?string $comparison = null)
     {
-        if ($role instanceof \DB\Role) {
+        if ($userRole instanceof \DB\UserRole) {
             return $this
-                ->addUsingAlias(UsersTableMap::COL_ROLE_ID, $role->getId(), $comparison);
-        } elseif ($role instanceof ObjectCollection) {
+                ->addUsingAlias(UsersTableMap::COL_ROLE_ID, $userRole->getId(), $comparison);
+        } elseif ($userRole instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             $this
-                ->addUsingAlias(UsersTableMap::COL_ROLE_ID, $role->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(UsersTableMap::COL_ROLE_ID, $userRole->toKeyValue('PrimaryKey', 'Id'), $comparison);
 
             return $this;
         } else {
-            throw new PropelException('filterByRole() only accepts arguments of type \DB\Role or Collection');
+            throw new PropelException('filterByUserRole() only accepts arguments of type \DB\UserRole or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Role relation
+     * Adds a JOIN clause to the query using the UserRole relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinRole(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinUserRole(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Role');
+        $relationMap = $tableMap->getRelation('UserRole');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -897,14 +925,14 @@ abstract class UsersQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Role');
+            $this->addJoinObject($join, 'UserRole');
         }
 
         return $this;
     }
 
     /**
-     * Use the Role relation Role object
+     * Use the UserRole relation UserRole object
      *
      * @see useQuery()
      *
@@ -912,19 +940,19 @@ abstract class UsersQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DB\RoleQuery A secondary query class using the current class as primary query
+     * @return \DB\UserRoleQuery A secondary query class using the current class as primary query
      */
-    public function useRoleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useUserRoleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinRole($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Role', '\DB\RoleQuery');
+            ->joinUserRole($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserRole', '\DB\UserRoleQuery');
     }
 
     /**
-     * Use the Role relation Role object
+     * Use the UserRole relation UserRole object
      *
-     * @param callable(\DB\RoleQuery):\DB\RoleQuery $callable A function working on the related query
+     * @param callable(\DB\UserRoleQuery):\DB\UserRoleQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -932,12 +960,12 @@ abstract class UsersQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withRoleQuery(
+    public function withUserRoleQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
+        ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useRoleQuery(
+        $relatedQuery = $this->useUserRoleQuery(
             $relationAlias,
             $joinType
         );
@@ -947,7 +975,7 @@ abstract class UsersQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the relation to Role table for an EXISTS query.
+     * Use the relation to UserRole table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -955,26 +983,26 @@ abstract class UsersQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DB\RoleQuery The inner query object of the EXISTS statement
+     * @return \DB\UserRoleQuery The inner query object of the EXISTS statement
      */
-    public function useRoleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useUserRoleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('Role', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('UserRole', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the relation to Role table for a NOT EXISTS query.
+     * Use the relation to UserRole table for a NOT EXISTS query.
      *
-     * @see useRoleExistsQuery()
+     * @see useUserRoleExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DB\RoleQuery The inner query object of the NOT EXISTS statement
+     * @return \DB\UserRoleQuery The inner query object of the NOT EXISTS statement
      */
-    public function useRoleNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useUserRoleNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('Role', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('UserRole', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \DB\ProjectRole object

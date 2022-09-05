@@ -19,6 +19,12 @@ class RouterParser
 
     public static function getRootDirectory()
     {
+        $url = explode(".", $_SERVER["HTTP_HOST"]);
+        if (count($url) === 2) $branch = "main";
+        else $branch = $url[count($url) - 3];
+        if (!str_ends_with($_SERVER['DOCUMENT_ROOT'], $branch)) {
+            $_SERVER['DOCUMENT_ROOT'] = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "branches" . DIRECTORY_SEPARATOR . $branch;
+        }
         return $_SERVER['DOCUMENT_ROOT'];
     }
 

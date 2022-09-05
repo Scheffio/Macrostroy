@@ -63,7 +63,7 @@ class ProjectRoleTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class ProjectRoleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the id field
@@ -101,6 +101,11 @@ class ProjectRoleTableMap extends TableMap
     public const COL_USER_ID = 'project_role.user_id';
 
     /**
+     * the column name for the project_id field
+     */
+    public const COL_PROJECT_ID = 'project_role.project_id';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -114,11 +119,11 @@ class ProjectRoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Lvl', 'IsCrud', 'ObjectId', 'UserId', ],
-        self::TYPE_CAMELNAME     => ['id', 'lvl', 'isCrud', 'objectId', 'userId', ],
-        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID, ProjectRoleTableMap::COL_LVL, ProjectRoleTableMap::COL_IS_CRUD, ProjectRoleTableMap::COL_OBJECT_ID, ProjectRoleTableMap::COL_USER_ID, ],
-        self::TYPE_FIELDNAME     => ['id', 'lvl', 'is_crud', 'object_id', 'user_id', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'Lvl', 'IsCrud', 'ObjectId', 'UserId', 'ProjectId', ],
+        self::TYPE_CAMELNAME     => ['id', 'lvl', 'isCrud', 'objectId', 'userId', 'projectId', ],
+        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID, ProjectRoleTableMap::COL_LVL, ProjectRoleTableMap::COL_IS_CRUD, ProjectRoleTableMap::COL_OBJECT_ID, ProjectRoleTableMap::COL_USER_ID, ProjectRoleTableMap::COL_PROJECT_ID, ],
+        self::TYPE_FIELDNAME     => ['id', 'lvl', 'is_crud', 'object_id', 'user_id', 'project_id', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -130,11 +135,11 @@ class ProjectRoleTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Lvl' => 1, 'IsCrud' => 2, 'ObjectId' => 3, 'UserId' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'lvl' => 1, 'isCrud' => 2, 'objectId' => 3, 'userId' => 4, ],
-        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID => 0, ProjectRoleTableMap::COL_LVL => 1, ProjectRoleTableMap::COL_IS_CRUD => 2, ProjectRoleTableMap::COL_OBJECT_ID => 3, ProjectRoleTableMap::COL_USER_ID => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'lvl' => 1, 'is_crud' => 2, 'object_id' => 3, 'user_id' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Lvl' => 1, 'IsCrud' => 2, 'ObjectId' => 3, 'UserId' => 4, 'ProjectId' => 5, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'lvl' => 1, 'isCrud' => 2, 'objectId' => 3, 'userId' => 4, 'projectId' => 5, ],
+        self::TYPE_COLNAME       => [ProjectRoleTableMap::COL_ID => 0, ProjectRoleTableMap::COL_LVL => 1, ProjectRoleTableMap::COL_IS_CRUD => 2, ProjectRoleTableMap::COL_OBJECT_ID => 3, ProjectRoleTableMap::COL_USER_ID => 4, ProjectRoleTableMap::COL_PROJECT_ID => 5, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'lvl' => 1, 'is_crud' => 2, 'object_id' => 3, 'user_id' => 4, 'project_id' => 5, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -181,6 +186,14 @@ class ProjectRoleTableMap extends TableMap
         'COL_USER_ID' => 'USER_ID',
         'user_id' => 'USER_ID',
         'project_role.user_id' => 'USER_ID',
+        'ProjectId' => 'PROJECT_ID',
+        'ProjectRole.ProjectId' => 'PROJECT_ID',
+        'projectId' => 'PROJECT_ID',
+        'projectRole.projectId' => 'PROJECT_ID',
+        'ProjectRoleTableMap::COL_PROJECT_ID' => 'PROJECT_ID',
+        'COL_PROJECT_ID' => 'PROJECT_ID',
+        'project_id' => 'PROJECT_ID',
+        'project_role.project_id' => 'PROJECT_ID',
     ];
 
     /**
@@ -201,10 +214,11 @@ class ProjectRoleTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('lvl', 'Lvl', 'BOOLEAN', true, 1, true);
-        $this->addColumn('is_crud', 'IsCrud', 'BOOLEAN', false, 1, null);
+        $this->addColumn('lvl', 'Lvl', 'INTEGER', true, null, 1);
+        $this->addColumn('is_crud', 'IsCrud', 'TINYINT', true, null, false);
         $this->addColumn('object_id', 'ObjectId', 'INTEGER', true, null, null);
         $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'users', 'id', true, null, null);
+        $this->addForeignKey('project_id', 'ProjectId', 'INTEGER', 'obj_project', 'id', true, null, null);
     }
 
     /**
@@ -215,12 +229,19 @@ class ProjectRoleTableMap extends TableMap
     public function buildRelations(): void
     {
         $this->addRelation('Users', '\\DB\\Users', RelationMap::MANY_TO_ONE, array (
-            0 =>
-                array (
-                    0 => ':user_id',
-                    1 => ':id',
-                ),
-        ), null, null, null, false);
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('ObjProject', '\\DB\\ObjProject', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':project_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     }
 
     /**
@@ -261,9 +282,9 @@ class ProjectRoleTableMap extends TableMap
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
         return (int) $row[
-        $indexType == TableMap::TYPE_NUM
-            ? 0 + $offset
-            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -289,7 +310,7 @@ class ProjectRoleTableMap extends TableMap
      * @param array $row Row returned by DataFetcher->fetch().
      * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -370,12 +391,14 @@ class ProjectRoleTableMap extends TableMap
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_IS_CRUD);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_OBJECT_ID);
             $criteria->addSelectColumn(ProjectRoleTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(ProjectRoleTableMap::COL_PROJECT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.lvl');
             $criteria->addSelectColumn($alias . '.is_crud');
             $criteria->addSelectColumn($alias . '.object_id');
             $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.project_id');
         }
     }
 
@@ -399,12 +422,14 @@ class ProjectRoleTableMap extends TableMap
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_IS_CRUD);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_OBJECT_ID);
             $criteria->removeSelectColumn(ProjectRoleTableMap::COL_USER_ID);
+            $criteria->removeSelectColumn(ProjectRoleTableMap::COL_PROJECT_ID);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.lvl');
             $criteria->removeSelectColumn($alias . '.is_crud');
             $criteria->removeSelectColumn($alias . '.object_id');
             $criteria->removeSelectColumn($alias . '.user_id');
+            $criteria->removeSelectColumn($alias . '.project_id');
         }
     }
 
@@ -431,8 +456,8 @@ class ProjectRoleTableMap extends TableMap
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function doDelete($values, ?ConnectionInterface $con = null): int
-    {
+     public static function doDelete($values, ?ConnectionInterface $con = null): int
+     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ProjectRoleTableMap::DATABASE_NAME);
         }

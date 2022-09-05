@@ -4,6 +4,8 @@ namespace DB\Base;
 
 use \Exception;
 use \PDO;
+use DB\ObjProject as ChildObjProject;
+use DB\ObjProjectQuery as ChildObjProjectQuery;
 use DB\ProjectRoleQuery as ChildProjectRoleQuery;
 use DB\Users as ChildUsers;
 use DB\UsersQuery as ChildUsersQuery;
@@ -19,7 +21,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use wipe\inc\v1\role\user_role\UserRole;
 
 /**
  * Base class that represents a row from the 'project_role' table.
@@ -73,21 +74,17 @@ abstract class ProjectRole implements ActiveRecordInterface
 
     /**
      * The value for the lvl field.
-     * Уровень
-    ( 1 - проекта;
-    2 - подпроект;
-    3 - группа;
-    4 - дом;
-    5 - этап )
-     * Note: this column has a database default value of: true
-     * @var        boolean
+     * Уровень доступа;( 1 - проекта; 2 - подпроект; 3 - группа; 4 - дом; 5 - этап )
+     * Note: this column has a database default value of: 1
+     * @var        int
      */
     protected $lvl;
 
     /**
      * The value for the is_crud field.
      * Доступен ли CRUD объекта
-     * @var        boolean|null
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
     protected $is_crud;
 
@@ -106,9 +103,21 @@ abstract class ProjectRole implements ActiveRecordInterface
     protected $user_id;
 
     /**
+     * The value for the project_id field.
+     * ID проекта
+     * @var        int
+     */
+    protected $project_id;
+
+    /**
      * @var        ChildUsers
      */
     protected $aUsers;
+
+    /**
+     * @var        ChildObjProject
+     */
+    protected $aObjProject;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -126,7 +135,8 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
-        $this->lvl = true;
+        $this->lvl = 1;
+        $this->is_crud = 0;
     }
 
     /**
@@ -369,13 +379,8 @@ abstract class ProjectRole implements ActiveRecordInterface
 
     /**
      * Get the [lvl] column value.
-     * Уровень
-    ( 1 - проекта;
-    2 - подпроект;
-    3 - группа;
-    4 - дом;
-    5 - этап )
-     * @return boolean
+     * Уровень доступа;( 1 - проекта; 2 - подпроект; 3 - группа; 4 - дом; 5 - этап )
+     * @return int
      */
     public function getLvl()
     {
@@ -383,38 +388,13 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Get the [lvl] column value.
-     * Уровень
-    ( 1 - проекта;
-    2 - подпроект;
-    3 - группа;
-    4 - дом;
-    5 - этап )
-     * @return boolean
-     */
-    public function isLvl()
-    {
-        return $this->getLvl();
-    }
-
-    /**
      * Get the [is_crud] column value.
      * Доступен ли CRUD объекта
-     * @return boolean|null
+     * @return int
      */
     public function getIsCrud()
     {
         return $this->is_crud;
-    }
-
-    /**
-     * Get the [is_crud] column value.
-     * Доступен ли CRUD объекта
-     * @return boolean|null
-     */
-    public function isCrud()
-    {
-        return $this->getIsCrud();
     }
 
     /**
@@ -438,6 +418,16 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
+     * Get the [project_id] column value.
+     * ID проекта
+     * @return int
+     */
+    public function getProjectId()
+    {
+        return $this->project_id;
+    }
+
+    /**
      * Set the value of [id] column.
      * ID роли проекта
      * @param int $v New value
@@ -458,28 +448,15 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of the [lvl] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * Уровень
-    ( 1 - проекта;
-    2 - подпроект;
-    3 - группа;
-    4 - дом;
-    5 - этап )
-     * @param bool|integer|string $v The new value
+     * Set the value of [lvl] column.
+     * Уровень доступа;( 1 - проекта; 2 - подпроект; 3 - группа; 4 - дом; 5 - этап )
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setLvl($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
         if ($this->lvl !== $v) {
@@ -491,23 +468,15 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of the [is_crud] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [is_crud] column.
      * Доступен ли CRUD объекта
-     * @param bool|integer|string|null $v The new value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setIsCrud($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
         if ($this->is_crud !== $v) {
@@ -541,7 +510,7 @@ abstract class ProjectRole implements ActiveRecordInterface
     /**
      * Set the value of [user_id] column.
      * ID пользователя
-     * @param null|int $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setUserId($v)
@@ -563,6 +532,30 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [project_id] column.
+     * ID проекта
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setProjectId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->project_id !== $v) {
+            $this->project_id = $v;
+            $this->modifiedColumns[ProjectRoleTableMap::COL_PROJECT_ID] = true;
+        }
+
+        if ($this->aObjProject !== null && $this->aObjProject->getId() !== $v) {
+            $this->aObjProject = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -572,9 +565,13 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-        if ($this->lvl !== true) {
-            return false;
-        }
+            if ($this->lvl !== 1) {
+                return false;
+            }
+
+            if ($this->is_crud !== 0) {
+                return false;
+            }
 
         // otherwise, everything was equal, so return TRUE
         return true;
@@ -592,7 +589,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param bool $rehydrate Whether this object is being re-hydrated from the database.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @return int next starting column
@@ -606,16 +603,19 @@ abstract class ProjectRole implements ActiveRecordInterface
             $this->id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProjectRoleTableMap::translateFieldName('Lvl', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->lvl = (null !== $col) ? (boolean) $col : null;
+            $this->lvl = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProjectRoleTableMap::translateFieldName('IsCrud', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_crud = (null !== $col) ? (boolean) $col : null;
+            $this->is_crud = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ProjectRoleTableMap::translateFieldName('ObjectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->object_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ProjectRoleTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ProjectRoleTableMap::translateFieldName('ProjectId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->project_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -624,7 +624,7 @@ abstract class ProjectRole implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = ProjectRoleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = ProjectRoleTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\ProjectRole'), 0, $e);
@@ -649,6 +649,9 @@ abstract class ProjectRole implements ActiveRecordInterface
     {
         if ($this->aUsers !== null && $this->user_id !== $this->aUsers->getId()) {
             $this->aUsers = null;
+        }
+        if ($this->aObjProject !== null && $this->project_id !== $this->aObjProject->getId()) {
+            $this->aObjProject = null;
         }
     }
 
@@ -690,6 +693,7 @@ abstract class ProjectRole implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aUsers = null;
+            $this->aObjProject = null;
         } // if (deep)
     }
 
@@ -805,6 +809,13 @@ abstract class ProjectRole implements ActiveRecordInterface
                 $this->setUsers($this->aUsers);
             }
 
+            if ($this->aObjProject !== null) {
+                if ($this->aObjProject->isModified() || $this->aObjProject->isNew()) {
+                    $affectedRows += $this->aObjProject->save($con);
+                }
+                $this->setObjProject($this->aObjProject);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -841,7 +852,7 @@ abstract class ProjectRole implements ActiveRecordInterface
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . ProjectRoleTableMap::COL_ID . ')');
         }
 
-        // check the columns in natural order for more readable SQL queries
+         // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(ProjectRoleTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
@@ -856,6 +867,9 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'user_id';
+        }
+        if ($this->isColumnModified(ProjectRoleTableMap::COL_PROJECT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'project_id';
         }
 
         $sql = sprintf(
@@ -872,16 +886,19 @@ abstract class ProjectRole implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                     case 'lvl':
-                        $stmt->bindValue($identifier, (int) $this->lvl, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->lvl, PDO::PARAM_INT);
                         break;
                     case 'is_crud':
-                        $stmt->bindValue($identifier, (int) $this->is_crud, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->is_crud, PDO::PARAM_INT);
                         break;
                     case 'object_id':
                         $stmt->bindValue($identifier, $this->object_id, PDO::PARAM_INT);
                         break;
                     case 'user_id':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                        break;
+                    case 'project_id':
+                        $stmt->bindValue($identifier, $this->project_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -960,6 +977,9 @@ abstract class ProjectRole implements ActiveRecordInterface
             case 4:
                 return $this->getUserId();
 
+            case 5:
+                return $this->getProjectId();
+
             default:
                 return null;
         } // switch()
@@ -993,6 +1013,7 @@ abstract class ProjectRole implements ActiveRecordInterface
             $keys[2] => $this->getIsCrud(),
             $keys[3] => $this->getObjectId(),
             $keys[4] => $this->getUserId(),
+            $keys[5] => $this->getProjectId(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1014,6 +1035,21 @@ abstract class ProjectRole implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aObjProject) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objProject';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_project';
+                        break;
+                    default:
+                        $key = 'ObjProject';
+                }
+
+                $result[$key] = $this->aObjProject->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1066,6 +1102,9 @@ abstract class ProjectRole implements ActiveRecordInterface
             case 4:
                 $this->setUserId($value);
                 break;
+            case 5:
+                $this->setProjectId($value);
+                break;
         } // switch()
 
         return $this;
@@ -1107,11 +1146,14 @@ abstract class ProjectRole implements ActiveRecordInterface
         if (array_key_exists($keys[4], $arr)) {
             $this->setUserId($arr[$keys[4]]);
         }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setProjectId($arr[$keys[5]]);
+        }
 
         return $this;
     }
 
-    /**
+     /**
      * Populate the current object from a string, using a given parser format
      * <code>
      * $book = new Book();
@@ -1164,6 +1206,9 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProjectRoleTableMap::COL_USER_ID)) {
             $criteria->add(ProjectRoleTableMap::COL_USER_ID, $this->user_id);
+        }
+        if ($this->isColumnModified(ProjectRoleTableMap::COL_PROJECT_ID)) {
+            $criteria->add(ProjectRoleTableMap::COL_PROJECT_ID, $this->project_id);
         }
 
         return $criteria;
@@ -1257,6 +1302,7 @@ abstract class ProjectRole implements ActiveRecordInterface
         $copyObj->setIsCrud($this->getIsCrud());
         $copyObj->setObjectId($this->getObjectId());
         $copyObj->setUserId($this->getUserId());
+        $copyObj->setProjectId($this->getProjectId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1337,6 +1383,57 @@ abstract class ProjectRole implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildObjProject object.
+     *
+     * @param ChildObjProject $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setObjProject(ChildObjProject $v = null)
+    {
+        if ($v === null) {
+            $this->setProjectId(NULL);
+        } else {
+            $this->setProjectId($v->getId());
+        }
+
+        $this->aObjProject = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildObjProject object, it will not be re-added.
+        if ($v !== null) {
+            $v->addProjectRole($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildObjProject object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildObjProject The associated ChildObjProject object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjProject(?ConnectionInterface $con = null)
+    {
+        if ($this->aObjProject === null && ($this->project_id != 0)) {
+            $this->aObjProject = ChildObjProjectQuery::create()->findPk($this->project_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aObjProject->addProjectRoles($this);
+             */
+        }
+
+        return $this->aObjProject;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1348,11 +1445,15 @@ abstract class ProjectRole implements ActiveRecordInterface
         if (null !== $this->aUsers) {
             $this->aUsers->removeProjectRole($this);
         }
+        if (null !== $this->aObjProject) {
+            $this->aObjProject->removeProjectRole($this);
+        }
         $this->id = null;
         $this->lvl = null;
         $this->is_crud = null;
         $this->object_id = null;
         $this->user_id = null;
+        $this->project_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1374,7 +1475,11 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function clearAllReferences(bool $deep = false)
     {
+        if ($deep) {
+        } // if ($deep)
+
         $this->aUsers = null;
+        $this->aObjProject = null;
         return $this;
     }
 
@@ -1395,7 +1500,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preSave(?ConnectionInterface $con = null): bool
     {
-        return true;
+                return true;
     }
 
     /**
@@ -1405,22 +1510,16 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postSave(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before inserting to database
      * @param ConnectionInterface|null $con
      * @return bool
-     * @throws Exception
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        if ($this->is_crud === false &&
-            UserRole::getByUserId($this->user_id)->isManageUsers()) {
-            throw new Exception('Unable to edit administrator access');
-        }
-
-        return true;
+                return true;
     }
 
     /**
@@ -1430,26 +1529,16 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before updating the object in database
      * @param ConnectionInterface|null $con
      * @return bool
-     * @throws Exception
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        $columns = $this->getModifiedColumns();
-        $isCrud = in_array('project_role.is_crud', $columns);
-
-        if ($isCrud &&
-            $this->is_crud === false &&
-            UserRole::getByUserId($this->user_id)->isManageUsers()) {
-            throw new Exception('Unable to edit administrator access');
-        }
-
-        return true;
+                return true;
     }
 
     /**
@@ -1459,7 +1548,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postUpdate(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before deleting the object in database
@@ -1468,7 +1557,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function preDelete(?ConnectionInterface $con = null): bool
     {
-        return true;
+                return true;
     }
 
     /**
@@ -1478,7 +1567,7 @@ abstract class ProjectRole implements ActiveRecordInterface
      */
     public function postDelete(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
 
     /**

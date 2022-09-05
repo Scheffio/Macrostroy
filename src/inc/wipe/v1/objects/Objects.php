@@ -1,30 +1,36 @@
 <?php
 namespace wipe\inc\v1\objects;
 
-use DB\Base\ProjectQuery;
-use DB\Map\GroupsTableMap;
-use DB\Map\HouseTableMap;
-use DB\Map\ProjectTableMap;
-use DB\Map\StageTableMap;
-use DB\Map\SubprojectTableMap;
-use DB\Base\HouseQuery;
-use DB\Base\StageQuery;
-use DB\Base\GroupsQuery;
-use DB\Base\SubprojectQuery;
-use DB\Base\Stage as BaseStage;
-use DB\Base\House as BaseHouse;
-use DB\Base\Groups as BaseGroup;
-use DB\Base\Project as BaseProject;
-use DB\Base\Subproject as BaseSubproject;
+use DB\Base\ObjGroupQuery;
+use DB\Base\ObjHouseQuery;
+use DB\Base\ObjProjectQuery;
+use DB\Base\ObjStageQuery;
+use DB\Base\ObjSubprojectQuery;
+use DB\Map\ObjGroupTableMap;
+use DB\Map\ObjHouseTableMap;
+use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageTableMap;
+use DB\Map\ObjSubprojectTableMap;
+use ext\ObjGroup;
+use ext\ObjHouse;
+use ext\ObjProject;
+use ext\ObjStage;
+use ext\ObjSubproject;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\Exception\PropelException;
-use Propel\Runtime\Map\TableMap;
+use Propel\Runtime\ActiveQuery\PropelQuery;
+use wipe\inc\v1\objects\children\Group;
+use wipe\inc\v1\objects\children\House;
+use wipe\inc\v1\objects\children\Project;
+use wipe\inc\v1\objects\children\Stage;
+use wipe\inc\v1\objects\children\Subproject;
+use wipe\inc\v1\role\project_role\enum\eLvlStr;
+use wipe\inc\v1\role\project_role\enum\eLvlInt;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
-use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
+use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
-use wipe\inc\v1\role\project_role\ProjectRole;
 
 class Objects
 {
@@ -32,8 +38,14 @@ class Objects
     public const ATTRIBUTE_STATUS_COMPLETED = 'completed';
     public const ATTRIBUTE_STATUS_DELETED = 'deleted';
 
+    public const ATTRIBUTE_IS_PUBLIC_OPEN_ACCESS = true;
+    public const ATTRIBUTE_IS_PUBLIC_PRIVATE_ACCESS = false;
+
     public const ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS = true;
-    public const ATTRIBUTE_IS_AVAILABLE_PRIVATE_ACCESS = false;
+    public const ATTRIBUTE_IS_AVAILABLE_DELETED_ACCESS = false;
+
+    /** @var int|null Уровень доступа. */
+    protected ?int $lvl = null;
 
     /** @var int|null ID объекта. */
     protected ?int $id = null;
@@ -45,7 +57,13 @@ class Objects
     protected ?string $status = null;
 
     /** @var bool|null Доступ к объекту (пуличный, приватный). */
+    protected ?bool $isPublic = null;
+
+    /** @var bool|null Доступ к объекту (доступен, удален). */
     protected ?bool $isAvailable = null;
+
+    /** @var ObjGroup|ObjHouse|ObjProject|ObjStage|ObjSubproject|null Объект класса (подкласса). */
+    protected null|ObjProject|ObjSubproject|ObjGroup|ObjHouse|ObjStage $object = null;
 
     #region Apply Default Values Functions
     /**
@@ -55,36 +73,53 @@ class Objects
     protected function applyByDefaultValues(): void
     {
         $this->status = $this::ATTRIBUTE_STATUS_IN_PROCESS;
+        $this->isPublic = $this::ATTRIBUTE_IS_PUBLIC_OPEN_ACCESS;
         $this->isAvailable = $this::ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS;
     }
 
     /**
      * Заполнение свойств класса, используя объект.
-     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj
      * @return void
      */
-    protected function applyDefaultValuesByObj(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
+    protected function applyDefaultValuesByObj(): void
     {
-        $this->name = $obj->getName();
-        $this->status = $obj->getStatus();
-        $this->isAvailable = $obj->getIsAvailable();
+        $this->name = $this->object->getName();
+        $this->status = $this->object->getStatus();
+        $this->isPublic = $this->object->getIsPublic();
+        $this->isAvailable = $this->object->getIsAvailable();
     }
     #endregion
 
     #region Access Control Functions
-    /** @return bool|null Доступ к объекту (пуличный, приватный). */
+    /** @return bool|null Доступ к объекту (доступен, удален). */
     public function isAvailable(): ?bool
     {
         return $this->isAvailable;
     }
 
     /**
-     * Данный объект является публичным, иначе - ошибка.
+     * Данный объект является доступным, иначе - ошибка.
      * @throws AccessDeniedException
      */
     public function isAvailableOrThrow(): bool
     {
         return $this->isAvailable ?: throw new AccessDeniedException();
+    }
+
+    /** @return bool|null Доступ к объекту (доступен, удален). */
+    public function isPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * Данный объект является публичным, иначе - ошибка.
+     * @throws AccessDeniedException
+     */
+    public function isPublicOrThrow()
+    {
+        return $this->isPublic
+            ?: throw new AccessDeniedException();
     }
 
     /**
@@ -93,11 +128,47 @@ class Objects
      */
     public function isAccessEditOrThrow(): bool
     {
-        return $this->status === $this::ATTRIBUTE_STATUS_IN_PROCESS ?: throw new AccessDeniedException();
+        return $this->status === $this::ATTRIBUTE_STATUS_IN_PROCESS
+            ?: throw new AccessDeniedException();
     }
     #endregion
 
-    #region Getter Functions
+    #region Static Access Control Functions
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @param int $objId ID объекта.
+     * @return bool Сущетсвует ли данный объект.
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public static function isExistingOrThrow(int|string $lvl, int $objId): bool
+    {
+        $className = self::getColStatusByLvl($lvl);
+
+        return PropelQuery::from($className)->findPk($objId) !== null
+            ?: throw new NoFindObjectException();
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @param int $objId ID объекта.
+     * @return bool Доступно ли редактирование объекта.
+     * @throws IncorrectLvlException
+     * @throws ObjectIsNotEditableException
+     */
+    public static function isAvailableForEditionOrThrow(int|string $lvl, int $objId): bool
+    {
+        $colStatus = self::getColStatusByLvl($lvl);
+        $className = self::getClassNameObjByLvl($lvl);
+
+        return  PropelQuery::from($className)
+                ->where($colStatus . '=?', self::ATTRIBUTE_STATUS_IN_PROCESS)
+                ->findPk($objId) !== null ?:
+                throw new ObjectIsNotEditableException();
+    }
+    #endregion
+
+    #region Getter Default Values Functions
     /** @return int|null ID объекта. */
     public function getId(): ?int
     {
@@ -116,69 +187,71 @@ class Objects
         return $this->status;
     }
 
-    /**
-     * Фильтрация удаленных объектов.
-     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Запрос.
-     * @param string $colName Наименование колонки с статусом разработки объекта (TableMap).
-     * @return ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery
-     */
-    public function getFilterNoDeletedStatusQuery(
-        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj,
-        string $colName
-    ): ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery
+    /** @return ObjProject|ObjSubproject|ObjGroup|ObjHouse|ObjStage|null Объект класса (подкласса). */
+    public function getObj(): null|ObjProject|ObjSubproject|ObjGroup|ObjHouse|ObjStage
     {
-        return $obj->where($colName . '!=?', $this::ATTRIBUTE_STATUS_DELETED);
+        return $this->object;
+    }
+    #endregion
+
+    #region Getter Function
+    /**
+     * Поиск объекта по уровню доступа и ID, иначе - ошибка.
+     * @return mixed
+     * @throws IncorrectLvlException
+     * @throws NoProjectFoundException
+     */
+    public function getObjByLvlAndIdOrThrow(): mixed
+    {
+        $className = $this::getClassNameObjByLvl($this->lvl);
+
+        return  PropelQuery::from($className)
+                ->findPk($this->id) ?? throw new NoProjectFoundException();
     }
 
     /**
-     * Получить объект по ID, иначе - ошибка.
-     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Запрос.
-     * @param string $colName Наименование колонки с статусом разработки объекта (TableMap).
-     * @return BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+     * Поиск не удаленного объекта по уровню доступа и ID, иначе - ошибка.
+     * @return mixed
+     * @throws IncorrectLvlException
      * @throws NoProjectFoundException
      */
-    public function getSearchByIdOrThrow(
-        ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj,
-        string $colName
-    ): BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage
+    public function getObjByLvlAndIdNoDeletedOrThrow(): mixed
     {
-        $this->getFilterNoDeletedStatusQuery($obj, $colName);
+        $colStatus = $this::getColStatusByLvl($this->lvl);
+        $className = $this::getClassNameObjByLvl($this->lvl);
 
-        return $obj->findPk($this->id) ?? throw new NoProjectFoundException();
+        return  PropelQuery::from($className)
+            ->filterBy($colStatus, self::ATTRIBUTE_STATUS_DELETED, Criteria::ALT_NOT_EQUAL)
+            ->findPk($this->id) ?? throw new NoProjectFoundException();
     }
     #endregion
 
     #region Static Getter Functions
     /**
-     * @param int|null $id ID проекта.
-     * @return Project
-     * @throws NoFindObjectException
-     */
-    public static function getProject(?int $id = null): Project
-    {
-        return new Project(projectId: $id);
-    }
-
-    /**
-     * @param int $objectId ID объекта.
      * @param int|string $lvl Уровень доступа.
-     * @return int|string|array
+     * @return string Наименование propel класса для запроса.
      * @throws IncorrectLvlException
      */
-    public static function getProjectIdByLvlAndId(int $objectId, int|string $lvl): int|string|array
+    public static function getClassNameObjByLvl(int|string $lvl): string
     {
-        $col = self::getColIdByLvl($lvl);
+        return match ($lvl) {
+            eLvlStr::PROJECT->value,
+            eLvlInt::PROJECT->value => \DB\ObjProject::class,
 
-        return  ProjectQuery::create()
-                ->addSelectColumn(ProjectTableMap::COL_ID)
-                ->addJoin(ProjectTableMap::COL_ID, SubprojectTableMap::COL_PROJECT_ID)
-                ->addJoin(SubprojectTableMap::COL_ID, GroupsTableMap::COL_SUBPROJECT_ID)
-                ->addJoin(GroupsTableMap::COL_ID, HouseTableMap::COL_GROUP_ID)
-                ->addJoin(HouseTableMap::COL_ID, StageTableMap::COL_HOUSE_ID)
-                ->where($col.'=?', $objectId)
-                ->toString();
-//                ->findOne()
-//                ->toArray(TableMap::TYPE_FIELDNAME);
+            eLvlStr::SUBPROJECT->value,
+            eLvlInt::SUBPROJECT->value => \DB\ObjSubproject::class,
+
+            eLvlStr::GROUP->value,
+            eLvlInt::GROUP->value => \DB\ObjGroup::class,
+
+            eLvlStr::HOUSE->value,
+            eLvlInt::HOUSE->value => \DB\ObjHouse::class,
+
+            eLvlStr::STAGE->value,
+            eLvlInt::STAGE->value => \DB\ObjStage::class,
+
+            default => throw new IncorrectLvlException()
+        };
     }
 
     /**
@@ -189,23 +262,74 @@ class Objects
     public static function getColIdByLvl(int|string $lvl): string
     {
         return match ($lvl) {
-            ProjectRole::ATTRIBUTE_LVL_STR_PROJECT,
-            ProjectRole::ATTRIBUTE_LVL_INT_PROJECT => ProjectTableMap::COL_ID,
+            eLvlStr::PROJECT->value,
+            eLvlInt::PROJECT->value => ObjProjectTableMap::COL_ID,
 
-            ProjectRole::ATTRIBUTE_LVL_STR_SUBPROJECT,
-            ProjectRole::ATTRIBUTE_LVL_INT_SUBPROJECT => SubprojectTableMap::COL_ID,
+            eLvlStr::SUBPROJECT->value,
+            eLvlInt::SUBPROJECT->value => ObjSubprojectTableMap::COL_ID,
 
-            ProjectRole::ATTRIBUTE_LVL_STR_GROUP,
-            ProjectRole::ATTRIBUTE_LVL_INT_GROUP => GroupsTableMap::COL_ID,
+            eLvlStr::GROUP->value,
+            eLvlInt::GROUP->value => ObjGroupTableMap::COL_ID,
 
-            ProjectRole::ATTRIBUTE_LVL_STR_HOUSE,
-            ProjectRole::ATTRIBUTE_LVL_INT_HOUSE => HouseTableMap::COL_ID,
+            eLvlStr::HOUSE->value,
+            eLvlInt::HOUSE->value => ObjHouseTableMap::COL_ID,
 
-            ProjectRole::ATTRIBUTE_LVL_STR_STAGE,
-            ProjectRole::ATTRIBUTE_LVL_INT_STAGE => StageTableMap::COL_ID,
+            eLvlStr::STAGE->value,
+            eLvlInt::STAGE->value => ObjStageTableMap::COL_ID,
 
             default => throw new IncorrectLvlException()
         };
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @return string Наименование атрибута, в котором хранится статус родителя.
+     * @throws IncorrectLvlException
+     */
+    public static function getColStatusByLvl(int|string $lvl): string
+    {
+        return match ($lvl) {
+            eLvlStr::PROJECT->value,
+            eLvlInt::PROJECT->value => ObjProjectTableMap::COL_STATUS,
+
+            eLvlStr::SUBPROJECT->value,
+            eLvlInt::SUBPROJECT->value => ObjSubprojectTableMap::COL_STATUS,
+
+            eLvlStr::GROUP->value,
+            eLvlInt::GROUP->value => ObjGroupTableMap::COL_STATUS,
+
+            eLvlStr::HOUSE->value,
+            eLvlInt::HOUSE->value => ObjHouseTableMap::COL_STATUS,
+
+            eLvlStr::STAGE->value,
+            eLvlInt::STAGE->value => ObjStageTableMap::COL_STATUS,
+
+            default => throw new IncorrectLvlException()
+        };
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @param int $objectId ID объекта.
+     * @return int
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public static function getProjectIdByChildOrThrow(int|string $lvl, int $objectId): int
+    {
+        $col = self::getColIdByLvl($lvl);
+
+        return  ObjProjectQuery::create()
+                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                            ->leftJoinObjStage()
+                        ->endUse()
+                    ->endUse()
+                ->endUse()
+                ->where($col.'=?', $objectId)
+                ->findOne()
+                ->getId() ?: throw new NoFindObjectException();
     }
 
     /**
@@ -216,10 +340,8 @@ class Objects
      */
     public static function getProjectIdBySubprojectId(int $subprojectId): int
     {
-        $i = SubprojectQuery::create()->findPk($subprojectId)
+        return ObjSubprojectQuery::create()->findPk($subprojectId)->getProjectId()
             ?? throw new NoFindObjectException();
-
-        return $i->getProjectId();
     }
 
     /**
@@ -230,10 +352,8 @@ class Objects
      */
     public static function getSubprojectIdByGroupId(int $groupId): int
     {
-        $i = GroupsQuery::create()->findPk($groupId)
+        return ObjGroupQuery::create()->findPk($groupId)->getSubprojectId()
             ?? throw new NoFindObjectException();
-
-        return $i->getSubprojectId();
     }
 
     /**
@@ -244,10 +364,8 @@ class Objects
      */
     public static function getGroupIdByHouseId(int $houseId): int
     {
-        $i = HouseQuery::create()->findPk($houseId)
+        return ObjHouseQuery::create()->findPk($houseId)->getGroupId()
             ?? throw new NoFindObjectException();
-
-        return $i->getGroupId();
     }
 
     /**
@@ -258,10 +376,55 @@ class Objects
      */
     public static function getHouseIdByStageId(int $stageId): int
     {
-        $i = StageQuery::create()->findPk($stageId)
+        return ObjStageQuery::create()->findPk($stageId)->getHouseId()
             ?? throw new NoFindObjectException();
+    }
+    #endregion
 
-        return $i->getHouseId();
+    #region Static Getter Children Classes Functions
+    /**
+     * @param int|null $id ID проекта.
+     * @return Project
+     */
+    public static function getProject(?int $id = null): Project
+    {
+        return new Project();
+    }
+
+    /**
+     * @param int|null $id ID подпроекта.
+     * @return Subproject
+     */
+    public static function getSubproject(?int $id = null): Subproject
+    {
+        return new Subproject();
+    }
+
+    /**
+     * @param int|null $id ID группы.
+     * @return Group
+     */
+    public static function getGroup(?int $id = null): Group
+    {
+        return new Group();
+    }
+
+    /**
+     * @param int|null $id ID дома.
+     * @return House
+     */
+    public static function getHouse(?int $id = null): House
+    {
+        return new House();
+    }
+
+    /**
+     * @param int|null $id ID этапа.
+     * @return Stage
+     */
+    public static function getStage(?int $id = null): Stage
+    {
+        return new Stage();
     }
     #endregion
 
@@ -313,8 +476,22 @@ class Objects
     }
 
     /**
-     * Присваивание свойству класса доступа к объекту.
-     * @param bool|null $isAvailable Доступ к объекту (пуличный, приватный).
+     * Присваивание свойству класса доступа (пуличный, приватный) к объекту.
+     * @param bool|null $isPublic Доступ к объекту (пуличный, приватный).
+     * @return Objects
+     */
+    public function setIsPublic(?bool $isPublic = true): Objects
+    {
+        if ($isPublic !== null && $this->isPublic !== $isPublic) {
+            $this->isPublic = $isPublic;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Присваивание свойству класса доступа (доступен, удален) к объекту.
+     * @param bool|null $isAvailable Доступ к объекту (доступен, удален).
      * @return Objects
      */
     public function setIsAvailable(?bool $isAvailable = true): Objects
@@ -325,30 +502,35 @@ class Objects
 
         return $this;
     }
+    #endregion
 
+    #region Setter Functions
     /**
-     * Заполнение свойств класса.
-     * @param BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage $obj Объект.
+     * Заполнение свойств объекта, в соответсвие с актуальными знаениями класса.
      * @return void
      */
-    protected function setUpdateByDefaultValues(BaseProject|BaseSubproject|BaseGroup|BaseHouse|BaseStage &$obj): void
+    public function setUpdateObjByCurrentValues(): void
     {
-        if ($this->name) $obj->setName($this->name);
-        if ($this->status) $obj->setStatus($this->status);
-        if ($this->isAvailable) $obj->setIsAvailable($this->isAvailable);
+        if ($this->name) $this->object->setName($this->name);
+        if ($this->status) $this->object->setStatus($this->status);
+        if ($this->isPublic !== null) $this->object->setIsPublic($this->isPublic);
+        if ($this->isAvailable !== null) $this->object->setIsAvailable($this->isAvailable);
     }
 
     /**
-     * Заполнение фильтрации запроса.
-     * @param ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery $obj Объект запроса.
+     * @param string $name
+     * @param string $status
+     * @param bool $isPublic
+     * @param bool $isAvailable
      * @return void
+     * @throws IncorrectStatusException
      */
-    protected function setFilterByDefaultValues(ProjectQuery|SubprojectQuery|GroupsQuery|HouseQuery|StageQuery &$obj): void
+    public function setObjDefaultValues(string $name, string $status, bool $isPublic, bool $isAvailable): void
     {
-        if ($this->id) $obj->filterById($this->id);
-        if ($this->name) $obj->filterByName($this->name);
-        if ($this->status) $obj->filterByStatus($this->status);
-        if ($this->isAvailable) $obj->filterByIsAvailable($this->isAvailable);
+        $this->setName($name)
+             ->setStatus($status)
+             ->setIsPublic($isPublic)
+             ->setIsAvailable($isAvailable);
     }
     #endregion
 }

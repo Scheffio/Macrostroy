@@ -306,14 +306,14 @@ class UsersTableMap extends TableMap
         $this->addColumn('phone', 'Phone', 'VARCHAR', false, 11, null);
         $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
         $this->addColumn('username', 'Username', 'VARCHAR', false, 100, null);
-        $this->addColumn('status', 'Status', 'TINYINT', true, 2, 0);
-        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'role', 'id', true, null, 1);
-        $this->addColumn('verified', 'Verified', 'BOOLEAN', true, 1, false);
-        $this->addColumn('resettable', 'Resettable', 'BOOLEAN', true, 1, true);
-        $this->addColumn('roles_mask', 'RolesMask', 'INTEGER', true, 10, 0);
-        $this->addColumn('registered', 'Registered', 'INTEGER', true, 10, null);
-        $this->addColumn('last_login', 'LastLogin', 'INTEGER', false, 10, null);
-        $this->addColumn('force_logout', 'ForceLogout', 'SMALLINT', true, 7, 0);
+        $this->addColumn('status', 'Status', 'TINYINT', true, null, 0);
+        $this->addForeignKey('role_id', 'RoleId', 'INTEGER', 'user_role', 'id', false, null, null);
+        $this->addColumn('verified', 'Verified', 'TINYINT', true, null, 0);
+        $this->addColumn('resettable', 'Resettable', 'TINYINT', true, null, 1);
+        $this->addColumn('roles_mask', 'RolesMask', 'INTEGER', true, null, 0);
+        $this->addColumn('registered', 'Registered', 'INTEGER', true, null, null);
+        $this->addColumn('last_login', 'LastLogin', 'INTEGER', false, null, null);
+        $this->addColumn('force_logout', 'ForceLogout', 'SMALLINT', true, null, 0);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
     }
 
@@ -324,20 +324,20 @@ class UsersTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Role', '\\DB\\Role', RelationMap::MANY_TO_ONE, array (
-            0 =>
-                array (
-                    0 => ':role_id',
-                    1 => ':id',
-                ),
-        ), null, null, null, false);
+        $this->addRelation('UserRole', '\\DB\\UserRole', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':role_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
         $this->addRelation('ProjectRole', '\\DB\\ProjectRole', RelationMap::ONE_TO_MANY, array (
-            0 =>
-                array (
-                    0 => ':user_id',
-                    1 => ':id',
-                ),
-        ), null, null, 'ProjectRoles', false);
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'ProjectRoles', false);
     }
 
     /**
@@ -378,9 +378,9 @@ class UsersTableMap extends TableMap
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
         return (int) $row[
-        $indexType == TableMap::TYPE_NUM
-            ? 0 + $offset
-            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -406,7 +406,7 @@ class UsersTableMap extends TableMap
      * @param array $row Row returned by DataFetcher->fetch().
      * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+                                 One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -584,8 +584,8 @@ class UsersTableMap extends TableMap
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function doDelete($values, ?ConnectionInterface $con = null): int
-    {
+     public static function doDelete($values, ?ConnectionInterface $con = null): int
+     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(UsersTableMap::DATABASE_NAME);
         }

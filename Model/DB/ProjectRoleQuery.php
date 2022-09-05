@@ -5,7 +5,7 @@ namespace DB;
 use DB\Base\ProjectRoleQuery as BaseProjectRoleQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'project_access_role' table.
+ * Skeleton subclass for performing query and update operations on the 'project_role' table.
  *
  *
  *

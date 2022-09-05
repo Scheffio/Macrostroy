@@ -16,17 +16,18 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `groups`
+-- Table structure for table `obj_group`
 --
 
-DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS `obj_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `groups` (
+CREATE TABLE `obj_group` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID группы',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `subproject_id` int unsigned NOT NULL COMMENT 'ID подпроекта',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
@@ -34,65 +35,67 @@ CREATE TABLE `groups` (
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `subproject_id` (`subproject_id`),
-  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `subproject` (`id`)
+  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `obj_subproject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `groups`
+-- Dumping data for table `obj_group`
 --
 
-LOCK TABLES `groups` WRITE;
-/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+LOCK TABLES `obj_group` WRITE;
+/*!40000 ALTER TABLE `obj_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `groups_version`
+-- Table structure for table `obj_group_version`
 --
 
-DROP TABLE IF EXISTS `groups_version`;
+DROP TABLE IF EXISTS `obj_group_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `groups_version` (
+CREATE TABLE `obj_group_version` (
   `id` int unsigned NOT NULL COMMENT 'ID группы',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `subproject_id` int unsigned NOT NULL COMMENT 'ID подпроекта',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `subproject_id_version` int DEFAULT '0',
-  `house_ids` text,
-  `house_versions` text,
+  `obj_house_ids` text,
+  `obj_house_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `groups_version_fk_48de95` FOREIGN KEY (`id`) REFERENCES `groups` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_group_version_fk_663c1c` FOREIGN KEY (`id`) REFERENCES `obj_group` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `groups_version`
+-- Dumping data for table `obj_group_version`
 --
 
-LOCK TABLES `groups_version` WRITE;
-/*!40000 ALTER TABLE `groups_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `groups_version` ENABLE KEYS */;
+LOCK TABLES `obj_group_version` WRITE;
+/*!40000 ALTER TABLE `obj_group_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_group_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `house`
+-- Table structure for table `obj_house`
 --
 
-DROP TABLE IF EXISTS `house`;
+DROP TABLE IF EXISTS `obj_house`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `house` (
+CREATE TABLE `obj_house` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID дома',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `group_id` int unsigned NOT NULL COMMENT 'Id группы',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
@@ -100,254 +103,132 @@ CREATE TABLE `house` (
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
-  CONSTRAINT `house_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
+  CONSTRAINT `house_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `obj_group` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `house`
+-- Dumping data for table `obj_house`
 --
 
-LOCK TABLES `house` WRITE;
-/*!40000 ALTER TABLE `house` DISABLE KEYS */;
-/*!40000 ALTER TABLE `house` ENABLE KEYS */;
+LOCK TABLES `obj_house` WRITE;
+/*!40000 ALTER TABLE `obj_house` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `house_version`
+-- Table structure for table `obj_house_version`
 --
 
-DROP TABLE IF EXISTS `house_version`;
+DROP TABLE IF EXISTS `obj_house_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `house_version` (
+CREATE TABLE `obj_house_version` (
   `id` int unsigned NOT NULL COMMENT 'ID дома',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `group_id` int unsigned NOT NULL COMMENT 'Id группы',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `group_id_version` int DEFAULT '0',
-  `stage_ids` text,
-  `stage_versions` text,
+  `obj_stage_ids` text,
+  `obj_stage_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `house_version_fk_fa1e78` FOREIGN KEY (`id`) REFERENCES `house` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_house_version_fk_21140d` FOREIGN KEY (`id`) REFERENCES `obj_house` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `house_version`
+-- Dumping data for table `obj_house_version`
 --
 
-LOCK TABLES `house_version` WRITE;
-/*!40000 ALTER TABLE `house_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `house_version` ENABLE KEYS */;
+LOCK TABLES `obj_house_version` WRITE;
+/*!40000 ALTER TABLE `obj_house_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_house_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `material`
+-- Table structure for table `obj_project`
 --
 
-DROP TABLE IF EXISTS `material`;
+DROP TABLE IF EXISTS `obj_project`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `material` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID материала',
-  `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
-  `version` int DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `unit_id` (`unit_id`),
-  CONSTRAINT `material_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `material`
---
-
-LOCK TABLES `material` WRITE;
-/*!40000 ALTER TABLE `material` DISABLE KEYS */;
-/*!40000 ALTER TABLE `material` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `material_version`
---
-
-DROP TABLE IF EXISTS `material_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `material_version` (
-  `id` int unsigned NOT NULL COMMENT 'ID материала',
-  `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
-  `version` int NOT NULL DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  `stage_material_ids` text,
-  `stage_material_versions` text,
-  `work_material_ids` text,
-  `work_material_versions` text,
-  PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `material_version_fk_8d347e` FOREIGN KEY (`id`) REFERENCES `material` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `material_version`
---
-
-LOCK TABLES `material_version` WRITE;
-/*!40000 ALTER TABLE `material_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `material_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `project`
---
-
-DROP TABLE IF EXISTS `project`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project` (
+CREATE TABLE `obj_project` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID проекта',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (пуличный, приватный)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project`
+-- Dumping data for table `obj_project`
 --
 
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert'),(3,'ProjectName2','deleted',0,2,'2022-08-29 09:56:08','1','delete');
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
+LOCK TABLES `obj_project` WRITE;
+/*!40000 ALTER TABLE `obj_project` DISABLE KEYS */;
+INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert');
+/*!40000 ALTER TABLE `obj_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_role`
+-- Table structure for table `obj_project_version`
 --
 
-DROP TABLE IF EXISTS `project_role`;
+DROP TABLE IF EXISTS `obj_project_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project_role` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID роли проекта',
-  `lvl` int unsigned NOT NULL DEFAULT '1' COMMENT 'Уровень( 1 - проекта;2 - подпроект;3 - группа;4 - дом;5 - этап )',
-  `is_crud` tinyint(1) DEFAULT NULL COMMENT 'Доступен ли CRUD объекта',
-  `object_id` int unsigned NOT NULL COMMENT 'ID объекта (проект, подпроект, группа, дом, этап)',
-  `user_id` int unsigned NOT NULL COMMENT 'ID пользователя',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `project_role`
---
-
-LOCK TABLES `project_role` WRITE;
-/*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (3,1,0,1,3);
-/*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `project_version`
---
-
-DROP TABLE IF EXISTS `project_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project_version` (
+CREATE TABLE `obj_project_version` (
   `id` int unsigned NOT NULL COMMENT 'ID проекта',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (пуличный, приватный)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
-  `subproject_ids` text,
-  `subproject_versions` text,
+  `obj_subproject_ids` text,
+  `obj_subproject_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `project_version_fk_186d55` FOREIGN KEY (`id`) REFERENCES `project` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_project_version_fk_09ccc9` FOREIGN KEY (`id`) REFERENCES `obj_project` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project_version`
+-- Dumping data for table `obj_project_version`
 --
 
-LOCK TABLES `project_version` WRITE;
-/*!40000 ALTER TABLE `project_version` DISABLE KEYS */;
-INSERT INTO `project_version` VALUES (1,'TestProject','in_process',1,1,'2022-08-24 07:34:31','1','insert',NULL,NULL),(3,'ProjectName2','in_process',0,1,'2022-08-29 09:55:46','1','insert',NULL,NULL),(3,'ProjectName2','deleted',0,2,'2022-08-29 09:56:08','1','delete',NULL,NULL);
-/*!40000 ALTER TABLE `project_version` ENABLE KEYS */;
+LOCK TABLES `obj_project_version` WRITE;
+/*!40000 ALTER TABLE `obj_project_version` DISABLE KEYS */;
+INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL);
+/*!40000 ALTER TABLE `obj_project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `role`
+-- Table structure for table `obj_stage`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `obj_stage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID роли',
-  `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `object_viewer` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Просмотр объектов (все, конкретные)',
-  `manage_objects` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD объектов (все, конкретные)',
-  `manage_volumes` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD объёмов (все, никакие)',
-  `manage_history` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Управление историей',
-  `manage_users` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD учетными записями',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `object_viewer` (`object_viewer`,`manage_objects`,`manage_volumes`,`manage_history`,`manage_users`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role`
---
-
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'По умолчанию',0,0,0,0,0),(5,'Админ',1,1,1,1,1),(11,'Бухгалтер',1,0,1,0,0),(12,'CRUD',1,1,1,1,0),(15,'СуперБух',1,0,1,0,1);
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `stage`
---
-
-DROP TABLE IF EXISTS `stage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage` (
+CREATE TABLE `obj_stage` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID этапа',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `house_id` int unsigned NOT NULL COMMENT 'ID дома',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
@@ -355,33 +236,33 @@ CREATE TABLE `stage` (
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `house_id` (`house_id`),
-  CONSTRAINT `stage_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`)
+  CONSTRAINT `stage_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `obj_house` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage`
+-- Dumping data for table `obj_stage`
 --
 
-LOCK TABLES `stage` WRITE;
-/*!40000 ALTER TABLE `stage` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage` ENABLE KEYS */;
+LOCK TABLES `obj_stage` WRITE;
+/*!40000 ALTER TABLE `obj_stage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_material`
+-- Table structure for table `obj_stage_material`
 --
 
-DROP TABLE IF EXISTS `stage_material`;
+DROP TABLE IF EXISTS `obj_stage_material`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_material` (
+CREATE TABLE `obj_stage_material` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID материала работы на этапе',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `material_id` int unsigned NOT NULL COMMENT 'ID материала',
+  `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
@@ -389,34 +270,34 @@ CREATE TABLE `stage_material` (
   PRIMARY KEY (`id`),
   KEY `material_id` (`material_id`),
   KEY `stage_work_id` (`stage_work_id`),
-  CONSTRAINT `stage_material_ibfk_1` FOREIGN KEY (`material_id`) REFERENCES `material` (`id`),
-  CONSTRAINT `stage_material_ibfk_2` FOREIGN KEY (`stage_work_id`) REFERENCES `stage_work` (`id`)
+  CONSTRAINT `stage_material_ibfk_1` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`),
+  CONSTRAINT `stage_material_ibfk_2` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_material`
+-- Dumping data for table `obj_stage_material`
 --
 
-LOCK TABLES `stage_material` WRITE;
-/*!40000 ALTER TABLE `stage_material` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_material` ENABLE KEYS */;
+LOCK TABLES `obj_stage_material` WRITE;
+/*!40000 ALTER TABLE `obj_stage_material` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_material_version`
+-- Table structure for table `obj_stage_material_version`
 --
 
-DROP TABLE IF EXISTS `stage_material_version`;
+DROP TABLE IF EXISTS `obj_stage_material_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_material_version` (
+CREATE TABLE `obj_stage_material_version` (
   `id` int unsigned NOT NULL COMMENT 'ID материала работы на этапе',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `material_id` int unsigned NOT NULL COMMENT 'ID материала',
+  `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
@@ -424,27 +305,27 @@ CREATE TABLE `stage_material_version` (
   `material_id_version` int DEFAULT '0',
   `stage_work_id_version` int DEFAULT '0',
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `stage_material_version_fk_b671c9` FOREIGN KEY (`id`) REFERENCES `stage_material` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_stage_material_version_fk_68f469` FOREIGN KEY (`id`) REFERENCES `obj_stage_material` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_material_version`
+-- Dumping data for table `obj_stage_material_version`
 --
 
-LOCK TABLES `stage_material_version` WRITE;
-/*!40000 ALTER TABLE `stage_material_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_material_version` ENABLE KEYS */;
+LOCK TABLES `obj_stage_material_version` WRITE;
+/*!40000 ALTER TABLE `obj_stage_material_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_technic`
+-- Table structure for table `obj_stage_technic`
 --
 
-DROP TABLE IF EXISTS `stage_technic`;
+DROP TABLE IF EXISTS `obj_stage_technic`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_technic` (
+CREATE TABLE `obj_stage_technic` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID техники работы',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
@@ -458,28 +339,28 @@ CREATE TABLE `stage_technic` (
   PRIMARY KEY (`id`),
   KEY `stage_work_id` (`stage_work_id`),
   KEY `technic_id` (`technic_id`),
-  CONSTRAINT `stage_technic_ibfk_1` FOREIGN KEY (`stage_work_id`) REFERENCES `stage_work` (`id`),
-  CONSTRAINT `stage_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `technic` (`id`)
+  CONSTRAINT `stage_technic_ibfk_1` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`),
+  CONSTRAINT `stage_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_technic`
+-- Dumping data for table `obj_stage_technic`
 --
 
-LOCK TABLES `stage_technic` WRITE;
-/*!40000 ALTER TABLE `stage_technic` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_technic` ENABLE KEYS */;
+LOCK TABLES `obj_stage_technic` WRITE;
+/*!40000 ALTER TABLE `obj_stage_technic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_technic_version`
+-- Table structure for table `obj_stage_technic_version`
 --
 
-DROP TABLE IF EXISTS `stage_technic_version`;
+DROP TABLE IF EXISTS `obj_stage_technic_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_technic_version` (
+CREATE TABLE `obj_stage_technic_version` (
   `id` int unsigned NOT NULL COMMENT 'ID техники работы',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
@@ -493,130 +374,140 @@ CREATE TABLE `stage_technic_version` (
   `stage_work_id_version` int DEFAULT '0',
   `technic_id_version` int DEFAULT '0',
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `stage_technic_version_fk_2072b7` FOREIGN KEY (`id`) REFERENCES `stage_technic` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_stage_technic_version_fk_63bbbc` FOREIGN KEY (`id`) REFERENCES `obj_stage_technic` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_technic_version`
+-- Dumping data for table `obj_stage_technic_version`
 --
 
-LOCK TABLES `stage_technic_version` WRITE;
-/*!40000 ALTER TABLE `stage_technic_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_technic_version` ENABLE KEYS */;
+LOCK TABLES `obj_stage_technic_version` WRITE;
+/*!40000 ALTER TABLE `obj_stage_technic_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_version`
+-- Table structure for table `obj_stage_version`
 --
 
-DROP TABLE IF EXISTS `stage_version`;
+DROP TABLE IF EXISTS `obj_stage_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_version` (
+CREATE TABLE `obj_stage_version` (
   `id` int unsigned NOT NULL COMMENT 'ID этапа',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)	',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `house_id` int unsigned NOT NULL COMMENT 'ID дома',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `house_id_version` int DEFAULT '0',
+  `obj_stage_work_ids` text,
+  `obj_stage_work_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `stage_version_fk_203498` FOREIGN KEY (`id`) REFERENCES `stage` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_stage_version_fk_7cef42` FOREIGN KEY (`id`) REFERENCES `obj_stage` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_version`
+-- Dumping data for table `obj_stage_version`
 --
 
-LOCK TABLES `stage_version` WRITE;
-/*!40000 ALTER TABLE `stage_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_version` ENABLE KEYS */;
+LOCK TABLES `obj_stage_version` WRITE;
+/*!40000 ALTER TABLE `obj_stage_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_work`
+-- Table structure for table `obj_stage_work`
 --
 
-DROP TABLE IF EXISTS `stage_work`;
+DROP TABLE IF EXISTS `obj_stage_work`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_work` (
+CREATE TABLE `obj_stage_work` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID работы этапа',
-  `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `stage_work_ibfi_5` (`work_id`),
+  KEY `stage_work_ibfi_6` (`stage_id`),
+  CONSTRAINT `stage_work_ibfk_5` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
+  CONSTRAINT `stage_work_ibfk_6` FOREIGN KEY (`stage_id`) REFERENCES `obj_stage` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_work`
+-- Dumping data for table `obj_stage_work`
 --
 
-LOCK TABLES `stage_work` WRITE;
-/*!40000 ALTER TABLE `stage_work` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_work` ENABLE KEYS */;
+LOCK TABLES `obj_stage_work` WRITE;
+/*!40000 ALTER TABLE `obj_stage_work` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stage_work_version`
+-- Table structure for table `obj_stage_work_version`
 --
 
-DROP TABLE IF EXISTS `stage_work_version`;
+DROP TABLE IF EXISTS `obj_stage_work_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stage_work_version` (
+CREATE TABLE `obj_stage_work_version` (
   `id` int unsigned NOT NULL COMMENT 'ID работы этапа',
-  `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
-  `stage_material_ids` text,
-  `stage_material_versions` text,
-  `stage_technic_ids` text,
-  `stage_technic_versions` text,
+  `work_id_version` int DEFAULT '0',
+  `stage_id_version` int DEFAULT '0',
+  `obj_stage_material_ids` text,
+  `obj_stage_material_versions` text,
+  `obj_stage_technic_ids` text,
+  `obj_stage_technic_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `stage_work_version_fk_7e51cc` FOREIGN KEY (`id`) REFERENCES `stage_work` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_stage_work_version_fk_614452` FOREIGN KEY (`id`) REFERENCES `obj_stage_work` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stage_work_version`
+-- Dumping data for table `obj_stage_work_version`
 --
 
-LOCK TABLES `stage_work_version` WRITE;
-/*!40000 ALTER TABLE `stage_work_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage_work_version` ENABLE KEYS */;
+LOCK TABLES `obj_stage_work_version` WRITE;
+/*!40000 ALTER TABLE `obj_stage_work_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_stage_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `subproject`
+-- Table structure for table `obj_subproject`
 --
 
-DROP TABLE IF EXISTS `subproject`;
+DROP TABLE IF EXISTS `obj_subproject`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `subproject` (
+CREATE TABLE `obj_subproject` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID подпроекта',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `project_id` int unsigned NOT NULL COMMENT 'ID проекта',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
@@ -624,140 +515,166 @@ CREATE TABLE `subproject` (
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
-  CONSTRAINT `subproject_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `subproject_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `subproject`
+-- Dumping data for table `obj_subproject`
 --
 
-LOCK TABLES `subproject` WRITE;
-/*!40000 ALTER TABLE `subproject` DISABLE KEYS */;
-/*!40000 ALTER TABLE `subproject` ENABLE KEYS */;
+LOCK TABLES `obj_subproject` WRITE;
+/*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert');
+/*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `subproject_version`
+-- Table structure for table `obj_subproject_version`
 --
 
-DROP TABLE IF EXISTS `subproject_version`;
+DROP TABLE IF EXISTS `obj_subproject_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `subproject_version` (
+CREATE TABLE `obj_subproject_version` (
   `id` int unsigned NOT NULL COMMENT 'ID подпроекта',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `status` set('in_process','completed','deleted') NOT NULL DEFAULT 'in_process' COMMENT 'Статус (в процессе, завершен, удален)',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_public` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (публичный, приватный)',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `project_id` int unsigned NOT NULL COMMENT 'ID проекта',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `project_id_version` int DEFAULT '0',
-  `groups_ids` text,
-  `groups_versions` text,
+  `obj_group_ids` text,
+  `obj_group_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `subproject_version_fk_03348b` FOREIGN KEY (`id`) REFERENCES `subproject` (`id`) ON DELETE CASCADE
+  CONSTRAINT `obj_subproject_version_fk_7c9664` FOREIGN KEY (`id`) REFERENCES `obj_subproject` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `subproject_version`
+-- Dumping data for table `obj_subproject_version`
 --
 
-LOCK TABLES `subproject_version` WRITE;
-/*!40000 ALTER TABLE `subproject_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `subproject_version` ENABLE KEYS */;
+LOCK TABLES `obj_subproject_version` WRITE;
+/*!40000 ALTER TABLE `obj_subproject_version` DISABLE KEYS */;
+INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL);
+/*!40000 ALTER TABLE `obj_subproject_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `technic`
+-- Table structure for table `project_role`
 --
 
-DROP TABLE IF EXISTS `technic`;
+DROP TABLE IF EXISTS `project_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `technic` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID техники',
+CREATE TABLE `project_role` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID роли проекта',
+  `lvl` int unsigned NOT NULL DEFAULT '1' COMMENT 'Уровень доступа;( 1 - проекта; 2 - подпроект; 3 - группа; 4 - дом; 5 - этап )',
+  `is_crud` tinyint unsigned NOT NULL DEFAULT '0' COMMENT 'Доступен ли CRUD объекта',
+  `object_id` int unsigned NOT NULL COMMENT 'ID объекта (проект, подпроект, группа, дом, этап)',
+  `user_id` int unsigned NOT NULL COMMENT 'ID пользователя',
+  `project_id` int unsigned NOT NULL COMMENT 'ID проекта',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `project_role_ibfk_23` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`),
+  CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_role`
+--
+
+LOCK TABLES `project_role` WRITE;
+/*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
+INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2);
+/*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `propel_migration`
+--
+
+DROP TABLE IF EXISTS `propel_migration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `propel_migration` (
+  `version` int DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `propel_migration`
+--
+
+LOCK TABLES `propel_migration` WRITE;
+/*!40000 ALTER TABLE `propel_migration` DISABLE KEYS */;
+INSERT INTO `propel_migration` VALUES (1661943879),(1661953065),(1661953852);
+/*!40000 ALTER TABLE `propel_migration` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `static_file`
+--
+
+DROP TABLE IF EXISTS `static_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `static_file` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(255) NOT NULL,
+  `content_type` varchar(255) NOT NULL,
+  `file` longblob NOT NULL,
+  `headers` json DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `static_file_slug` (`url`),
+  CONSTRAINT `static_file_chk_1` CHECK (json_valid(`headers`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `static_file`
+--
+
+LOCK TABLES `static_file` WRITE;
+/*!40000 ALTER TABLE `static_file` DISABLE KEYS */;
+/*!40000 ALTER TABLE `static_file` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_role`
+--
+
+DROP TABLE IF EXISTS `user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_role` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID роли',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
-  `version` int DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
+  `object_viewer` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Просмотр объектов (все, конкретные)',
+  `manage_objects` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD объектов (все, конкретные)',
+  `manage_volumes` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD объёмов (все, никакие)',
+  `manage_history` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Управление историей',
+  `manage_users` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD учетными записями',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `technic`
+-- Dumping data for table `user_role`
 --
 
-LOCK TABLES `technic` WRITE;
-/*!40000 ALTER TABLE `technic` DISABLE KEYS */;
-/*!40000 ALTER TABLE `technic` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `technic_version`
---
-
-DROP TABLE IF EXISTS `technic_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `technic_version` (
-  `id` int unsigned NOT NULL COMMENT 'ID техники',
-  `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
-  `version` int NOT NULL DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  `stage_technic_ids` text,
-  `stage_technic_versions` text,
-  `work_technic_ids` text,
-  `work_technic_versions` text,
-  PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `technic_version_fk_9f10cd` FOREIGN KEY (`id`) REFERENCES `technic` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `technic_version`
---
-
-LOCK TABLES `technic_version` WRITE;
-/*!40000 ALTER TABLE `technic_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `technic_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `unit`
---
-
-DROP TABLE IF EXISTS `unit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `unit` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID ед. измерения',
-  `name` varchar(255) NOT NULL COMMENT 'Наименование',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `unit`
---
-
-LOCK TABLES `unit` WRITE;
-/*!40000 ALTER TABLE `unit` DISABLE KEYS */;
-/*!40000 ALTER TABLE `unit` ENABLE KEYS */;
+LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,0,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(4,'CRUD объектов',1,1,0,1,0),(5,'CRUD объемов',1,0,1,1,0);
+/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -774,19 +691,19 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `username` varchar(100) DEFAULT NULL,
   `status` tinyint unsigned NOT NULL DEFAULT '0',
-  `role_id` int unsigned NOT NULL DEFAULT '1' COMMENT 'ID роли',
+  `role_id` int unsigned DEFAULT NULL COMMENT 'ID роли',
   `verified` tinyint unsigned NOT NULL DEFAULT '0',
   `resettable` tinyint unsigned NOT NULL DEFAULT '1',
   `roles_mask` int unsigned NOT NULL DEFAULT '0',
   `registered` int unsigned NOT NULL,
   `last_login` int unsigned DEFAULT NULL,
   `force_logout` mediumint unsigned NOT NULL DEFAULT '0',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `role_id` (`role_id`),
-  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -795,7 +712,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy1',0,5,1,1,0,1661160115,1661845313,1,1),(3,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,12,1,1,0,1661162813,NULL,0,0),(11,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,5,1,1,0,1661249739,1661853665,2,1),(16,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,1,1,1,0,1661250790,NULL,0,1),(17,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,1,1,1,0,1661250794,NULL,0,1),(18,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,1,1,1,0,1661250800,NULL,0,1),(19,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(20,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,12,1,1,0,1661250868,NULL,0,1),(21,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,11,1,1,0,1661250873,NULL,0,1),(30,'test@artemy.net',NULL,'$2y$10$7PKHkf/ejfvWjO4ypTlMKukM/jeR38ZOCuTm11hGMW.e7lyRMrgfC','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(31,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,5,0,1,0,1661256292,NULL,0,1),(67,'qwe@artemy.net',NULL,'$2y$10$D.Np4FpAH.C0iQ5ln.OoTelnt37fPX3r/svLxd0pSYsNphXzdCFHu','nick',0,5,1,1,0,1661506678,NULL,1,1),(70,'trash@artemy.net',NULL,'$2y$10$N2hoSUlh3MUubSIA0LUNBeP07zoX9AhJHvOTix5kyvKKI/y8gk0vu','nick',0,5,1,1,0,1661516527,NULL,1,1),(71,'rewrer@artemy.net',NULL,'$2y$10$G0cCpk7SYNWBzvDJTdTpauccjVfo/Nl71OkkEkGkkTUA5K9N5jI/.','chroeojtm',0,5,0,1,0,1661523322,NULL,0,1),(75,'123@artemy.net',NULL,'$2y$10$w1yawSC8jVrbLfPYKYteu.PKNUFa7Vu/CIs4j6tUMZLCR5UScx21S','nick',0,5,0,1,0,1661845906,NULL,0,1),(76,'1234@artemy.net',NULL,'$2y$10$uk23bMGw4aReucHXX6OeIeHSkAy8Q28rVI/vB55wfrcwcJ5ZWd066','nick',0,5,0,1,0,1661846113,NULL,0,1),(77,'12334@artemy.net',NULL,'$2y$10$C0sv42D2soaYK61Jj4VbMu/m65SagKqgWHhCggPjWO42QmvN5KrE2','nick',0,5,0,1,0,1661846190,NULL,0,1),(78,'33@artemy.net',NULL,'$2y$10$pZvsfzRm/Hr7Q9LxjMr/CefaqY1iAw3bYwE6FJ2aftgXtT47Se7k6','nick',0,5,0,1,0,1661846228,NULL,0,1),(79,'3234@artemy.net',NULL,'$2y$10$ntZzwFA8S0zi9QlJjJf8y.Sy1nTbYkq3H56jAHY7VDOa9IeztPbMS','nick',0,5,0,1,0,1661846392,NULL,0,1),(80,'123243324@artemy.net',NULL,'$2y$10$uC7SuNYgYwtuEeIUkWPPGu6XFOg9nGa3FPm1E5gtdCEXvBynq8B3C','nick',0,5,0,1,0,1661846487,NULL,0,1),(81,'434324@artemy.net',NULL,'$2y$10$ytK.P4RTAie4LGFNb5/nteyowTqc5KPi1PsOubwhGlZWDyUJDWqt2','nick',0,5,0,1,0,1661846517,NULL,0,1),(82,'43434324324@artemy.net',NULL,'$2y$10$K2sRUd13h.bB3Zey.mH8tepSdtiLyO.cWdAofBzNjMFjCJztfYoDa','nick',0,5,0,1,0,1661846589,NULL,0,1),(83,'gfitdrags69@gmail.com',NULL,'$2y$10$grVO4aAjQEoETggPDZggxuswOypqII8Natqe55fsWgLnW0cnH1GhO','nick',0,5,0,1,0,1661846643,NULL,0,1),(84,'gfirdrags69@gmail.com',NULL,'$2y$10$xXnh4wrLnuoZcoWvw3I3ouAE1yWuj.PR7bnIKX16hAhKaOG3pF.p.','nick',0,5,0,1,0,1661846742,NULL,0,1);
+INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662036978,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1661942966,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,5,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$7PKHkf/ejfvWjO4ypTlMKukM/jeR38ZOCuTm11hGMW.e7lyRMrgfC','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -817,7 +734,7 @@ CREATE TABLE `users_confirmations` (
   UNIQUE KEY `selector` (`selector`),
   KEY `email_expires` (`email`,`expires`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -826,7 +743,6 @@ CREATE TABLE `users_confirmations` (
 
 LOCK TABLES `users_confirmations` WRITE;
 /*!40000 ALTER TABLE `users_confirmations` DISABLE KEYS */;
-INSERT INTO `users_confirmations` VALUES (2,9,'scheffio@bk.ru','JJyDXYGBxpSyJIRY','$2y$10$tQSMgmEh1kgzzau2.bzDX.rcvX3Hstk6ulxZiZSAylQN54NfTMMmm',1661336077),(3,12,'test@artemy.net','xbMbBExUpTroGaHh','$2y$10$pjtyccG4nguhXGnsmpBmL.YBMGRNfcOMArwD0reGuzim7gLpaxZn2',1661336293),(7,22,'123@artemy.net','LJjjsvCn8jKv0pQ5','$2y$10$tomEit3nf/cFE2S79gJqAu2OWLb5wpjqAC9w9AKy62TgY7nqjVHR2',1661337540),(9,26,'test@artemy.net','CqZgHrgIB1_ilLTt','$2y$10$eJUu9IRfUztv/9wgIjzRVOGbg5B65xDt5juCVWah1IgAPS0t3GzhG',1661338271),(11,30,'test@artemy.net','BMYCiximfRbEj9Uv','$2y$10$YWBWA/mrLwDYK17FPbQKFOLc3mKvG42rgIjdC2W6oJ9QXeXEEbUDK',1661342674),(12,31,'tes1t@artemy.net','Ps1Lo9nFdgteUyfe','$2y$10$p/gXVwcr.mx8sH5oGVoXLORYaRp/G94Ms3z8AxeL.EU4JhDTHt5NK',1661342692),(13,32,'111@artemy.net','_aVcVcQEol8e_Xij','$2y$10$SSmsg8Wo/PHULWgQ.13eYONJKUBMA6UvZluUJpbFgInD6AdiBSBqu',1661590979),(14,34,'1111@artemy.net','GHULYGMLSPgPJ-8v','$2y$10$ifl4ONMl4eYisPKJgW7Z7e1aoPX08FBrmC0vGMQ30sEzkQB1tnwxq',1661591018),(15,36,'11111@artemy.net','H2Tu8EvQRL1EPKjD','$2y$10$IUjjsA0XbWyStoVW6FNkeuS4mXcHOTTHP/RoUlyM4.uFGM3lpMlxG',1661591057),(16,42,'111111@artemy.net','U4z-Mf9thr3RQeWG','$2y$10$ZrXZy0TnFql6ZDYjtQ9zH.Y9oaD9vbZSHg7zZka3Hty4i2MUvWBEW',1661591150),(17,43,'11111811@artemy.net','r7QgC2FuUwFVwX5-','$2y$10$wOvAqSfr2kcuqwphjqjdkeCaYFO42MOyWDO2sj/ZHsFSpIZDNhj2G',1661591608),(18,45,'111111811@artemy.net','u7CQw2RiVdTWHN3T','$2y$10$0qqzSBMyN1wYxKGYyrnz/eUzizQEpqbc2qjdM/.Kg3SW8sezLQju6',1661591644),(19,49,'111111123811@artemy.net','EMHbbhiwMtP149W_','$2y$10$PhwgcTDcRp0L8ujCD4oicuUD4lxsKuzeH5j0VJg82Oa1II./MRxv2',1661592061),(20,51,'4343@artemy.net','Zz8K7wLQq61liMi2','$2y$10$AzxMKtLXYiYTSTiG0OrrIO0kKsWReGSrseoWJDm8tvVmpYrUjjXfq',1661592178),(21,53,'4333343@artemy.net','UgP--pBuO4OC7EAP','$2y$10$7B/3gL95W2wCpwlqOTIui.JUtc1Ox1Wntn/wQibK2EhPuEW9V7gsC',1661592306),(22,56,'3333@artemy.net','WOxlmAHzG36AtiDv','$2y$10$VJpgld1PL5TaBVazLQxU5O8d0rzDLim2FNi8L.Y1tEjfdeRIdyrBS',1661592403),(23,58,'1212354@artemy.net','vXnOSLEK_ZhOqcPq','$2y$10$CjTK.BmHWkffIMiEqD09PO/ffp4cRolwsaUVmogVJnfJgS6bUK5q6',1661592428),(24,59,'1212354344@artemy.net','sqKFD_8TL7R-ybeW','$2y$10$w3WygDQXTJ14x..SPzvLNONgFKupFKv5MZ3wsi8.pOPQYMcvdgO3K',1661592441),(25,60,'121233354344@artemy.net','G1p3RslJcl84Sqyb','$2y$10$3Edoubv3WG/zQXVD1FIJM.aziOqxknWDOH/MM8iIMM6c7br0O6Hzi',1661592537),(26,62,'121233333354344@artemy.net','IZTas8LBWYqBw-LQ','$2y$10$vw0eY5mik0tb0YyfCGaA8OmvFD2vPuiopO95DRcmr.bCQf64hIcUO',1661592551),(27,63,'qwe@artemy.net','vcHFRRDalYSWFy3n','$2y$10$TTR8GPKKcv7wzGKBrdSAauP1Xf.Z681lz9kLkAyHV45yixj8zUKFe',1661592794),(28,65,'qwree@artemy.net','o-j5Hrq3XvnWcxl-','$2y$10$W1rgXU1wEhQxgqSXHLFgquXvPRWi4WxZlSvtMZ29rEIw8YEGReepC',1661592824),(32,71,'rewrer@artemy.net','wMEl8Zg_X08YMpa_','$2y$10$xRyY7GRhFLiluIY/uqVWSOKC8XxoMDtxXVie4x9oTrBNUpBHp1S2S',1661609722),(33,75,'123@artemy.net','Zd9HRrTd8mEfTxlE','$2y$10$2GHSerLvgmmVbb0hjyr3SOre4y03Ub19bVEfjoWS6iFbegzXglofe',1661932306),(34,76,'1234@artemy.net','Pfr1uIi9F8cdxrND','$2y$10$.3JGx7t.yl5zPlnR3ZlA1OL/Rvh3AykWXKxPrpXi8ajkVmX8wOefy',1661932513),(35,77,'12334@artemy.net','K3a0QgmPm2bLue3a','$2y$10$dwvXNS0/oASZGnY1nXhB6eJBi2B0xOSnMwEkO0dpQB2/U1ApZ88BO',1661932590),(36,78,'33@artemy.net','e4ri2CwnfOHZ7pov','$2y$10$DKt28Fy5IU9H.XcSTEHWFuENVaaCQjjtkJlmGXzJ32Z8149xsadhu',1661932629),(37,79,'3234@artemy.net','0JUJ1CnfRV2TWTZ4','$2y$10$vLYdLzpHZQdWpNULFtQFXe/azn77sjV2QhchPyzhFK8e7v9yUb8vS',1661932792),(38,80,'123243324@artemy.net','yGG1Dnlor1zuyXn-','$2y$10$5MoG1wi96rdopF3.EZkSoeDkfv6HE1FJnXna1tlymlVxPrFosgtVO',1661932887),(39,81,'434324@artemy.net','ghIvPoWQu1FfBzbt','$2y$10$3/vSurdfbaWxBdpjOjirOuaj/8oFHrYb7uBqlEl4Rx7PXQYSHcf76',1661932917),(40,82,'43434324324@artemy.net','eI_kKF9XvTjpD7-U','$2y$10$3n8GKA4eMbxzyMUG2jcW8es6cA6VYH22aMwgZzbMG1X5HcFsNEwUe',1661932989),(41,83,'gfitdrags69@gmail.com','QV0vMHFzRBfwo7A8','$2y$10$A9HMYOMICBBWThSPs8Nj9efnG6iN2RSeWIxiBKCSpEe5KBKQ3/J9.',1661933043),(42,84,'gfirdrags69@gmail.com','BY95pr1Y8ggKnkqe','$2y$10$z7sVXRBEHQ/YbUTkv1q0HuwNkl1IZPqUPl5O.x56MXrXTZUbUVtk2',1661933142);
 /*!40000 ALTER TABLE `users_confirmations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -846,7 +762,7 @@ CREATE TABLE `users_remembered` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `selector` (`selector`),
   KEY `user` (`user`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -855,7 +771,7 @@ CREATE TABLE `users_remembered` (
 
 LOCK TABLES `users_remembered` WRITE;
 /*!40000 ALTER TABLE `users_remembered` DISABLE KEYS */;
-INSERT INTO `users_remembered` VALUES (31,11,'N52tLfktbL3PWqbX0PgsKzsl','$2y$10$xWfA8KYWl5KUF0f9WP3AXOjcIgBKHdQg0O3x1rUpu8nWVSn9/XwuK',1693411265);
+INSERT INTO `users_remembered` VALUES (1,13,'_uZyRRs0G4bpqLjg_pU4oCd5','$2y$10$CWMnQZIiJLWTJF7vjOPYIesGWd7O.lT7kD5qmf.kIOxlrc8C9zfZS',1693512656),(2,12,'7F2jiwswraQK5gfV2xRyNnUF','$2y$10$O64hSVACEPRr.Zut1xCycOjy.UxUiPMzmMiDExRGwKaIt3zpMzGum',1693594578);
 /*!40000 ALTER TABLE `users_remembered` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -875,7 +791,7 @@ CREATE TABLE `users_resets` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `selector` (`selector`),
   KEY `user_expires` (`user`,`expires`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -884,7 +800,6 @@ CREATE TABLE `users_resets` (
 
 LOCK TABLES `users_resets` WRITE;
 /*!40000 ALTER TABLE `users_resets` DISABLE KEYS */;
-INSERT INTO `users_resets` VALUES (1,1,'xp50HlgCnIoSZdxR7iok','$2y$10$QM4DxLm7Jt8FLU53nAiw2OSUrAcZIf1fbOczh12f59rlfI6MY7q86',1661251342),(2,1,'QmL-5q7jh-2Kewz_69Gz','$2y$10$kwVLn.wC2lUyNlM9MNXwSu/LBc84.xYuRkGxg4rEY6wHHTYeYfagy',1661251397),(5,11,'BSsB-U4ncNWF3ls_x4yc','$2y$10$7VVMzT6/JIFp2bvwHPtYyuWMEmKzqStNgaIhxkfYLXitvnv9LESye',1661767883),(6,11,'h_W0uxpMF-oK5NSnV4Bm','$2y$10$epFXjFcVJ6ytU3KtUFyzUOwEd5MMCDCsWxHx9twWPjwl3qF5TJml2',1661767884),(7,1,'oAnWJ7KL-8W0RdrZs194','$2y$10$V6CcGZdwAA1lD4bNZWI3SePULFLTiMX.ohdN6i6j1fk9dCRn6MOt.',1661775572),(8,11,'LOV8taWYiVqLWX2CZf1v','$2y$10$QXoOPTfF9/8Z4PDt7KAqEuitI3m2mUYLqiYCFYKbJLIjsn12f2RMS',1661775679),(9,11,'L575fAMCqMKmwm6Qc1Hx','$2y$10$Sv5Sf0XhMWaamr8dqS9c9ercgtGBT/gQ22PYv6aZjwiPeXWO21sUW',1661775681),(10,1,'3A2523bl0zze5zGv0AWx','$2y$10$MFqdISwfoYtEq/g2m.Yflut8RS6gkv0MzbPeEbluCG3kDK9/Jsuc.',1661776675),(11,11,'wHB0LKoTd4uGkmuw5pgf','$2y$10$n5EXMitoiszPYOm9BRzZRum0TtbBFHgV0z4NVmoAdVamYA6d5qRUW',1661781537),(12,11,'GaDx0b47DOMOnUZVMGPk','$2y$10$Hp9dern3xK5zt2hoTRQ.ZumoPpmKni6sLqvv8jjYaMXU8tZO5L93a',1661782078),(13,11,'KgitaYeadEMQGQVWNvcL','$2y$10$7hOHafOtvCqmHtvBAPL7G.ZGxSJZvZhEefwa2GHeQ69omJWY/JKT2',1661782219),(14,11,'faq5BPJXarJrK10vPsIE','$2y$10$4utwtcVr6cHMXom5gjH7/epXXqGgugwkNLDo6dxrxqHbPfsSgh0a6',1661782258),(15,11,'Fit2OrfLu-mbXTB5ubVo','$2y$10$.PY22vMQxv4bcIXlhqU9g.zG/ty0R.d2T0YwdCJVyTR49QBZyor/m',1661782288),(16,11,'mwsjvChUJbnj-87K6qtX','$2y$10$oVZP6dUtiR4rriWS5ZnlBe7TMgQ14Ox9shl3Q0DH/oMBN05QLVyXm',1661782374),(17,11,'St_zrCEs9I1FDyn2EMKl','$2y$10$gjSiHhHWGpGkE08ihVt7y.JFJL.9cmEDXERhx63BvieceftvLH1eG',1661785936),(18,1,'0nAWHMSa1ToemwG6mipR','$2y$10$3ibEdl7KmZKcWM5OA6F56.g20D8SSqPb8s4DdxgKqHfpKSe8lAXNu',1661849185),(19,11,'wzKCaZ9LlZ2Bm2biNrjA','$2y$10$9JtGLi2I2Lt8/IQlPH1rduOX2IGLkOjkBwmQY1PjEucosqdfoPbem',1661855154),(20,11,'N5ssS-WvnWcYjZM8TGBV','$2y$10$2/IIgzeqH3HngjUWukTr6.8F/anWqx4Moun9FgXUNNwL.6y1naYVi',1661855222),(22,1,'L1R240gMPN-0yBBTe-HP','$2y$10$mAaG2gSqtwpMnAuuoU3mNe4m4AiudHn4WBTtqjvwZA/b6PnNdfh/S',1661856566),(24,11,'KybhNkcR0jgV4HczcCyg','$2y$10$dwLQRdlLDQyiPI8iOCefqeBDFCz6vjOnKn0GmmzJN1.rZF.ZfGYoa',1661856737),(25,11,'FIVNh2RyZzD4f4EkMaz7','$2y$10$NqhwwvbYS0pjWClZeQebiOxkudE12jG7ukCP5lT2MWt0r3SJP/m0W',1661856786),(26,1,'KwykpA3Qc08wweLs68sQ','$2y$10$i0QLr1KJQLVIo95RGJuSyuTT0x85Comq8MLe.kyZ4FmTPAtAxAH6a',1661856857);
 /*!40000 ALTER TABLE `users_resets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -911,22 +826,21 @@ CREATE TABLE `users_throttling` (
 
 LOCK TABLES `users_throttling` WRITE;
 /*!40000 ALTER TABLE `users_throttling` DISABLE KEYS */;
-INSERT INTO `users_throttling` VALUES ('_mQqixpaRHHDDBWUyMklhcEGC6ap0sfHLBIDD2zROrQ',71.0625,1661846742,1662386742),('4VFdvO8eGatDTyejW7hkHTZSAwvvJ6kz0VQm_ibG6ko',29,1661853655,1661925655),('7A0Cg5zpZ12o-f6rNEkibYgdCUn_GxiOIEUZAjAXufo',72.0809,1661855057,1662395057),('7KLaXN0U_732tMngzewSUaZu5nPAYBInEZwGrhlpgQE',4.05075,1661855057,1664274257),('bd2YbZ6TioneNjDphh3eQJ9sg3_ZN1sE0UoQ_A6Q3Tk',29,1661853655,1661925655),('ch_sJnjaY4eRJE6khGJMTmd4i_cvc21dFkdNj1I1G2I',4.05075,1661855057,1664274257),('geAUMq4SToisJ36fdFQhsmDDREhJQ_cnxU4JUHDo3jg',29,1661854810,1661926810),('Hg-OULC74ixnAJ4CLBvxNixttOtxP0Dj-9TjJyRFvR8',3.01079,1661854986,1664274186),('JnDzOaecMhXLmQ27AMhqafwGm8fJnih3cRwR0yuml7U',1.00521,1661846743,1662278743),('JvJ-qYkEKqlCUWDv6Y--hvT5Kd1aDDsUr4O0dB_b6S0',29,1661854810,1661926810),('kPSYco1yNz8AAuS_a6NQ8dbu-qDwlCkZplR4kE6TXPM',3.01079,1661854986,1664274186),('LloFopoZYwBUZwaA2Jy-WT5hFvvKXfovWv5drAhXVHU',49,1661854810,1661926810),('s5uPcRuN1u9xafyR5YIWpHm7Eu1DyOI4dUKKIHqndis',69.0391,1661854986,1662394986),('YYTL-qRL2hyXhz8juA959i30Z0lrgL40sCp7hLBaAUU',49,1661853655,1661925655);
+INSERT INTO `users_throttling` VALUES ('_mQqixpaRHHDDBWUyMklhcEGC6ap0sfHLBIDD2zROrQ',74,1661955056,1662495056),('7A0Cg5zpZ12o-f6rNEkibYgdCUn_GxiOIEUZAjAXufo',74,1662036978,1662576978);
 /*!40000 ALTER TABLE `users_throttling` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `work`
+-- Table structure for table `vol_material`
 --
 
-DROP TABLE IF EXISTS `work`;
+DROP TABLE IF EXISTS `vol_material`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID работы',
+CREATE TABLE `vol_material` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID материала',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int DEFAULT '0',
@@ -935,187 +849,262 @@ CREATE TABLE `work` (
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
-  CONSTRAINT `work_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`)
+  CONSTRAINT `material_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `work`
+-- Dumping data for table `vol_material`
 --
 
-LOCK TABLES `work` WRITE;
-/*!40000 ALTER TABLE `work` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work` ENABLE KEYS */;
+LOCK TABLES `vol_material` WRITE;
+/*!40000 ALTER TABLE `vol_material` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `work_material`
+-- Table structure for table `vol_material_version`
 --
 
-DROP TABLE IF EXISTS `work_material`;
+DROP TABLE IF EXISTS `vol_material_version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_material` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID материала работы',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
-  `material_id` int unsigned NOT NULL COMMENT 'ID материала',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `version` int DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `work_id` (`work_id`),
-  KEY `material_id` (`material_id`),
-  CONSTRAINT `work_material_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `work` (`id`),
-  CONSTRAINT `work_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `material` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `work_material`
---
-
-LOCK TABLES `work_material` WRITE;
-/*!40000 ALTER TABLE `work_material` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_material` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `work_material_version`
---
-
-DROP TABLE IF EXISTS `work_material_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_material_version` (
-  `id` int unsigned NOT NULL COMMENT 'ID материала работы',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
-  `material_id` int unsigned NOT NULL COMMENT 'ID материала',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `version` int NOT NULL DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  `work_id_version` int DEFAULT '0',
-  `material_id_version` int DEFAULT '0',
-  PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `work_material_version_fk_747b8b` FOREIGN KEY (`id`) REFERENCES `work_material` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `work_material_version`
---
-
-LOCK TABLES `work_material_version` WRITE;
-/*!40000 ALTER TABLE `work_material_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_material_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `work_technic`
---
-
-DROP TABLE IF EXISTS `work_technic`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_technic` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID техники работы',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
-  `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `version` int DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `work_id` (`work_id`),
-  KEY `technic_id` (`technic_id`),
-  CONSTRAINT `work_technic_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `work` (`id`),
-  CONSTRAINT `work_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `technic` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `work_technic`
---
-
-LOCK TABLES `work_technic` WRITE;
-/*!40000 ALTER TABLE `work_technic` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_technic` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `work_technic_version`
---
-
-DROP TABLE IF EXISTS `work_technic_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_technic_version` (
-  `id` int unsigned NOT NULL COMMENT 'ID техники работы',
-  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
-  `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
-  `version` int NOT NULL DEFAULT '0',
-  `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
-  `version_comment` varchar(255) DEFAULT NULL,
-  `work_id_version` int DEFAULT '0',
-  `technic_id_version` int DEFAULT '0',
-  PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `work_technic_version_fk_b0d0da` FOREIGN KEY (`id`) REFERENCES `work_technic` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `work_technic_version`
---
-
-LOCK TABLES `work_technic_version` WRITE;
-/*!40000 ALTER TABLE `work_technic_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_technic_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `work_version`
---
-
-DROP TABLE IF EXISTS `work_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_version` (
-  `id` int unsigned NOT NULL COMMENT 'ID работы',
+CREATE TABLE `vol_material_version` (
+  `id` int unsigned NOT NULL COMMENT 'ID материала',
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
-  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
-  `work_material_ids` text,
-  `work_material_versions` text,
-  `work_technic_ids` text,
-  `work_technic_versions` text,
+  `obj_stage_material_ids` text,
+  `obj_stage_material_versions` text,
   PRIMARY KEY (`id`,`version`),
-  CONSTRAINT `work_version_fk_40cf0f` FOREIGN KEY (`id`) REFERENCES `work` (`id`) ON DELETE CASCADE
+  CONSTRAINT `vol_material_version_fk_d64a59` FOREIGN KEY (`id`) REFERENCES `vol_material` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `work_version`
+-- Dumping data for table `vol_material_version`
 --
 
-LOCK TABLES `work_version` WRITE;
-/*!40000 ALTER TABLE `work_version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_version` ENABLE KEYS */;
+LOCK TABLES `vol_material_version` WRITE;
+/*!40000 ALTER TABLE `vol_material_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_material_version` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_technic`
+--
+
+DROP TABLE IF EXISTS `vol_technic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_technic` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID техники',
+  `name` varchar(255) NOT NULL COMMENT 'Наименование',
+  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
+  `version` int DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `unit_id` (`unit_id`),
+  CONSTRAINT `technic_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_technic`
+--
+
+LOCK TABLES `vol_technic` WRITE;
+/*!40000 ALTER TABLE `vol_technic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_technic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_technic_version`
+--
+
+DROP TABLE IF EXISTS `vol_technic_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_technic_version` (
+  `id` int unsigned NOT NULL COMMENT 'ID техники',
+  `name` varchar(255) NOT NULL COMMENT 'Наименование',
+  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
+  `version` int NOT NULL DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  `obj_stage_technic_ids` text,
+  `obj_stage_technic_versions` text,
+  PRIMARY KEY (`id`,`version`),
+  CONSTRAINT `vol_technic_version_fk_e379d9` FOREIGN KEY (`id`) REFERENCES `vol_technic` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_technic_version`
+--
+
+LOCK TABLES `vol_technic_version` WRITE;
+/*!40000 ALTER TABLE `vol_technic_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_technic_version` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_unit`
+--
+
+DROP TABLE IF EXISTS `vol_unit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_unit` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID ед. измерения',
+  `name` varchar(255) NOT NULL COMMENT 'Наименование',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_unit`
+--
+
+LOCK TABLES `vol_unit` WRITE;
+/*!40000 ALTER TABLE `vol_unit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_unit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_work`
+--
+
+DROP TABLE IF EXISTS `vol_work`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID работы',
+  `name` varchar(255) NOT NULL COMMENT 'Наименование',
+  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
+  `version` int DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `unit_id` (`unit_id`),
+  CONSTRAINT `work_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work`
+--
+
+LOCK TABLES `vol_work` WRITE;
+/*!40000 ALTER TABLE `vol_work` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_work_material`
+--
+
+DROP TABLE IF EXISTS `vol_work_material`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work_material` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID материала работы',
+  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `material_id` int unsigned NOT NULL COMMENT 'ID материала',
+  PRIMARY KEY (`id`),
+  KEY `work_id` (`work_id`),
+  KEY `material_id` (`material_id`),
+  CONSTRAINT `work_material_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
+  CONSTRAINT `work_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work_material`
+--
+
+LOCK TABLES `vol_work_material` WRITE;
+/*!40000 ALTER TABLE `vol_work_material` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work_material` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_work_technic`
+--
+
+DROP TABLE IF EXISTS `vol_work_technic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work_technic` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID техники работы',
+  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
+  PRIMARY KEY (`id`),
+  KEY `work_id` (`work_id`),
+  KEY `technic_id` (`technic_id`),
+  CONSTRAINT `work_technic_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
+  CONSTRAINT `work_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work_technic`
+--
+
+LOCK TABLES `vol_work_technic` WRITE;
+/*!40000 ALTER TABLE `vol_work_technic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work_technic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_work_version`
+--
+
+DROP TABLE IF EXISTS `vol_work_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work_version` (
+  `id` int unsigned NOT NULL COMMENT 'ID работы',
+  `name` varchar(255) NOT NULL COMMENT 'Наименование',
+  `price` decimal(19,2) unsigned NOT NULL COMMENT 'Стоимость',
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
+  `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
+  `version` int NOT NULL DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  `obj_stage_work_ids` text,
+  `obj_stage_work_versions` text,
+  PRIMARY KEY (`id`,`version`),
+  CONSTRAINT `vol_work_version_fk_b92c65` FOREIGN KEY (`id`) REFERENCES `vol_work` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work_version`
+--
+
+LOCK TABLES `vol_work_version` WRITE;
+/*!40000 ALTER TABLE `vol_work_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

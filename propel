@@ -114,4 +114,4 @@ if (PHP_VERSION_ID < 80000) {
     }
 }
 
-include __DIR__ . '/..'.'/propel/propel/bin/propel';
+include __DIR__ . '/..'.'/main/vendor/propel/propel/bin/propel';

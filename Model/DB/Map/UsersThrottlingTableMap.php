@@ -189,8 +189,8 @@ class UsersThrottlingTableMap extends TableMap
         // columns
         $this->addPrimaryKey('bucket', 'Bucket', 'VARCHAR', true, 44, null);
         $this->addColumn('tokens', 'Tokens', 'FLOAT', true, null, null);
-        $this->addColumn('replenished_at', 'ReplenishedAt', 'INTEGER', true, 10, null);
-        $this->addColumn('expires_at', 'ExpiresAt', 'INTEGER', true, 10, null);
+        $this->addColumn('replenished_at', 'ReplenishedAt', 'INTEGER', true, null, null);
+        $this->addColumn('expires_at', 'ExpiresAt', 'INTEGER', true, null, null);
     }
 
     /**

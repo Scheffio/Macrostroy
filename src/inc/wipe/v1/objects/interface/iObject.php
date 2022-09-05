@@ -8,8 +8,6 @@ interface iObject {
 
     public function update();
 
-    public function updateOrCreate();
-
     public function updateByObj();
 
     public function delete();

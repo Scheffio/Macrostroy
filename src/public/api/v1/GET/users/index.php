@@ -1,14 +1,15 @@
 <?php
+namespace wipe\api\v1\get\users;
 //Вывод пользователей.
 
-use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
 use DB\Map\ProjectRoleTableMap;
-use DB\Map\ProjectTableMap;
-use DB\Map\RoleTableMap;
+use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
+use Delight\Auth\Auth;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\ActiveQuery\Criteria;
+use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
@@ -28,52 +29,13 @@ try {
 
     $request = new Request();
     $objectId = $request->getQueryOrThrow('object_id');
-    $lvl = ProjectRole::getDefault()->setLvl($request->getQueryOrThrow('lvl'))->getLvl();
+    $lvl = $request->getQueryOrThrow('lvl');
 
-    $users = UsersQuery::create()
-                ->select([
-                    UsersTableMap::COL_ID,
-                    UsersTableMap::COL_USERNAME,
-                    RoleTableMap::COL_MANAGE_USERS,
-                    RoleTableMap::COL_OBJECT_VIEWER,
-                    RoleTableMap::COL_MANAGE_OBJECTS,
-                    ProjectRoleTableMap::COL_IS_CRUD,
-                ])
-                ->leftJoinRole()
-                ->leftJoinProjectRole(ProjectRoleTableMap::TABLE_NAME)
-                    ->addJoinCondition(
-                        name: ProjectRoleTableMap::TABLE_NAME,
-                        clause: ProjectRoleTableMap::COL_LVL.'=?',
-                        value: $lvl)
-                    ->addJoinCondition(
-                        name: ProjectRoleTableMap::TABLE_NAME,
-                        clause: ProjectRoleTableMap::COL_OBJECT_ID.'=?',
-                        value: $objectId)
-                ->filterByIsAvailable(1)
-                ->find()
-                ->getData();
+    if (is_string($lvl)) $lvl = ProjectRole::getLvlByStr($lvl);
 
-    foreach ($users as &$user) {
-        $isAdmin = (bool)$user['role.manage_users'];
+    $projectId = Objects::getProjectIdByChildOrThrow($objectId, $lvl);
 
-        if ($isAdmin) $isCrud = true;
-        else {
-            $isCrud = $user['project_role.is_crud'];
-
-            if (is_int($isCrud)) $isCrud = (bool)$isCrud;
-            elseif ($user['role.manage_objects']) $isCrud = true;
-            elseif ($user['role.object_viewer']) $isCrud = false;
-        }
-
-        $user = [
-            'id' => $user['users.id'],
-            'name' => $user['users.username'],
-            'isCrud' => $isCrud,
-            'isAdmin' => $isAdmin,
-        ];
-    };
-
-    JsonOutput::success($users);
-} catch (PropelException|Exception $e) {
+    JsonOutput::success(ProjectRole::getCrudUsersObject($lvl, $projectId));
+} catch (PropelException|\Exception $e) {
     JsonOutput::error($e->getMessage());
 }

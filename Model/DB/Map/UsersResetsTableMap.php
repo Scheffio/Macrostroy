@@ -198,10 +198,10 @@ class UsersResetsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'BIGINT', true, null, null);
-        $this->addColumn('user', 'User', 'INTEGER', true, 10, null);
+        $this->addColumn('user', 'User', 'INTEGER', true, null, null);
         $this->addColumn('selector', 'Selector', 'VARCHAR', true, 20, null);
         $this->addColumn('token', 'Token', 'VARCHAR', true, 255, null);
-        $this->addColumn('expires', 'Expires', 'INTEGER', true, 10, null);
+        $this->addColumn('expires', 'Expires', 'INTEGER', true, null, null);
     }
 
     /**

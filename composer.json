@@ -6,6 +6,7 @@
   "autoload": {
     "psr-4": {
       "DB\\": "Model/DB/",
+      "ext\\": "ModelExtended/",
       "MysqlCredentials\\": "mysql_credentials/",
       "inc\\artemy\\": "src/inc/artemy/",
       "wipe\\inc\\": "src/inc/wipe/",
@@ -32,7 +33,6 @@
     "ext-mysqli": "*",
     "riverline/multipart-parser": "dev-master",
     "ext-intl": "*",
-    "propel/propel": " ~2.0@dev",
-    ssh2
+    "propel/propel": " ~2.0@dev"
   }
 }

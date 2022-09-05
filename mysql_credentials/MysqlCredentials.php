@@ -3,12 +3,13 @@
 namespace MysqlCredentials;
 
 use PDO;
+use PDOException;
 
 class MysqlCredentials
 {
     private static PDO|null $pdo = null;
 
-    public const HOST = '127.0.0.1';
+    public const HOST = '31.31.201.154';
     public const DATABASE = 'macrostroy_db';
     public const USER = 'macrostroy_user';
     public const PASSWORD = '5dM5OeUlsE';

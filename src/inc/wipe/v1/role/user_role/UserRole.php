@@ -1,12 +1,13 @@
 <?php
 namespace wipe\inc\v1\role\user_role;
 
-use Exception;
-use DB\Role as DBRole;
-use DB\Base\Role as BaseRole;
-use DB\Base\RoleQuery;
+use DB\Base\UserRoleQuery;
 use DB\Base\UsersQuery;
+use ext\DB;
 use inc\artemy\v1\auth\Auth;
+use Exception;
+use ext\UserRole as ExtUserRole;
+use DB\Base\UserRole as BaseUserRole;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageHistoryException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageObjectsException;
@@ -22,31 +23,31 @@ class UserRole
     private static ?UserRole $staticConstruct = null;
 
     /** @var int|null ID пользователя. */
-    private ?int $userId = null;
+    private static ?int $userId = null;
 
     /** @var int|null ID роли. */
-    private ?int $roleId = null;
+    private static ?int $roleId = null;
 
     /** @var string|null Наименование роли. */
-    private ?string $roleName = null;
+    private static ?string $roleName = null;
 
-    /** @var BaseRole|null Объект роли. */
-    private ?BaseRole $roleObj = null;
+    /** @var ExtUserRole|BaseUserRole|null Объект роли. */
+    private static null|ExtUserRole|BaseUserRole $roleObj = null;
 
     /** @var bool Разрешен ли просмотр объектов. */
-    private bool $objectViewer = false;
+    private static ?bool $objectViewer = null;
 
     /** @var bool Разрешен ли CRUD объектов. */
-    private bool $manageObjects = false;
+    private static ?bool $manageObjects = null;
 
     /** @var bool Разрешен ли CRUD объемов. */
-    private bool $manageVolumes = false;
+    private static ?bool $manageVolumes = null;
 
     /** @var bool Разрешено ли управление историей. */
-    private bool $manageHistory = false;
+    private static ?bool $manageHistory = null;
 
     /** @var bool Разрешен ли CRUD учетными записями. */
-    private bool $manageUsers = false;
+    private static ?bool $manageUsers = null;
 
     /**
      * @param int|null $userId ID пользователя.
@@ -57,15 +58,15 @@ class UserRole
     function __construct(?int $userId = null, ?int $roleId = null)
     {
         if ($userId && $roleId) {
-            $this->userId = $userId;
-            $this->roleId = $roleId;
+            $this::$userId = $userId;
+            $this::$roleId = $roleId;
             $this->applyDefaultValuesByRoleId();
         } elseif ($roleId) {
-            $this->roleId = $roleId;
-            $this->userId = Auth::getUser()->id();
+            $this::$roleId = $roleId;
+            $this::$userId = Auth::getUser()->id();
             $this->applyDefaultValuesByRoleId();
         } else {
-            $this->userId = $userId ?: Auth::getUser()->id();
+            $this::$userId = $userId ?: Auth::getUser()->id();
             $this->applyDefaultValuesByUserId();
         }
     }
@@ -80,24 +81,28 @@ class UserRole
      */
     private function applyDefaultValuesByUserId(): void
     {
-        $user = UsersQuery::create()->filterByIsAvailable(1)->findPk($this->userId) ??
+        $user = UsersQuery::create()->filterByIsAvailable(1)->findPk($this::$userId) ??
                 throw new NoUserFoundException();
-        $this->roleId = $user->getRoleId();
-
+        $this::$roleId = $user->getRoleId();
         $this->applyDefaultValuesByRoleId();
     }
 
     /**
      * Заполнение свойств класса, используя ID роли.
      * Получение и присваивание объекта роли ($roleObj).
+     * @param bool $flag Обновлять ли свойства класса в соответствие со значениями найденного объекта.
      * @return void
      * @throws NoRoleFoundException
      */
-    private function applyDefaultValuesByRoleId(): void
+    private function applyDefaultValuesByRoleId(bool $flag = true): void
     {
-        $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
+        $this::$roleObj = UserRoleQuery::create()->findPk($this::$roleId) ??
                          throw new NoRoleFoundException();
-        $this->applyDefaultValuesByRoleObj();
+        $this::$roleObj = DB::getExtUserRole($this::$roleObj);
+
+        if ($flag) {
+            $this->applyDefaultValuesByRoleObj();
+        }
     }
 
     /**
@@ -108,44 +113,45 @@ class UserRole
      */
     private function applyDefaultValuesByRoleObj(): void
     {
-        $this->roleName = $this->roleObj->getName();
-        $this->objectViewer = $this->roleObj->getObjectViewer();
-        $this->manageObjects = $this->roleObj->getManageObjects();
-        $this->manageVolumes = $this->roleObj->getManageVolumes();
-        $this->manageHistory = $this->roleObj->getManageHistory();
-        $this->manageUsers = $this->roleObj->getManageUsers();
+        $this::$roleName = $this::$roleObj->getName();
+        $this::$objectViewer = $this::$roleObj->getObjectViewer();
+        $this::$manageObjects = $this::$roleObj->getManageObjects();
+        $this::$manageVolumes = $this::$roleObj->getManageVolumes();
+        $this::$manageHistory = $this::$roleObj->getManageHistory();
+        $this::$manageUsers = $this::$roleObj->getManageUsers();
     }
+
     #endregion
 
     #region Access Control Functions
     /** @return bool Разрешен ли просмотр объектов. */
     public function isObjectViewer(): bool
     {
-        return $this->objectViewer;
+        return $this::$objectViewer;
     }
 
     /** @return bool Разрешен ли CRUD объектов. */
     public function isManageObjects(): bool
     {
-        return $this->manageObjects;
+        return $this::$manageObjects;
     }
 
     /** @return bool Разрешен ли CRUD объемов. */
     public function isManageVolumes(): bool
     {
-        return $this->manageVolumes;
+        return $this::$manageVolumes;
     }
 
     /** @return bool Разрешено ли управление историей. */
     public function isManageHistory(): bool
     {
-        return $this->manageHistory;
+        return $this::$manageHistory;
     }
 
     /** @return bool Разрешен ли CRUD учетными записями. */
     public function isManageUsers(): bool
     {
-        return $this->manageUsers;
+        return $this::$manageUsers;
     }
 
     /**
@@ -154,7 +160,7 @@ class UserRole
      */
     public function isObjectViewerOrThrow(): bool
     {
-        return $this->objectViewer ?: throw new NoAccessObjectViewException();
+        return $this::$objectViewer ?: throw new NoAccessObjectViewException();
     }
 
     /**
@@ -163,7 +169,7 @@ class UserRole
      */
     public function isManageObjectsOrThrow(): bool
     {
-        return $this->manageObjects ?: throw new NoAccessManageObjectsException();
+        return $this::$manageObjects ?: throw new NoAccessManageObjectsException();
     }
 
     /**
@@ -172,7 +178,7 @@ class UserRole
      */
     public function isManageVolumesOrThrow(): bool
     {
-        return $this->manageVolumes ?: throw new NoAccessManageVolumes();
+        return $this::$manageVolumes ?: throw new NoAccessManageVolumes();
     }
 
     /**
@@ -181,7 +187,7 @@ class UserRole
      */
     public function isManageHistoryOrThrow(): bool
     {
-        return $this->manageHistory ?: throw new NoAccessManageHistoryException();
+        return $this::$manageHistory ?: throw new NoAccessManageHistoryException();
     }
 
     /**
@@ -190,7 +196,7 @@ class UserRole
      */
     public function isManageUsersOrThrow(): bool
     {
-        return $this->manageUsers ?: throw new NoAccessManageUsersException();
+        return $this::$manageUsers ?: throw new NoAccessManageUsersException();
     }
     #endregion
 
@@ -198,25 +204,25 @@ class UserRole
     /** @return int ID пользователя. */
     public function getUserId(): int
     {
-        return $this->userId;
+        return $this::$userId;
     }
 
     /** @return int ID роли. */
     public function getRoleId(): int
     {
-        return $this->roleId;
+        return $this::$roleId;
     }
 
     /** @return string Наименование роли. */
     public function getRoleName(): string
     {
-        return $this->roleName;
+        return $this::$roleName;
     }
 
-    /** @return BaseRole Объект роли. */
-    public function getRoleObj(): BaseRole
+    /** @return ExtUserRole Объект роли. */
+    public function getRoleObj(): ExtUserRole
     {
-        return $this->roleObj;
+        return $this::$roleObj;
     }
     #endregion
 
@@ -229,7 +235,7 @@ class UserRole
      */
     public static function getByUserId(?int $id = null): UserRole
     {
-        if (self::$staticConstruct === null) {
+        if (self::$staticConstruct === null || self::$userId !== $id) {
             self::$staticConstruct = new UserRole(userId: $id);
         }
 
@@ -245,7 +251,7 @@ class UserRole
      */
     public static function getByRoleId(?int $id = null): UserRole
     {
-        if (self::$staticConstruct === null) {
+        if (self::$staticConstruct === null || self::$roleId !== $id) {
             self::$staticConstruct = new UserRole(roleId: $id);
         }
 
@@ -265,8 +271,8 @@ class UserRole
      */
     public function setUserId(int $id, bool $flag = true): UserRole
     {
-        if ($this->userId !== $id) {
-            $this->userId = $id;
+        if ($this::$userId !== $id) {
+            $this::$userId = $id;
 
             if ($flag) {
                 $this->applyDefaultValuesByUserId();
@@ -286,8 +292,8 @@ class UserRole
      */
     public function setRoleId(int $id, bool $flag = true): UserRole
     {
-        if ($this->roleId !== $id) {
-            $this->roleId = $id;
+        if ($this::$roleId !== $id) {
+            $this::$roleId = $id;
 
             if ($flag) {
                 $this->applyDefaultValuesByRoleId();
@@ -304,8 +310,8 @@ class UserRole
      */
     public function setRoleName(?string $name): UserRole
     {
-        if ($name !== null && $this->roleName !== $name) {
-            $this->roleName = $name;
+        if ($name !== null && $this::$roleName !== $name) {
+            $this::$roleName = $name;
         }
 
         return $this;
@@ -313,18 +319,18 @@ class UserRole
 
     /**
      * Присваивание свойству класса объект роли.
-     * @param BaseRole $role Объект роли.
+     * @param ExtUserRole $role Объект роли.
      * @param bool $flag Необходимо ли обновлять свойства роли в соответсвие с переданным объектом.
      * Обновляются такие значения как: $roleId, $roleName, $roleObj, $objectViewer, $manageObjects, $manageVolumes, $manageHistory, $manageUsers.
      * @return UserRole
      */
-    public function setRoleObj(BaseRole $role, bool $flag = true): UserRole
+    public function setRoleObj(ExtUserRole $role, bool $flag = true): UserRole
     {
-        if ($this->roleId !== $role->getId()) {
-            $this->roleObj = $role;
+        if ($this::$roleId !== $role->getId()) {
+            $this::$roleObj = $role;
 
             if ($flag) {
-                $this->roleId = $role->getId();
+                $this::$roleId = $role->getId();
                 $this->applyDefaultValuesByRoleObj();
             }
         }
@@ -339,8 +345,8 @@ class UserRole
      */
     public function setObjectViewer(?bool $flag): UserRole
     {
-        if ($flag !== null && $this->objectViewer !== $flag) {
-            $this->objectViewer = $flag;
+        if ($flag !== null && $this::$objectViewer !== $flag) {
+            $this::$objectViewer = $flag;
         }
 
         return $this;
@@ -353,8 +359,8 @@ class UserRole
      */
     public function setManageObjects(?bool $flag): UserRole
     {
-        if ($flag !== null && $this->manageObjects !== $flag) {
-            $this->manageObjects = $flag;
+        if ($flag !== null && $this::$manageObjects !== $flag) {
+            $this::$manageObjects = $flag;
         }
 
         return $this;
@@ -367,8 +373,8 @@ class UserRole
      */
     public function setManageVolumes(?bool $flag): UserRole
     {
-        if ($flag !== null && $this->manageVolumes !== $flag) {
-            $this->manageVolumes = $flag;
+        if ($flag !== null && $this::$manageVolumes !== $flag) {
+            $this::$manageVolumes = $flag;
         }
 
         return $this;
@@ -381,8 +387,8 @@ class UserRole
      */
     public function setManageHistory(?bool $flag): UserRole
     {
-        if ($flag !== null && $this->manageHistory !== $flag) {
-            $this->manageHistory = $flag;
+        if ($flag !== null && $this::$manageHistory !== $flag) {
+            $this::$manageHistory = $flag;
         }
 
         return $this;
@@ -395,8 +401,8 @@ class UserRole
      */
     public function setManageUsers(?bool $flag): UserRole
     {
-        if ($flag !== null && $this->manageUsers !== $flag) {
-            $this->manageUsers = $flag;
+        if ($flag !== null && $this::$manageUsers !== $flag) {
+            $this::$manageUsers = $flag;
         }
 
         return $this;
@@ -413,12 +419,12 @@ class UserRole
      */
     public function updateUserRole(): UserRole
     {
-        $user = UsersQuery::create()->findPk($this->userId) ??
+        $user = UsersQuery::create()->findPk($this::$userId) ??
                 throw new NoUserFoundException();
 
-        if ($user->getRoleId() !== $this->roleId) {
+        if ($user->getRoleId() !== $this::$roleId) {
             $user
-                ->setRoleId($this->roleId)
+                ->setRoleId($this::$roleId)
                 ->save();
         }
 
@@ -434,17 +440,17 @@ class UserRole
      */
     public function add(): UserRole
     {
-        $this->roleObj = new DBRole();
+        $this::$roleObj = new ExtUserRole();
         $this->roleObj
-            ->setName($this->roleName)
-            ->setObjectViewer($this->objectViewer)
-            ->setManageObjects($this->manageObjects)
-            ->setManageVolumes($this->manageVolumes)
-            ->setManageHistory($this->manageHistory)
-            ->setManageUsers($this->manageUsers)
+            ->setName($this::$roleName)
+            ->setObjectViewer($this::$objectViewer)
+            ->setManageObjects($this::$manageObjects)
+            ->setManageVolumes($this::$manageVolumes)
+            ->setManageHistory($this::$manageHistory)
+            ->setManageUsers($this::$manageUsers)
             ->save();
 
-        $this->roleId = $this->roleObj->getId();
+        $this::$roleId = $this::$roleObj->getId();
 
         return $this;
     }
@@ -461,19 +467,17 @@ class UserRole
      */
     public function update(bool $isObj = false): UserRole
     {
-        if ($isObj && !$this->roleObj) throw new NoRoleObjectException();
-        elseif (!$isObj) {
-            $this->applyDefaultValuesByRoleId();
-        }
+        if ($isObj && !$this::$roleObj) throw new NoRoleObjectException();
+        elseif (!$isObj) $this->applyDefaultValuesByRoleId(false);
 
-        $this->roleObj
-            ->setName($this->roleName)
-            ->setObjectViewer($this->objectViewer)
-            ->setManageObjects($this->manageObjects)
-            ->setManageVolumes($this->manageVolumes)
-            ->setManageHistory($this->manageHistory)
-            ->setManageUsers($this->manageUsers)
-            ->save();
+        if ($this::$roleName !== null) $this::$roleObj->setName($this::$roleName);
+        if ($this::$objectViewer !== null) $this::$roleObj->setObjectViewer($this::$objectViewer);
+        if ($this::$manageObjects !== null) $this::$roleObj->setManageObjects($this::$manageObjects);
+        if ($this::$manageVolumes !== null) $this::$roleObj->setManageVolumes($this::$manageVolumes);
+        if ($this::$manageHistory !== null) $this::$roleObj->setManageHistory($this::$manageHistory);
+        if ($this::$manageUsers !== null) $this::$roleObj->setManageUsers($this::$manageUsers);
+
+        $this::$roleObj->save();
 
         return $this;
     }
@@ -489,13 +493,10 @@ class UserRole
      */
     public function delete(bool $isObj = false): UserRole
     {
-        if ($isObj && $this->roleObj === null) throw new NoRoleObjectException();
-        elseif (!$isObj) {
-            $this->roleObj = RoleQuery::create()->findPk($this->roleId) ??
-                             throw new NoRoleFoundException();
-        }
+        if ($isObj && $this::$roleObj === null) throw new NoRoleObjectException();
+        elseif (!$isObj) $this->applyDefaultValuesByRoleId();
 
-        $this->roleObj->delete();
+        $this::$roleObj->delete();
 
         return $this;
     }

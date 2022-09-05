@@ -6,8 +6,8 @@ use \Exception;
 use \PDO;
 use DB\ProjectRole as ChildProjectRole;
 use DB\ProjectRoleQuery as ChildProjectRoleQuery;
-use DB\Role as ChildRole;
-use DB\RoleQuery as ChildRoleQuery;
+use DB\UserRole as ChildUserRole;
+use DB\UserRoleQuery as ChildUserRoleQuery;
 use DB\Users as ChildUsers;
 use DB\UsersQuery as ChildUsersQuery;
 use DB\Map\ProjectRoleTableMap;
@@ -24,7 +24,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use wipe\inc\v1\role\user_role\UserRole;
 
 /**
  * Base class that represents a row from the 'users' table.
@@ -115,24 +114,23 @@ abstract class Users implements ActiveRecordInterface
     /**
      * The value for the role_id field.
      * ID роли
-     * Note: this column has a database default value of: 1
-     * @var        int
+     * @var        int|null
      */
     protected $role_id;
 
     /**
      * The value for the verified field.
      *
-     * Note: this column has a database default value of: false
-     * @var        boolean
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
     protected $verified;
 
     /**
      * The value for the resettable field.
      *
-     * Note: this column has a database default value of: true
-     * @var        boolean
+     * Note: this column has a database default value of: 1
+     * @var        int
      */
     protected $resettable;
 
@@ -168,16 +166,16 @@ abstract class Users implements ActiveRecordInterface
 
     /**
      * The value for the is_available field.
-     *
+     * Доступ (доступный, удаленный)
      * Note: this column has a database default value of: true
      * @var        boolean
      */
     protected $is_available;
 
     /**
-     * @var        ChildRole
+     * @var        ChildUserRole
      */
-    protected $aRole;
+    protected $aUserRole;
 
     /**
      * @var        ObjectCollection|ChildProjectRole[] Collection to store aggregation of ChildProjectRole objects.
@@ -210,9 +208,8 @@ abstract class Users implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->status = 0;
-        $this->role_id = 1;
-        $this->verified = false;
-        $this->resettable = true;
+        $this->verified = 0;
+        $this->resettable = 1;
         $this->roles_mask = 0;
         $this->force_logout = 0;
         $this->is_available = true;
@@ -509,7 +506,7 @@ abstract class Users implements ActiveRecordInterface
     /**
      * Get the [role_id] column value.
      * ID роли
-     * @return int
+     * @return int|null
      */
     public function getRoleId()
     {
@@ -519,7 +516,7 @@ abstract class Users implements ActiveRecordInterface
     /**
      * Get the [verified] column value.
      *
-     * @return boolean
+     * @return int
      */
     public function getVerified()
     {
@@ -527,33 +524,13 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Get the [verified] column value.
-     *
-     * @return boolean
-     */
-    public function isVerified()
-    {
-        return $this->getVerified();
-    }
-
-    /**
      * Get the [resettable] column value.
      *
-     * @return boolean
+     * @return int
      */
     public function getResettable()
     {
         return $this->resettable;
-    }
-
-    /**
-     * Get the [resettable] column value.
-     *
-     * @return boolean
-     */
-    public function isResettable()
-    {
-        return $this->getResettable();
     }
 
     /**
@@ -598,7 +575,7 @@ abstract class Users implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     *
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function getIsAvailable()
@@ -608,7 +585,7 @@ abstract class Users implements ActiveRecordInterface
 
     /**
      * Get the [is_available] column value.
-     *
+     * Доступ (доступный, удаленный)
      * @return boolean
      */
     public function isAvailable()
@@ -739,7 +716,7 @@ abstract class Users implements ActiveRecordInterface
     /**
      * Set the value of [role_id] column.
      * ID роли
-     * @param int $v New value
+     * @param int|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setRoleId($v)
@@ -753,31 +730,23 @@ abstract class Users implements ActiveRecordInterface
             $this->modifiedColumns[UsersTableMap::COL_ROLE_ID] = true;
         }
 
-        if ($this->aRole !== null && $this->aRole->getId() !== $v) {
-            $this->aRole = null;
+        if ($this->aUserRole !== null && $this->aUserRole->getId() !== $v) {
+            $this->aUserRole = null;
         }
 
         return $this;
     }
 
     /**
-     * Sets the value of the [verified] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [verified] column.
      *
-     * @param bool|integer|string $v The new value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setVerified($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
         if ($this->verified !== $v) {
@@ -789,23 +758,15 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of the [resettable] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [resettable] column.
      *
-     * @param bool|integer|string $v The new value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setResettable($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (int) $v;
         }
 
         if ($this->resettable !== $v) {
@@ -902,7 +863,7 @@ abstract class Users implements ActiveRecordInterface
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
+     * Доступ (доступный, удаленный)
      * @param bool|integer|string $v The new value
      * @return $this The current object (for fluent API support)
      */
@@ -934,33 +895,29 @@ abstract class Users implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-        if ($this->status !== 0) {
-            return false;
-        }
+            if ($this->status !== 0) {
+                return false;
+            }
 
-        if ($this->role_id !== 1) {
-            return false;
-        }
+            if ($this->verified !== 0) {
+                return false;
+            }
 
-        if ($this->verified !== false) {
-            return false;
-        }
+            if ($this->resettable !== 1) {
+                return false;
+            }
 
-        if ($this->resettable !== true) {
-            return false;
-        }
+            if ($this->roles_mask !== 0) {
+                return false;
+            }
 
-        if ($this->roles_mask !== 0) {
-            return false;
-        }
+            if ($this->force_logout !== 0) {
+                return false;
+            }
 
-        if ($this->force_logout !== 0) {
-            return false;
-        }
-
-        if ($this->is_available !== true) {
-            return false;
-        }
+            if ($this->is_available !== true) {
+                return false;
+            }
 
         // otherwise, everything was equal, so return TRUE
         return true;
@@ -978,7 +935,7 @@ abstract class Users implements ActiveRecordInterface
      * @param int $startcol 0-based offset column which indicates which resultset column to start with.
      * @param bool $rehydrate Whether this object is being re-hydrated from the database.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
-    One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
+                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
      * @return int next starting column
@@ -1010,10 +967,10 @@ abstract class Users implements ActiveRecordInterface
             $this->role_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UsersTableMap::translateFieldName('Verified', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->verified = (null !== $col) ? (boolean) $col : null;
+            $this->verified = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UsersTableMap::translateFieldName('Resettable', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->resettable = (null !== $col) ? (boolean) $col : null;
+            $this->resettable = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UsersTableMap::translateFieldName('RolesMask', TableMap::TYPE_PHPNAME, $indexType)];
             $this->roles_mask = (null !== $col) ? (int) $col : null;
@@ -1060,8 +1017,8 @@ abstract class Users implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
-            $this->aRole = null;
+        if ($this->aUserRole !== null && $this->role_id !== $this->aUserRole->getId()) {
+            $this->aUserRole = null;
         }
     }
 
@@ -1102,7 +1059,7 @@ abstract class Users implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aRole = null;
+            $this->aUserRole = null;
             $this->collProjectRoles = null;
 
         } // if (deep)
@@ -1213,11 +1170,11 @@ abstract class Users implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aRole !== null) {
-                if ($this->aRole->isModified() || $this->aRole->isNew()) {
-                    $affectedRows += $this->aRole->save($con);
+            if ($this->aUserRole !== null) {
+                if ($this->aUserRole->isModified() || $this->aUserRole->isNew()) {
+                    $affectedRows += $this->aUserRole->save($con);
                 }
-                $this->setRole($this->aRole);
+                $this->setUserRole($this->aUserRole);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1273,7 +1230,7 @@ abstract class Users implements ActiveRecordInterface
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . UsersTableMap::COL_ID . ')');
         }
 
-        // check the columns in natural order for more readable SQL queries
+         // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(UsersTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
@@ -1349,10 +1306,10 @@ abstract class Users implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->role_id, PDO::PARAM_INT);
                         break;
                     case 'verified':
-                        $stmt->bindValue($identifier, (int) $this->verified, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->verified, PDO::PARAM_INT);
                         break;
                     case 'resettable':
-                        $stmt->bindValue($identifier, (int) $this->resettable, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->resettable, PDO::PARAM_INT);
                         break;
                     case 'roles_mask':
                         $stmt->bindValue($identifier, $this->roles_mask, PDO::PARAM_INT);
@@ -1522,20 +1479,20 @@ abstract class Users implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aRole) {
+            if (null !== $this->aUserRole) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'role';
+                        $key = 'userRole';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'role';
+                        $key = 'user_role';
                         break;
                     default:
-                        $key = 'Role';
+                        $key = 'UserRole';
                 }
 
-                $result[$key] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aUserRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collProjectRoles) {
 
@@ -1702,7 +1659,7 @@ abstract class Users implements ActiveRecordInterface
         return $this;
     }
 
-    /**
+     /**
      * Populate the current object from a string, using a given parser format
      * <code>
      * $book = new Book();
@@ -1927,24 +1884,24 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildRole object.
+     * Declares an association between this object and a ChildUserRole object.
      *
-     * @param ChildRole $v
+     * @param ChildUserRole|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setRole(ChildRole $v = null)
+    public function setUserRole(ChildUserRole $v = null)
     {
         if ($v === null) {
-            $this->setRoleId(1);
+            $this->setRoleId(NULL);
         } else {
             $this->setRoleId($v->getId());
         }
 
-        $this->aRole = $v;
+        $this->aUserRole = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildRole object, it will not be re-added.
+        // If this object has already been added to the ChildUserRole object, it will not be re-added.
         if ($v !== null) {
             $v->addUsers($this);
         }
@@ -1955,26 +1912,26 @@ abstract class Users implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildRole object
+     * Get the associated ChildUserRole object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildRole The associated ChildRole object.
+     * @return ChildUserRole|null The associated ChildUserRole object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getRole(?ConnectionInterface $con = null)
+    public function getUserRole(?ConnectionInterface $con = null)
     {
-        if ($this->aRole === null && ($this->role_id != 0)) {
-            $this->aRole = ChildRoleQuery::create()->findPk($this->role_id, $con);
+        if ($this->aUserRole === null && ($this->role_id != 0)) {
+            $this->aUserRole = ChildUserRoleQuery::create()->findPk($this->role_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aRole->addUserss($this);
+                $this->aUserRole->addUserss($this);
              */
         }
 
-        return $this->aRole;
+        return $this->aUserRole;
     }
 
 
@@ -2251,10 +2208,10 @@ abstract class Users implements ActiveRecordInterface
      * @return ObjectCollection|ChildProjectRole[] List of ChildProjectRole objects
      * @phpstan-return ObjectCollection&\Traversable<ChildProjectRole}> List of ChildProjectRole objects
      */
-    public function getProjectRolesJoinProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getProjectRolesJoinObjProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProjectRoleQuery::create(null, $criteria);
-        $query->joinWith('project', $joinBehavior);
+        $query->joinWith('ObjProject', $joinBehavior);
 
         return $this->getProjectRoles($query, $con);
     }
@@ -2268,8 +2225,8 @@ abstract class Users implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aRole) {
-            $this->aRole->removeUsers($this);
+        if (null !== $this->aUserRole) {
+            $this->aUserRole->removeUsers($this);
         }
         $this->id = null;
         $this->email = null;
@@ -2315,7 +2272,7 @@ abstract class Users implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collProjectRoles = null;
-        $this->aRole = null;
+        $this->aUserRole = null;
         return $this;
     }
 
@@ -2336,7 +2293,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preSave(?ConnectionInterface $con = null): bool
     {
-        return true;
+                return true;
     }
 
     /**
@@ -2346,7 +2303,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postSave(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before inserting to database
@@ -2355,7 +2312,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        return true;
+                return true;
     }
 
     /**
@@ -2365,33 +2322,16 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postInsert(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before updating the object in database
      * @param ConnectionInterface|null $con
      * @return bool
-     * @throws Exception
      */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
-        $columns = $this->getModifiedColumns();
-        $newRole = in_array(UsersTableMap::COL_ROLE_ID, $columns);
-
-        if ($newRole) {
-            $isAdmin = UserRole::getByUserId()->isManageUsers();
-
-            if ($isAdmin) {
-                $projectRole = ProjectRoleQuery::create()->findByUserId($this->id);
-
-                foreach ($projectRole as &$role) {
-                    $role->setIsCrud(true);
-                    $role->save();
-                }
-            }
-        }
-
-        return true;
+                return true;
     }
 
     /**
@@ -2401,7 +2341,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postUpdate(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
     /**
      * Code to be run before deleting the object in database
@@ -2410,7 +2350,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function preDelete(?ConnectionInterface $con = null): bool
     {
-        return true;
+                return true;
     }
 
     /**
@@ -2420,7 +2360,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function postDelete(?ConnectionInterface $con = null): void
     {
-    }
+            }
 
 
     /**

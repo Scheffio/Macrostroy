@@ -14,6 +14,11 @@ $file->setFile($request->getRequest("file"))
     ->setUrl($request->getRequest("url"))
     ->save();
 
+//header('Content-Description: File Transfer');
+//header('Content-Type: application/octet-stream');
+//header('Content-Disposition: attachment; filename=' . "file.file");
+//header('Content-Transfer-Encoding: binary');
+
 JsonOutput::success([
                         "url" => $_SERVER["SERVER_NAME"] . "/api/v1/static?file=" . $file->getUrl()
                     ]);

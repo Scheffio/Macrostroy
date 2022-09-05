@@ -26,40 +26,63 @@ try {
     $isPublic = $request->getRequest('is_public');
     $parentId = null;
 
-    if (is_string($lvl)) {
-        $lvl = ProjectRole::getLvlByStr($lvl);
-    }
-
-    if ($lvl !== eLvlInt::PROJECT->value) {
-        $parentId = $request->getRequestOrThrow('parent_id');
-    }
+    if (is_string($lvl)) $lvl = ProjectRole::getLvlByStr($lvl);
+    if ($lvl !== eLvlInt::PROJECT->value) $parentId = $request->getRequestOrThrow('parent_id');
 
     switch ($lvl) {
         // Проект
         case eLvlInt::PROJECT->value:
             Objects::getProject()
-                ->setName($name)
-                ->setStatus($status)
-                ->setIsPublic($isPublic)
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic
+                )
                 ->add();
             break;
         // Подпроект
         case eLvlInt::SUBPROJECT->value:
             Objects::getSubproject()
-                ->setName($name)
-                ->setStatus($status)
-                ->setIsPublic($isPublic)
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic
+                )
                 ->setProjectId($parentId)
                 ->add();
             break;
         // Группа
         case eLvlInt::GROUP->value:
+            Objects::getGroup()
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic
+                )
+                ->setSubprojectId($parentId)
+                ->add();
             break;
         // Дом
         case eLvlInt::HOUSE->value:
+            Objects::getHouse()
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic
+                )
+                ->setGroupId($parentId)
+                ->add();
             break;
         // Этап
         case eLvlInt::STAGE->value:
+            Objects::getStage()
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic
+                )
+                ->setHouseId($parentId)
+                ->add();
             break;
         default: throw new IncorrectLvlException();
     }

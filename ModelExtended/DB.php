@@ -178,22 +178,6 @@ class DB
         $i = ObjStageWorkQuery::create()->findByStageId($id);
 
         foreach ($i as &$item) {
-            $item = self::getExtObjStage($item);
-            $item->setIsAvailable(false)->save();
-        }
-    }
-
-    /**
-     * Удаление дочерних элементов работы этапа (работа).
-     * @param int $id ID этапа.
-     * @return void
-     * @throws PropelException
-     */
-    public static function deleteStageWorkChildren(int $id): void
-    {
-        $i = ObjStageWorkQuery::create()->findByStageId($id);
-
-        foreach ($i as &$item) {
             $item = self::getExtObjStageWork($item);
             $item->setIsAvailable(false)->save();
         }
@@ -205,7 +189,7 @@ class DB
      * @return void
      * @throws PropelException
      */
-    private static function deleteChildStageMaterials(int $id): void
+    public static function deleteChildStageMaterials(int $id): void
     {
         $i = ObjStageMaterialQuery::create()->findByStageWorkId($id);
 
@@ -221,7 +205,7 @@ class DB
      * @return void
      * @throws PropelException
      */
-    private static function deleteChildStageTechnics(int $id): void
+    public static function deleteChildStageTechnics(int $id): void
     {
         $i = ObjStageTechnicQuery::create()->findByStageWorkId($id);
 

@@ -31,13 +31,14 @@ try {
         // Проект
         case eLvlInt::PROJECT->value: Objects::getProject($id)->deleteByObj(); break;
         // Подпроект
-        case eLvlInt::SUBPROJECT->value: break;
+        case eLvlInt::SUBPROJECT->value: Objects::getSubproject($id)->deleteByObj(); break;
         // Группа
-        case eLvlInt::GROUP->value: break;
+        case eLvlInt::GROUP->value: Objects::getGroup($id)->deleteByObj(); break;
         // Дом
-        case eLvlInt::HOUSE->value: break;
+        case eLvlInt::HOUSE->value: Objects::getHouse($id)->deleteByObj(); break;
         // Этап
-        case eLvlInt::STAGE->value: break;
+        case eLvlInt::STAGE->value: Objects::getStage($id)->deleteByObj(); break;
+
         default: throw new IncorrectLvlException();
     }
 

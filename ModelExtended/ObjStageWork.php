@@ -3,6 +3,7 @@ namespace ext;
 
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Exception\PropelException;
 
 class ObjStageWork extends \DB\ObjStageWork
 {
@@ -14,6 +15,11 @@ class ObjStageWork extends \DB\ObjStageWork
         return true;
     }
 
+    /**
+     * @param ConnectionInterface|null $con
+     * @return bool
+     * @throws PropelException
+     */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
         $this->setVersionCreatedBy(Auth::getUser()->id());
@@ -22,6 +28,8 @@ class ObjStageWork extends \DB\ObjStageWork
         else {
             $this->setVersionComment('delete');
             $this->setIsAvailable(false);
+            DB::deleteChildStageMaterials($this->getId());
+            DB::deleteChildStageTechnics($this->getId());
         }
 
         return true;

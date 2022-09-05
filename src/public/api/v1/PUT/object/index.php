@@ -36,29 +36,57 @@ try {
         // Проект
         case eLvlInt::PROJECT->value:
             Objects::getProject($id)
-                ->setName($name)
-                ->setStatus($status)
-                ->setIsPublic($isPublic)
-                ->setIsAvailable($isAvailable)
-                ->updateByObj();
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic,
+                    isAvailable: $isAvailable,
+                )
+                ->update();
             break;
         // Подпроект
         case eLvlInt::SUBPROJECT->value:
             Objects::getSubproject($id)
-                ->setName($name)
-                ->setStatus($status)
-                ->setIsPublic($isPublic)
-                ->setIsAvailable($isAvailable)
-                ->updateByObj();
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic,
+                    isAvailable: $isAvailable,
+                )
+                ->update();
             break;
         // Группа
         case eLvlInt::GROUP->value:
+            Objects::getGroup($id)
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic,
+                    isAvailable: $isAvailable,
+                )
+                ->update();
             break;
         // Дом
         case eLvlInt::HOUSE->value:
+            Objects::getHouse($id)
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic,
+                    isAvailable: $isAvailable,
+                )
+                ->update();
             break;
         // Этап
         case eLvlInt::STAGE->value:
+            Objects::getStage($id)
+                ->setObjDefaultValues(
+                    name: $name,
+                    status: $status,
+                    isPublic: $isPublic,
+                    isAvailable: $isAvailable,
+                )
+                ->update();
             break;
         default: throw new IncorrectLvlException();
     }

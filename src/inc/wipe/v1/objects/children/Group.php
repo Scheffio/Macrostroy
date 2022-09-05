@@ -88,14 +88,14 @@ class Group extends Objects implements iObject
     }
 
     /**
-     * Получить объект проекта, которому принадлежит подпроект.
-     * @return Project
+     * Получить объект подпроекта, которому принадлежит группа.
+     * @return Subproject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function getProjectObj(): Project
+    public function getSubprojectObj(): Subproject
     {
-        return $this->projectId ? parent::getProject($this->projectId) : throw new NoFindObjectException();
+        return $this->subprojectId ? parent::getSubproject($this->subprojectId) : throw new NoFindObjectException();
     }
     #endregion
 

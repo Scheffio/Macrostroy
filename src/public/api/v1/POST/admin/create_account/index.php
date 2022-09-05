@@ -1,7 +1,7 @@
 <?php
 
 
-use DB\RoleQuery;
+use DB\Base\UserRoleQuery;
 use DB\UsersQuery;
 use Delight\Auth\InvalidEmailException;
 use Delight\Auth\InvalidPasswordException;
@@ -12,19 +12,18 @@ use inc\artemy\v1\email_sender\MailSender;
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
-use wipe\inc\v1\role\user_role\UserRole;
 
-try {
-    UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
-} catch (Exception $e) {
-    JsonOutput::error($e);
-}
+//try {
+//    UserRole::getByUserId()->isManageUsersOrThrow(); //спасибо лера
+//} catch (Exception $e) {
+//    JsonOutput::error($e);
+//}
 
 
 $request = new Request();
 $request->checkRequestVariables("user_nickname", "user_email", "user_role_id");
 
-$role = RoleQuery::create()->findOneById($request->getRequest("user_role_id"));
+$role = UserRoleQuery::create()->findOneById($request->getRequest("user_role_id"));
 if ($role === null) JsonOutput::error("Неизвестная роль");
 
 if (!empty($request->getRequest("user_nickname"))) {
@@ -42,7 +41,7 @@ try {
         MailSender::sendAccountCreatedByAdmin($request->getRequest("user_email"), $link);
     });
 
-    UsersQuery::create()->findOneById($user_id)->setRole($role)->save();
+    UsersQuery::create()->findOneById($user_id)->setRoleId($role->getId())->save();
 
     JsonOutput::success([
                             "id" => $user_id,

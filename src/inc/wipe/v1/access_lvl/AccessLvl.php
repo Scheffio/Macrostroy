@@ -44,6 +44,46 @@ class AccessLvl
         };
     }
 
-    public static function checkLvl
+    public static function checkLvlIntObj(int $lvl): bool
+    {
+        return in_array($lvl, [
+            eLvlObjInt::PROJECT->value,
+            eLvlObjInt::SUBPROJECT->value,
+            eLvlObjInt::GROUP->value,
+            eLvlObjInt::HOUSE->value,
+            eLvlObjInt::STAGE->value,
+        ]);
+    }
+
+    public static function checkLvlStrObj(string $lvl): bool
+    {
+        return in_array($lvl, [
+            eLvlObjStr::PROJECT->value,
+            eLvlObjStr::SUBPROJECT->value,
+            eLvlObjStr::GROUP->value,
+            eLvlObjStr::HOUSE->value,
+            eLvlObjStr::STAGE->value,
+        ]);
+    }
+
+    /**
+     * @param int $lvl Уровень доступа.
+     * @return bool
+     * @throws InvalidAccessLvlIntException
+     */
+    public static function isLvlIntObjOrThrow(int $lvl): bool
+    {
+        return self::isLvlIntObjOrThrow($lvl) ?: throw new InvalidAccessLvlIntException();
+    }
+
+    /**
+     * @param string $lvl Уровень доступа.
+     * @return bool
+     * @throws InvalidAccessLvlIntException
+     */
+    public static function isLvlStrObjOrThrow(string $lvl): bool
+    {
+        return self::isLvlStrObjOrThrow($lvl) ?: throw new InvalidAccessLvlIntException();
+    }
     #endregion
 }

@@ -77,6 +77,21 @@ $services = [];
 
     $services[] = ["Russian propaganda", $performance];
 }
+
+{
+    $performance = Performance::OPERATIONAL;
+
+    $ch = curl_init("netflix.com");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $output = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpcode !== 403) $performance = Performance::MAJOR_OUTAGE;
+
+    $services[] = ["Database backup", $performance];
+}
 ?>
     <html lang="en">
     <head>

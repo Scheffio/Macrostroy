@@ -3,6 +3,7 @@ namespace ext;
 
 use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Exception\PropelException;
 
 class ObjHouse extends \DB\ObjHouse
 {
@@ -14,6 +15,11 @@ class ObjHouse extends \DB\ObjHouse
         return true;
     }
 
+    /**
+     * @param ConnectionInterface|null $con
+     * @return bool
+     * @throws PropelException
+     */
     public function preUpdate(?ConnectionInterface $con = null): bool
     {
         $this->setVersionCreatedBy(Auth::getUser()->id());
@@ -22,6 +28,7 @@ class ObjHouse extends \DB\ObjHouse
             $this->setVersionComment('delete');
             $this->setIsPublic(false);
             $this->setIsAvailable(false);
+            DB::deleteHouseChildren($this->getId());
         } else $this->setVersionComment('update');
 
         return true;

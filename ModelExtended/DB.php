@@ -44,7 +44,7 @@ class DB
         );
     }
 
-    #region ExtRole
+    #region getExtRole
     public static function getExtUserRole(BaseUserRole $obj): UserRole
     {
         return self::cast($obj, UserRole::class);
@@ -56,7 +56,7 @@ class DB
     }
     #endregion
 
-    #region ExtObj
+    #region getExtObj
     public static function getExtObjProject(BaseObjProject $obj): ObjProject
     {
         return self::cast($obj, ObjProject::class);
@@ -81,7 +81,9 @@ class DB
     {
         return self::cast($obj, ObjStage::class);
     }
+    #endregion
 
+    #region deleteExtObj
     /**
      * Удаление дочерних элементов проекта.
      * @param int $id ID проекта.
@@ -147,7 +149,7 @@ class DB
     }
     #endregion
 
-    #region ExtVol
+    #region getExtVol
     public static function getExtVolMaterial(BaseVolMaterial $obj): VolMaterial
     {
         return self::cast($obj, VolMaterial::class);

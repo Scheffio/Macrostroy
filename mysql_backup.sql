@@ -636,7 +636,7 @@ CREATE TABLE `static_file` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `static_file_slug` (`url`),
   CONSTRAINT `static_file_chk_1` CHECK (json_valid(`headers`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -645,6 +645,7 @@ CREATE TABLE `static_file` (
 
 LOCK TABLES `static_file` WRITE;
 /*!40000 ALTER TABLE `static_file` DISABLE KEYS */;
+INSERT INTO `static_file` VALUES (1,'123','123',_binary '123',NULL,'123'),(2,'123','123',_binary '123',NULL,'123-1'),(3,'123','123',_binary '123',NULL,'qqq'),(4,'123','123',_binary '123',NULL,'qqq-1');
 /*!40000 ALTER TABLE `static_file` ENABLE KEYS */;
 UNLOCK TABLES;
 

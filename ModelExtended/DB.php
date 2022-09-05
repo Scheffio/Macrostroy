@@ -5,6 +5,7 @@ namespace ext;
 use DB\Base\ObjGroupQuery;
 use DB\Base\ObjHouseQuery;
 use DB\Base\ObjProjectQuery;
+use DB\Base\ObjStageWorkQuery;
 use DB\Base\ObjSubprojectQuery;
 use DB\Base\ProjectRoleQuery;
 use InvalidArgumentException;
@@ -147,6 +148,24 @@ class DB
             $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
         }
     }
+
+    /**
+     * Удаление дочерних элементов этапа.
+     * @param int $id ID этапа.
+     * @return void
+     * @throws PropelException
+     */
+    public static function deleteStageChildren(int $id): void
+    {
+        $i = ObjStageWorkQuery::create()->findByStageId($id);
+
+        foreach ($i as &$item) {
+            $item = self::getExtObjStage($item);
+            $item->setIsAvailable(false)->save();
+        }
+    }
+
+    
     #endregion
 
     #region getExtVol

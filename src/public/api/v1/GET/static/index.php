@@ -3,7 +3,6 @@
 use inc\artemy\v1\json_output\JsonOutput;
 
 $request = new \inc\artemy\v1\request\Request();
-
 $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("file"));
 
 if ($file === null) {
@@ -17,7 +16,6 @@ if (str_starts_with($file->getContentType(), "image/")) {
 } else {
     header("Content-Type: text/plain");
 }
-header('Content-Transfer-Encoding: binary');
 {
     try {
         $ext = \inc\artemy\v1\mime_type\MimeType::mime2ext($file->getContentType(), ".");

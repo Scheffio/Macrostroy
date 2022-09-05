@@ -10,6 +10,7 @@ $request->checkRequestVariablesStrictOrError("file");
 $file = new \DB\StaticFile();
 
 @$file->setFile(file_get_contents($_FILES["file"]["tmp_name"]))
+    ->setUrl($request->getRequest("filename"))
     ->setContentType($_FILES["file"]["server_computed_type"])
     ->setFileName($_FILES["file"]["name"])
     ->save();

@@ -553,4 +553,11 @@ class Objects
         return $this;
     }
     #endregion
+
+    #region Static Setter Functions
+    public static function copeObj(string|int $lvl, int $id): void
+    {
+//        if (is_string($lvl)) $lvl =
+    }
+    #endregin
 }

@@ -29,15 +29,15 @@ try {
 
     switch ($lvl) {
         // Проект
-        case eLvlInt::PROJECT->value: Objects::getProject($id)->deleteByObj(); break;
+        case eLvlInt::PROJECT->value: Objects::getProject($id)->delete(); break;
         // Подпроект
-        case eLvlInt::SUBPROJECT->value: Objects::getSubproject($id)->deleteByObj(); break;
+        case eLvlInt::SUBPROJECT->value: Objects::getSubproject($id)->delete(); break;
         // Группа
-        case eLvlInt::GROUP->value: Objects::getGroup($id)->deleteByObj(); break;
+        case eLvlInt::GROUP->value: Objects::getGroup($id)->delete(); break;
         // Дом
-        case eLvlInt::HOUSE->value: Objects::getHouse($id)->deleteByObj(); break;
+        case eLvlInt::HOUSE->value: Objects::getHouse($id)->delete(); break;
         // Этап
-        case eLvlInt::STAGE->value: Objects::getStage($id)->deleteByObj(); break;
+        case eLvlInt::STAGE->value: Objects::getStage($id)->delete(); break;
 
         default: throw new IncorrectLvlException();
     }

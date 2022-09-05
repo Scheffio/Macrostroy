@@ -8,8 +8,7 @@ $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("p
 
 if ($file === null) JsonOutput::error("File not found");
 
-header('Content-Description: File Transfer');
-header('Content-Disposition: attachment; filename=' . "file.file");
-header('Content-Transfer-Encoding: binary');
+header('Content-Type: ') . $file->getContentType();
+if (!empty($request->getQuery("download"))) header('Content-Disposition: attachment; filename=' . "file.file");
 
 echo stream_get_contents($file->getFile());

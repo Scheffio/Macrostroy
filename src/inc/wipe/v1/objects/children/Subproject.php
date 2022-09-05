@@ -111,18 +111,13 @@ class Subproject extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoProjectFoundException
      * @throws PropelException
+     * @throws NoFindObjectException
      */
     public function update(): Subproject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjSubproject($this->object);
-        $this->setUpdateObjByCurrentValues();
-
-        if ($this->projectId) {
-            $this->object->setProjectId($this->projectId);
-        }
-
-        $this->object->save();
+        $this->updateByObj();
 
         return $this;
     }
@@ -161,7 +156,7 @@ class Subproject extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjSubproject($this->object);
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+        $this->deleteByObj();
 
         return $this;
     }

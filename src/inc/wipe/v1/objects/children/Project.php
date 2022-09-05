@@ -85,6 +85,7 @@ class Project extends Objects implements iObject
      * Редактирование проекта.
      * @return Project
      * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      * @throws NoProjectFoundException
      * @throws PropelException
      */
@@ -92,8 +93,7 @@ class Project extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjProject($this->object);
-        $this->setUpdateObjByCurrentValues();
-        $this->object->save();
+        $this->updateByObj();
 
         return $this;
     }
@@ -127,7 +127,7 @@ class Project extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjProject($this->object);
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+        $this->deleteByObj();
 
         return $this;
     }

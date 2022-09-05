@@ -109,6 +109,7 @@ class Stage extends Objects implements iObject
      * Редактирование этапа.
      * @return Stage
      * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      * @throws NoProjectFoundException
      * @throws PropelException
      */
@@ -116,13 +117,7 @@ class Stage extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjStage($this->object);
-        $this->setUpdateObjByCurrentValues();
-
-        if ($this->houseId) {
-            $this->object->setHouseId($this->houseId);
-        }
-
-        $this->object->save();
+        $this->updateByObj();
 
         return $this;
     }
@@ -161,7 +156,7 @@ class Stage extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjStage($this->object);
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+        $this->deleteByObj();
 
         return $this;
     }

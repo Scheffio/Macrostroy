@@ -109,6 +109,7 @@ class Group extends Objects implements iObject
      * Редактирование группы.
      * @return Group
      * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      * @throws NoProjectFoundException
      * @throws PropelException
      */
@@ -116,13 +117,7 @@ class Group extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjGroup($this->object);
-        $this->setUpdateObjByCurrentValues();
-
-        if ($this->subprojectId) {
-            $this->object->setSubprojectId($this->subprojectId);
-        }
-
-        $this->object->save();
+        $this->updateByObj();
 
         return $this;
     }
@@ -161,7 +156,7 @@ class Group extends Objects implements iObject
     {
         $this->object = $this->getObjByLvlAndIdOrThrow();
         $this->object = DB::getExtObjGroup($this->object);
-        $this->setStatus($this::ATTRIBUTE_STATUS_DELETED)->updateByObj();
+        $this->deleteByObj();
 
         return $this;
     }

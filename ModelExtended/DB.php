@@ -2,6 +2,7 @@
 
 namespace ext;
 
+use DB\Base\ProjectRoleQuery;
 use InvalidArgumentException;
 use DB\Base\UserRole as BaseUserRole;
 use DB\Base\ProjectRole as BaseProjectRole;
@@ -73,6 +74,16 @@ class DB
     public static function getExtObjStage(BaseObjStage $obj): ObjStage
     {
         return self::cast($obj, ObjStage::class);
+    }
+
+    public static function deleteProjectChildren(int $id): void
+    {
+        $i = ProjectRoleQuery::create()->filterByProjectId($id)->find();
+
+        foreach ($i as &$item) {
+            $item = self::getExtObjSubproject($item);
+            $item->setStatus()
+        }
     }
     #endregion
 

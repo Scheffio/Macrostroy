@@ -9,7 +9,6 @@ $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("p
 if ($file === null) JsonOutput::error("File not found");
 
 header('Content-Description: File Transfer');
-header('Content-Type: image/png');
 header('Content-Disposition: attachment; filename=' . "file.file");
 header('Content-Transfer-Encoding: binary');
 

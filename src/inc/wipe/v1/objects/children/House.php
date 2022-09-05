@@ -10,7 +10,6 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class House extends Objects implements iObject
 {
@@ -23,7 +22,7 @@ class House extends Objects implements iObject
     /**
      * @param int|null $id ID группы.
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     function __construct(?int $id = null)
     {
@@ -38,7 +37,7 @@ class House extends Objects implements iObject
      * Заполнение свойств класса, используя ID дома.
      * @return void
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {
@@ -110,9 +109,8 @@ class House extends Objects implements iObject
      * Редактирование дома.
      * @return House
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
-     * @throws PropelException
      * @throws NoFindObjectException
+     * @throws PropelException
      */
     public function update(): House
     {
@@ -149,7 +147,6 @@ class House extends Objects implements iObject
      * @return House
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      * @throws IncorrectStatusException
      */

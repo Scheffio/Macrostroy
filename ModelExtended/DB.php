@@ -8,7 +8,7 @@ use DB\Base\ObjStageMaterialQuery;
 use DB\Base\ObjStageTechnicQuery;
 use DB\Base\ObjStageWorkQuery;
 use DB\Base\ObjSubprojectQuery;
-use InvalidArgumentException;
+
 use DB\Base\UserRole as BaseUserRole;
 use DB\Base\ProjectRole as BaseProjectRole;
 use DB\Base\ObjProject as BaseObjProject;
@@ -22,8 +22,10 @@ use DB\Base\ObjStageTechnic as BaseObjStageTechnic;
 use DB\Base\VolWork as BaseVolWork;
 use DB\Base\VolTechnic as BaseVolTechnic;
 use DB\Base\VolMaterial as BaseVolMaterial;
-use Propel\Runtime\Exception\PropelException;
+
 use wipe\inc\v1\objects\Objects;
+use InvalidArgumentException;
+use Propel\Runtime\Exception\PropelException;
 
 class DB
 {

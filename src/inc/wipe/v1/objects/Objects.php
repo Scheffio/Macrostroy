@@ -16,7 +16,6 @@ use ext\ObjHouse;
 use ext\ObjProject;
 use ext\ObjStage;
 use ext\ObjSubproject;
-use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\PropelQuery;
 use wipe\inc\v1\objects\children\Group;
@@ -201,13 +200,13 @@ class Objects
      * Поиск объекта по уровню доступа и ID, иначе - ошибка.
      * @return mixed
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     public function getObjByLvlAndIdOrThrow(): mixed
     {
         $className = $this::getClassNameObjByLvl($this->lvl);
 
-        return PropelQuery::from($className)->findPk($this->id) ?? throw new NoProjectFoundException();
+        return PropelQuery::from($className)->findPk($this->id) ?? throw new NoFindObjectException();
     }
 
     /**
@@ -384,48 +383,58 @@ class Objects
 
     #region Static Getter Children Classes Functions
     /**
-     * @param int|null $id ID проекта.
+     * @param int|null $id
      * @return Project
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      */
     public static function getProject(?int $id = null): Project
     {
-        return new Project();
+        return new Project($id);
     }
 
     /**
-     * @param int|null $id ID подпроекта.
+     * @param int|null $id
      * @return Subproject
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      */
     public static function getSubproject(?int $id = null): Subproject
     {
-        return new Subproject();
+        return new Subproject($id);
     }
 
     /**
-     * @param int|null $id ID группы.
+     * @param int|null $id
      * @return Group
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      */
     public static function getGroup(?int $id = null): Group
     {
-        return new Group();
+        return new Group($id);
     }
 
     /**
-     * @param int|null $id ID дома.
+     * @param int|null $id
      * @return House
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      */
     public static function getHouse(?int $id = null): House
     {
-        return new House();
+        return new House($id);
     }
 
     /**
-     * @param int|null $id ID этапа.
+     * @param int|null $id
      * @return Stage
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
      */
     public static function getStage(?int $id = null): Stage
     {
-        return new Stage();
+        return new Stage($id);
     }
     #endregion
 

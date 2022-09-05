@@ -22,7 +22,7 @@ class Subproject extends Objects implements iObject
     /**
      * @param int|null $id ID подпроекта.
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     function __construct(?int $id = null)
     {
@@ -37,7 +37,7 @@ class Subproject extends Objects implements iObject
      * Заполнение свойств класса, используя ID подпроекта.
      * @return void
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {

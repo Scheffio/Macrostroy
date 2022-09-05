@@ -9,7 +9,6 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Stage extends Objects implements iObject
 {
@@ -22,7 +21,7 @@ class Stage extends Objects implements iObject
     /**
      * @param int|null $id ID группы.
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     function __construct(?int $id = null)
     {
@@ -37,7 +36,7 @@ class Stage extends Objects implements iObject
      * Заполнение свойств класса, используя ID дома.
      * @return void
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {
@@ -110,7 +109,6 @@ class Stage extends Objects implements iObject
      * @return Stage
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      */
     public function update(): Stage
@@ -148,7 +146,6 @@ class Stage extends Objects implements iObject
      * @return Stage
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      * @throws IncorrectStatusException
      */

@@ -9,7 +9,6 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Project extends Objects implements iObject
 {
@@ -19,7 +18,7 @@ class Project extends Objects implements iObject
     /**
      * @param int|null $id ID проекта.
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     function __construct(?int $id = null)
     {
@@ -34,7 +33,7 @@ class Project extends Objects implements iObject
      * Заполнение свойств класса, используя ID проекта.
      * @return void
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
+     * @throws NoFindObjectException
      */
     public function applyDefaultValuesById(): void
     {
@@ -86,7 +85,6 @@ class Project extends Objects implements iObject
      * @return Project
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      */
     public function update(): Project
@@ -119,7 +117,6 @@ class Project extends Objects implements iObject
      * @return Project
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      * @throws IncorrectStatusException
      */

@@ -81,16 +81,35 @@ $services = [];
 {
     $performance = Performance::OPERATIONAL;
 
-    $ch = curl_init("netflix.com");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    $output = curl_exec($ch);
-    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $db_minutes_from_last_backup = (int)(((time() - filemtime("../../mysql_backup.sql")) / 60) / 60);
+var_dump($db_minutes_from_last_backup);
+    if ($db_minutes_from_last_backup > 10) {
+        $performance = Performance::DEGRADED_PERFORMANCE;
+    }
 
-    if ($httpcode !== 403) $performance = Performance::MAJOR_OUTAGE;
+    if ($db_minutes_from_last_backup > 11) {
+        $performance = Performance::MAJOR_OUTAGE;
+    }
 
-    $services[] = ["Database backup", $performance];
+    $info = "Last Database backup was $db_minutes_from_last_backup minute" . ($db_minutes_from_last_backup === 1 ? "" : "s")
+                                                                                                                  . " ago.";
+    $services[] = ["Database backup", $performance, $info];
+}
+
+{
+    $performance = Performance::OPERATIONAL;
+
+    $db_minutes_from_last_backup = ((time() - filemtime("../../mysql_backup.sql")) / 60) / 60;
+
+    if ($db_minutes_from_last_backup > 10) {
+        $performance = Performance::DEGRADED_PERFORMANCE;
+    }
+
+    if ($db_minutes_from_last_backup > 11) {
+    }
+    $performance = Performance::MAJOR_OUTAGE;
+
+    $services[] = ["Site backup", $performance];
 }
 ?>
     <html lang="en">

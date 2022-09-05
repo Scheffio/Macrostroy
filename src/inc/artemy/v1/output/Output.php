@@ -4,7 +4,6 @@ namespace inc\artemy\v1\output;
 
 use Delight\Db\Throwable\Error;
 use DOMDocument;
-use ext\UserRole;
 use inc\artemy\v1\auth\Auth;
 use inc\artemy\v1\development_mode\DevelopmentMode;
 use inc\artemy\v1\http_response_code_handler\HTTPResponse;
@@ -27,6 +26,13 @@ class Output
 
         //Ссылка клиента
         $path = RouterParser::getPath();
+
+        //is README request
+        if(end($path) === "help") {
+            array_pop($path);
+        }
+
+//        var_dump($path);
 
         //запрашиваемая версия API
         $api_version = (function () use ($path) {
@@ -77,8 +83,7 @@ class Output
             return $method;
         })();
 
-        $api_path = (function () {
-            $path = RouterParser::getPath();
+        $api_path = (function () use ($path) {
             return implode("/", array_slice($path, 2));
         })();
 

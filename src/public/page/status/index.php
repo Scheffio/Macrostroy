@@ -79,10 +79,43 @@ $services = [];
 }
 
 {
+    function time_ago($datetime): string
+    {
+        if (is_numeric($datetime)) {
+            $timestamp = $datetime;
+        } else {
+            $timestamp = strtotime($datetime);
+        }
+        $diff = time() - $timestamp;
+
+        $min = 60;
+        $hour = 60 * 60;
+        $day = 60 * 60 * 24;
+        $month = $day * 30;
+
+        if ($diff < 60) //Under a min
+        {
+            $timeago = $diff . " seconds";
+        } elseif ($diff < $hour) //Under an hour
+        {
+            $timeago = round($diff / $min) . " mins";
+        } elseif ($diff < $day) //Under a day
+        {
+            $timeago = round($diff / $hour) . " hours";
+        } elseif ($diff < $month) //Under a day
+        {
+            $timeago = round($diff / $day) . " days";
+        } else {
+            $timeago = round($diff / $month) . " months";
+        }
+
+        return $timeago;
+
+    }
+
     $performance = Performance::OPERATIONAL;
-//    var_dump(date('Y-m-d H:i:s', filemtime("backup.sh")));
-    var_dump(pathinfo("../../mysql_backup.sql"));
-//    $db_minutes_from_last_backup = (((time() - filectime("../../mysql_backup.sql")) / 60));
+    var_dump(filectime("../../mysql_backup.sql"));
+    $db_unix_backup = filemtime("../../mysql_backup.sql");
 //    if ($db_minutes_from_last_backup > 10) {
 //        $performance = Performance::DEGRADED_PERFORMANCE;
 //    }
@@ -91,11 +124,7 @@ $services = [];
 //        $performance = Performance::MAJOR_OUTAGE;
 //    }
 
-    $info = "Last Database backup was $db_minutes_from_last_backup minute" . ($db_minutes_from_last_backup > 1
-            ? "s"
-            :
-            "")
-            . " ago.";
+    $info = "Last Database backup was " . time_ago($db_unix_backup) . " ago.";
     $services[] = ["Database backup", $performance, $info];
 }
 

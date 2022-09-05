@@ -80,9 +80,9 @@ $services = [];
 
 {
     $performance = Performance::OPERATIONAL;
-var_dump(date('Y-m-d H:i:s'));
+    var_dump(date('Y-m-d H:i:s', filemtime("backup.sh")));
     $db_minutes_from_last_backup = (((time() - filemtime("../../mysql_backup.sql")) / 60));
-var_dump($db_minutes_from_last_backup);
+    var_dump($db_minutes_from_last_backup);
     if ($db_minutes_from_last_backup > 10) {
         $performance = Performance::DEGRADED_PERFORMANCE;
     }
@@ -91,8 +91,11 @@ var_dump($db_minutes_from_last_backup);
         $performance = Performance::MAJOR_OUTAGE;
     }
 
-    $info = "Last Database backup was $db_minutes_from_last_backup minute" . ($db_minutes_from_last_backup === 1 ? "" : "s")
-                                                                                                                  . " ago.";
+    $info = "Last Database backup was $db_minutes_from_last_backup minute" . ($db_minutes_from_last_backup > 1
+            ? "s"
+            :
+            "")
+            . " ago.";
     $services[] = ["Database backup", $performance, $info];
 }
 

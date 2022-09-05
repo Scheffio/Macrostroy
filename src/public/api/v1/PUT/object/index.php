@@ -37,6 +37,7 @@ try {
         case eLvlInt::PROJECT->value:
             Objects::getProject($id)
                 ->setObjDefaultValues(
+                    id: $id,
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
@@ -48,6 +49,7 @@ try {
         case eLvlInt::SUBPROJECT->value:
             Objects::getSubproject($id)
                 ->setObjDefaultValues(
+                    id: $id,
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
@@ -59,6 +61,7 @@ try {
         case eLvlInt::GROUP->value:
             Objects::getGroup($id)
                 ->setObjDefaultValues(
+                    id: $id,
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
@@ -70,6 +73,7 @@ try {
         case eLvlInt::HOUSE->value:
             Objects::getHouse($id)
                 ->setObjDefaultValues(
+                    id: $id,
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
@@ -81,6 +85,7 @@ try {
         case eLvlInt::STAGE->value:
             Objects::getStage($id)
                 ->setObjDefaultValues(
+                    id: $id,
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
@@ -93,7 +98,11 @@ try {
 
     JsonOutput::success();
 } catch (Exception $e) {
-    JsonOutput::success($e->getMessage());
+    JsonOutput::success([
+        'getMessage'=>$e->getMessage(),
+        'getLine'=>$e->getLine(),
+        'getFile'=>$e->getFile()
+    ]);
 }
 
 //function setPropertiesForObject

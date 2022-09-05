@@ -5,13 +5,13 @@ use inc\artemy\v1\request\Request;
 
 $request = new Request();
 
-$request->checkRequestVariablesStrictOrError("file_name", "content_type", "file");
+$request->checkRequestVariablesStrictOrError("file");
 
 $file = new \DB\StaticFile();
-$file->setFile($request->getRequest("file"))
-    ->setContentType($request->getRequest("content_type"))
-    ->setFileName($request->getRequest("file_name"))
-    ->setUrl($request->getRequest("url"))
+
+$file->setFile(file_get_contents($_FILES["file"][""]))
+    ->setContentType($_FILES["file"]["server_computed_type"])
+    ->setFileName($_FILES["file"]["name"])
     ->save();
 
 //header('Content-Description: File Transfer');

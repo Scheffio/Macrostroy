@@ -62,8 +62,8 @@ class Objects
     /** @var bool|null Доступ к объекту (доступен, удален). */
     protected ?bool $isAvailable = null;
 
-    /** @var ObjGroup|ObjHouse|ObjProject|ObjStage|ObjSubproject|null Объект класса (подкласса). */
-    protected null|ObjProject|ObjSubproject|ObjGroup|ObjHouse|ObjStage $object = null;
+    /** @var mixed Объект класса (подкласса). */
+    protected mixed $object = null;
 
     #region Apply Default Values Functions
     /**
@@ -206,8 +206,7 @@ class Objects
     {
         $className = $this::getClassNameObjByLvl($this->lvl);
 
-        return  PropelQuery::from($className)
-                ->findPk($this->id) ?? throw new NoProjectFoundException();
+        return PropelQuery::from($className)->findPk($this->id) ?? throw new NoProjectFoundException();
     }
 
     /**
@@ -519,24 +518,27 @@ class Objects
     }
 
     /**
-     * @param string $name Наименование объекта.
-     * @param string $status Статус разработки объекта (в процессе, завершен, удален).
-     * @param bool $isPublic Доступ (открытый/публичный).
-     * @param bool $isAvailable Доступ (доступен/удален).
+     * @param string|null $id ID объекта.
+     * @param string|null $name Наименование объекта.
+     * @param string|null $status Статус разработки объекта (в процессе, завершен, удален).
+     * @param bool|null $isPublic Доступ (открытый/публичный).
+     * @param bool|null $isAvailable Доступ (доступен/удален).
      * @return Objects
      * @throws IncorrectStatusException
      */
     public function setObjDefaultValues(
-        string $name,
-        string $status = self::ATTRIBUTE_STATUS_IN_PROCESS,
-        bool $isPublic = true,
-        bool $isAvailable = true
+        ?string $id = null,
+        ?string $name = null,
+        ?string $status = self::ATTRIBUTE_STATUS_IN_PROCESS,
+        ?bool $isPublic = true,
+        ?bool $isAvailable = true
     ): Objects
     {
-        $this->setName($name)
-             ->setStatus($status)
-             ->setIsPublic($isPublic)
-             ->setIsAvailable($isAvailable);
+        if ($id !== null) $this->setId($id);
+        if ($name !== null) $this->setName($name);
+        if ($status !== null) $this->setStatus($status);
+        if ($isPublic !== null) $this->setIsPublic($isPublic);
+        if ($isAvailable !== null) $this->setIsAvailable($isAvailable);
 
         return $this;
     }

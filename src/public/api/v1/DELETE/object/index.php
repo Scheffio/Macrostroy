@@ -44,5 +44,9 @@ try {
 
     JsonOutput::success();
 } catch (Exception $e) {
-    JsonOutput::success($e->getMessage());
+    JsonOutput::success([
+        'getMessage'=>$e->getMessage(),
+        'getLine'=>$e->getLine(),
+        'getFile'=>$e->getFile()
+    ]);
 }

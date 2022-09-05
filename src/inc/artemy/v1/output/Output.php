@@ -27,12 +27,6 @@ class Output
         //Ссылка клиента
         $path = RouterParser::getPath();
 
-        //is README request
-        if(end($path) === "help") {
-            array_pop($path);
-        }
-
-//        var_dump($path);
 
         //запрашиваемая версия API
         $api_version = (function () use ($path) {

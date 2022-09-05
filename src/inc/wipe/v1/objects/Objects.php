@@ -97,15 +97,6 @@ class Objects
         return $this->isAvailable;
     }
 
-    /**
-     * Данный объект является доступным, иначе - ошибка.
-     * @throws AccessDeniedException
-     */
-    public function isAvailableOrThrow(): bool
-    {
-        return $this->isAvailable ?: throw new AccessDeniedException();
-    }
-
     /** @return bool|null Доступ к объекту (доступен, удален). */
     public function isPublic(): ?bool
     {
@@ -113,23 +104,33 @@ class Objects
     }
 
     /**
-     * Данный объект является публичным, иначе - ошибка.
+     * Данный объект является доступным, иначе - ошибка.
+     * @return Objects
      * @throws AccessDeniedException
      */
-    public function isPublicOrThrow()
+    public function isAvailableOrThrow(): Objects
     {
-        return $this->isPublic
-            ?: throw new AccessDeniedException();
+        return $this->isAvailable ? $this : throw new AccessDeniedException();
+    }
+
+    /**
+     * Данный объект является публичным, иначе - ошибка.
+     * @return Objects
+     * @throws AccessDeniedException
+     */
+    public function isPublicOrThrow(): Objects
+    {
+        return $this->isPublic ? $this : throw new AccessDeniedException();
     }
 
     /**
      * Данный объект доступен для редактирования, т.е. статус разработки равен "В процессе", иначе - ошибка.
+     * @return Objects
      * @throws AccessDeniedException
      */
-    public function isAccessEditOrThrow(): bool
+    public function isAccessEditOrThrow(): Objects
     {
-        return $this->status === $this::ATTRIBUTE_STATUS_IN_PROCESS
-            ?: throw new AccessDeniedException();
+        return $this->status === $this::ATTRIBUTE_STATUS_IN_PROCESS ? $this : throw new AccessDeniedException();
     }
     #endregion
 

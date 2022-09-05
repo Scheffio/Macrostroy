@@ -14,6 +14,8 @@ use DB\Base\ObjStage as BaseObjStage;
 use DB\Base\VolWork as BaseVolWork;
 use DB\Base\VolTechnic as BaseVolTechnic;
 use DB\Base\VolMaterial as BaseVolMaterial;
+use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\objects\Objects;
 
 class DB
 {
@@ -76,15 +78,39 @@ class DB
         return self::cast($obj, ObjStage::class);
     }
 
+    /**
+     * Удаление дочерних элементов проекта.
+     * @param int $id ID проекта.
+     * @return void
+     * @throws PropelException
+     */
     public static function deleteProjectChildren(int $id): void
+    {
+        $i = BaseObjProject::create()->filterByProjectId($id)->find();
+
+        foreach ($i as &$item) {
+            $item = self::getExtObjSubproject($item);
+            $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
+        }
+    }
+
+    /**
+     * Удаление дочерних элементов проекта.
+     * @param int $id ID проекта.
+     * @return void
+     * @throws PropelException
+     */
+    public static function deleteSubprojectChildren(int $id): void
     {
         $i = ProjectRoleQuery::create()->filterByProjectId($id)->find();
 
         foreach ($i as &$item) {
             $item = self::getExtObjSubproject($item);
-            $item->setStatus()
+            $item->setStatus(Objects::ATTRIBUTE_STATUS_DELETED)->save();
         }
     }
+
+    
     #endregion
 
     #region ExtVol

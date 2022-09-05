@@ -518,19 +518,26 @@ class Objects
     }
 
     /**
-     * @param string $name
-     * @param string $status
-     * @param bool $isPublic
-     * @param bool $isAvailable
-     * @return void
+     * @param string $name Наименование объекта.
+     * @param string $status Статус разработки объекта (в процессе, завершен, удален).
+     * @param bool $isPublic Доступ (открытый/публичный).
+     * @param bool $isAvailable Доступ (доступен/удален).
+     * @return Objects
      * @throws IncorrectStatusException
      */
-    public function setObjDefaultValues(string $name, string $status, bool $isPublic, bool $isAvailable): void
+    public function setObjDefaultValues(
+        string $name,
+        string $status = self::ATTRIBUTE_STATUS_IN_PROCESS,
+        bool $isPublic = true,
+        bool $isAvailable = true
+    ): Objects
     {
         $this->setName($name)
              ->setStatus($status)
              ->setIsPublic($isPublic)
              ->setIsAvailable($isAvailable);
+
+        return $this;
     }
     #endregion
 }

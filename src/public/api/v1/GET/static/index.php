@@ -8,10 +8,20 @@ $file = \DB\StaticFileQuery::create()->findOneByUrl($request->getQueryOrThrow("f
 
 if ($file === null) JsonOutput::error("File not found");
 
-if (!str_starts_with($file->getContentType(), "image/")) header("Content-Type: ");
-
-header('Content-Type: ') . $file->getContentType();
+if (str_starts_with($file->getContentType(), "image/")) {
+    //если картинка - присвоить content type
+    header('Content-Type: ') . $file->getContentType();
+} else {
+    header("Content-Type: text/plain");
+}
 header('Content-Transfer-Encoding: binary');
-if (!empty($request->getQuery("download"))) header('Content-Disposition: attachment; filename=' . "file.file");
+{
+    try {
+        $ext = \inc\artemy\v1\mime_type\MimeType::mime2ext($file->getContentType(), ".");
+    } catch (Exception) {
+        $ext = "";
+    }
+    if (!empty($request->getQuery("download"))) header('Content-Disposition: attachment; filename=' . "file" . $ext);
+}
 
 echo stream_get_contents($file->getFile());

@@ -5,9 +5,24 @@ namespace ext;
 use DB\Base\ObjGroupQuery;
 use DB\Base\ObjHouseQuery;
 use DB\Base\ObjStageMaterialQuery;
+use DB\Base\ObjStageQuery;
 use DB\Base\ObjStageTechnicQuery;
 use DB\Base\ObjStageWorkQuery;
 use DB\Base\ObjSubprojectQuery;
+
+use DB\UserRole as DbUserRole;
+use DB\ProjectRole as DbProjectRole;
+use DB\ObjProject as DbObjProject;
+use DB\ObjSubproject as DbObjSubproject;
+use DB\ObjGroup as DbObjGroup;
+use DB\ObjHouse as DbObjHouse;
+use DB\ObjStage as DbObjStage;
+use DB\ObjStageWork as DbObjStageWork;
+use DB\ObjStageMaterial as DbObjStageMaterial;
+use DB\ObjStageTechnic as DbObjStageTechnic;
+use DB\VolWork as DbVolWork;
+use DB\VolTechnic as DbVolTechnic;
+use DB\VolMaterial as DbVolMaterial;
 
 use DB\Base\UserRole as BaseUserRole;
 use DB\Base\ProjectRole as BaseProjectRole;
@@ -51,54 +66,54 @@ class DB
     }
 
     #region getExtRole
-    public static function getExtUserRole(BaseUserRole $obj): UserRole
+    public static function getExtUserRole(BaseUserRole|DbUserRole $obj): UserRole
     {
         return self::cast($obj, UserRole::class);
     }
 
-    public static function getExtProjectRole(BaseProjectRole $obj): ProjectRole
+    public static function getExtProjectRole(BaseProjectRole|DbProjectRole $obj): ProjectRole
     {
         return self::cast($obj, ProjectRole::class);
     }
     #endregion
 
     #region getExtObj
-    public static function getExtObjProject(BaseObjProject $obj): ObjProject
+    public static function getExtObjProject(BaseObjProject|DbObjProject $obj): ObjProject
     {
         return self::cast($obj, ObjProject::class);
     }
 
-    public static function getExtObjSubproject(BaseObjSubproject $obj): ObjSubproject
+    public static function getExtObjSubproject(BaseObjSubproject|DbObjSubproject $obj): ObjSubproject
     {
         return self::cast($obj, ObjSubproject::class);
     }
 
-    public static function getExtObjGroup(BaseObjGroup $obj): ObjGroup
+    public static function getExtObjGroup(BaseObjGroup|DbObjGroup $obj): ObjGroup
     {
         return self::cast($obj, ObjGroup::class);
     }
 
-    public static function getExtObjHouse(BaseObjHouse $obj): ObjHouse
+    public static function getExtObjHouse(BaseObjHouse|DbObjHouse $obj): ObjHouse
     {
         return self::cast($obj, ObjHouse::class);
     }
 
-    public static function getExtObjStage(BaseObjStage $obj): ObjStage
+    public static function getExtObjStage(BaseObjStage|DbObjStage $obj): ObjStage
     {
         return self::cast($obj, ObjStage::class);
     }
 
-    public static function getExtObjStageWork(BaseObjStageWork $obj): ObjStageWork
+    public static function getExtObjStageWork(BaseObjStageWork|DbObjStageWork $obj): ObjStageWork
     {
         return self::cast($obj, ObjStageWork::class);
     }
 
-    public static function getExtObjStageMaterial(BaseObjStageMaterial $obj): ObjStageMaterial
+    public static function getExtObjStageMaterial(BaseObjStageMaterial|DbObjStageMaterial $obj): ObjStageMaterial
     {
         return self::cast($obj, ObjStageMaterial::class);
     }
 
-    public static function getExtObjStageTechnic(BaseObjStageTechnic $obj): ObjStageTechnic
+    public static function getExtObjStageTechnic(BaseObjStageTechnic|DbObjStageTechnic $obj): ObjStageTechnic
     {
         return self::cast($obj, ObjStageTechnic::class);
     }
@@ -161,7 +176,7 @@ class DB
      */
     public static function deleteHouseChildren(int $id): void
     {
-        $i = ObjHouseQuery::create()->filterByGroupId($id)->find();
+        $i = ObjStageQuery::create()->filterByHouseId($id)->find();
 
         foreach ($i as &$item) {
             $item = self::getExtObjStage($item);
@@ -219,17 +234,17 @@ class DB
     #endregion
 
     #region getExtVol
-    public static function getExtVolMaterial(BaseVolMaterial $obj): VolMaterial
+    public static function getExtVolMaterial(BaseVolMaterial|DbVolMaterial $obj): VolMaterial
     {
         return self::cast($obj, VolMaterial::class);
     }
 
-    public static function getExtVolTechnic(BaseVolTechnic $obj): VolTechnic
+    public static function getExtVolTechnic(BaseVolTechnic|DbVolTechnic $obj): VolTechnic
     {
         return self::cast($obj, VolTechnic::class);
     }
 
-    public static function getExtVolWork(BaseVolWork $obj): VolWork
+    public static function getExtVolWork(BaseVolWork|DbVolWork $obj): VolWork
     {
         return self::cast($obj, VolWork::class);
     }

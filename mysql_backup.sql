@@ -45,7 +45,7 @@ CREATE TABLE `obj_group` (
 
 LOCK TABLES `obj_group` WRITE;
 /*!40000 ALTER TABLE `obj_group` DISABLE KEYS */;
-INSERT INTO `obj_group` VALUES (1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update');
+INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete');
 /*!40000 ALTER TABLE `obj_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +81,7 @@ CREATE TABLE `obj_group_version` (
 
 LOCK TABLES `obj_group_version` WRITE;
 /*!40000 ALTER TABLE `obj_group_version` DISABLE KEYS */;
-INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update',2,'| 1 |','| 2 |');
+INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 4 |');
 /*!40000 ALTER TABLE `obj_group_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +115,7 @@ CREATE TABLE `obj_house` (
 
 LOCK TABLES `obj_house` WRITE;
 /*!40000 ALTER TABLE `obj_house` DISABLE KEYS */;
-INSERT INTO `obj_house` VALUES (1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update');
+INSERT INTO `obj_house` VALUES (1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete');
 /*!40000 ALTER TABLE `obj_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +151,7 @@ CREATE TABLE `obj_house_version` (
 
 LOCK TABLES `obj_house_version` WRITE;
 /*!40000 ALTER TABLE `obj_house_version` DISABLE KEYS */;
-INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16','12','update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update',2,'| 1 |','| 1 |');
+INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16','12','update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update',2,'| 1 |','| 1 |'),(1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete',2,'| 1 | 2 |','| 3 | 2 |');
 /*!40000 ALTER TABLE `obj_house_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,7 +182,7 @@ CREATE TABLE `obj_project` (
 
 LOCK TABLES `obj_project` WRITE;
 /*!40000 ALTER TABLE `obj_project` DISABLE KEYS */;
-INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert'),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update');
+INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete');
 /*!40000 ALTER TABLE `obj_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,7 +216,7 @@ CREATE TABLE `obj_project_version` (
 
 LOCK TABLES `obj_project_version` WRITE;
 /*!40000 ALTER TABLE `obj_project_version` DISABLE KEYS */;
-INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12','12','insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update','| 3 |','| 1 |');
+INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12','12','insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update','| 3 |','| 1 |'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete','| 3 |','| 3 |');
 /*!40000 ALTER TABLE `obj_project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,7 +250,7 @@ CREATE TABLE `obj_stage` (
 
 LOCK TABLES `obj_stage` WRITE;
 /*!40000 ALTER TABLE `obj_stage` DISABLE KEYS */;
-INSERT INTO `obj_stage` VALUES (1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete');
+INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete');
 /*!40000 ALTER TABLE `obj_stage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -424,7 +424,7 @@ CREATE TABLE `obj_stage_version` (
 
 LOCK TABLES `obj_stage_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL);
+INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,7 +531,7 @@ CREATE TABLE `obj_subproject` (
 
 LOCK TABLES `obj_subproject` WRITE;
 /*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
-INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update');
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete');
 /*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,7 +567,7 @@ CREATE TABLE `obj_subproject_version` (
 
 LOCK TABLES `obj_subproject_version` WRITE;
 /*!40000 ALTER TABLE `obj_subproject_version` DISABLE KEYS */;
-INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |');
+INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |');
 /*!40000 ALTER TABLE `obj_subproject_version` ENABLE KEYS */;
 UNLOCK TABLES;
 

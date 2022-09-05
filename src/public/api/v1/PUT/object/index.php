@@ -98,11 +98,7 @@ try {
 
     JsonOutput::success();
 } catch (Exception $e) {
-    JsonOutput::success([
-        'getMessage'=>$e->getMessage(),
-        'getLine'=>$e->getLine(),
-        'getFile'=>$e->getFile()
-    ]);
+    JsonOutput::success($e->getMessage());
 }
 
 //function setPropertiesForObject

@@ -136,37 +136,36 @@ class Objects
 
     #region Static Access Control Functions
     /**
-     * Проверка на существование данного объекта.
      * @param int|string $lvl Уровень доступа.
      * @param int $objId ID объекта.
-     * @return Objects
+     * @return bool Сущетсвует ли данный объект.
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public static function isExistingOrThrow(int|string $lvl, int $objId): Objects
+    public static function isExistingOrThrow(int|string $lvl, int $objId): bool
     {
         $className = self::getColStatusByLvl($lvl);
 
-        return PropelQuery::from($className)->findPk($objId) !== null ? new static() : throw new NoFindObjectException();
+        return PropelQuery::from($className)->findPk($objId) !== null
+            ?: throw new NoFindObjectException();
     }
 
     /**
-     * Доступно ли редактирование объекта.
      * @param int|string $lvl Уровень доступа.
      * @param int $objId ID объекта.
-     * @return Objects
+     * @return bool Доступно ли редактирование объекта.
      * @throws IncorrectLvlException
      * @throws ObjectIsNotEditableException
      */
-    public static function isAvailableForEditionOrThrow(int|string $lvl, int $objId): Objects
+    public static function isAvailableForEditionOrThrow(int|string $lvl, int $objId): bool
     {
         $colStatus = self::getColStatusByLvl($lvl);
         $className = self::getClassNameObjByLvl($lvl);
-        $flag = PropelQuery::from($className)
-                ->where($colStatus . '=?', self::ATTRIBUTE_STATUS_IN_PROCESS)
-                ->findPk($objId) !== null;
 
-        return  $flag ? new static() : throw new ObjectIsNotEditableException();
+        return  PropelQuery::from($className)
+                ->where($colStatus . '=?', self::ATTRIBUTE_STATUS_IN_PROCESS)
+                ->findPk($objId) !== null ?:
+                throw new ObjectIsNotEditableException();
     }
     #endregion
 

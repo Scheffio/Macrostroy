@@ -10,6 +10,9 @@ use Exception;
 use DB\Base\ProjectRoleQuery;
 use DB\Base\ProjectRole as BaseProjectRole;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\access_lvl\AccessLvl;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\role\project_role\enum\eLvlInt;
 use wipe\inc\v1\role\project_role\enum\eLvlStr;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
@@ -198,20 +201,20 @@ class ProjectRole
 
     /**
      * @return string Наименование уровня доступа но его номеру.
-     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      */
     public function getLvlNameByNum(): string
     {
-        return $this::getLvlNameByInt($this->lvl);
+        return AccessLvl::getAccessLvlStrObjByInt($this->lvl);
     }
 
     /**
      * @return int Номер уровня доступа по его наименованию.
-     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlStrException
      */
     public function getLvlNumByName(): int
     {
-        return $this::getLvlByStr($this->lvlName);
+        return AccessLvl::getAccessLvlIntObjByStr($this->lvlName);
     }
 
     /** @return int|null ID проекта. */
@@ -429,40 +432,6 @@ class ProjectRole
     #endregion
 
     #region Static Getter Functions
-    /**
-     * @param int $lvl Номер уровня доступа.
-     * @return string Наименование уровня доступа но его номеру.
-     * @throws IncorrectLvlException
-     */
-    public static function getLvlNameByInt(int $lvl): string
-    {
-        return match ($lvl) {
-            eLvlInt::PROJECT->value => eLvlStr::PROJECT->value,
-            eLvlInt::SUBPROJECT->value => eLvlStr::SUBPROJECT->value,
-            eLvlInt::GROUP->value => eLvlStr::GROUP->value,
-            eLvlInt::HOUSE->value => eLvlStr::HOUSE->value,
-            eLvlInt::STAGE->value => eLvlStr::STAGE->value,
-            default => throw new IncorrectLvlException()
-        };
-    }
-
-    /**
-     * @param string $lvl Наименование уровня доступа.
-     * @return int Номер уровня доступа по его наименованию.
-     * @throws IncorrectLvlException
-     */
-    public static function getLvlByStr(string $lvl): int
-    {
-        return match ($lvl) {
-            eLvlStr::PROJECT->value => eLvlInt::PROJECT->value,
-            eLvlStr::SUBPROJECT->value => eLvlInt::SUBPROJECT->value,
-            eLvlStr::GROUP->value => eLvlInt::GROUP->value,
-            eLvlStr::HOUSE->value => eLvlInt::HOUSE->value,
-            eLvlStr::STAGE->value => eLvlInt::STAGE->value,
-            default => throw new IncorrectLvlException()
-        };
-    }
-
     /**
      * Получить объект класса через статический метод, используя ID роли проекта.
      * @param int $projectRoleId ID роли проекта.

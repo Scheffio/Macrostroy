@@ -1,7 +1,7 @@
 <?php
 namespace wipe\inc\v1\access_lvl\enum;
 
-enum eLvlVolString: string
+enum eLvlVolStr: string
 {
     case WORK = 'work';
     case TECHNIC = 'technic';

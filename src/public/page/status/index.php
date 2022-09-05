@@ -80,8 +80,8 @@ $services = [];
 
 {
     $performance = Performance::OPERATIONAL;
-
-    $db_minutes_from_last_backup = (int)(((time() - filemtime("../../mysql_backup.sql")) / 60) / 60);
+var_dump(date('Y-m-d H:i:s'));
+    $db_minutes_from_last_backup = (((time() - filemtime("../../mysql_backup.sql")) / 60));
 var_dump($db_minutes_from_last_backup);
     if ($db_minutes_from_last_backup > 10) {
         $performance = Performance::DEGRADED_PERFORMANCE;

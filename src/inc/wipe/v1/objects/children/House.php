@@ -71,6 +71,17 @@ class House extends Objects implements iObject
     }
 
     /**
+     * Получить объект группы, которой принадлежит дом.
+     * @return Group
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public function getGroupObj(): Group
+    {
+        return $this->groupId ? parent::getGroup($this->groupId) : throw new NoFindObjectException();
+    }
+
+    /**
      * @param ExtObjHouse|null $obj Объект группы.
      * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return House

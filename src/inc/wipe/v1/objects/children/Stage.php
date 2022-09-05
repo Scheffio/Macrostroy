@@ -56,6 +56,17 @@ class Stage extends Objects implements iObject
     }
 
     /**
+     * Получить объект дома, которому принадлежит этапа.
+     * @return House
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public function getGroupObj(): House
+    {
+        return $this->houseId ? parent::getHouse($this->houseId) : throw new NoFindObjectException();
+    }
+
+    /**
      * Присваивание свойству класса ID дома.
      * @param int|null $id ID дома.
      * @return Stage

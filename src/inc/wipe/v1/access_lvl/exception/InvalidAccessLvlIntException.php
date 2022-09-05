@@ -1,7 +1,7 @@
 <?php
-namespace wipe\inc\v1\role\project_role\exception;
+namespace wipe\inc\v1\access_lvl\exception;
 
-class IncorrectLvlException extends \Exception
+class InvalidAccessLvlIntException extends \Exception
 {
-    protected $message = 'Incorrect lvl value';
+    protected $message = 'Invalid access lvl number';
 }

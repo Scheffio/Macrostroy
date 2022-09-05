@@ -2,39 +2,48 @@
 
 namespace wipe\inc\v1\access_lvl;
 
+use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
+use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
+
 class AccessLvl
 {
+    #region Access Lvl Obj
     /**
      * @param int $lvl Номер уровня доступа.
      * @return string Наименование уровня доступа но его номеру.
-     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      */
-    public static function getLvlNameByInt(int $lvl): string
+    public static function getAccessLvlStrObj(int $lvl): string
     {
         return match ($lvl) {
-            eLvlInt::PROJECT->value => eLvlStr::PROJECT->value,
-            eLvlInt::SUBPROJECT->value => eLvlStr::SUBPROJECT->value,
-            eLvlInt::GROUP->value => eLvlStr::GROUP->value,
-            eLvlInt::HOUSE->value => eLvlStr::HOUSE->value,
-            eLvlInt::STAGE->value => eLvlStr::STAGE->value,
-            default => throw new IncorrectLvlException()
+            eLvlObjInt::PROJECT->value => eLvlObjStr::PROJECT->value,
+            eLvlObjInt::SUBPROJECT->value => eLvlObjStr::SUBPROJECT->value,
+            eLvlObjInt::GROUP->value => eLvlObjStr::GROUP->value,
+            eLvlObjInt::HOUSE->value => eLvlObjStr::HOUSE->value,
+            eLvlObjInt::STAGE->value => eLvlObjStr::STAGE->value,
+            default => throw new InvalidAccessLvlIntException()
         };
     }
 
     /**
      * @param string $lvl Наименование уровня доступа.
      * @return int Номер уровня доступа по его наименованию.
-     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlStrException
      */
-    public static function getLvlByStr(string $lvl): int
+    public static function getAccessLvlIntObj(string $lvl): int
     {
         return match ($lvl) {
-            eLvlStr::PROJECT->value => eLvlInt::PROJECT->value,
-            eLvlStr::SUBPROJECT->value => eLvlInt::SUBPROJECT->value,
-            eLvlStr::GROUP->value => eLvlInt::GROUP->value,
-            eLvlStr::HOUSE->value => eLvlInt::HOUSE->value,
-            eLvlStr::STAGE->value => eLvlInt::STAGE->value,
-            default => throw new IncorrectLvlException()
+            eLvlObjStr::PROJECT->value => eLvlObjInt::PROJECT->value,
+            eLvlObjStr::SUBPROJECT->value => eLvlObjInt::SUBPROJECT->value,
+            eLvlObjStr::GROUP->value => eLvlObjInt::GROUP->value,
+            eLvlObjStr::HOUSE->value => eLvlObjInt::HOUSE->value,
+            eLvlObjStr::STAGE->value => eLvlObjInt::STAGE->value,
+            default => throw new InvalidAccessLvlStrException()
         };
     }
+
+    public static function checkLvl
+    #endregion
 }

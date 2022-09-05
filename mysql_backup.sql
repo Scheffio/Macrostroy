@@ -719,7 +719,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662369876,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662374696,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,5,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$7PKHkf/ejfvWjO4ypTlMKukM/jeR38ZOCuTm11hGMW.e7lyRMrgfC','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1);
+INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662369876,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662374696,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,5,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -778,7 +778,7 @@ CREATE TABLE `users_remembered` (
 
 LOCK TABLES `users_remembered` WRITE;
 /*!40000 ALTER TABLE `users_remembered` DISABLE KEYS */;
-INSERT INTO `users_remembered` VALUES (1,13,'_uZyRRs0G4bpqLjg_pU4oCd5','$2y$10$CWMnQZIiJLWTJF7vjOPYIesGWd7O.lT7kD5qmf.kIOxlrc8C9zfZS',1693512656),(2,12,'7F2jiwswraQK5gfV2xRyNnUF','$2y$10$O64hSVACEPRr.Zut1xCycOjy.UxUiPMzmMiDExRGwKaIt3zpMzGum',1693594578),(3,12,'EfnFtkBJIQjKhBLrXWcHiywC','$2y$10$95GNaH2pny3erP0IWWrWNeqBR.PH8QaBybqSBXZ20Ui4guxSeSvAa',1693923180),(4,14,'PIwi5pmUq8_lt1hj8hlnmRnB','$2y$10$fZchPwHvg0WxksHQ6hderutLifBcSpTmZ0eSVLnJBvvBhmP0uG9Em',1693932296);
+INSERT INTO `users_remembered` VALUES (1,13,'_uZyRRs0G4bpqLjg_pU4oCd5','$2y$10$CWMnQZIiJLWTJF7vjOPYIesGWd7O.lT7kD5qmf.kIOxlrc8C9zfZS',1693512656),(2,12,'7F2jiwswraQK5gfV2xRyNnUF','$2y$10$O64hSVACEPRr.Zut1xCycOjy.UxUiPMzmMiDExRGwKaIt3zpMzGum',1693594578),(4,14,'PIwi5pmUq8_lt1hj8hlnmRnB','$2y$10$fZchPwHvg0WxksHQ6hderutLifBcSpTmZ0eSVLnJBvvBhmP0uG9Em',1693932296);
 /*!40000 ALTER TABLE `users_remembered` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -833,7 +833,7 @@ CREATE TABLE `users_throttling` (
 
 LOCK TABLES `users_throttling` WRITE;
 /*!40000 ALTER TABLE `users_throttling` DISABLE KEYS */;
-INSERT INTO `users_throttling` VALUES ('_mQqixpaRHHDDBWUyMklhcEGC6ap0sfHLBIDD2zROrQ',74,1661955056,1662495056),('7A0Cg5zpZ12o-f6rNEkibYgdCUn_GxiOIEUZAjAXufo',74,1662365579,1662905579),('iCblImb3auUxCvmW4SGnPkdoq6bnoQ9gsvujuuCZuB0',74,1662374696,1662914696);
+INSERT INTO `users_throttling` VALUES ('_mQqixpaRHHDDBWUyMklhcEGC6ap0sfHLBIDD2zROrQ',66.0115,1662383908,1662923908),('7A0Cg5zpZ12o-f6rNEkibYgdCUn_GxiOIEUZAjAXufo',74,1662365579,1662905579),('iCblImb3auUxCvmW4SGnPkdoq6bnoQ9gsvujuuCZuB0',74,1662374696,1662914696),('PCl2OkZPFu_-xRyGRi1IqHjGzlNLoW4Fd57uWjQxcng',19,1662383867,1662419867),('uigmkrFXH4eiMRH9mSMTmV5y4_VBi1vylSvuet1efso',499,1662383867,1662556667);
 /*!40000 ALTER TABLE `users_throttling` ENABLE KEYS */;
 UNLOCK TABLES;
 

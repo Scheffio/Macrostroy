@@ -27,8 +27,8 @@ class Stage extends Objects implements iObject
     {
         $this->setId($id);
 
-        if ($id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+        if ($id === null) $this->applyDefault();
+        else $this->applyById();
     }
 
     #region Apply Default Values Functions
@@ -38,12 +38,12 @@ class Stage extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function applyDefaultValuesById(): void
+    public function applyById(): void
     {
         if ($this->object === null) {
-            $this->object = $this->getObjByLvlAndIdOrThrow();
+            $this->object = $this->getObjByIdOrThrow();
             $this->object = DB::getExtObjStage($this->object);
-            $this->applyDefaultValuesByObj();
+            $this->applyByObj();
         }
     }
     #endregion
@@ -82,18 +82,26 @@ class Stage extends Objects implements iObject
 
     /**
      * @param ExtObjStage|null $obj Объект группы.
-     * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return Stage
      */
-    public function setObj(?ExtObjStage $obj = null, bool $flag = false): Stage
+    public function setObj(?ExtObjStage $obj = null): Stage
     {
         if ($obj !== null && $this->object->getId() !== $obj->getId()) {
             $this->object = $obj;
-
-            if ($flag) {
-                $this->applyDefaultValuesByObj();
-            }
         }
+
+        return $this;
+    }
+
+    /**
+     * Присваивает свойтву класса объект этапа и заполняет остальные значения.
+     * @param ExtObjStage $obj Объект группы.
+     * @return Stage
+     * @throws NoFindObjectException
+     */
+    public function setObjAndApply(ExtObjStage $obj): Stage
+    {
+        $this->setObj($obj)->applyByObj();
 
         return $this;
     }
@@ -124,7 +132,7 @@ class Stage extends Objects implements iObject
      */
     public function update(): Stage
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjStage($this->object);
         $this->updateByObj();
 
@@ -162,7 +170,7 @@ class Stage extends Objects implements iObject
      */
     public function delete(): Stage
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjStage($this->object);
         $this->deleteByObj();
 

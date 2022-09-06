@@ -27,8 +27,8 @@ class Group extends Objects implements iObject
     {
         $this->setId($id);
 
-        if ($id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+        if ($id === null) $this->applyDefault();
+        else $this->applyById();
     }
 
     #region Apply Default Values Functions
@@ -38,12 +38,12 @@ class Group extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function applyDefaultValuesById(): void
+    public function applyById(): void
     {
         if ($this->object === null) {
-            $this->object = $this->getObjByLvlAndIdOrThrow();
+            $this->object = $this->getObjByIdOrThrow();
             $this->object = DB::getExtObjGroup($this->object);
-            $this->applyDefaultValuesByObj();
+            $this->applyByObj();
         }
     }
     #endregion
@@ -56,9 +56,20 @@ class Group extends Objects implements iObject
     }
 
     /**
+     * Получить объект подпроекта, которому принадлежит группа.
+     * @return Subproject
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public function getSubprojectObj(): Subproject
+    {
+        return $this->subprojectId ? parent::getSubproject($this->subprojectId) : throw new NoFindObjectException();
+    }
+
+    /**
      * Присваивание свойству класса ID подпроекта.
      * @param int|null $id ID подпроекта.
-     * @return  Group
+     * @return Group
      */
     public function setSubprojectId(?int $id):  Group
     {
@@ -71,31 +82,28 @@ class Group extends Objects implements iObject
 
     /**
      * @param ExtObjGroup|null $obj Объект группы.
-     * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return Group
      */
-    public function setObj(?ExtObjGroup $obj = null, bool $flag = false): Group
+    public function setObj(?ExtObjGroup $obj = null): Group
     {
         if ($obj !== null && $this->object->getId() !== $obj->getId()) {
             $this->object = $obj;
-
-            if ($flag) {
-                $this->applyDefaultValuesByObj();
-            }
         }
 
         return $this;
     }
 
     /**
-     * Получить объект подпроекта, которому принадлежит группа.
-     * @return Subproject
-     * @throws IncorrectLvlException
+     * Присваивает свойтву класса объект группы и заполняет остальные значения.
+     * @param ExtObjGroup $obj Объект группы.
+     * @return Group
      * @throws NoFindObjectException
      */
-    public function getSubprojectObj(): Subproject
+    public function setObjAndApply(ExtObjGroup $obj): Group
     {
-        return $this->subprojectId ? parent::getSubproject($this->subprojectId) : throw new NoFindObjectException();
+        $this->setObj($obj)->applyByObj();
+
+        return $this;
     }
     #endregion
 
@@ -124,7 +132,7 @@ class Group extends Objects implements iObject
      */
     public function update(): Group
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjGroup($this->object);
         $this->updateByObj();
 
@@ -162,7 +170,7 @@ class Group extends Objects implements iObject
      */
     public function delete(): Group
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjGroup($this->object);
         $this->deleteByObj();
 

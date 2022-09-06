@@ -28,8 +28,8 @@ class House extends Objects implements iObject
     {
         $this->setId($id);
 
-        if ($id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+        if ($id === null) $this->applyDefault();
+        else $this->applyById();
     }
 
     #region Apply Default Values Functions
@@ -39,12 +39,12 @@ class House extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function applyDefaultValuesById(): void
+    public function applyById(): void
     {
         if ($this->object === null) {
-            $this->object = $this->getObjByLvlAndIdOrThrow();
+            $this->object = $this->getObjByIdOrThrow();
             $this->object = DB::getExtObjHouse($this->object);
-            $this->applyDefaultValuesByObj();
+            $this->applyByObj();
         }
     }
     #endregion
@@ -83,18 +83,26 @@ class House extends Objects implements iObject
 
     /**
      * @param ExtObjHouse|null $obj Объект группы.
-     * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return House
      */
-    public function setObj(?ExtObjHouse $obj = null, bool $flag = false): House
+    public function setObj(?ExtObjHouse $obj = null): House
     {
         if ($obj !== null && $this->object->getId() !== $obj->getId()) {
             $this->object = $obj;
-
-            if ($flag) {
-                $this->applyDefaultValuesByObj();
-            }
         }
+
+        return $this;
+    }
+
+    /**
+     * Присваивает свойтву класса объект группы и заполняет остальные значения.
+     * @param ExtObjHouse $obj Объект группы.
+     * @return House
+     * @throws NoFindObjectException
+     */
+    public function setObjAndApply(ExtObjHouse $obj): House
+    {
+        $this->setObj($obj)->applyByObj();
 
         return $this;
     }
@@ -125,7 +133,7 @@ class House extends Objects implements iObject
      */
     public function update(): House
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjHouse($this->object);
         $this->updateByObj();
 
@@ -163,7 +171,7 @@ class House extends Objects implements iObject
      */
     public function delete(): House
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjHouse($this->object);
         $this->deleteByObj();
 

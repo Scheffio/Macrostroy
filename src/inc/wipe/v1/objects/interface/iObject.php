@@ -2,7 +2,7 @@
 namespace wipe\inc\v1\objects\interface;
 
 interface iObject {
-    public function applyDefaultValuesById();
+    public function applyById();
 
     public function add();
 

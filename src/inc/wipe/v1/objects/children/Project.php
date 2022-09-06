@@ -24,8 +24,8 @@ class Project extends Objects implements iObject
     {
         $this->setId($id);
 
-        if ($id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+        if ($id === null) $this->applyDefault();
+        else $this->applyById();
     }
 
     #region Apply Default Values Functions
@@ -35,12 +35,12 @@ class Project extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function applyDefaultValuesById(): void
+    public function applyById(): void
     {
         if ($this->object === null) {
-            $this->object = $this->getObjByLvlAndIdOrThrow();
+            $this->object = $this->getObjByIdOrThrow();
             $this->object = DB::getExtObjProject($this->object);
-            $this->applyDefaultValuesByObj();
+            $this->applyByObj();
         }
     }
     #endregion
@@ -48,18 +48,26 @@ class Project extends Objects implements iObject
     #region Setter Functions
     /**
      * @param ExtObjProject|null $obj Объект проекта.
-     * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return Project
      */
-    public function setObj(?ExtObjProject $obj = null, bool $flag = false): Project
+    public function setObj(?ExtObjProject $obj = null): Project
     {
         if ($obj !== null && $this->object->getId() !== $obj->getId()) {
             $this->object = $obj;
-
-            if ($flag) {
-                $this->applyDefaultValuesByObj();
-            }
         }
+
+        return $this;
+    }
+
+    /**
+     * Присваивает свойтву класса объект проекта и заполняет остальные значения.
+     * @param ExtObjProject $obj Объект проекта.
+     * @return $this
+     * @throws NoFindObjectException
+     */
+    public function setObjAndApply(ExtObjProject $obj): Project
+    {
+        $this->setObj($obj)->applyByObj();
 
         return $this;
     }
@@ -89,7 +97,7 @@ class Project extends Objects implements iObject
      */
     public function update(): Project
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjProject($this->object);
         $this->updateByObj();
 
@@ -122,7 +130,7 @@ class Project extends Objects implements iObject
      */
     public function delete(): Project
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjProject($this->object);
         $this->deleteByObj();
 

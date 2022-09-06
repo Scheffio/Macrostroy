@@ -9,7 +9,6 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\interface\iObject;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\exception\NoProjectFoundException;
 
 class Subproject extends Objects implements iObject
 {
@@ -28,8 +27,8 @@ class Subproject extends Objects implements iObject
     {
         $this->setId($id);
 
-        if ($id === null) $this->applyByDefaultValues();
-        else $this->applyDefaultValuesById();
+        if ($id === null) $this->applyDefault();
+        else $this->applyById();
     }
 
     #region Apply Default Values Functions
@@ -39,12 +38,12 @@ class Subproject extends Objects implements iObject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      */
-    public function applyDefaultValuesById(): void
+    public function applyById(): void
     {
         if ($this->object === null) {
-            $this->object = $this->getObjByLvlAndIdOrThrow();
+            $this->object = $this->getObjByIdOrThrow();
             $this->object = DB::getExtObjSubproject($this->object);
-            $this->applyDefaultValuesByObj();
+            $this->applyByObj();
         }
     }
     #endregion
@@ -54,6 +53,17 @@ class Subproject extends Objects implements iObject
     public function getProjectId(): ?int
     {
         return $this->projectId;
+    }
+
+    /**
+     * Получить объект проекта, которому принадлежит подпроект.
+     * @return Project
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public function getProjectObj(): Project
+    {
+        return $this->projectId ? parent::getProject($this->projectId) : throw new NoFindObjectException();
     }
 
     /**
@@ -72,31 +82,28 @@ class Subproject extends Objects implements iObject
 
     /**
      * @param ExtObjSubproject|null $obj Объект подпроекта.
-     * @param bool $flag Необходимо ли обновлять свойства класса в соответсвие с знаениями объекта.
      * @return Subproject
      */
-    public function setObj(?ExtObjSubproject $obj = null, bool $flag = false): Subproject
+    public function setObj(?ExtObjSubproject $obj = null): Subproject
     {
         if ($obj !== null && $this->object->getId() !== $obj->getId()) {
             $this->object = $obj;
-
-            if ($flag) {
-                $this->applyDefaultValuesByObj();
-            }
         }
 
         return $this;
     }
 
     /**
-     * Получить объект проекта, которому принадлежит подпроект.
-     * @return Project
-     * @throws IncorrectLvlException
+     * Присваивает свойтву класса объект подпроекта и заполняет остальные значения.
+     * @param ExtObjSubproject $obj Объект подпроекта.
+     * @return Subproject
      * @throws NoFindObjectException
      */
-    public function getProjectObj(): Project
+    public function setObjAndApply(ExtObjSubproject $obj): Subproject
     {
-        return $this->projectId ? parent::getProject($this->projectId) : throw new NoFindObjectException();
+        $this->setObj($obj)->applyByObj();
+
+        return $this;
     }
     #endregion
 
@@ -120,13 +127,12 @@ class Subproject extends Objects implements iObject
      * Редактирование подпроекта.
      * @return Subproject
      * @throws IncorrectLvlException
-     * @throws NoProjectFoundException
      * @throws PropelException
      * @throws NoFindObjectException
      */
     public function update(): Subproject
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjSubproject($this->object);
         $this->updateByObj();
 
@@ -159,13 +165,12 @@ class Subproject extends Objects implements iObject
      * @return Subproject
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
-     * @throws NoProjectFoundException
      * @throws PropelException
      * @throws IncorrectStatusException
      */
     public function delete(): Subproject
     {
-        $this->object = $this->getObjByLvlAndIdOrThrow();
+        $this->object = $this->getObjByIdOrThrow();
         $this->object = DB::getExtObjSubproject($this->object);
         $this->deleteByObj();
 

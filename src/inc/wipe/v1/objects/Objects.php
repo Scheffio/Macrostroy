@@ -18,8 +18,11 @@ use ext\ObjStage;
 use ext\ObjSubproject;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\PropelQuery;
+use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\children\Group;
 use wipe\inc\v1\objects\children\House;
 use wipe\inc\v1\objects\children\Project;
@@ -43,8 +46,11 @@ class Objects
     public const ATTRIBUTE_IS_AVAILABLE_OPEN_ACCESS = true;
     public const ATTRIBUTE_IS_AVAILABLE_DELETED_ACCESS = false;
 
-    /** @var int|null Уровень доступа. */
+    /** @var int|null Номер уровня доступа. */
     protected ?int $lvlInt = null;
+
+    /** @var string|null Наименвание уровня доступа. */
+    protected ?string $lvlStr = null;
 
     /** @var int|null ID объекта. */
     protected ?int $id = null;
@@ -210,6 +216,21 @@ class Objects
         return $this->object;
     }
 
+    /** @return int|null Номер уровня доступа. */
+    public function getAccessLvlInt(): ?int
+    {
+        return $this->lvlInt;
+    }
+
+    /**
+     * @return string|null Наименвание уровня доступа.
+     * @throws InvalidAccessLvlIntException
+     */
+    public function getAccessLvlStr(): ?string
+    {
+        return $this->lvlInt ? AccessLvl::getAccessLvlStrObjByInt($this->lvlInt) : null;
+    }
+
     /**
      * Поиск объекта по уровню доступа и ID.
      * @return mixed
@@ -231,6 +252,11 @@ class Objects
     public function getObjByIdOrThrow(): mixed
     {
         return $this->getObjById() ?? throw new NoFindObjectException();
+    }
+
+    public function getProjectId()
+    {
+
     }
     #endregion
 
@@ -402,7 +428,43 @@ class Objects
     }
     #endregion
 
-    #region Static Getter Children Classes Functions
+    #region Static Getter Classes Functions
+    /**
+     * @param int|null $id ID объекта.
+     * @param int|string|eLvlObjInt|eLvlObjStr|null $lvl Уровень доступа.
+     * @param string|null $name Наименование.
+     * @param string|null $status Статус.
+     * @param bool|null $isPublic Состоит ли объект в публичном доступе.
+     * @param bool|null $isAvailable Является ли объект достпуным, т.е. не удаленным.
+     * @return Objects
+     * @throws IncorrectStatusException
+     * @throws InvalidAccessLvlIntException
+     * @throws InvalidAccessLvlStrException
+     */
+    public static function getObject(
+        ?int $id = null,
+        null|int|string|eLvlObjInt|eLvlObjStr $lvl = null,
+        ?string $name = null,
+        ?string $status = null,
+        ?bool $isPublic = null,
+        ?bool $isAvailable = null,
+    ): Objects
+    {
+        if (is_object($lvl)) {
+            $lvl = $lvl->value;
+        }
+
+        $obj = new self();
+        $obj->setId($id)
+            ->setAccessLvl($lvl)
+            ->setName($name)
+            ->setStatus($status)
+            ->setIsPublic($isPublic)
+            ->setIsAvailable($isAvailable);
+
+        return $obj;
+    }
+
     /**
      * @param int|null $id
      * @return Project
@@ -529,6 +591,31 @@ class Objects
     {
         if ($isAvailable !== null && $this->isAvailable !== $isAvailable) {
             $this->isAvailable = $isAvailable;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int|string|null $lvl Номер или наименование уровня доступа.
+     * @return Objects
+     * @throws InvalidAccessLvlIntException
+     * @throws InvalidAccessLvlStrException
+     */
+    protected function setAccessLvl(null|int|string $lvl): Objects
+    {
+        if ($lvl !== null) {
+            if (is_int($lvl) &&
+                $this->lvlInt !== $lvl &&
+                AccessLvl::isAccessLvlIntObj($lvl)) {
+                    $this->lvlInt = $lvl;
+                    $this->lvlStr = AccessLvl::getAccessLvlStrObjByInt($lvl);
+            } elseif (  is_string($lvl) &&
+                        $this->lvlStr !== $lvl &&
+                        AccessLvl::isAccessLvlStrObj($lvl)) {
+                $this->lvlStr = $lvl;
+                $this->lvlInt = AccessLvl::getAccessLvlIntObjByStr($lvl);
+            }
         }
 
         return $this;

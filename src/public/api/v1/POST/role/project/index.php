@@ -18,7 +18,7 @@ try {
     $userId = $request->getRequest('user_id');
     $objectId = $request->getRequest('object_id');
 
-    Objects::isAvailableForEditionOrThrow($lvl, $objectId);
+    Objects::getObject(id: $objectId, lvl: $lvl)->isEditableOrThrow();
     $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objectId);
 
     ProjectRole::getDefault()

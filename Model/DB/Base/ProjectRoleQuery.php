@@ -17,7 +17,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'project_role' table.
+ * Base class that represents a query for the 'project_role2' table.
  *
  *
  *
@@ -198,7 +198,7 @@ abstract class ProjectRoleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, lvl, is_crud, object_id, user_id, project_id FROM project_role WHERE id = :p0';
+        $sql = 'SELECT id, lvl, is_crud, object_id, user_id, project_id FROM project_role2 WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -839,7 +839,7 @@ abstract class ProjectRoleQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the project_role table.
+     * Deletes all rows from the project_role2 table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

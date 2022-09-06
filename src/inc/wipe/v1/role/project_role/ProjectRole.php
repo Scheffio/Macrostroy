@@ -13,7 +13,6 @@ use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
-use wipe\inc\v1\role\user_role\UserRole;
 
 class ProjectRole
 {

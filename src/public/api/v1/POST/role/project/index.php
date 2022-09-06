@@ -18,13 +18,15 @@ try {
     $userId = $request->getRequest('user_id');
     $objectId = $request->getRequest('object_id');
 
-    Objects::checkAccessEditObjectOrThrow($lvl, $objectId);
+    Objects::isAvailableForEditionOrThrow($lvl, $objectId);
     $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objectId);
 
-    ProjectRole::getByMinimumData(lvl: $lvl, objectId: $objectId, userId: $userId)
-                ->setIsCrud($isCrud)
-                ->setProjectId($projectId)
-                ->addOrUpdate();
+    ProjectRole::getBySearch($lvl, $objectId, $userId)
+    ;
+//    ProjectRole::getByMinimumData(lvl: $lvl, objectId: $objectId, userId: $userId)
+//                ->setIsCrud($isCrud)
+//                ->setProjectId($projectId)
+//                ->addOrUpdate();
 
     JsonOutput::success();
 } catch (Exception $e) {

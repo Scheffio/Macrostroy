@@ -230,16 +230,15 @@ class UserRole
     /**
      * Получить объект класса через статический метод, используя ID пользователя.
      * @param int|null $id ID пользователя, по умолчанию выбирается ID авторизированного пользователя.
-     * @return UserRole
+     * @return UserRole|null
      * @throws Exception
      */
-    public static function getByUserId(?int $id = null): UserRole
+    public static function getByUserId(?int $id = null): ?UserRole
     {
-        if (self::$staticConstruct === null || self::$userId !== $id) {
-            self::$staticConstruct = new UserRole(userId: $id);
+        if ($id !== null) {
+            if (self::$userId === $id) return self::$staticConstruct;
+            return new UserRole(userId: $id);
         }
-
-        return self::$staticConstruct;
     }
 
     /**

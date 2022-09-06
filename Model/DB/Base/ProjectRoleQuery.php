@@ -17,7 +17,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'project_role2' table.
+ * Base class that represents a query for the 'project_role' table.
  *
  *
  *
@@ -66,7 +66,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\UsersQuery|\DB\ObjProjectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProjectRole|null findOne(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query
- * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no match is found
+ * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no m@tch is found
  *
  * @method     ChildProjectRole|null findOneById(int $id) Return the first ChildProjectRole filtered by the id column
  * @method     ChildProjectRole|null findOneByLvl(int $lvl) Return the first ChildProjectRole filtered by the lvl column
@@ -198,7 +198,7 @@ abstract class ProjectRoleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, lvl, is_crud, object_id, user_id, project_id FROM project_role2 WHERE id = :p0';
+        $sql = 'SELECT id, lvl, is_crud, object_id, user_id, project_id FROM project_role WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -839,7 +839,7 @@ abstract class ProjectRoleQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the project_role2 table.
+     * Deletes all rows from the project_role table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

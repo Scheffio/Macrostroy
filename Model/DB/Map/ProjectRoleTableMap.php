@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'project_role2' table.
+ * This class defines the structure of the 'project_role' table.
  *
  *
  *
@@ -43,7 +43,7 @@ class ProjectRoleTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'project_role2';
+    public const TABLE_NAME = 'project_role';
 
     /**
      * The PHP name of this class (PascalCase)
@@ -78,32 +78,32 @@ class ProjectRoleTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'project_role2.id';
+    public const COL_ID = 'project_role.id';
 
     /**
      * the column name for the lvl field
      */
-    public const COL_LVL = 'project_role2.lvl';
+    public const COL_LVL = 'project_role.lvl';
 
     /**
      * the column name for the is_crud field
      */
-    public const COL_IS_CRUD = 'project_role2.is_crud';
+    public const COL_IS_CRUD = 'project_role.is_crud';
 
     /**
      * the column name for the object_id field
      */
-    public const COL_OBJECT_ID = 'project_role2.object_id';
+    public const COL_OBJECT_ID = 'project_role.object_id';
 
     /**
      * the column name for the user_id field
      */
-    public const COL_USER_ID = 'project_role2.user_id';
+    public const COL_USER_ID = 'project_role.user_id';
 
     /**
      * the column name for the project_id field
      */
-    public const COL_PROJECT_ID = 'project_role2.project_id';
+    public const COL_PROJECT_ID = 'project_role.project_id';
 
     /**
      * The default string format for model objects of the related table
@@ -154,14 +154,14 @@ class ProjectRoleTableMap extends TableMap
         'projectRole.id' => 'ID',
         'ProjectRoleTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'project_role2.id' => 'ID',
+        'project_role.id' => 'ID',
         'Lvl' => 'LVL',
         'ProjectRole.Lvl' => 'LVL',
         'lvl' => 'LVL',
         'projectRole.lvl' => 'LVL',
         'ProjectRoleTableMap::COL_LVL' => 'LVL',
         'COL_LVL' => 'LVL',
-        'project_role2.lvl' => 'LVL',
+        'project_role.lvl' => 'LVL',
         'IsCrud' => 'IS_CRUD',
         'ProjectRole.IsCrud' => 'IS_CRUD',
         'isCrud' => 'IS_CRUD',
@@ -169,7 +169,7 @@ class ProjectRoleTableMap extends TableMap
         'ProjectRoleTableMap::COL_IS_CRUD' => 'IS_CRUD',
         'COL_IS_CRUD' => 'IS_CRUD',
         'is_crud' => 'IS_CRUD',
-        'project_role2.is_crud' => 'IS_CRUD',
+        'project_role.is_crud' => 'IS_CRUD',
         'ObjectId' => 'OBJECT_ID',
         'ProjectRole.ObjectId' => 'OBJECT_ID',
         'objectId' => 'OBJECT_ID',
@@ -177,7 +177,7 @@ class ProjectRoleTableMap extends TableMap
         'ProjectRoleTableMap::COL_OBJECT_ID' => 'OBJECT_ID',
         'COL_OBJECT_ID' => 'OBJECT_ID',
         'object_id' => 'OBJECT_ID',
-        'project_role2.object_id' => 'OBJECT_ID',
+        'project_role.object_id' => 'OBJECT_ID',
         'UserId' => 'USER_ID',
         'ProjectRole.UserId' => 'USER_ID',
         'userId' => 'USER_ID',
@@ -185,7 +185,7 @@ class ProjectRoleTableMap extends TableMap
         'ProjectRoleTableMap::COL_USER_ID' => 'USER_ID',
         'COL_USER_ID' => 'USER_ID',
         'user_id' => 'USER_ID',
-        'project_role2.user_id' => 'USER_ID',
+        'project_role.user_id' => 'USER_ID',
         'ProjectId' => 'PROJECT_ID',
         'ProjectRole.ProjectId' => 'PROJECT_ID',
         'projectId' => 'PROJECT_ID',
@@ -193,7 +193,7 @@ class ProjectRoleTableMap extends TableMap
         'ProjectRoleTableMap::COL_PROJECT_ID' => 'PROJECT_ID',
         'COL_PROJECT_ID' => 'PROJECT_ID',
         'project_id' => 'PROJECT_ID',
-        'project_role2.project_id' => 'PROJECT_ID',
+        'project_role.project_id' => 'PROJECT_ID',
     ];
 
     /**
@@ -206,7 +206,7 @@ class ProjectRoleTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('project_role2');
+        $this->setName('project_role');
         $this->setPhpName('ProjectRole');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\DB\\ProjectRole');
@@ -487,7 +487,7 @@ class ProjectRoleTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the project_role2 table.
+     * Deletes all rows from the project_role table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

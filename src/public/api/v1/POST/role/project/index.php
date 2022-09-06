@@ -37,6 +37,7 @@ try {
                 ->setIsCrud($lvl)
                 ->setObjectId($objectId)
                 ->setProjectId($projectId)
+                ->setUserId($userId)
                 ->addOrUpdate();
 
     JsonOutput::success();

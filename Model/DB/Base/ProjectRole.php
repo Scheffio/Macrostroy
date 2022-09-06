@@ -23,7 +23,7 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
 /**
- * Base class that represents a row from the 'project_role2' table.
+ * Base class that represents a row from the 'project_role' table.
  *
  *
  *
@@ -873,7 +873,7 @@ abstract class ProjectRole implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO project_role2 (%s) VALUES (%s)',
+            'INSERT INTO project_role (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

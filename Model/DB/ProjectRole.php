@@ -5,7 +5,7 @@ namespace DB;
 use DB\Base\ProjectRole as BaseProjectRole;
 
 /**
- * Skeleton subclass for representing a row from the 'project_role2' table.
+ * Skeleton subclass for representing a row from the 'project_role' table.
  *
  *
  *

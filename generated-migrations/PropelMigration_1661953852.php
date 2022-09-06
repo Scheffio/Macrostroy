@@ -60,7 +60,7 @@ CREATE TABLE `user_role`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `project_role2`
+CREATE TABLE `project_role`
 (
     `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID роли проекта',
     `lvl` int unsigned DEFAULT 1 NOT NULL COMMENT 'Уровень доступа;( 1 - проекта; 2 - подпроект; 3 - группа; 4 - дом; 5 - этап )',
@@ -176,7 +176,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `user_role`;
 
-DROP TABLE IF EXISTS `project_role2`;
+DROP TABLE IF EXISTS `project_role`;
 
 DROP TABLE IF EXISTS `users`;
 

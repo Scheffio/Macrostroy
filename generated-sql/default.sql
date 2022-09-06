@@ -40,7 +40,7 @@ CREATE TABLE `user_role`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- project_role2
+-- project_role
 -- ---------------------------------------------------------------------
 
 DROP TABLE IF EXISTS `project_role`;

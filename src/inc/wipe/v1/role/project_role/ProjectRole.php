@@ -226,6 +226,15 @@ class ProjectRole
 
         return $p;
     }
+
+    /**
+     * Получить объект класса через статический метод со значениями по умолчанию.
+     * @return ProjectRole
+     */
+    public static function getDefault(): ProjectRole
+    {
+        return new ProjectRole();
+    }
     #endregion
 
     #region Setter Functions
@@ -435,9 +444,6 @@ class ProjectRole
 
         return  $this;
     }
-    #endregin
-
-    #regin CRUD Functions
     #endregion
 
     #region CRUD Functions

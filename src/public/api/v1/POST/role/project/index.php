@@ -21,12 +21,12 @@ try {
     Objects::isAvailableForEditionOrThrow($lvl, $objectId);
     $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objectId);
 
-    ProjectRole::getBySearch($lvl, $objectId, $userId)
-    ;
-//    ProjectRole::getByMinimumData(lvl: $lvl, objectId: $objectId, userId: $userId)
-//                ->setIsCrud($isCrud)
-//                ->setProjectId($projectId)
-//                ->addOrUpdate();
+    ProjectRole::getDefault()
+                ->setAccessLvl($lvl)
+                ->setIsCrud($lvl)
+                ->setObjectId($objectId)
+                ->setProjectId($projectId)
+                ->addOrUpdate();
 
     JsonOutput::success();
 } catch (Exception $e) {

@@ -3,12 +3,17 @@
 
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
+use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
+use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -95,14 +100,14 @@ try {
     JsonOutput::success();
 } catch (InvalidAccessLvlIntException|IncorrectLvlException $e) {
     JsonOutput::error('Некорретный номер уровня доступа');
-} catch (\wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException $e) {
+} catch (InvalidAccessLvlStrException $e) {
     JsonOutput::error('Некорректное наименование уровня доступа');
-} catch (\wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException $e) {
+} catch (NoProjectRoleFoundException $e) {
     JsonOutput::error('Роль проекта не была найдена');
-} catch (\wipe\inc\v1\objects\exception\IncorrectStatusException $e) {
+} catch (IncorrectStatusException $e) {
     JsonOutput::error('Некорретный статус объекта');
-} catch (\Propel\Runtime\Exception\PropelException $e) {
+} catch (NoFindObjectException $e) {
+    JsonOutput::error('Объект не был найден');
+} catch (PropelException|AccessDeniedException $e) {
     JsonOutput::error($e->getMessage());
-} catch (\wipe\inc\v1\objects\exception\NoFindObjectException $e) {
-    JsonOutput::error('Объект не блы найден');
 }

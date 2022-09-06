@@ -30,7 +30,6 @@ try {
     if ($lvl !== eLvlInt::PROJECT->value) $parentId = $request->getRequestOrThrow('parent_id');
 
     switch ($lvl) {
-        // Проект
         case eLvlInt::PROJECT->value:
             Objects::getProject()
                 ->setObjDefaultValues(
@@ -40,7 +39,6 @@ try {
                 )
                 ->add();
             break;
-        // Подпроект
         case eLvlInt::SUBPROJECT->value:
             Objects::getSubproject()
                 ->setObjDefaultValues(
@@ -51,7 +49,6 @@ try {
                 ->setProjectId($parentId)
                 ->add();
             break;
-        // Группа
         case eLvlInt::GROUP->value:
             Objects::getGroup()
                 ->setObjDefaultValues(
@@ -62,7 +59,6 @@ try {
                 ->setSubprojectId($parentId)
                 ->add();
             break;
-        // Дом
         case eLvlInt::HOUSE->value:
             Objects::getHouse()
                 ->setObjDefaultValues(
@@ -73,7 +69,6 @@ try {
                 ->setGroupId($parentId)
                 ->add();
             break;
-        // Этап
         case eLvlInt::STAGE->value:
             Objects::getStage()
                 ->setObjDefaultValues(

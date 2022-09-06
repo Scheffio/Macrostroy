@@ -254,9 +254,15 @@ class Objects
         return $this->getObjById() ?? throw new NoFindObjectException();
     }
 
-    public function getProjectId()
+    /**
+     * Получить ID проекта, к которому относить объект, иначе - ошибка.
+     * @return int ID проекта.
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    public function getProjectIdObjOrThrow(): int
     {
-
+        return self::getProjectIdByChildOrThrow($this->lvlInt, $this->id);
     }
     #endregion
 

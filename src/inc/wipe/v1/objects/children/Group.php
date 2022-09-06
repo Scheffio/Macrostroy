@@ -13,7 +13,7 @@ use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 class Group extends Objects implements iObject
 {
     /** @var int|null Уровень доступа. */
-    protected ?int $lvl = 3;
+    protected ?int $lvlInt = 3;
 
     /** @var int|null ID подпроекта. */
     private ?int $subprojectId = null;

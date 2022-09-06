@@ -8,6 +8,7 @@ use inc\artemy\v1\auth\Auth;
 use Exception;
 use ext\UserRole as ExtUserRole;
 use DB\Base\UserRole as BaseUserRole;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageHistoryException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageObjectsException;
@@ -239,6 +240,8 @@ class UserRole
             if (self::$userId === $id) return self::$staticConstruct;
             return new UserRole(userId: $id);
         }
+
+        return new UserRole(userId: $id);
     }
 
     /**

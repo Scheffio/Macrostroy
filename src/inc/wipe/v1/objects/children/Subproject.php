@@ -13,7 +13,7 @@ use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 class Subproject extends Objects implements iObject
 {
     /** @var int|null Уровень доступа. */
-    protected ?int $lvl = 2;
+    protected ?int $lvlInt = 2;
 
     /** @var int|null ID проекта. */
     private ?int $projectId = null;

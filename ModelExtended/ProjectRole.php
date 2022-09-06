@@ -14,10 +14,6 @@ class ProjectRole extends \DB\ProjectRole
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        JsonOutput::success([
-            $this->user_id,
-            UserRole::getByUserId($this->user_id)->getUserId()
-        ]);
         if (UserRole::getByUserId($this->user_id)->isManageUsers()) {
             throw new Exception('Unable to edit administrator access');
         }

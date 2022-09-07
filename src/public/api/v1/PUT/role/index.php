@@ -7,29 +7,40 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoRoleObjectException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 
 $user = new UserRole();
 $request = new Request();
 
+try {
+    $user->applyByUserAuth()->isAccessManageUsersOrThrow();
 
+    $role_id = $request->getQueryOrThrow('role_id');
+    $role_name = $request->getQuery('role_name');
+    $object_viewer = $request->getQuery('object_viewer');
+    $manage_objects = $request->getQuery('manage_objects');
+    $manage_volumes = $request->getQuery('manage_volumes');
+    $manage_history = $request->getQuery('manage_history');
+    $manage_users = $request->getQuery('manage_users');
 
-//try {
-//    $user->isManageUsersOrThrow();
-//
-//    $user
-//        ->setRoleId($request->getQueryOrThrow('role_id'))
-//        ->setRoleName($request->getQuery('role_name'))
-//        ->setObjectViewer($request->getQuery('object_viewer'))
-//        ->setManageObjects($request->getQuery('manage_objects'))
-//        ->setManageVolumes($request->getQuery('manage_volumes'))
-//        ->setManageHistory($request->getQuery('manage_history'))
-//        ->setManageUsers($request->getQuery('manage_users'))
-//        ->update();
-//
-//    JsonOutput::success();
-//} catch (PropelException|Error $e) {
-//    JsonOutput::error($e->getMessage());
-//} catch (NoAccessManageUsersException|NoRoleFoundException|NoRoleObjectException $e) {
-//    JsonOutput::error($e->getMessage());
-//}
+    $user
+        ->setRoleId($role_id)
+        ->setRoleName($role_name)
+        ->setAccessObjectViewer($object_viewer)
+        ->setAccessManageObjects($manage_objects)
+        ->setAccessManageVolumes($manage_volumes)
+        ->setAccessManageHistory($manage_history)
+        ->setAccessManageUsers($manage_users)
+        ->update();
+
+    JsonOutput::success();
+} catch (NoAccessManageUsersException $e) {
+    JsonOutput::error('Недостаточно прав');
+} catch (NoRoleFoundException $e) {
+    JsonOutput::error('Роль не была найдена');
+} catch (NoUserFoundException $e) {
+    JsonOutput::success('Пользователь не был найден');
+} catch (PropelException $e) {
+    JsonOutput::error($e->getMessage());
+}

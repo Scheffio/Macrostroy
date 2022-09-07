@@ -10,13 +10,16 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    $user->isManageUsersOrThrow();
+    $user->applyByUserAuth()->isAccessManageUsersOrThrow();
     $request->checkRequestVariablesOrError('user_id', 'role_id');
 
+    $user_id = $request->getRequest("user_id");
+    $role_id = $request->getRequest("role_id");
+
     $user
-        ->setUserId($request->getRequest("user_id"), false)
-        ->setRoleId($request->getRequest("role_id"), false)
-        ->updateUserRole();
+        ->setUserId($user_id)
+        ->setRoleId($role_id)
+        ->updateUserRoleId();
 
     JsonOutput::success();
 } catch (PropelException|Exception $e) {

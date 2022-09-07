@@ -8,6 +8,7 @@ use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use ext\UserRole as ExtUserRole;
 use DB\Base\UserRole as BaseUserRole;
+use inc\artemy\v1\auth\Auth;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageHistoryException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageObjectsException;
@@ -66,6 +67,20 @@ class UserRole
         $this->accessManageVolumes = false;
         $this->accessManageHistory = false;
         $this->accessManageUsers = false;
+    }
+
+    /**
+     * Заполнение свойств класса по ID авторизованного пользователя.
+     * @return UserRole
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
+    public function applyByUserAuth(): UserRole
+    {
+        $this->userId = Auth::getUser()->id();
+        $this->applyByUserId();
+
+        return $this;
     }
 
     /**

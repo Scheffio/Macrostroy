@@ -4,11 +4,12 @@
 use DB\Base\UserRoleQuery;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Map\TableMap;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 
 try {
-    UserRole::getByUserId()->isManageUsersOrThrow();
+    AuthUserRole::isAccessManageUsersOrThrow();
 
     $role_id = (new Request())->getQueryOrThrow('role_id');
 

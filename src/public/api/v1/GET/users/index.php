@@ -11,12 +11,13 @@ use inc\artemy\v1\request\Request;
 use Propel\Runtime\ActiveQuery\Criteria;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 
 try {
-    UserRole::getByUserId()->isManageUsersOrThrow();
+    AuthUserRole::isAccessManageUsersOrThrow();
 
     if (empty($_GET)) {
         JsonOutput::success(

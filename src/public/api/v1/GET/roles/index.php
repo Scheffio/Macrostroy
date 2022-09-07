@@ -9,7 +9,6 @@ use inc\artemy\v1\json_output\JsonOutput;
 
 try {
     AuthUserRole::isAccessManageUsersOrThrow();
-//    UserRole::getByUserId()->isManageUsersOrThrow();
 
     JsonOutput::success(
         UserRoleQuery::create()

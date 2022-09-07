@@ -25,9 +25,23 @@ class AuthUserRole
      */
     function __construct()
     {
-        $this::$userId = Auth::getUser()->id();
-        $this::$userRoleObj = UserRole::getByUserId($this::$userId);
+        $this::applyDefault();
     }
+
+    #region Apply Functions
+    /**
+     * Заполнение свойств класса по умолчанию.
+     * Т.е. по авторизованному пользователю.
+     * @return void
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
+    public static function applyDefault(): void
+    {
+        self::$userId = Auth::getUser()->id();
+        self::$userRoleObj = UserRole::getByUserId(self::$userId);
+    }
+    #endregion
 
     #region Getter Functions
     /** @return int|null ID пользователя. */
@@ -44,9 +58,30 @@ class AuthUserRole
     #endregion
 
     #region Access Control Functions
-    /** @return bool Разрешен ли просмотр объектов. */
+    /**
+     * Проверяет на наличие объекта роли, иначе - заполняет по умолчанию.
+     * Т.е. заполняет по авторизованному пользователю.
+     * @return AuthUserRole
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
+    public static function isNoEmptyRoleObjOrApplyDefault(): AuthUserRole
+    {
+        if (self::$userRoleObj === null) {
+            self::applyDefault();
+        }
+
+        return new self;
+    }
+
+    /**
+     * @return bool Разрешен ли просмотр объектов.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function isAccessObjectViewer(): bool
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
         return self::$userRoleObj->isAccessObjectViewer();
     }
 
@@ -54,15 +89,22 @@ class AuthUserRole
      * Разрешен просмотр объектов, иначе - ошибка.
      * @return AuthUserRole
      * @throws NoAccessObjectViewException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public static function isAccessObjectViewerOrThrow(): AuthUserRole
     {
         return self::isAccessObjectViewer() ? new self : throw new NoAccessObjectViewException();
     }
 
-    /** @return bool Разрешен ли CRUD объектов. */
+    /**
+     * @return bool Разрешен ли CRUD объектов.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function isAccessManageObjects(): bool
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
         return self::$userRoleObj->isAccessManageObjects();
     }
 
@@ -70,15 +112,22 @@ class AuthUserRole
      * Разрешен CRUD объектов, иначе - ошибка.
      * @return AuthUserRole
      * @throws NoAccessManageObjectsException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public static function isAccessManageObjectsOrThrow(): AuthUserRole
     {
         return self::isAccessManageObjects() ? new self : throw new NoAccessManageObjectsException();
     }
 
-    /** @return bool Разрешен ли CRUD объемов. */
+    /**
+     * @return bool Разрешен ли CRUD объемов.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function isAccessManageVolumes(): bool
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
         return self::$userRoleObj->isAccessManageVolumes();
     }
 
@@ -86,15 +135,22 @@ class AuthUserRole
      * Разрешен CRUD объемов, иначе - ошибка.
      * @return AuthUserRole
      * @throws NoAccessManageVolumesException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public static function isAccessManageVolumesOrThrow(): AuthUserRole
     {
         return self::isAccessManageVolumes() ? new self : throw new NoAccessManageVolumesException();
     }
 
-    /** @return bool Разрешено ли управление историей. */
+    /**
+     * @return bool Разрешено ли управление историей.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function isAccessManageHistory(): bool
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
         return self::$userRoleObj->isAccessManageHistory();
     }
 
@@ -102,15 +158,22 @@ class AuthUserRole
      * Разрешено управление историей, иначе - ошибка.
      * @return AuthUserRole
      * @throws NoAccessManageHistoryException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public static function isAccessManageHistoryOrThrow(): AuthUserRole
     {
         return self::isAccessManageHistory() ? new self : throw new NoAccessManageHistoryException();
     }
 
-    /** @return bool Разрешен ли CRUD учетными записями. */
+    /**
+     * @return bool Разрешен ли CRUD учетными записями.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function isAccessManageUsers(): bool
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
         return self::$userRoleObj->isAccessManageUsers();
     }
 
@@ -118,6 +181,8 @@ class AuthUserRole
      * Разрешен CRUD учетными записями, иначе - ошибка.
      * @return AuthUserRole
      * @throws NoAccessManageUsersException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public static function isAccessManageUsersOrThrow(): AuthUserRole
     {

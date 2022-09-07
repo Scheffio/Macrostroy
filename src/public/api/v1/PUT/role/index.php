@@ -12,22 +12,24 @@ use wipe\inc\v1\role\user_role\UserRole;
 $user = new UserRole();
 $request = new Request();
 
-try {
-    $user->isManageUsersOrThrow();
 
-    $user
-        ->setRoleId($request->getQueryOrThrow('role_id'))
-        ->setRoleName($request->getQuery('role_name'))
-        ->setObjectViewer($request->getQuery('object_viewer'))
-        ->setManageObjects($request->getQuery('manage_objects'))
-        ->setManageVolumes($request->getQuery('manage_volumes'))
-        ->setManageHistory($request->getQuery('manage_history'))
-        ->setManageUsers($request->getQuery('manage_users'))
-        ->update();
 
-    JsonOutput::success();
-} catch (PropelException|Error $e) {
-    JsonOutput::error($e->getMessage());
-} catch (NoAccessManageUsersException|NoRoleFoundException|NoRoleObjectException $e) {
-    JsonOutput::error($e->getMessage());
-}
+//try {
+//    $user->isManageUsersOrThrow();
+//
+//    $user
+//        ->setRoleId($request->getQueryOrThrow('role_id'))
+//        ->setRoleName($request->getQuery('role_name'))
+//        ->setObjectViewer($request->getQuery('object_viewer'))
+//        ->setManageObjects($request->getQuery('manage_objects'))
+//        ->setManageVolumes($request->getQuery('manage_volumes'))
+//        ->setManageHistory($request->getQuery('manage_history'))
+//        ->setManageUsers($request->getQuery('manage_users'))
+//        ->update();
+//
+//    JsonOutput::success();
+//} catch (PropelException|Error $e) {
+//    JsonOutput::error($e->getMessage());
+//} catch (NoAccessManageUsersException|NoRoleFoundException|NoRoleObjectException $e) {
+//    JsonOutput::error($e->getMessage());
+//}

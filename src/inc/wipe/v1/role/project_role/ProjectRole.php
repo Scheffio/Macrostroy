@@ -141,11 +141,13 @@ class ProjectRole
 
     public static function isAccessCrudByLvl(int $lvl, int $projectId, int $userId)
     {
+        return self::getUsersOnQuery($lvl, $projectId);
+
         return self::formArrayWithUserCrud(
             self::mergingUserDataById(
-                self::getUsersOnQuery($lvl, $projectId)
+                self::getUsersOnQuery($lvl, $projectId, $userId)
             )
-            );
+        );
 
         return self::formArrayWithUserCrud(
             self::mergingUserDataById(

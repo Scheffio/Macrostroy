@@ -84,9 +84,9 @@ class AccessLvl
      * @return bool
      * @throws InvalidAccessLvlIntException
      */
-    public static function isAccessLvlIntObjOrThrow(int $lvl): bool
+    public static function isAccessLvlIntObjOrThrow(int $lvl): int
     {
-        return self::isAccessLvlIntObj($lvl) ?: throw new InvalidAccessLvlIntException();
+        return self::isAccessLvlIntObj($lvl) ? $lvl : throw new InvalidAccessLvlIntException();
     }
 
     /**
@@ -95,9 +95,9 @@ class AccessLvl
      * @return bool
      * @throws InvalidAccessLvlIntException
      */
-    public static function isAccessLvlStrObjOrThrow(string $lvl): bool
+    public static function isAccessLvlStrObjOrThrow(string $lvl): string
     {
-        return self::isAccessLvlStrObj($lvl) ?: throw new InvalidAccessLvlIntException();
+        return self::isAccessLvlStrObj($lvl) ? $lvl : throw new InvalidAccessLvlIntException();
     }
 
     /**

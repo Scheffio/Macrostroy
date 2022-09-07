@@ -6,9 +6,11 @@ use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
 use inc\artemy\v1\request\Request;
 use wipe\inc\v1\role\user_role\AuthUserRole;
-use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
+use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 $request = new Request();
 
@@ -27,7 +29,7 @@ try {
                 ])
                 ->leftJoinUserRole()
                 ->filterByIsAvailable(1)
-                ->findPk($user_id) ?: throw new Exception('No user found');
+                ->findPk($user_id) ?: throw new Exception('Пользователь не был найден');
 
     JsonOutput::success([
         'id' => $user['users.id'],
@@ -39,6 +41,11 @@ try {
             'name' => $user['user_role.name'],
         ],
     ]);
-} catch (PropelException|Exception $e) {
+} catch (NoAccessManageUsersException $e) {
+} catch (NoRoleFoundException $e) {
+    JsonOutput::error('Роль не была найдена');
+} catch (NoUserFoundException $e) {
+    JsonOutput::error('Пользователь не был найден');
+} catch (Exception|PropelException $e) {
     JsonOutput::error($e->getMessage());
 }

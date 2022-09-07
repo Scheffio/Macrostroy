@@ -115,7 +115,6 @@ $services = [];
 {
     $performance = Performance::OPERATIONAL;
     $db_unix_backup = filemtime("mysql_backup.sql");
-    var_dump((time() - $db_unix_backup) / 60);
     if ((time() - $db_unix_backup) / 60 > 10) {
         $performance = Performance::DEGRADED_PERFORMANCE;
     }

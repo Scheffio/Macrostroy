@@ -279,6 +279,13 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
+    private static function getUsersQuery()
+    {
+        UsersQuery::create()
+    }
+    #endregion
+
+    #region Static Select Functions
     /**
      * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
      * @param int $lvl Уровень доступа.

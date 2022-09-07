@@ -45,15 +45,15 @@ class AuthUserRole
 
     #region Getter Functions
     /** @return int|null ID пользователя. */
-    public function getUserId(): ?int
+    public static function getUserId(): ?int
     {
-        return $this::$userId;
+        return self::$userId;
     }
 
     /** @return UserRole|null Объект роли. */
-    public function getUserRoleObj(): ?UserRole
+    public static function getUserRoleObj(): ?UserRole
     {
-        return $this::$userRoleObj;
+        return self::$userRoleObj;
     }
     #endregion
 

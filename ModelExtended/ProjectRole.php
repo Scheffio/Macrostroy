@@ -3,7 +3,6 @@
 namespace ext;
 
 use Exception;
-use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Connection\ConnectionInterface;
 use wipe\inc\v1\role\user_role\UserRole;
 
@@ -14,7 +13,7 @@ class ProjectRole extends \DB\ProjectRole
      */
     public function preInsert(?ConnectionInterface $con = null): bool
     {
-        if (UserRole::getByUserId($this->user_id)->isManageUsers()) {
+        if (UserRole::getByUserId($this->user_id)->isAccessManageUsers()) {
             throw new Exception('Unable to edit administrator access');
         }
 

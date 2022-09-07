@@ -19,9 +19,9 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    if (!$user->isManageUsers() && !$user->isManageObjects()) {
-        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
-    }
+//    if (!$user->isManageUsers() && !$user->isManageObjects()) {
+//        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+//    }
 
     $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_public');
 

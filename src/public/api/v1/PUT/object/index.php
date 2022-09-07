@@ -15,21 +15,20 @@ use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
-use wipe\inc\v1\role\user_role\UserRole;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
-$user = new UserRole();
 $request = new Request();
 
 try {
     $id = $request->getRequestOrThrow('id');
     $lvl = $request->getRequestOrThrow('lvl');
-    $user->applyByUserAuth();
 
     if (
-        !$user->isAccessManageUsers() &&
-        !$user->isAccessManageObjects() &&
-        !ProjectRole::getBySearch($lvl, $id, $user->getUserId())->isAccessCrud()
+        !AuthUserRole::isAccessManageUsers() &&
+        !AuthUserRole::isAccessManageObjects() &&
+        !ProjectRole::getBySearch($lvl, $id, AuthUserRole::getUserId())->isAccessCrud()
     ) {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }
@@ -114,5 +113,6 @@ try {
     JsonOutput::error($e->getMessage());
 } catch (NoRoleFoundException $e) {
     JsonOutput::error('Роль не была найдена');
-} catch (\wipe\inc\v1\role\user_role\exception\NoUserFoundException $e) {
+} catch (NoUserFoundException $e) {
+    JsonOutput::error('Пользователь не найден');
 }

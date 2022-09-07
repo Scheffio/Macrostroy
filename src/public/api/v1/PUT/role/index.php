@@ -6,7 +6,6 @@ use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
-use wipe\inc\v1\role\user_role\exception\NoRoleObjectException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 

@@ -15,7 +15,6 @@ use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
-use wipe\inc\v1\role\user_role\UserRole;
 
 $request = new Request();
 

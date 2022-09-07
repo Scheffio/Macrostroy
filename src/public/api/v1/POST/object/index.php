@@ -21,7 +21,7 @@ $request = new Request();
 
 try {
     JsonOutput::success(
-        ProjectRole::getUsersQuery(1, 1)
+        ProjectRole::getUsersByQuery(1, 1)
     );
 //    if (!$user->isManageUsers() && !$user->isManageObjects()) {
 //        throw new AccessDeniedException('Недостаточно прав для добавления объекта');

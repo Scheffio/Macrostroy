@@ -279,176 +279,194 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-    public static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null)
+    public static function getUsersByQuery(int $lvl, int $projectId, ?int $userId = null): array
     {
-        return UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-            ])
-            ->withColumn('GROUP_CONCAT(project_role.is_crud)', 'is_crud')
-            ->withColumn('GROUP_CONCAT(project_role.lvl)', 'lvl')
-            ->withColumn('GROUP_CONCAT(project_role.object_id)', 'object_id')
-            ->withColumn('GROUP_CONCAT(project_role.project_id)', 'project_id')
-            ->groupById()
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-            ->addJoinCondition(
-                name: 'ProjectRole',
-                clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
-                value: $projectId
-            )
-            ->filterByIsAvailable(1)->find()->getData();
+        return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
+    }
+
+    /**
+     * @param int $lvl Номер уровня доступа.
+     * @param int $projectId ID проекта.
+     * @param int|null $userId ID пользователя.
+     * @return \DB\UsersQuery
+     * @throws PropelException
+     */
+    private static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null): \DB\UsersQuery
+    {
+        $query = UsersQuery::create()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    UserRoleTableMap::COL_MANAGE_USERS,
+                    UserRoleTableMap::COL_OBJECT_VIEWER,
+                    UserRoleTableMap::COL_MANAGE_OBJECTS,
+                ])
+                ->withColumn('GROUP_CONCAT(project_role.is_crud)', 'is_crud')
+                ->withColumn('GROUP_CONCAT(project_role.lvl)', 'lvl')
+                ->withColumn('GROUP_CONCAT(project_role.object_id)', 'object_id')
+                ->withColumn('GROUP_CONCAT(project_role.project_id)', 'project_id')
+                ->groupById()
+                ->leftJoinUserRole()
+                ->leftJoinProjectRole()
+                ->addJoinCondition(
+                    name: 'ProjectRole',
+                    clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
+                    value: $projectId
+                )
+                ->filterByIsAvailable(1);
+
+        if ($userId) {
+            $query->filterById($userId);
+        }
+
+        return $query;
     }
     #endregion
 
     #region Static Select Functions
-    /**
-     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
-     * @param int $lvl Уровень доступа.
-     * @param int $projectId ID проекта.
-     * @return array
-     * @throws PropelException
-     */
-    public static function getCrudUsersObject(int $lvl, int $projectId): array
-    {
-        return self::formArrayWithUserCrud(
-            self::mergingUserDataById(
-                self::getUsersOnQuery($lvl, $projectId)
-            )
-        );
-    }
-
-    /**
-     * @param int $lvl Уровень доступа.
-     * @param int $projectId ID проекта.
-     * @param int|null $userId ID пользователя.
-     * @return array
-     * @throws PropelException
-     */
-    private static function getUsersOnQuery(int $lvl, int $projectId, ?int $userId = null): array
-    {
-        $q = UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                ProjectRoleTableMap::COL_IS_CRUD,
-                ProjectRoleTableMap::COL_LVL,
-                ProjectRoleTableMap::COL_OBJECT_ID,
-                ProjectRoleTableMap::COL_PROJECT_ID,
-            ])
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-            ->addJoinCondition(
-                name: 'ProjectRole',
-                clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
-                value: $projectId
-            )
-            ->filterByIsAvailable(1)
-            ->where(ProjectRoleTableMap::COL_LVL . '<=?', $lvl)
-            ->_or()
-            ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL');
-
-        if ($userId) {
-            $q->filterById($userId);
-        }
-
-        return $q->find()->getData();
-    }
-
-    /**
-     * Объединение данных пользователя по его ID.
-     * @param array $users массив данных пользователей.
-     * @return array
-     */
-    private static function mergingUserDataById(array $users): array
-    {
-        $result = [];
-
-        foreach ($users as $user) {
-            $userId = $user['users.id'];
-
-            if (!array_key_exists($userId, $result)) {
-                $result[$userId] = [
-                    'user' => [
-                        'id' => $user['users.id'],
-                        'name' => $user['users.username'],
-                        'manageUsers' => (bool) $user['user_role.manage_users'],
-                        'objectViewer' => (bool) $user['user_role.object_viewer'],
-                        'manageObjects' => (bool) $user['user_role.manage_objects'],
-                    ],
-                    'crud' => []
-                ];
-            }
-
-
-            $result[$userId]['crud'][] = [
-                'lvl' => $user['project_role.lvl'],
-                'isCrud' => $user['project_role.is_crud'],
-                'object_id' => $user['project_role.object_id'],
-            ];
-
-        }
-
-        return $result;
-    }
-
-    /**
-     * Формирование массива с пользователями для вывода на странице "Управение достуа".
-     * @param array $users Массив данных о пользователе, после фукции self::mergingUserDataById.
-     * @return array
-     */
-    private static function formArrayWithUserCrud(array $users): array
-    {
-        foreach ($users as &$user) {
-            if ($user['user']['manageUsers']) {
-                $isCrud = true;
-                $isAdmin = true;
-            } else {
-                $isAdmin = false;
-                $isCrud = self::getIsCrudByArray(
-                    userCrud: $user['crud'],
-                    isAccessManageObjects: $user['user']['manageObjects'],
-                    isAccessObjectViewer: $user['user']['objectViewer']
-                );
-            }
-
-            $user = [
-                'id' => $user['user']['id'],
-                'name' => $user['user']['name'],
-                'isCrud' => $isCrud,
-                'isAdmin' => $isAdmin,
-            ];
-        }
-
-        return array_values($users);
-    }
-
-    private static function getIsCrudByArray(
-        array $userCrud,
-        bool $isAccessManageObjects,
-        bool $isAccessObjectViewer
-    ): bool
-    {
-        $userCrud = array_replace($userCrud);
-
-        foreach ($userCrud as $crud) {
-            if (is_int($crud['isCrud'])) {
-                return (bool)$crud['isCrud'];
-            }
-        }
-
-        if ($isAccessObjectViewer) return false;
-        if ($isAccessManageObjects) return true;
-
-        return false;
-    }
+//    /**
+//     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
+//     * @param int $lvl Уровень доступа.
+//     * @param int $projectId ID проекта.
+//     * @return array
+//     * @throws PropelException
+//     */
+//    public static function getCrudUsersObject(int $lvl, int $projectId): array
+//    {
+//        return self::formArrayWithUserCrud(
+//            self::mergingUserDataById(
+//                self::getUsersOnQuery($lvl, $projectId)
+//            )
+//        );
+//    }
+//
+//    /**
+//     * @param int $lvl Уровень доступа.
+//     * @param int $projectId ID проекта.
+//     * @param int|null $userId ID пользователя.
+//     * @return array
+//     * @throws PropelException
+//     */
+//    private static function getUsersOnQuery(int $lvl, int $projectId, ?int $userId = null): array
+//    {
+//        $q = UsersQuery::create()
+//            ->select([
+//                UsersTableMap::COL_ID,
+//                UsersTableMap::COL_USERNAME,
+//                UserRoleTableMap::COL_MANAGE_USERS,
+//                UserRoleTableMap::COL_OBJECT_VIEWER,
+//                UserRoleTableMap::COL_MANAGE_OBJECTS,
+//                ProjectRoleTableMap::COL_IS_CRUD,
+//                ProjectRoleTableMap::COL_LVL,
+//                ProjectRoleTableMap::COL_OBJECT_ID,
+//                ProjectRoleTableMap::COL_PROJECT_ID,
+//            ])
+//            ->leftJoinUserRole()
+//            ->leftJoinProjectRole()
+//            ->addJoinCondition(
+//                name: 'ProjectRole',
+//                clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
+//                value: $projectId
+//            )
+//            ->filterByIsAvailable(1)
+//            ->where(ProjectRoleTableMap::COL_LVL . '<=?', $lvl)
+//            ->_or()
+//            ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL');
+//
+//        if ($userId) {
+//            $q->filterById($userId);
+//        }
+//
+//        return $q->find()->getData();
+//    }
+//
+//    /**
+//     * Объединение данных пользователя по его ID.
+//     * @param array $users массив данных пользователей.
+//     * @return array
+//     */
+//    private static function mergingUserDataById(array $users): array
+//    {
+//        $result = [];
+//
+//        foreach ($users as $user) {
+//            $userId = $user['users.id'];
+//
+//            if (!array_key_exists($userId, $result)) {
+//                $result[$userId] = [
+//                    'user' => [
+//                        'id' => $user['users.id'],
+//                        'name' => $user['users.username'],
+//                        'manageUsers' => (bool) $user['user_role.manage_users'],
+//                        'objectViewer' => (bool) $user['user_role.object_viewer'],
+//                        'manageObjects' => (bool) $user['user_role.manage_objects'],
+//                    ],
+//                    'crud' => []
+//                ];
+//            }
+//
+//
+//            $result[$userId]['crud'][] = [
+//                'lvl' => $user['project_role.lvl'],
+//                'isCrud' => $user['project_role.is_crud'],
+//                'object_id' => $user['project_role.object_id'],
+//            ];
+//
+//        }
+//
+//        return $result;
+//    }
+//
+//    /**
+//     * Формирование массива с пользователями для вывода на странице "Управение достуа".
+//     * @param array $users Массив данных о пользователе, после фукции self::mergingUserDataById.
+//     * @return array
+//     */
+//    private static function formArrayWithUserCrud(array $users): array
+//    {
+//        foreach ($users as &$user) {
+//            if ($user['user']['manageUsers']) {
+//                $isCrud = true;
+//                $isAdmin = true;
+//            } else {
+//                $isAdmin = false;
+//                $isCrud = self::getIsCrudByArray(
+//                    userCrud: $user['crud'],
+//                    isAccessManageObjects: $user['user']['manageObjects'],
+//                    isAccessObjectViewer: $user['user']['objectViewer']
+//                );
+//            }
+//
+//            $user = [
+//                'id' => $user['user']['id'],
+//                'name' => $user['user']['name'],
+//                'isCrud' => $isCrud,
+//                'isAdmin' => $isAdmin,
+//            ];
+//        }
+//
+//        return array_values($users);
+//    }
+//
+//    private static function getIsCrudByArray(
+//        array $userCrud,
+//        bool $isAccessManageObjects,
+//        bool $isAccessObjectViewer
+//    ): bool
+//    {
+//        $userCrud = array_replace($userCrud);
+//
+//        foreach ($userCrud as $crud) {
+//            if (is_int($crud['isCrud'])) {
+//                return (bool)$crud['isCrud'];
+//            }
+//        }
+//
+//        if ($isAccessObjectViewer) return false;
+//        if ($isAccessManageObjects) return true;
+//
+//        return false;
+//    }
     #endregion
 
     #region Setter Functions

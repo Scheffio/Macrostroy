@@ -36,7 +36,7 @@ CREATE TABLE `obj_group` (
   PRIMARY KEY (`id`),
   KEY `subproject_id` (`subproject_id`),
   CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `obj_subproject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `obj_group` (
 
 LOCK TABLES `obj_group` WRITE;
 /*!40000 ALTER TABLE `obj_group` DISABLE KEYS */;
-INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete');
+INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10','12','insert');
 /*!40000 ALTER TABLE `obj_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +81,7 @@ CREATE TABLE `obj_group_version` (
 
 LOCK TABLES `obj_group_version` WRITE;
 /*!40000 ALTER TABLE `obj_group_version` DISABLE KEYS */;
-INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 4 |');
+INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 4 |'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10','12','insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_group_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -590,7 +590,7 @@ CREATE TABLE `project_role` (
   KEY `project_id` (`project_id`),
   CONSTRAINT `project_role_ibfk_23` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`),
   CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -599,7 +599,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2);
+INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,1,2,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

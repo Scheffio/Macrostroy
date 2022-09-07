@@ -9,6 +9,7 @@ use DB\Map\UsersTableMap;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
@@ -138,16 +139,13 @@ class ProjectRole
 
     #region Static Access Control Functions
 
-    public static function isAccessCrudByLvl(int $lvl, int $objectId, int $userId)
+    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $userId)
     {
-        return self::mergingUserDataById(
-            self::getUsersOnQuery($lvl, $objectId, $userId)
-        );
-//        return self::formArrayWithUserCrud(
-//                    self::mergingUserDataById(
-//                        self::getUsersOnQuery($lvl, $objectId, $userId)
-//                    )
-//                )[0]['isCrud'] ?? false;
+        return self::formArrayWithUserCrud(
+            self::mergingUserDataById(
+                self::getUsersOnQuery($lvl, $projectId, $userId)
+            )
+        )[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -257,20 +255,25 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-    /**
-     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
-     * @param int $lvl Уровень доступа.
-     * @param int $projectId ID проекта.
-     * @return array
-     * @throws PropelException
-     */
+//    /**
+//     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
+//     * @param int $lvl Уровень доступа.
+//     * @param int $projectId ID проекта.
+//     * @return array
+//     * @throws PropelException
+//     */
+//    public static function getCrudUsersObject(int $lvl, int $projectId): array
+//    {
+//        return self::formArrayWithUserCrud(
+//            self::mergingUserDataById(
+//                self::getUsersOnQuery($lvl, $projectId)
+//            )
+//        );
+//    }
+
     public static function getCrudUsersObject(int $lvl, int $projectId): array
     {
-        return  self::formArrayWithUserCrud(
-                    self::mergingUserDataById(
-                        self::getUsersOnQuery($lvl, $projectId)
-                    )
-                );
+        return self::getUsersOnQuery($lvl, $projectId);
     }
 
     /**
@@ -309,6 +312,10 @@ class ProjectRole
         if ($userId) {
             $q->filterById($userId);
         }
+
+        return [
+            'query' => $q->toString()
+        ];
 
         return $q->find()->getData();
     }

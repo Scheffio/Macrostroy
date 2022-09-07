@@ -140,11 +140,14 @@ class ProjectRole
 
     public static function isAccessCrudByLvl(int $lvl, int $objectId, int $userId)
     {
-        return self::formArrayWithUserCrud(
-                    self::mergingUserDataById(
-                        self::getUsersOnQuery($lvl, $objectId, $userId)
-                    )
-                )[0]['isCrud'] ?? false;
+        return self::mergingUserDataById(
+            self::getUsersOnQuery($lvl, $objectId, $userId)
+        );
+//        return self::formArrayWithUserCrud(
+//                    self::mergingUserDataById(
+//                        self::getUsersOnQuery($lvl, $objectId, $userId)
+//                    )
+//                )[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -360,11 +363,11 @@ class ProjectRole
                 $isAdmin = true;
             } else {
                 $isAdmin = false;
-                $isCrud = array_pop($user['crud'])['isCrud'];
-
-                if (is_int($isCrud)) $isCrud = (bool)$isCrud;
-                elseif ($user['user']['manageObjects']) $isCrud = true;
-                elseif ($user['user']['objectViewer']) $isCrud = false;
+                $isCrud = self::getIsCrudByArray(
+                    userCrud: $user['crud'],
+                    isAccessManageObjects: $user['user']['manageObjects'],
+                    isAccessObjectViewer: $user['user']['objectViewer']
+                );
             }
 
             $user = [
@@ -376,6 +379,26 @@ class ProjectRole
         }
 
         return array_values($users);
+    }
+
+    private static function getIsCrudByArray(
+        array $userCrud,
+        bool $isAccessManageObjects,
+        bool $isAccessObjectViewer
+    ): bool
+    {
+        $userCrud = array_replace($userCrud);
+
+        foreach ($userCrud as $crud) {
+            if (is_int($crud['isCrud'])) {
+                return (bool)$crud['isCrud'];
+            }
+        }
+
+        if ($isAccessObjectViewer) return false;
+        if ($isAccessManageObjects) return true;
+
+        return false;
     }
     #endregion
 

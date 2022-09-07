@@ -42,6 +42,7 @@ try {
         ],
     ]);
 } catch (NoAccessManageUsersException $e) {
+    JsonOutput::error('Недостаточно прав');
 } catch (NoRoleFoundException $e) {
     JsonOutput::error('Роль не была найдена');
 } catch (NoUserFoundException $e) {

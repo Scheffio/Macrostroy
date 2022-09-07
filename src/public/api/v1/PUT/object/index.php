@@ -25,13 +25,13 @@ try {
     $id = $request->getRequestOrThrow('id');
     $lvl = $request->getRequestOrThrow('lvl');
 
-    if (
-        !AuthUserRole::isAccessManageUsers() &&
-        !AuthUserRole::isAccessManageObjects() &&
-        !ProjectRole::getBySearch($lvl, $id, AuthUserRole::getUserId())->isAccessCrud()
-    ) {
-        throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
-    }
+//    if (
+//        !AuthUserRole::isAccessManageUsers() &&
+//        !AuthUserRole::isAccessManageObjects() &&
+//        !ProjectRole::getBySearch($lvl, $id, AuthUserRole::getUserId())->isAccessCrud()
+//    ) {
+//        throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
+//    }
 
     $lvl = AccessLvl::getLvlIntObj($lvl);
     $name = $request->getRequest('name');

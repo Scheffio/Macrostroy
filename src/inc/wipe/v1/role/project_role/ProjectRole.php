@@ -136,6 +136,13 @@ class ProjectRole
     }
     #endregion
 
+    #region Static Access Control Functions
+    public static function isAccessCrudByLvl(int $lvl): bool
+    {
+        return true;
+    }
+    #endregion
+
     #region Getter Functions
     /** @return int|null ID роли проекта. */
     public function getProjectRoleId(): ?int
@@ -252,10 +259,10 @@ class ProjectRole
     public static function getCrudUsersObject(int $lvl, int $projectId): array
     {
         return  self::formArrayWithUserCrud(
-            self::mergingUserDataById(
-                self::getUsersOnQuery($lvl, $projectId)
-            )
-        );
+                    self::mergingUserDataById(
+                        self::getUsersOnQuery($lvl, $projectId)
+                    )
+                );
     }
 
     /**

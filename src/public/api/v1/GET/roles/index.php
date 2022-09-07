@@ -26,4 +26,5 @@ try {
 } catch (NoUserFoundException $e) {
     JsonOutput::error('Пользователь не найден');
 } catch (PropelException $e) {
+    JsonOutput::error($e->getMessage());
 }

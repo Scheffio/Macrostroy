@@ -25,13 +25,13 @@ try {
     $lvl = $request->getQueryOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    if (
-        !$user->isManageUsers() &&
-        !$user->isManageObjects() &&
-        !ProjectRole::getBySearch($lvl, $id, $user->getUserId())->isAccessCrud()
-    ) {
-        throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
-    }
+//    if (
+//        !$user->isManageUsers() &&
+//        !$user->isManageObjects() &&
+//        !ProjectRole::getBySearch($lvl, $id, $user->getUserId())->isAccessCrud()
+//    ) {
+//        throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
+//    }
 
     switch ($lvl) {
         case eLvlObjInt::PROJECT->value: Objects::getProject($id)->delete(); break;

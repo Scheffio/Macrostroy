@@ -271,9 +271,13 @@ class ProjectRole
 //        );
 //    }
 
-    public static function getCrudUsersObject(int $lvl, int $projectId): array
+    public static function getCrudUsersObject(int $lvl, int $projectId)
     {
-        return self::getUsersOnQuery($lvl, $projectId);
+        return self::formArrayWithUserCrud(
+            self::mergingUserDataById(
+                self::getUsersOnQuery($lvl, $projectId)
+            )
+            );
     }
 
     /**
@@ -312,10 +316,6 @@ class ProjectRole
         if ($userId) {
             $q->filterById($userId);
         }
-
-        return [
-            'query' => $q->toString()
-        ];
 
         return $q->find()->getData();
     }

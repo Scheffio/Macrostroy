@@ -13,13 +13,14 @@ use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\UserRole;
 
 $request = new Request();
 
 try {
-    UserRole::getByUserId()->isManageUsersOrThrow();
+    AuthUserRole::isAccessManageUsersOrThrow();
     $request->checkRequestVariablesOrError('lvl', 'is_crud', 'object_id', 'user_id');
 
     $lvl = $request->getRequest('lvl');

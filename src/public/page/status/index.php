@@ -114,8 +114,8 @@ $services = [];
 
 {
     $performance = Performance::OPERATIONAL;
-//    var_dump(filectime("../../mysql_backup.sql"));
-    $db_unix_backup = filemtime("../../mysql_backup.sql");
+    var_dump(filectime("../../mysql_backup.sql"));
+    $db_unix_backup = filemtime("../mysql_backup.sql");
     if ($db_unix_backup > 10) {
         $performance = Performance::DEGRADED_PERFORMANCE;
     }

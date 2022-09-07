@@ -279,9 +279,29 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-    private static function getUsersQuery()
+    public static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null)
     {
-        UsersQuery::create()
+        return UsersQuery::create()
+            ->select([
+                UsersTableMap::COL_ID,
+                UsersTableMap::COL_USERNAME,
+                UserRoleTableMap::COL_MANAGE_USERS,
+                UserRoleTableMap::COL_OBJECT_VIEWER,
+                UserRoleTableMap::COL_MANAGE_OBJECTS,
+            ])
+            ->withColumn('GROUP_CONCAT(project_role.is_crud)', 'is_crud')
+            ->withColumn('GROUP_CONCAT(project_role.lvl)', 'lvl')
+            ->withColumn('GROUP_CONCAT(project_role.object_id)', 'object_id')
+            ->withColumn('GROUP_CONCAT(project_role.project_id)', 'project_id')
+            ->groupById()
+            ->leftJoinUserRole()
+            ->leftJoinProjectRole()
+            ->addJoinCondition(
+                name: 'ProjectRole',
+                clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
+                value: $projectId
+            )
+            ->filterByIsAvailable(1)->find()->getData();
     }
     #endregion
 

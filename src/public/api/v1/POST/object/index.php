@@ -13,12 +13,16 @@ use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
 $user = new UserRole();
 $request = new Request();
 
 try {
+    JsonOutput::success(
+        ProjectRole::getUsersQuery(1, 1)
+    );
 //    if (!$user->isManageUsers() && !$user->isManageObjects()) {
 //        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
 //    }

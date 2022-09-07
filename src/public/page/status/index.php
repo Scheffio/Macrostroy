@@ -115,12 +115,12 @@ $services = [];
 {
     $performance = Performance::OPERATIONAL;
     $db_unix_backup = filemtime("mysql_backup.sql");
-    var_dump((($db_unix_backup / 60) / 60));
-    if ((($db_unix_backup / 60) / 60) > 10) {
+    var_dump((time() - $db_unix_backup) / 60);
+    if ((time() - $db_unix_backup) / 60 > 10) {
         $performance = Performance::DEGRADED_PERFORMANCE;
     }
 
-    if ((($db_unix_backup / 60) / 60) > 11) {
+    if ((time() - $db_unix_backup) / 60 > 11) {
         $performance = Performance::MAJOR_OUTAGE;
     }
 

@@ -137,9 +137,14 @@ class ProjectRole
     #endregion
 
     #region Static Access Control Functions
-    public static function isAccessCrudByLvl(int $lvl): bool
+
+    public static function isAccessCrudByLvl(int $lvl, int $objectId, int $userId)
     {
-        return true;
+        return self::formArrayWithUserCrud(
+                    self::mergingUserDataById(
+                        self::getUsersOnQuery($lvl, $objectId, $userId)
+                    )
+                )[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -268,12 +273,13 @@ class ProjectRole
     /**
      * @param int $lvl Уровень доступа.
      * @param int $projectId ID проекта.
+     * @param int|null $userId ID пользователя.
      * @return array
      * @throws PropelException
      */
-    private static function getUsersOnQuery(int $lvl, int $projectId): array
+    private static function getUsersOnQuery(int $lvl, int $projectId, ?int $userId = null): array
     {
-        return  UsersQuery::create()
+        $q = UsersQuery::create()
             ->select([
                 UsersTableMap::COL_ID,
                 UsersTableMap::COL_USERNAME,
@@ -295,9 +301,13 @@ class ProjectRole
             ->filterByIsAvailable(1)
             ->where(ProjectRoleTableMap::COL_LVL . '<=?', $lvl)
             ->_or()
-            ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL')
-            ->find()
-            ->getData();
+            ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL');
+
+        if ($userId) {
+            $q->filterById($userId);
+        }
+
+        return $q->find()->getData();
     }
 
     /**
@@ -327,9 +337,9 @@ class ProjectRole
 
 
             $result[$userId]['crud'][] = [
-                'lvl' => $user['project_role2.lvl'],
-                'isCrud' => $user['project_role2.is_crud'],
-                'object_id' => $user['project_role2.object_id'],
+                'lvl' => $user['project_role.lvl'],
+                'isCrud' => $user['project_role.is_crud'],
+                'object_id' => $user['project_role.object_id'],
             ];
 
         }

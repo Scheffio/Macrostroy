@@ -143,6 +143,12 @@ class ProjectRole
     {
         return self::formArrayWithUserCrud(
             self::mergingUserDataById(
+                self::getUsersOnQuery($lvl, $projectId)
+            )
+            );
+
+        return self::formArrayWithUserCrud(
+            self::mergingUserDataById(
                 self::getUsersOnQuery($lvl, $projectId, $userId)
             )
         )[0]['isCrud'] ?? false;
@@ -255,29 +261,20 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-//    /**
-//     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
-//     * @param int $lvl Уровень доступа.
-//     * @param int $projectId ID проекта.
-//     * @return array
-//     * @throws PropelException
-//     */
-//    public static function getCrudUsersObject(int $lvl, int $projectId): array
-//    {
-//        return self::formArrayWithUserCrud(
-//            self::mergingUserDataById(
-//                self::getUsersOnQuery($lvl, $projectId)
-//            )
-//        );
-//    }
-
-    public static function getCrudUsersObject(int $lvl, int $projectId)
+    /**
+     * Вовзвращает массив данных о пользователях для страниц "Управление доступом".
+     * @param int $lvl Уровень доступа.
+     * @param int $projectId ID проекта.
+     * @return array
+     * @throws PropelException
+     */
+    public static function getCrudUsersObject(int $lvl, int $projectId): array
     {
         return self::formArrayWithUserCrud(
             self::mergingUserDataById(
                 self::getUsersOnQuery($lvl, $projectId)
             )
-            );
+        );
     }
 
     /**

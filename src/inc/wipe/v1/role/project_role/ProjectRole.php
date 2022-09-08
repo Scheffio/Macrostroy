@@ -308,7 +308,7 @@ class ProjectRole
         self::filterUsersCrudDataByParents($r['parents'], $r['users']);
         self::formingUsersCrud($r['users']);
 
-        return $r;
+        return $r['users'];
     }
 
     /**

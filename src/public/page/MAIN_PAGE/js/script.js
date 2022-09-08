@@ -1,45 +1,3 @@
-// Anchor Checker
-const anchors = document.querySelectorAll('.tabs-controller__tab-anchor')
-
-const anchorCheker = {
-    anchorReset() {
-        // обнулятор якорей
-        anchors.forEach((anchor) => {
-            anchor.children[0].classList.remove('selected')
-            anchor.style.order = 0
-        })
-    },
-    anchorCheck(anchor, target) {
-        // чекер якорей
-        if(anchor != '') {
-            if (!anchor.children[0].classList.contains('selected')) {
-                // Если у ребёнка внутри якоря нету класса | этого 
-                // то мы ему даём класс и выталкиваем на первое место
-                this.anchorReset()
-                anchor.style.order = -1
-                anchor.children[0].classList.add('selected')
-            }
-        }
-
-        if(target != '') {
-            anchors.forEach((elem) => {
-                if(elem.children[0].textContent == target) {
-                    this.anchorReset()
-                    elem.style.order = -1
-                    elem.children[0].classList.add('selected')
-                }
-            })
-        }
-    }
-}
-
-anchors.forEach((elem) => {
-    elem.addEventListener('click', () => {
-        anchorCheker.anchorCheck(elem)
-        // вешаем эту жесть на все якори
-    })
-})
-// =====================
 
 // Table Generator
 
@@ -186,9 +144,6 @@ const CCM = {
         let posX = 0
         let posY = 0
 
-        console.log(window.innerHeight, e.pageY, window.innerHeight-e.pageY);
-        console.log(window.innerWidth, e.pageX, window.innerWidth-e.pageX);
-
         if(e.pageX || e.pageY) {
             posX = e.pageX + 20
             posY = e.pageY - 50
@@ -214,16 +169,16 @@ const CCM = {
     contextMenu_open(elementRow) {
         if(UrlSplitter() == "#cities") {
             PageLoader('#areas', 4)
-            anchorCheker.anchorCheck('','Районы')
+            anchorChecker.anchorCheck('','Районы')
         }else if(UrlSplitter() == "#areas") {
             PageLoader("#residential-complexes")
-            anchorCheker.anchorCheck('','ЖК')
+            anchorChecker.anchorCheck('','ЖК')
         }else if (UrlSplitter() == "#residential-complexes") {
             PageLoader('#houses', 4)
-            anchorCheker.anchorCheck('','Дома')
+            anchorChecker.anchorCheck('','Дома')
         }else if(UrlSplitter() == "#houses") {
             PageLoader("#stages", 4)
-            anchorCheker.anchorCheck('','Этапы')
+            anchorChecker.anchorCheck('','Этапы')
         }else if (UrlSplitter() == "#stages") {
             window.location.href = "../access-control/"
         }

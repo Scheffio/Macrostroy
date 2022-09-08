@@ -296,17 +296,29 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-    public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
+    /**
+     * Возвращает массив разрешений пользователей.
+     * @param int $lvl Номер уровня доступа.
+     * @param int $projectId ID проекта.
+     * @param int $objId ID объекта.
+     * @param int|null $userId ID пользователя.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    public static function getCrudUsersObject(int $lvl, int $projectId, int $objId, ?int $userId = null): array
     {
         $r = [
             'parents' => self::getParentsId($lvl, $objId),
             'users' => self::getUsersQuery($lvl, $projectId)->find()->getData()
         ];
 
-        self::formingUsersDataById($r['users']);
-        self::filterUsersCrudByLvl($lvl, $r['users']);
-        self::filterUsersCrudDataByParents($r['parents'], $r['users']);
-        self::formingUsersCrud($r['users']);
+        if ($r['users']) {
+            self::formingUsersDataById($r['users']);
+            self::filterUsersCrudByLvl($lvl, $r['users']);
+            self::filterUsersCrudDataByParents($r['parents'], $r['users']);
+            self::formingUsersCrud($r['users']);
+        }
 
         return $r['users'];
     }
@@ -470,7 +482,7 @@ class ProjectRole
             $user = [
                 'id' => $user['user']['id'],
                 'name' => $user['user']['name'],
-                'isCurd' => self::getIsCrudByArray(
+                'isCrud' => self::getIsCrudByArray(
                     userCrud: $user['crud'],
                     isAccessManageUsers: $user['user']['manageUsers'],
                     isAccessManageObjects: $user['user']['manageObjects'],
@@ -562,7 +574,7 @@ class ProjectRole
         bool $isAccessManageUsers,
         bool $isAccessManageObjects,
         bool $isAccessObjectViewer
-    ): bool
+    ): ?bool
     {
         if ($isAccessManageUsers) return true;
 
@@ -581,7 +593,7 @@ class ProjectRole
         if ($isAccessObjectViewer) return false;
         if ($isAccessManageObjects) return true;
 
-        return false;
+        return null;
     }
     #endregion
 

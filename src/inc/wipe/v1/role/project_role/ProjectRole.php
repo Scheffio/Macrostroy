@@ -27,6 +27,7 @@ use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\Objects;
+use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 
@@ -293,13 +294,12 @@ class ProjectRole
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
         $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
-        self::formingUsersDataById($r);
-        self::filterUsersDataByLvl($lvl, $r);
+        $r[] = self::getParentsId($lvl, $objId);
+//        self::formingUsersDataById($r);
+//        self::filterUsersDataByLvl($lvl, $r);
 
         JsonOutput::success([
-            'lvl' => $lvl,
-            'objId' => $objId,
-            'parent' => self::getParentsQuery($lvl, $objId)
+            $r
         ]);
 
         return $r;
@@ -344,11 +344,18 @@ class ProjectRole
         return $query;
     }
 
-    private static function getParentsQuery(int $lvl, int $objId)
+    /**
+     * ВОзвращает массив ID родителей объекта.
+     * @param int $lvl Номер уровня доступа.
+     * @param int $objId ID объекта.
+     * @return array
+     * @throws PropelException
+     * @throws IncorrectLvlException
+     */
+    private static function getParentsId(int $lvl, int $objId): array
     {
         $col = Objects::getColIdByLvl($lvl);
-
-        return  DbObjProjectQuery::create()
+        $obj = DbObjProjectQuery::create()
                 ->select([
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
@@ -366,38 +373,13 @@ class ProjectRole
                 ->where($col.'=?', $objId)
                 ->findOne();
 
-//        return DbObjStageQuery::create()
-//            ->select([
-//                ObjProjectTableMap::COL_ID,
-//                ObjSubprojectTableMap::COL_ID,
-//                ObjGroupTableMap::COL_ID,
-//                ObjHouseTableMap::COL_ID,
-//                ObjStageTableMap::COL_ID,
-//            ])
-//            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-//                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-//                    ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-//                        ->leftJoinObjProject()
-//                    ->endUse()
-//                ->endUse()
-//            ->endUse()
-//            ->where($col.'=?', $objId)
-//            ->findOne();
-
-//        $col = self::getColIdByLvl($lvl);
-//
-//        return  ObjProjectQuery::create()
-//            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-//            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-//            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-//            ->leftJoinObjStage()
-//            ->endUse()
-//            ->endUse()
-//            ->endUse()
-//            ->where($col.'=?', $objectId)
-//            ->findOne()
-//            ->getId() ?? null;
-
+        return [
+            eLvlObjStr::PROJECT->value => &$obj['obj_project.id'],
+            eLvlObjStr::SUBPROJECT->value => &$obj['obj_subproject.id'],
+            eLvlObjStr::GROUP->value => &$obj['obj_group.id'],
+            eLvlObjStr::HOUSE->value => &$obj['obj_house.id'],
+            eLvlObjStr::STAGE->value => &$obj['obj_stage.id'],
+        ];
     }
 
     /**

@@ -137,6 +137,7 @@ function parseRoles() {
     }).then((json) => {
         json.data.forEach((roles) => {
             let option = document.createElement('option')
+            option.dataset.id = roles.id
             option.value = roles.name
             option.textContent = roles.name
             select.appendChild(option)
@@ -145,13 +146,22 @@ function parseRoles() {
 }
 
 function addUser() {
-    let url = new URL('https://artemy.net/api/v1/admin/create_account')
-    let obj = {
-        user_email: 1,
-        o: 1
-    }
-    url.search = new URLSearchParams(obj).toString()
+    const username = document.querySelector(".modal-body__name").value
+    const email = document.querySelector('.modal-body__email').value
+    console.log(document.querySelector('.modal-body__role > select').selectedIndex.text);
 
+    fetch("/api/v1/admin/create_account", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user_email: email, user_nickname: username})
+    })
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(json) {
+    })
 }
 
 
@@ -159,3 +169,4 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 parseRoles()
+addUser()

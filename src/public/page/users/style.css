@@ -262,6 +262,7 @@ body.fixated {
   position: absolute;
   top: 5px;
   right: 5px;
+  transition: 0.3s;
 }
 .wrap .tabs-container .users__list .users__close-btn::after {
   content: "";
@@ -272,6 +273,11 @@ body.fixated {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+.wrap .tabs-container .users__list .users__close-btn:hover {
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 0.6;
 }
 .wrap .tabs-container .search-bar {
   display: flex;

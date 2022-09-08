@@ -100,7 +100,11 @@
                 <div class="modal-header">
                     <p>Добавить пользователя</p>
                 </div>
-                <div class="modal-body"></div>
+                <div class="modal-body">
+                    <input type="text">
+                    <input type="text">
+                    <input type="text">
+                </div>
                 <div class="modal-footer"></div>
             </div>
             <div class="delete-user">

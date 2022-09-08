@@ -87,3 +87,4 @@ modal.addEventListener('click', (e) => {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
+window.location = "#users"

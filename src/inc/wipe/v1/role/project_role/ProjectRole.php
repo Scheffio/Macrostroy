@@ -293,14 +293,13 @@ class ProjectRole
     #region Static Select Functions
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
-        $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
-        $r[] = self::getParentsId($lvl, $objId);
-//        self::formingUsersDataById($r);
-//        self::filterUsersDataByLvl($lvl, $r);
+        $r = [
+            'parents' => self::getParentsId($lvl, $objId),
+            'users' => self::getUsersQuery($lvl, $projectId)->find()->getData()
+        ];
 
-        JsonOutput::success([
-            $r
-        ]);
+        self::formingUsersDataById($r['users']);
+        self::filterUsersDataByLvl($lvl, $r['users']);
 
         return $r;
     }
@@ -348,14 +347,14 @@ class ProjectRole
      * ВОзвращает массив ID родителей объекта.
      * @param int $lvl Номер уровня доступа.
      * @param int $objId ID объекта.
-     * @return array
+     * @return \DB\ObjGroupVersion|\DB\ObjHouse|\DB\ObjStageVersion|\DB\ObjStageWork|\DB\ObjSubproject
      * @throws PropelException
      * @throws IncorrectLvlException
      */
-    private static function getParentsId(int $lvl, int $objId): array
+    private static function getParentsId(int $lvl, int $objId)
     {
         $col = Objects::getColIdByLvl($lvl);
-        $obj = DbObjProjectQuery::create()
+        return DbObjProjectQuery::create()
                 ->select([
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
@@ -372,14 +371,6 @@ class ProjectRole
                 ->endUse()
                 ->where($col.'=?', $objId)
                 ->findOne();
-
-        return [
-            eLvlObjStr::PROJECT->value => &$obj['obj_project.id'],
-            eLvlObjStr::SUBPROJECT->value => &$obj['obj_subproject.id'],
-            eLvlObjStr::GROUP->value => &$obj['obj_group.id'],
-            eLvlObjStr::HOUSE->value => &$obj['obj_house.id'],
-            eLvlObjStr::STAGE->value => &$obj['obj_stage.id'],
-        ];
     }
 
     /**
@@ -479,7 +470,7 @@ class ProjectRole
         }
     }
 
-    private static function filterUsersDataByObjId(int &$objId, array &$users): void
+    private static function filterUsersDataByParents(int &$parents, array &$users): void
     {
 
     }

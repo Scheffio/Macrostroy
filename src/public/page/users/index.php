@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button>Добавить</button>
+                    <button onclick="addUser()">Добавить</button>
                 </div>
             </div>
             <div class="delete-user">

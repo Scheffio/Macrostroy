@@ -146,22 +146,22 @@ function parseRoles() {
 }
 
 function addUser() {
-    const username = document.querySelector(".modal-body__name").value
-    const email = document.querySelector('.modal-body__email').value
-    console.log(document.querySelector('.modal-body__role > select').selectedIndex.text);
+    console.log(select[select.selectedIndex].value);
+    // const username = document.querySelector(".modal-body__name").value
+    // const email = document.querySelector('.modal-body__email').value
 
-    fetch("/api/v1/admin/create_account", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({user_email: email, user_nickname: username})
-    })
-    .then(function(res) {
-        return res.json();
-    })
-    .then(function(json) {
-    })
+    // fetch("/api/v1/admin/create_account", {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({user_email: email, user_nickname: username})
+    // })
+    // .then(function(res) {
+    //     return res.json();
+    // })
+    // .then(function(json) {
+    // })
 }
 
 
@@ -169,4 +169,6 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 parseRoles()
-addUser()
+
+
+const select = document.querySelector('.modal-body__role > select')

@@ -298,14 +298,23 @@ class ProjectRole
     #region Static Select Functions
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
+        echo json_encode([
+            '$lvl' => $lvl,
+            '$colName' => Objects::getColIdByLvl($lvl),
+            '$projectId' => $projectId,
+            '$objId' => $objId,
+        ]);
+
         $r = [
             'parents' => self::getParentsId($lvl, $objId),
             'users' => self::getUsersQuery($lvl, $projectId)->find()->getData()
         ];
 
+        JsonOutput::success($r);
+
         self::formingUsersDataById($r['users']);
         self::filterUsersCrudByLvl($lvl, $r['users']);
-//        self::filterUsersCrudDataByParents($r['parents'], $r['users']);
+        self::filterUsersCrudDataByParents($r['parents'], $r['users']);
 
         return $r;
     }
@@ -500,9 +509,13 @@ class ProjectRole
                 $count = count($crud);
 
                 for ($i = 0; $i < $count; $i++) {
-                    $colName = Objects::getColIdByLvl($crud[$i]['lvl']);
-
-                    if($crud[$i]['object_id'] !== $parents[$colName]) unset($crud);
+                    JsonOutput::success([
+                        'crud' => $crud[$i],
+                        '$colName' => Objects::getColIdByLvl($user['crud'][$i]['lvl']),
+                        '$parents[$colName]' => $parents[Objects::getColIdByLvl($user['crud'][$i]['lvl'])]
+                    ]);
+//                    $colName = Objects::getColIdByLvl($user['crud'][$i]['lvl']);
+//                    if($user['crud'][$i]['object_id'] !== $parents[$colName]) unset($user['crud'][$i]);
                 }
 
                 $crud = array_values($user['crud']);

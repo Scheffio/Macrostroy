@@ -389,11 +389,47 @@
             display: none;
             @include MainTitle;
             flex-direction: column;
+            span {
+                width: 25px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                top: 20px;
+                transition: .3s;
+                right: 20px;
+                &::before{
+                    content: '';
+                    display: block;
+                    width: 15px;
+                    height: 2px;
+                    background-color: black;
+                    transform: rotate(-45deg);
+                    position: absolute;
+                }
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 15px;
+                    height: 2px;
+                    background-color: black;
+                    transform: rotate(45deg);
+                    position: absolute;
+                }
+                &:hover {
+                    cursor: pointer;
+                    opacity: .6;
+                    transition: .3s;
+                }
+            }
             &.opened {
                 display: flex;
             }
             .modal-header{
-
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             .modal-body {
 

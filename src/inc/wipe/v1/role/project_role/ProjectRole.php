@@ -331,48 +331,48 @@ class ProjectRole
     {
         $result = [];
 
-        foreach ($users as $user) {
+        foreach ($users as &$user) {
             $userId = $user['users.id'];
 
             if (!array_key_exists($userId, $result)) {
-                $result[$userId] = [
-                    'user' => [
-                        'id' => $user['users.id'],
-                        'name' => $user['users.username'],
-                        'manageUsers' => (bool) $user['user_role.manage_users'],
-                        'objectViewer' => (bool) $user['user_role.object_viewer'],
-                        'manageObjects' => (bool) $user['user_role.manage_objects'],
-                    ],
-                    'crud' => []
-                ];
+                self::formingUserData($userId, $result, $user);
             }
 
             if ($user['lvl'] !== null) {
-                JsonOutput::success(explode(',', "2"));
-                $arrLvl = explode(',', $user['lvl']);
-                $arrCrud = explode(',', $user['is_crud']);
-                $arrObj = explode(',', $user['object_id']);
-
-
-//                foreach ($arrLvl as $lvl) {
-//                    $result[$userId]['crud'][] = [
-//                        'lvl' => $user['project_role.lvl'],
-//                        'isCrud' => $user['project_role.is_crud'],
-//                        'object_id' => $user['project_role.object_id'],
-//                    ];
-//                }
+                self::formingUserCrud($userId, $result, $user);
             }
-
-
-//            $result[$userId]['crud'][] = [
-//                'lvl' => $user['project_role.lvl'],
-//                'isCrud' => $user['project_role.is_crud'],
-//                'object_id' => $user['project_role.object_id'],
-//            ];
-
         }
 
         return $result;
+    }
+
+    private static function formingUserData(int &$userId, array &$result, array &$user): void
+    {
+        $result[$userId] = [
+            'user' => [
+                'id' => $user['users.id'],
+                'name' => $user['users.username'],
+                'manageUsers' => (bool) $user['user_role.manage_users'],
+                'objectViewer' => (bool) $user['user_role.object_viewer'],
+                'manageObjects' => (bool) $user['user_role.manage_objects'],
+            ],
+            'crud' => []
+        ];
+    }
+
+    private static function formingUserCrud(int &$userId, array &$result, array &$user): void
+    {
+        $arrLvl = explode(',', $user['lvl']);
+        $arrCrud = explode(',', $user['is_crud']);
+        $arrObj = explode(',', $user['object_id']);
+
+        for ($i = 0; $i < count($arrLvl); $i++) {
+            $result[$userId]['crud'][] = [
+                'lvl' => (int)$arrLvl[$i],
+                'isCrud' => (bool)$arrCrud[$i],
+                'object_id' => (int)$arrObj[$i],
+            ];
+        }
     }
     #endregion
 

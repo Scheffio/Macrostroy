@@ -97,6 +97,7 @@
     <div class="modal">
         <div class="modal-wrap">
             <div class="add-user">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Добавить пользователя</p>
                 </div>

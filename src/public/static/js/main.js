@@ -37,7 +37,7 @@ const anchorChecker = {
 
 anchors.forEach((elem) => {
     elem.addEventListener('click', () => {
-        anchorCheker.anchorCheck(elem)
+        anchorChecker.anchorCheck(elem)
         // вешаем эту жесть на все якори
     })
 })

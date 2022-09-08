@@ -481,6 +481,10 @@ body.fixated {
 }
 .modal .modal-wrap .add-user {
   display: none;
+  font-family: "Jost", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  flex-direction: column;
 }
 .modal .modal-wrap .add-user.opened {
   display: flex;

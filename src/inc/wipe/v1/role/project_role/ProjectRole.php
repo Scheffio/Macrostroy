@@ -6,6 +6,7 @@ use DB\Base\UsersQuery;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
+use DB\UsersQuery as DbUsersQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
@@ -279,17 +280,12 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
-    /**
-     * Полуить массив пользователя по запросу.
-     * @param int $lvl Номер уровня доступа.
-     * @param int $projectId ID проекта.
-     * @param int|null $userId ID пользователя.
-     * @return array
-     * @throws PropelException
-     */
-    public static function getUsersByQuery(int $lvl, int $projectId, ?int $userId = null): array
+    public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
-        return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
+        $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
+        $r = self::mergingUsersDataById($lvl, $objId, $r);
+
+        return $r;
     }
 
     /**
@@ -297,10 +293,10 @@ class ProjectRole
      * @param int $lvl Номер уровня доступа.
      * @param int $projectId ID проекта.
      * @param int|null $userId ID пользователя.
-     * @return \DB\UsersQuery
+     * @return DbUsersQuery
      * @throws PropelException
      */
-    private static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null): \DB\UsersQuery
+    private static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null): DbUsersQuery
     {
         $query = UsersQuery::create()
                 ->select([
@@ -352,17 +348,27 @@ class ProjectRole
             }
 
             if ($user['lvl'] !== null) {
+                JsonOutput::success(explode(',', "2"));
                 $arrLvl = explode(',', $user['lvl']);
                 $arrCrud = explode(',', $user['is_crud']);
-                $arrObj = explode(',', $user['is_crud']);
+                $arrObj = explode(',', $user['object_id']);
+
+
+//                foreach ($arrLvl as $lvl) {
+//                    $result[$userId]['crud'][] = [
+//                        'lvl' => $user['project_role.lvl'],
+//                        'isCrud' => $user['project_role.is_crud'],
+//                        'object_id' => $user['project_role.object_id'],
+//                    ];
+//                }
             }
 
 
-            $result[$userId]['crud'][] = [
-                'lvl' => $user['project_role.lvl'],
-                'isCrud' => $user['project_role.is_crud'],
-                'object_id' => $user['project_role.object_id'],
-            ];
+//            $result[$userId]['crud'][] = [
+//                'lvl' => $user['project_role.lvl'],
+//                'isCrud' => $user['project_role.is_crud'],
+//                'object_id' => $user['project_role.object_id'],
+//            ];
 
         }
 

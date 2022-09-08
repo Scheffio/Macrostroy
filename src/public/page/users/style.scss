@@ -387,6 +387,8 @@
         }
         .add-user {
             display: none;
+            @include MainTitle;
+            flex-direction: column;
             &.opened {
                 display: flex;
             }

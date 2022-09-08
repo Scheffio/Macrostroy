@@ -405,16 +405,18 @@ class ProjectRole
             $crud =& $user['crud'];
 
             if (!self::isAssociateCrud($crud)) {
-                if ($user['user']['id'] === 17) JsonOutput::success($user);
-                foreach ($user['crud'] as $crud) {
-
-                    unset($crud);
-//                    if ($crud['lvl'] === null) continue;
-//                    if ($crud['lvl'] > $lvl) unset($crud);
+                for ($i = 0; $i < count($crud); $i++) {
+                    if ($crud[$i]['lvl'] === null) continue;
+                    if ($crud[$i]['lvl'] > $lvl) unset($crud[$i]);
                 }
-            } elseif ($crud['lvl'] > $lvl) unset($crud);
 
-            if ($user['user']['id'] === 17) JsonOutput::success($user);
+//                foreach ($crud as &$c) {
+//                    if ($c['lvl'] === null) continue;
+//                    if ($c['lvl'] > $lvl) $c = null;
+//                }
+//
+//                $crud = array_filter($crud, fn($e) => !!$e);
+            } elseif ($crud['lvl'] > $lvl) unset($crud);
 
             if (!$user['crud']) self::formingUserCrudIsNull($user);
         }

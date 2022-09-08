@@ -109,8 +109,8 @@ nameField.addEventListener('click', () => {
 })
 
 nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
-numberField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
-nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
+numberField.addEventListener('click', () => {if(numberInput.value != '') numberInput.focus()})
+emailField.addEventListener('click', () => {if(emailInput.value != '') emailInput.focus()})
 
 nameInput.addEventListener('focus', () => {
     if(nameInput.value != '') {
@@ -127,6 +127,35 @@ nameInput.addEventListener('blur', () => {
     }
 })
 
+numberInput.addEventListener('focus', () => {
+    if(numberInput.value != '') {
+        return
+    }else {
+        numberField.classList.toggle("focused")
+    }
+})
+numberInput.addEventListener('blur', () => {
+    if(numberInput.value != "") {
+        return
+    }else {
+        numberField.classList.toggle("focused")
+    }
+})
+
+emailInput.addEventListener('focus', () => {
+    if(emailInput.value != '') {
+        return
+    }else {
+        emailField.classList.toggle("focused")
+    }
+})
+emailInput.addEventListener('blur', () => {
+    if(emailInput.value != "") {
+        return
+    }else {
+        emailField.classList.toggle("focused")
+    }
+})
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)

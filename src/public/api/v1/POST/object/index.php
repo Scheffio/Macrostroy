@@ -26,19 +26,28 @@ try {
     $lvl = $request->getRequestOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    $parentId = $lvl !== eLvlObjInt::PROJECT->value ? $request->getRequestOrThrow('parent_id') : 1;
-    $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
+    $parentId = 1;
 
-    // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
-    $projectId = Objects::getObject(id: $parentId, lvl: $parentLvl)
-                ->isEditableOrThrow()
-                ->getProjectIdObjOrThrow();
+    if ($lvl === eLvlObjInt::PROJECT->value) {
+        if (AuthUserRole::isAccessManageUsers() &&
+            !AuthUserRole::isAccessManageObjects()) {
+            throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+        }
+    } else {
+        $parentId = $request->getRequestOrThrow('parent_id');
+        $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
 
-    if (!AuthUserRole::isAccessManageUsers() &&
-        !AuthUserRole::isAccessManageObjects() &&
-        !ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())
-    ) {
-        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+        // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+        $projectId = Objects::getObject(id: $parentId, lvl: $parentLvl)
+                    ->isEditableOrThrow()
+                    ->getProjectIdObjOrThrow();
+
+        if (!AuthUserRole::isAccessManageUsers() &&
+            !AuthUserRole::isAccessManageObjects() &&
+            !ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())
+        ) {
+            throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+        }
     }
 
     $request->checkRequestVariablesOrError('name', 'status', 'is_public');

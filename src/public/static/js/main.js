@@ -95,3 +95,46 @@ document.querySelectorAll('.sorter > img').forEach((elem) => {
 })
 
 // =======================
+
+// Anchor Checker
+const anchors = document.querySelectorAll('.tabs-controller__tab-anchor')
+
+const anchorCheker = {
+    anchorReset() {
+        // обнулятор якорей
+        anchors.forEach((anchor) => {
+            anchor.children[0].classList.remove('selected')
+            anchor.style.order = 0
+        })
+    },
+    anchorCheck(anchor, target) {
+        // чекер якорей
+        if(anchor != '') {
+            if (!anchor.children[0].classList.contains('selected')) {
+                // Если у ребёнка внутри якоря нету класса | этого 
+                // то мы ему даём класс и выталкиваем на первое место
+                this.anchorReset()
+                anchor.style.order = -1
+                anchor.children[0].classList.add('selected')
+            }
+        }
+
+        if(target != '') {
+            anchors.forEach((elem) => {
+                if(elem.children[0].textContent == target) {
+                    this.anchorReset()
+                    elem.style.order = -1
+                    elem.children[0].classList.add('selected')
+                }
+            })
+        }
+    }
+}
+
+anchors.forEach((elem) => {
+    elem.addEventListener('click', () => {
+        anchorCheker.anchorCheck(elem)
+        // вешаем эту жесть на все якори
+    })
+})
+// =====================

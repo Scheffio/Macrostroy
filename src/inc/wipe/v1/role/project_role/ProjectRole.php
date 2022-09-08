@@ -306,6 +306,7 @@ class ProjectRole
         self::formingUsersDataById($r['users']);
         self::filterUsersCrudByLvl($lvl, $r['users']);
         self::filterUsersCrudDataByParents($r['parents'], $r['users']);
+        self::formingUsersCrud($r['users']);
 
         return $r;
     }
@@ -458,31 +459,26 @@ class ProjectRole
         ];
     }
 
+    /**
+     * Формирование разрешений пользователей.
+     * @param array $users Массив полльзователей.
+     * @return void
+     */
     private static function formingUsersCrud(array &$users): void
     {
-        foreach ($users as $user) {
-
+        foreach ($users as &$user) {
+            $user = [
+                'id' => $user['user']['id'],
+                'name' => $user['user']['name'],
+                'isCurd' => self::getIsCrudByArray(
+                    userCrud: $user['crud'],
+                    isAccessManageUsers: $user['user']['manageUsers'],
+                    isAccessManageObjects: $user['user']['manageObjects'],
+                    isAccessObjectViewer: $user['user']['objectViewer']
+                ),
+                'isAdmin' => $user['user']['manageUsers']
+            ];
         }
-    }
-
-    private static function getIsCrudByArray(
-        array $userCrud,
-        bool $isAccessManageObjects,
-        bool $isAccessObjectViewer
-    ): bool
-    {
-        $userCrud = array_replace($userCrud);
-
-        foreach ($userCrud as $crud) {
-            if (is_int($crud['isCrud'])) {
-                return (bool)$crud['isCrud'];
-            }
-        }
-
-        if ($isAccessObjectViewer) return false;
-        if ($isAccessManageObjects) return true;
-
-        return false;
     }
 
     /**
@@ -551,6 +547,41 @@ class ProjectRole
     private static function isAssociateCrud(array &$crud): bool
     {
         return array_keys($crud) !== range(0, count($crud) - 1);
+    }
+
+    /**
+     * Разрешен ли пользователю CRUD.
+     * @param array $userCrud Массив CRUD разрешений пользователя.
+     * @param bool $isAccessManageUsers Разрешено ли управление пользователя.
+     * @param bool $isAccessManageObjects Разрешено ли управление объектами.
+     * @param bool $isAccessObjectViewer Разрешен ли просмотр объектов.
+     * @return bool
+     */
+    private static function getIsCrudByArray(
+        array $userCrud,
+        bool $isAccessManageUsers,
+        bool $isAccessManageObjects,
+        bool $isAccessObjectViewer
+    ): bool
+    {
+        if ($isAccessManageUsers) return true;
+
+        if (!self::isAssociateCrud($userCrud)) {
+            $userCrud = array_replace($userCrud);
+
+            foreach ($userCrud as $crud) {
+                if ($crud['isCrud'] !== null) {
+                    return $crud['isCrud'];
+                }
+            }
+        } elseif ($userCrud['isCrud'] !== null) {
+            return $userCrud['isCrud'];
+        }
+
+        if ($isAccessObjectViewer) return false;
+        if ($isAccessManageObjects) return true;
+
+        return false;
     }
     #endregion
 

@@ -157,6 +157,20 @@ emailInput.addEventListener('blur', () => {
     }
 })
 
+function parseRoles() {
+    const options = document.querySelectorAll('.modal-body__role > select > option')
+
+    let url = new URL('https://artemy.net/api/v1/roles')
+
+    fetch(url).then((elem) => {
+        return elem.json()
+    }).then((json) => {
+        json.data.forEach((elem))
+    })
+}
+
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
+parseRoles()

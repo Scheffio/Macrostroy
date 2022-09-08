@@ -1,16 +1,20 @@
 <?php
 namespace wipe\inc\v1\role\project_role;
 
+use DB\Base\ObjProjectQuery;
+use DB\Base\ObjStageQuery;
 use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
 use DB\UsersQuery as DbUsersQuery;
+use DB\ObjStageQuery as DbObjStageQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
 use inc\artemy\v1\json_output\JsonOutput;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
@@ -326,6 +330,24 @@ class ProjectRole
         }
 
         return $query;
+    }
+
+    private static function getParentsQuery(int $lvl, int $objId)
+    {
+        $col = self::getColIdByLvl($lvl);
+
+        return  ObjProjectQuery::create()
+            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+            ->leftJoinObjStage()
+            ->endUse()
+            ->endUse()
+            ->endUse()
+            ->where($col.'=?', $objectId)
+            ->findOne()
+            ->getId() ?? null;
+
     }
 
     /**

@@ -279,12 +279,21 @@ class ProjectRole
     #endregion
 
     #region Static Select Functions
+    /**
+     * Полуить массив пользователя по запросу.
+     * @param int $lvl Номер уровня доступа.
+     * @param int $projectId ID проекта.
+     * @param int|null $userId ID пользователя.
+     * @return array
+     * @throws PropelException
+     */
     public static function getUsersByQuery(int $lvl, int $projectId, ?int $userId = null): array
     {
         return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
     }
 
     /**
+     * Получить запрос на вывод пользователей.
      * @param int $lvl Номер уровня доступа.
      * @param int $projectId ID проекта.
      * @param int|null $userId ID пользователя.
@@ -320,6 +329,39 @@ class ProjectRole
         }
 
         return $query;
+    }
+
+    public static function mergingUsersDataById(array $users): array
+    {
+        $result = [];
+
+        foreach ($users as $user) {
+            $userId = $user['users.id'];
+
+            if (!array_key_exists($userId, $result)) {
+                $result[$userId] = [
+                    'user' => [
+                        'id' => $user['users.id'],
+                        'name' => $user['users.username'],
+                        'manageUsers' => (bool) $user['user_role.manage_users'],
+                        'objectViewer' => (bool) $user['user_role.object_viewer'],
+                        'manageObjects' => (bool) $user['user_role.manage_objects'],
+                    ],
+                    'crud' => []
+                ];
+            }
+
+            $arrLvl =  
+
+            $result[$userId]['crud'][] = [
+                'lvl' => $user['project_role.lvl'],
+                'isCrud' => $user['project_role.is_crud'],
+                'object_id' => $user['project_role.object_id'],
+            ];
+
+        }
+
+        return $result;
     }
     #endregion
 

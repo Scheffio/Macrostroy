@@ -53,15 +53,15 @@ try {
 } catch (NoRoleFoundException $e) {
     JsonOutput::error('Некорректная роль');
 } catch (NoUserFoundException $e) {
-    JsonOutput::error('Пользователь не найден');
+    JsonOutput::error('Неизвестный пользователь');
 } catch (InvalidAccessLvlIntException $e) {
-    JsonOutput::error('Некорретный номер уровя доступа');
+    JsonOutput::error('Некорректный номер уровя доступа');
 } catch (InvalidAccessLvlStrException $e) {
-    JsonOutput::error('Некорретное наименование урвня доступа');
+    JsonOutput::error('Некорректное наименование урвня доступа');
 }  catch (IncorrectLvlException $e) {
     JsonOutput::error('Некорректный уровень доступа');
 } catch (NoFindObjectException $e) {
-        JsonOutput::error('Объект не был найден');
+        JsonOutput::error('Некорректный объект');
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
 }

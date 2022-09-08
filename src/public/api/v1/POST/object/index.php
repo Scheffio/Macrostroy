@@ -36,7 +36,8 @@ try {
 
     if (!AuthUserRole::isAccessManageUsers() &&
         !AuthUserRole::isAccessManageObjects() &&
-        ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())) {
+        !ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())
+    ) {
         throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
@@ -101,13 +102,13 @@ try {
 
     JsonOutput::success();
 } catch (InvalidAccessLvlIntException|IncorrectLvlException $e) {
-    JsonOutput::error('Некорретный номер уровня доступа');
+    JsonOutput::error('Некорректный номер уровня доступа');
 } catch (InvalidAccessLvlStrException $e) {
     JsonOutput::error('Некорректное наименование уровня доступа');
 } catch (IncorrectStatusException $e) {
-    JsonOutput::error('Некорретный статус объекта');
+    JsonOutput::error('Некорректный статус объекта');
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Объект не был найден');
+    JsonOutput::error('Некорректный объект');
 } catch (PropelException|AccessDeniedException $e) {
     JsonOutput::error($e->getMessage());
 } catch (ObjectIsNotEditableException $e) {

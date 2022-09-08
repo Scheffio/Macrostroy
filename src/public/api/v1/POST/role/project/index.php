@@ -42,19 +42,19 @@ try {
 
     JsonOutput::success();
 } catch (NoProjectRoleFoundException $e) {
-    JsonOutput::error('Роль проекта не была найдена');
+    JsonOutput::error('Некорректная роль проекта');
 } catch (InvalidAccessLvlIntException $e) {
-    JsonOutput::error('Некорретный номер доступа');
+    JsonOutput::error('Некорректный номер доступа');
 } catch (InvalidAccessLvlStrException $e) {
-    JsonOutput::error('Некорретное наименование уровня одступа');
+    JsonOutput::error('Некорректное наименование уровня одступа');
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Объект не был найден');
+    JsonOutput::error('Некорректный объект');
 } catch (IncorrectLvlException $e) {
-    JsonOutput::error('Некорретный уровень доступа');
+    JsonOutput::error('Некорректный уровень доступа');
 } catch (ObjectIsNotEditableException $e) {
     JsonOutput::error('Объект не доступен для редактирования');
 } catch (IncorrectStatusException $e) {
-    JsonOutput::error('Некорретный статус объекта');
+    JsonOutput::error('Некорректный статус объекта');
 } catch (NoAccessManageUsersException $e) {
 } catch (PropelException|Exception $e) {
     JsonOutput::error($e->getMessage());

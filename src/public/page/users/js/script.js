@@ -84,3 +84,6 @@ const modalSystem = {
 modal.addEventListener('click', (e) => {
     if(e.target == modal) modalSystem.hide()
 })
+
+titleChecker.resetClasses()
+titleChecker.checkTitle(document.title)

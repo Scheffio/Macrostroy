@@ -283,8 +283,8 @@ class ProjectRole
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
         $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
-        $r = self::formingUsersDataById($r);
-
+        self::formingUsersDataById($r);
+        self::filterUsersDataByLvl($lvl, $r);
 
         return $r;
     }
@@ -331,23 +331,18 @@ class ProjectRole
     /**
      * Формирование данных о пользователе и его разрешениях.
      * @param array $users Массив данных пользователей.
-     * @return array
+     * @return void
      */
-    private static function formingUsersDataById(array &$users): array
+    private static function formingUsersDataById(array &$users): void
     {
         foreach ($users as &$user) {
             $user['crud'] = [];
 
-            if ($user['lvl'] === null) {
-                self::formingUserCrudIsNull($user);
-            } else {
-                self::formingUserCrud($user);
-            }
+            if ($user['lvl'] === null) self::formingUserCrudIsNull($user);
+            else self::formingUserCrud($user);
 
             self::formingUserData($user, $user['crud']);
         }
-
-        return $users;
     }
 
     /**
@@ -404,9 +399,17 @@ class ProjectRole
         ];
     }
 
-    private static function filterUsersDataByLvl(array &$users)
+    private static function filterUsersDataByLvl(int &$lvl, array &$users): void
     {
+        foreach ($users as &$user) {
 
+            foreach ($user['crud'] as &$crud) {
+                if ($crud['lvl'] === null) continue;
+                if ($crud['lvl'] > $lvl) unset($crud);
+            }
+
+            if (!$user['crud']) self::formingUserCrudIsNull($user);
+        }
     }
     #endregion
 

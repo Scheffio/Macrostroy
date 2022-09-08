@@ -102,13 +102,21 @@
                     <p>Добавить пользователя</p>
                 </div>
                 <div class="modal-body">
-                    <input type="text">
-                    <input type="tel" placeholder="+7..." pattern="+7">
-                    <input type="email">
-                    <select>
-                        <option value="В процессе">Инженер</option>
-                        <option value="Завершён">Бухгалтер</option>
-                    </select>
+                    <div class="modal-body__name">
+                        <input type="text">
+                    </div>
+                    <div class="modal-body__number">
+                        <input type="tel">
+                    </div>
+                    <div class="modal-body__email">
+                        <input type="email">
+                    </div>
+                    <div class="modal-body__role">
+                        <select>
+                            <option value="В процессе">Инженер</option>
+                            <option value="Завершён">Бухгалтер</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button>Добавить</button>

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 * {
   box-sizing: border-box;
@@ -536,8 +537,14 @@ body.fixated {
   flex-direction: column;
   gap: 30px;
 }
-.modal .modal-wrap .add-user .modal-body input {
-  width: 100%;
+.modal .modal-wrap .add-user .modal-body .modal-body__name {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__name:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__name input {
+  width: 500px;
   height: 50px;
   border: 1px solid black;
   outline: 0;
@@ -546,6 +553,127 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__name::before {
+  content: "Имя пользователя";
+  display: block;
+  position: absolute;
+  top: 20%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -25px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number input {
+  width: 500px;
+  height: 50px;
+  border: 1px solid black;
+  outline: 0;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number::before {
+  content: "Номер телефона";
+  display: block;
+  position: absolute;
+  top: 20%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -25px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email input {
+  width: 500px;
+  height: 50px;
+  border: 1px solid black;
+  outline: 0;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email::before {
+  content: "Электронная почта";
+  display: block;
+  position: absolute;
+  top: 20%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -25px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role select {
+  background-color: white;
+  width: 250px;
+  height: 50px;
+  border: 1px solid black;
+  outline: 0;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role::before {
+  content: "Роль";
+  display: block;
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 0px 5px;
 }
 .modal .modal-wrap .delete-user {
   display: none;

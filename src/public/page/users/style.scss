@@ -1,0 +1,597 @@
+@import "../../static/additional";
+
+.wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 80px;
+    width: 100%;
+
+    .tabs-controller {
+        display: flex;
+        width: clamp(768px, 90vw, 1555px);
+        justify-content: flex-start;
+        gap: 50px;
+        padding-bottom: 25px;
+        position: relative;
+
+        &::after {
+            content: '';
+            display: block;
+            width: clamp(768px, 90vw, 1555px);
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background-color: $EstiminUnderlineColor;
+            border-radius: 2px;
+        }
+
+        .tabs-controller__tab-anchor {
+            display: flex;
+            align-items: center;
+
+            .tab-anchor__anchor-name {
+                order: 0;
+                text-decoration: none;
+                color: black;
+                @include TabAnchorName;
+
+                &.selected {
+                    font-size: 36px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+    .tabs-container {
+        .tabs-container__tab-element {
+            display: none;
+            .grid {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-top: 40px;
+                max-width: 1555px;
+            
+                .grid__header {
+                    display: grid;
+                    grid-template-rows: 1fr;
+                    grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                    gap: 0px;
+                    height: 100%;
+                    .header__element {
+                        @include TabAnchorName;
+                        display: flex;
+                        height: 60px;
+                        align-items: center;
+                        justify-content: center;
+                        user-select: none;
+                        padding: 0px 10px;
+                        &:first-child {
+                            justify-content: flex-start;
+                            padding-left: 27px;
+                        }
+                        p{
+                            margin: 0;
+                        }
+                        .sorter {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            gap: 2px;
+                            margin-right: 8px;
+        
+                            img {
+                                &:nth-child(1) {
+                                    transform: rotate(180deg);
+                                    margin-right: 0.7px;
+                                }
+        
+                                &:hover {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
+        
+                .grid__body {
+                    .grid-row {
+                        display: grid;
+                        grid-template-rows: 1fr;
+                        grid-template-columns: minmax(200px, 590px) minmax(100px, 210px) minmax(90px, 190px) minmax(110px, 350px) minmax(120px, 280px);
+                        height: 100%;
+                        flex-direction: column;
+                        &:nth-child(odd) {
+                            background-color: #F4F4F4;
+                        }
+        
+                        &:last-child {
+                            border-bottom-left-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }
+                        .grid-column {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 60px;
+                            @include TabText;
+                            box-sizing: border-box;
+        
+                            &.name {
+                                justify-content: flex-start;
+                                padding-left: 27px;
+                            }
+                            &.cancel {
+                                color: $EstiminSaturate-8;
+                                opacity: .4;
+                                text-decoration: underline;
+                                transition: .3s;
+                                &:hover {
+                                    transition: .3s;
+                                    opacity: .9;
+                                }
+                            }
+                            &.status {
+                                position: relative;
+        
+                                &::before {
+                                    content: '';
+                                    display: block;
+                                    width: 10px;
+                                    height: 10px;
+                                    background-color: $EstiminBlank;
+                                    border-radius: 100%;
+                                    position: absolute;
+                                    left: 25px;
+                                    top: 45%;
+                                }
+        
+                                &.active::before {
+                                    background-color: $EstiminSuccessful;
+                                }
+        
+                                &.closed::before {
+                                    background-color: $EstiminClosed;
+                                }
+        
+                                &.deleted::before {
+                                    background-color: $EstiminDeleted;
+                                }
+                                &.stoped::before {
+                                    background-color: $EstiminStoped;
+                                }
+                            }
+                            p {
+                                margin: 0;
+                                padding: 0px 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .tab-header {
+            display: flex;
+            justify-content: center
+        }
+        .info {
+            @include InputRegularText;
+            text-align: center;
+            margin: 0px 0px 20px 0px;
+        }
+        .users__list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            height: auto;
+            width: clamp(768px, 90vw, 1660px);
+            .users__user-field {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: clamp(185px, 80vw, 220px);
+                height: 49px;
+                border-radius: 10px;
+                background-color: $EstiminBackground5;
+                position: relative;
+                p {
+                    @include inputPlaceholder;
+                    user-select: none;
+                }
+            }
+            .users__close-btn {
+                width: 19px;
+                height: 19px;
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                transition: .3s;
+                &::after {
+                    content: '';
+                    background: url(../../../static/icons/buttons/delete.svg);
+                    display: block;
+                    width: 19px;
+                    height: 19px;
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                }
+                &:hover {
+                    cursor: pointer;
+                    transition: .3s;
+                    opacity: .6;
+                }
+            }
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 132px;
+            margin: 20px 0px 15px 0px;
+            .search-bar__input-wrap {
+                position: relative;
+                &::before {
+                    content: '';
+                    background: url(../../static/auth/icons/search-icon.svg);
+                    display: block;
+                    width: 24px;
+                    height: 24px;
+                    position: absolute;
+                    top: 25%;
+                    left: 11px;
+                    cursor: pointer;
+                }
+                input {
+                    width: clamp(460px, 80vw, 640px);
+                    height: 44px;
+                    background-color: $EstiminBackground2;
+                    outline: 0;
+                    border: none;
+                    border-radius: 10px;
+                    padding: 0 50px;
+                    color: white;
+                    @include InputRegularText;
+                    &::placeholder {
+                        @include InputRegularText;
+                    }
+                }
+            }
+        }
+        .tabs-container__tab-element:target {
+            display: block;
+        }
+    }
+    .add-project {
+        width: clamp(768px, 90vw, 1555px);
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 50px;
+
+        .add-project__button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            @include Button($EstiminColor4, $EstiminColor8, 120px, 40px);
+
+            &:hover {
+                .add {
+
+                    &::before,
+                    &::after {
+                        background-color: $EstiminColor4;
+                        transition: .3s;
+                    }
+                }
+            }
+
+            .add {
+                width: 20px;
+                height: 20px;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    display: block;
+                    width: 2px;
+                    height: 15px;
+                    position: absolute;
+                    background-color: $EstiminColor8;
+                    top: 3px;
+                    left: 5px;
+                    transition: .3s;
+                }
+
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 2px;
+                    height: 15px;
+                    background-color: $EstiminColor8;
+                    transform: rotate(90deg);
+                    position: absolute;
+                    top: 3px;
+                    left: 5px;
+                    transition: .3s;
+                }
+            }
+        }
+    }
+}
+
+@keyframes showModal {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hideModal {
+    0% {
+        display: flex;
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;  
+    }
+    100% {
+        display: none;
+    }
+}
+
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: .3s;
+    opacity: 0;
+    &.opened {
+        display: flex;
+        animation: showModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    &.closed {
+        animation: hideModal .6s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    .modal-wrap {
+        background-color: white;
+        width: 600px;
+        height: 595px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        top: -1000px;
+        transition: .6s;
+        &.opened {
+            transition: .6s;
+            top: 0px;
+        }
+        &.closed {
+            transition: .6s;
+            top: -1000px;
+        }
+        .add-user {
+            display: none;
+            @include MainTitle;
+            flex-direction: column;
+            span {
+                width: 25px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                top: 20px;
+                transition: .3s;
+                right: 20px;
+                &::before{
+                    content: '';
+                    display: block;
+                    width: 15px;
+                    height: 2px;
+                    background-color: black;
+                    transform: rotate(-45deg);
+                    position: absolute;
+                }
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 15px;
+                    height: 2px;
+                    background-color: black;
+                    transform: rotate(45deg);
+                    position: absolute;
+                }
+                &:hover {
+                    cursor: pointer;
+                    opacity: .6;
+                    transition: .3s;
+                }
+            }
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                p {
+                    margin: 0;
+                }
+                margin: 35px 0px 40px 0px;
+            }
+            .modal-body {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                .modal-body__name {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(500px, 50px);
+                    }
+                    &::before {
+                        content: 'Имя пользователя';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__name.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -25px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__number {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(500px, 50px);
+                    }
+                    &::before {
+                        content: 'Номер телефона';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__number.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -25px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__email {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(500px, 50px);
+                    }
+                    &::before {
+                        content: 'Электронная почта';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__email.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -25px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__role {
+                    select {
+                        background-color: white;
+                        @include Input(250px, 50px)
+                    }
+                    position: relative;
+                    &::before {
+                        content: 'Роль';
+                        display: block;
+                        position: absolute;
+                        top: -11px;
+                        left: 10px;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        padding: 0px 5px;
+                    }
+                }
+            }
+            .modal-footer {
+
+            }
+        }
+        .delete-user {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        .info-user {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        .edit-user {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        
+    }
+}

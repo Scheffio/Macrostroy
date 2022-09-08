@@ -402,14 +402,27 @@ class ProjectRole
     private static function filterUsersDataByLvl(int &$lvl, array &$users): void
     {
         foreach ($users as &$user) {
+            $crud =& $user['crud'];
 
-            foreach ($user['crud'] as &$crud) {
-                if ($crud['lvl'] === null) continue;
-                if ($crud['lvl'] > $lvl) unset($crud);
-            }
+            if (!self::isAssociateCrud($crud)) {
+                if ($user['user']['id'] === 17) JsonOutput::success($user);
+                foreach ($user['crud'] as $crud) {
+
+                    unset($crud);
+//                    if ($crud['lvl'] === null) continue;
+//                    if ($crud['lvl'] > $lvl) unset($crud);
+                }
+            } elseif ($crud['lvl'] > $lvl) unset($crud);
+
+            if ($user['user']['id'] === 17) JsonOutput::success($user);
 
             if (!$user['crud']) self::formingUserCrudIsNull($user);
         }
+    }
+
+    private static function isAssociateCrud(array &$crud): bool
+    {
+        return array_keys($crud) !== range(0, count($crud) - 1);
     }
     #endregion
 

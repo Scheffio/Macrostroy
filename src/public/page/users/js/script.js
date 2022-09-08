@@ -89,6 +89,45 @@ document.addEventListener('keydown', (e) => {
     if(e.keyCode === 27) modalSystem.hide()
 })
 
+const nameInput = document.querySelector('.modal-body__name > input')
+const nameField = document.querySelector('.modal-body__name')
+
+const numberInput = document.querySelector('.modal-body__number > input')
+const numberField = document.querySelector('.modal-body__number')
+
+const emailInput = document.querySelector('.modal-body__email > input')
+const emailField = document.querySelector('.modal-body__email')
+
+nameField.addEventListener('click', () => {
+    if(nameInput.value != '') {
+        nameInput.focus()
+        return
+    }else {
+        nameInput.focus()
+    }
+
+})
+
+nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
+numberField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
+nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
+
+nameInput.addEventListener('focus', () => {
+    if(nameInput.value != '') {
+        return
+    }else {
+        nameField.classList.toggle("focused")
+    }
+})
+nameInput.addEventListener('blur', () => {
+    if(nameInput.value != "") {
+        return
+    }else {
+        nameField.classList.toggle("focused")
+    }
+})
+
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"

@@ -156,37 +156,10 @@ class ProjectRole
 
     #region Static Access Control Functions
 
-    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $userId)
+    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $objId, int $userId)
     {
-        return UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                ProjectRoleTableMap::COL_IS_CRUD,
-                ProjectRoleTableMap::COL_LVL,
-                ProjectRoleTableMap::COL_OBJECT_ID,
-                ProjectRoleTableMap::COL_PROJECT_ID,
-            ])
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-            ->addJoinCondition(
-                name: 'ProjectRole',
-                clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
-                value: $projectId
-            )
-            ->filterByIsAvailable(1)
-            ->where(ProjectRoleTableMap::COL_LVL . '<=?', $lvl)
-            ->_or()
-            ->where(ProjectRoleTableMap::COL_LVL . ' IS NULL')->toString();
-
-//        return self::formArrayWithUserCrud(
-//            self::mergingUserDataById(
-//                self::getUsersOnQuery($lvl, $projectId, $userId)
-//            )
-//        )[0]['isCrud'] ?? false;
+        return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
+//        return self::getCrudUsersObject($lvl, $projectId, $objId, $userId);
     }
     #endregion
 
@@ -294,7 +267,6 @@ class ProjectRole
         return new ProjectRole();
     }
     #endregion
-
     #region Static Select Functions
     /**
      * Возвращает массив разрешений пользователей.
@@ -310,7 +282,7 @@ class ProjectRole
     {
         $r = [
             'parents' => self::getParentsId($lvl, $objId),
-            'users' => self::getUsersQuery($lvl, $projectId)->find()->getData()
+            'users' => self::getUsersQuery($lvl, $projectId, $userId)->find()->getData()
         ];
 
         if ($r['users']) {

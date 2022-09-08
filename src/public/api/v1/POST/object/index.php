@@ -20,6 +20,9 @@ $user = new UserRole();
 $request = new Request();
 
 try {
+    JsonOutput::success(
+        ProjectRole::isAccessCrudByLvl(1, 1, 1, 17)
+    );
 //    if (!$user->isManageUsers() && !$user->isManageObjects()) {
 //        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
 //    }

@@ -331,7 +331,7 @@ class ProjectRole
         return $query;
     }
 
-    public static function mergingUsersDataById(array $users): array
+    public static function mergingUsersDataById(int $lvl, array $users): array
     {
         $result = [];
 
@@ -351,7 +351,12 @@ class ProjectRole
                 ];
             }
 
-            $arrLvl =  
+            if ($user['lvl'] !== null) {
+                $arrLvl = explode(',', $user['lvl']);
+                $arrCrud = explode(',', $user['is_crud']);
+
+            }
+
 
             $result[$userId]['crud'][] = [
                 'lvl' => $user['project_role.lvl'],

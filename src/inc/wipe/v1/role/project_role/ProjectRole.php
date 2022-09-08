@@ -287,9 +287,9 @@ class ProjectRole
      * @return array
      * @throws PropelException
      */
-    public static function getUsersByQuery(int $lvl, int $projectId, int $objId, ?int $userId = null): array
+    public static function getUsersByQuery(int $lvl, int $projectId, ?int $userId = null): array
     {
-        return self::getUsersQuery($lvl, $projectId, $objId, $userId)->find()->getData();
+        return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
     }
 
     /**
@@ -300,7 +300,7 @@ class ProjectRole
      * @return \DB\UsersQuery
      * @throws PropelException
      */
-    private static function getUsersQuery(int $lvl, int $projectId, int $objId, ?int $userId = null): \DB\UsersQuery
+    private static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null): \DB\UsersQuery
     {
         $query = UsersQuery::create()
                 ->select([
@@ -321,11 +321,6 @@ class ProjectRole
                         name: 'ProjectRole',
                         clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
                         value: $projectId
-                    )
-                    ->addJoinCondition(
-                        name: 'ProjectRole',
-                        clause: ProjectRoleTableMap::COL_OBJECT_ID.'=?',
-                        value: $objId
                     )
                 ->filterByIsAvailable(1);
 
@@ -359,6 +354,7 @@ class ProjectRole
             if ($user['lvl'] !== null) {
                 $arrLvl = explode(',', $user['lvl']);
                 $arrCrud = explode(',', $user['is_crud']);
+                $arrObj = explode(',', $user['is_crud']);
             }
 
 

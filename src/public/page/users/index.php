@@ -102,10 +102,16 @@
                 </div>
                 <div class="modal-body">
                     <input type="text">
-                    <input type="tel" placeholder="+7" pattern="+7([0-9]{3})-[0-9]{3}-[0-9]{2}-[0-9]{2}">
+                    <input type="tel" placeholder="+7..." pattern="+7">
                     <input type="email">
+                    <select>
+                        <option value="В процессе">Инженер</option>
+                        <option value="Завершён">Бухгалтер</option>
+                    </select>
                 </div>
-                <div class="modal-footer"></div>
+                <div class="modal-footer">
+                    <button>Добавить</button>
+                </div>
             </div>
             <div class="delete-user">
                 <div class="modal-header">

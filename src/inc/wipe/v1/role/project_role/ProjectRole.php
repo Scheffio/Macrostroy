@@ -354,7 +354,7 @@ class ProjectRole
             if ($user['lvl'] !== null) {
                 $arrLvl = explode(',', $user['lvl']);
                 $arrCrud = explode(',', $user['is_crud']);
-
+                
             }
 
 

@@ -558,7 +558,7 @@ body.fixated {
   content: "Имя пользователя";
   display: block;
   position: absolute;
-  top: 20%;
+  top: 33%;
   left: 10px;
   opacity: 0.6;
   background-color: white;
@@ -570,7 +570,7 @@ body.fixated {
 .modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before {
   padding: 5px 5px;
   left: 10px;
-  top: -25px;
+  top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
@@ -595,7 +595,7 @@ body.fixated {
   content: "Номер телефона";
   display: block;
   position: absolute;
-  top: 20%;
+  top: 33%;
   left: 10px;
   opacity: 0.6;
   background-color: white;
@@ -607,7 +607,7 @@ body.fixated {
 .modal .modal-wrap .add-user .modal-body .modal-body__number.focused::before {
   padding: 5px 5px;
   left: 10px;
-  top: -25px;
+  top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
@@ -632,7 +632,7 @@ body.fixated {
   content: "Электронная почта";
   display: block;
   position: absolute;
-  top: 20%;
+  top: 33%;
   left: 10px;
   opacity: 0.6;
   background-color: white;
@@ -644,7 +644,7 @@ body.fixated {
 .modal .modal-wrap .add-user .modal-body .modal-body__email.focused::before {
   padding: 5px 5px;
   left: 10px;
-  top: -25px;
+  top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
@@ -667,13 +667,38 @@ body.fixated {
   content: "Роль";
   display: block;
   position: absolute;
-  top: -20px;
+  top: -11px;
   left: 10px;
   background-color: white;
   font-family: "Jost", sans-serif;
   font-size: 20px;
   font-weight: 500;
   padding: 0px 5px;
+}
+.modal .modal-wrap .add-user .modal-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal .modal-wrap .add-user .modal-footer button {
+  margin-top: 30px;
+  width: 140px;
+  height: 40px;
+  background-color: #7E99AD;
+  color: white;
+  border-radius: 5px;
+  transition: 0.3s;
+  border: 2px solid transparent;
+  outline: 0;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-footer button:hover {
+  transition: 0.3s;
+  background-color: white;
+  border: 2px solid #7E99AD;
+  color: #7E99AD;
 }
 .modal .modal-wrap .delete-user {
   display: none;

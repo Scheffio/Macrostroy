@@ -590,7 +590,7 @@ CREATE TABLE `project_role` (
   KEY `project_id` (`project_id`),
   CONSTRAINT `project_role_ibfk_23` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`),
   CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -599,7 +599,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1);
+INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,1,1,1,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,7 +719,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662540613,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662623814,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,5,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1);
+INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662632585,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662623814,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,5,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

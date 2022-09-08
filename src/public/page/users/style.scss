@@ -462,7 +462,7 @@
                     &::before {
                         padding: 5px 5px;
                         left: 10px;
-                        top: -25px;
+                        top: -17px;
                         opacity: 1;
                         transition: .3s;
                     }
@@ -491,7 +491,7 @@
                     &::before {
                         padding: 5px 5px;
                         left: 10px;
-                        top: -25px;
+                        top: -17px;
                         opacity: 1;
                         transition: .3s;
                     }
@@ -520,7 +520,7 @@
                     &::before {
                         padding: 5px 5px;
                         left: 10px;
-                        top: -25px;
+                        top: -17px;
                         opacity: 1;
                         transition: .3s;
                     }
@@ -544,7 +544,13 @@
                 }
             }
             .modal-footer {
-
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                button {
+                    margin-top: 30px;
+                    @include Button($EstiminColor4, white, 140px, 40px)
+                }
             }
         }
         .delete-user {

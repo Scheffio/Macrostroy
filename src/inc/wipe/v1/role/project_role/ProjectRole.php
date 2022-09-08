@@ -399,33 +399,43 @@ class ProjectRole
         ];
     }
 
+    /**
+     * Фильстрация массива данных пользователей по номеру уровня доступа.
+     * @param int $lvl Номер уровня доступа.
+     * @param array $users Массив данных о пользователя.
+     * @return void
+     */
     private static function filterUsersDataByLvl(int &$lvl, array &$users): void
     {
         foreach ($users as &$user) {
             $crud =& $user['crud'];
 
             if (!self::isAssociateCrud($crud)) {
-                for ($i = 0; $i < count($crud); $i++) {
+                $count = count($crud);
+
+                for ($i = 0; $i < $count; $i++) {
                     if ($crud[$i]['lvl'] === null) continue;
                     if ($crud[$i]['lvl'] > $lvl) unset($crud[$i]);
                 }
 
-//                foreach ($crud as &$c) {
-//                    if ($c['lvl'] === null) continue;
-//                    if ($c['lvl'] > $lvl) $c = null;
-//                }
-//
-//                $crud = array_filter($crud, fn($e) => !!$e);
-            } elseif ($crud['lvl'] > $lvl) unset($crud);
+                $crud = array_values($user['crud']);
+            } elseif ($crud['lvl'] !== null && $crud['lvl'] > $lvl) unset($crud);
 
             if (!$user['crud']) self::formingUserCrudIsNull($user);
         }
     }
 
+    /**
+     * Проверка, что массив CRUD разрешений пользователя - ассоциативный.
+     * @param array $crud Массив CRUD разрешений пользователя.
+     * @return bool
+     */
     private static function isAssociateCrud(array &$crud): bool
     {
         return array_keys($crud) !== range(0, count($crud) - 1);
     }
+
+
     #endregion
 
     #region Static Select Functions

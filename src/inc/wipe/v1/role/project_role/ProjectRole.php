@@ -304,7 +304,7 @@ class ProjectRole
         ];
 
         self::formingUsersDataById($r['users']);
-        self::filterUsersDataByLvl($lvl, $r['users']);
+        self::filterUsersCrudByLvl($lvl, $r['users']);
 
         return $r;
     }
@@ -349,23 +349,16 @@ class ProjectRole
     }
 
     /**
-     * ВОзвращает массив ID родителей объекта.
+     * Возвращает массив ID родителей объекта.
      * @param int $lvl Номер уровня доступа.
      * @param int $objId ID объекта.
-     * @throws PropelException
-     * @throws IncorrectLvlException
-     */
-
-    /**
-     * @param int $lvl
-     * @param int $objId
      * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
     private static function getParentsId(int $lvl, int $objId): array
     {
-        $col = Objects::getColIdByLvl($lvl);
+        $colName = Objects::getColIdByLvl($lvl);
         $obj = DbObjProjectQuery::create()
                 ->select([
                     ObjProjectTableMap::COL_ID,
@@ -381,7 +374,7 @@ class ProjectRole
                         ->endUse()
                     ->endUse()
                 ->endUse()
-                ->where($col.'=?', $objId)
+                ->where($colName.'=?', $objId)
                 ->findOne();
 
         return [
@@ -470,7 +463,7 @@ class ProjectRole
      * @param array $users Массив данных о пользователя.
      * @return void
      */
-    private static function filterUsersDataByLvl(int &$lvl, array &$users): void
+    private static function filterUsersCrudByLvl(int &$lvl, array &$users): void
     {
         foreach ($users as &$user) {
             $crud =& $user['crud'];
@@ -490,9 +483,20 @@ class ProjectRole
         }
     }
 
-    private static function filterUsersDataByParents(int &$parents, array &$users): void
+    private static function filterUsersCrudDataByParents(array &$parents, array &$users): void
     {
+        foreach ($users as &$user) {
+            $crud = $user['crud'];
 
+            if (!self::isAssociateCrud($crud)) {
+                $colName = Objects::getColIdByLvl($crud['lvl']);
+                $parentId =& $parents[$colName];
+
+                if ($crud['object'])
+            } else {
+
+            }
+        }
     }
 
     /**

@@ -166,8 +166,10 @@ function addUser() {
     })
     .then(function(res) {
         return res.json();
+        console.log(json);
     })
     .then(function(json) {
+        console.log(json);
         if(json.status === 'error') {
             if(json.error_message === 'Недостаточно прав') {
                 alert(json.error_message)

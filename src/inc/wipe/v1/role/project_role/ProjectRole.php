@@ -285,6 +285,7 @@ class ProjectRole
         $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
         $r = self::formingUsersDataById($r);
 
+
         return $r;
     }
 
@@ -328,11 +329,11 @@ class ProjectRole
     }
 
     /**
-     * Формирование данных о пользователе и его разрешениях по ID.
+     * Формирование данных о пользователе и его разрешениях.
      * @param array $users Массив данных пользователей.
      * @return array
      */
-    public static function formingUsersDataById(array &$users): array
+    private static function formingUsersDataById(array &$users): array
     {
         foreach ($users as &$user) {
             $user['crud'] = [];
@@ -401,6 +402,11 @@ class ProjectRole
             'isCrud' => null,
             'object_id' => null,
         ];
+    }
+
+    private static function filterUsersDataByLvl(array &$users)
+    {
+
     }
     #endregion
 

@@ -305,6 +305,7 @@ class ProjectRole
 
         self::formingUsersDataById($r['users']);
         self::filterUsersCrudByLvl($lvl, $r['users']);
+//        self::filterUsersCrudDataByParents($r['parents'], $r['users']);
 
         return $r;
     }
@@ -458,7 +459,7 @@ class ProjectRole
     }
 
     /**
-     * Фильстрация массива данных пользователей по номеру уровня доступа.
+     * Фильстрация массива CRUD разрешений пользователей по номеру уровня доступа.
      * @param int $lvl Номер уровня доступа.
      * @param array $users Массив данных о пользователя.
      * @return void
@@ -483,19 +484,35 @@ class ProjectRole
         }
     }
 
+    /**
+     * Фильстрация массива CRUD разрешений пользователей по родителям.
+     * @param array $parents Массив родительски ID.
+     * @param array $users Массив пользователей.
+     * @return void
+     * @throws IncorrectLvlException
+     */
     private static function filterUsersCrudDataByParents(array &$parents, array &$users): void
     {
         foreach ($users as &$user) {
-            $crud = $user['crud'];
+            $crud =& $user['crud'];
 
             if (!self::isAssociateCrud($crud)) {
+                $count = count($crud);
+
+                for ($i = 0; $i < $count; $i++) {
+                    $colName = Objects::getColIdByLvl($crud[$i]['lvl']);
+
+                    if($crud[$i]['object_id'] !== $parents[$colName]) unset($crud);
+                }
+
+                $crud = array_values($user['crud']);
+            } elseif ($crud['lvl'] !== null) {
                 $colName = Objects::getColIdByLvl($crud['lvl']);
-                $parentId =& $parents[$colName];
 
-                if ($crud['object'])
-            } else {
-
+                if ($crud['object_id'] !== $parents[$colName]) unset($crud);
             }
+
+            if (!$user['crud']) self::formingUserCrudIsNull($user);
         }
     }
 

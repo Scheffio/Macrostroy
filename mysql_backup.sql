@@ -522,7 +522,7 @@ CREATE TABLE `obj_subproject` (
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   CONSTRAINT `subproject_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -531,7 +531,7 @@ CREATE TABLE `obj_subproject` (
 
 LOCK TABLES `obj_subproject` WRITE;
 /*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
-INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete');
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert');
 /*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,7 +567,7 @@ CREATE TABLE `obj_subproject_version` (
 
 LOCK TABLES `obj_subproject_version` WRITE;
 /*!40000 ALTER TABLE `obj_subproject_version` DISABLE KEYS */;
-INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |');
+INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert',3,NULL,NULL);
 /*!40000 ALTER TABLE `obj_subproject_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -590,7 +590,7 @@ CREATE TABLE `project_role` (
   KEY `project_id` (`project_id`),
   CONSTRAINT `project_role_ibfk_23` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`),
   CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -599,7 +599,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,1,1,1,17,1);
+INSERT INTO `project_role` VALUES (1,1,1,2,15,2),(4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,2,1,4,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

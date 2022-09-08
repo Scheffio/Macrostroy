@@ -21,7 +21,7 @@ $request = new Request();
 
 try {
     JsonOutput::success(
-        ProjectRole::getMerg(2, 2, 2)
+        ProjectRole::getMerg(3, 1, 1)
     );
 //    if (!$user->isManageUsers() && !$user->isManageObjects()) {
 //        throw new AccessDeniedException('Недостаточно прав для добавления объекта');

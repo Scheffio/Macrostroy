@@ -92,24 +92,10 @@ document.addEventListener('keydown', (e) => {
 const nameInput = document.querySelector('.modal-body__name > input')
 const nameField = document.querySelector('.modal-body__name')
 
-const numberInput = document.querySelector('.modal-body__number > input')
-const numberField = document.querySelector('.modal-body__number')
-
 const emailInput = document.querySelector('.modal-body__email > input')
 const emailField = document.querySelector('.modal-body__email')
 
-nameField.addEventListener('click', () => {
-    if(nameInput.value != '') {
-        nameInput.focus()
-        return
-    }else {
-        nameInput.focus()
-    }
-
-})
-
 nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
-numberField.addEventListener('click', () => {if(numberInput.value != '') numberInput.focus()})
 emailField.addEventListener('click', () => {if(emailInput.value != '') emailInput.focus()})
 
 nameInput.addEventListener('focus', () => {
@@ -124,21 +110,6 @@ nameInput.addEventListener('blur', () => {
         return
     }else {
         nameField.classList.toggle("focused")
-    }
-})
-
-numberInput.addEventListener('focus', () => {
-    if(numberInput.value != '') {
-        return
-    }else {
-        numberField.classList.toggle("focused")
-    }
-})
-numberInput.addEventListener('blur', () => {
-    if(numberInput.value != "") {
-        return
-    }else {
-        numberField.classList.toggle("focused")
     }
 })
 
@@ -158,15 +129,29 @@ emailInput.addEventListener('blur', () => {
 })
 
 function parseRoles() {
-    const options = document.querySelectorAll('.modal-body__role > select > option')
-
+    const select = document.querySelector('.modal-body__role > select')
     let url = new URL('https://artemy.net/api/v1/roles')
 
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
-        json.data.forEach((elem))
+        json.data.forEach((roles) => {
+            let option = document.createElement('option')
+            option.value = roles.name
+            option.textContent = roles.name
+            select.appendChild(option)
+        })
     })
+}
+
+function addUser() {
+    let url = new URL('https://artemy.net/api/v1/admin/create_account')
+    let obj = {
+        user_email: 1,
+        o: 1
+    }
+    url.search = new URLSearchParams(obj).toString()
+
 }
 
 

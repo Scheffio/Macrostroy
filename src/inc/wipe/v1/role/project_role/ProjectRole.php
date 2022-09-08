@@ -5,11 +5,16 @@ use DB\Base\ObjProjectQuery;
 use DB\Base\ObjStageQuery;
 use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
+use DB\Map\ObjGroupTableMap;
+use DB\Map\ObjHouseTableMap;
+use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageTableMap;
+use DB\Map\ObjSubprojectTableMap;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
 use DB\UsersQuery as DbUsersQuery;
-use DB\ObjStageQuery as DbObjStageQuery;
+use DB\ObjProjectQuery as DbObjProjectQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
@@ -21,6 +26,7 @@ use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
+use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 
@@ -290,6 +296,12 @@ class ProjectRole
         self::formingUsersDataById($r);
         self::filterUsersDataByLvl($lvl, $r);
 
+        JsonOutput::success([
+            'lvl' => $lvl,
+            'objId' => $objId,
+            'parent' => self::getParentsQuery($lvl, $objId)
+        ]);
+
         return $r;
     }
 
@@ -334,19 +346,57 @@ class ProjectRole
 
     private static function getParentsQuery(int $lvl, int $objId)
     {
-        $col = self::getColIdByLvl($lvl);
+        $col = Objects::getColIdByLvl($lvl);
 
-        return  ObjProjectQuery::create()
-            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-            ->leftJoinObjStage()
-            ->endUse()
-            ->endUse()
-            ->endUse()
-            ->where($col.'=?', $objectId)
-            ->findOne()
-            ->getId() ?? null;
+        return  DbObjProjectQuery::create()
+                ->select([
+                    ObjProjectTableMap::COL_ID,
+                    ObjSubprojectTableMap::COL_ID,
+                    ObjGroupTableMap::COL_ID,
+                    ObjHouseTableMap::COL_ID,
+                    ObjStageTableMap::COL_ID,
+                ])
+                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                            ->leftJoinObjStage()
+                        ->endUse()
+                    ->endUse()
+                ->endUse()
+                ->where($col.'=?', $objId)
+                ->findOne();
+
+//        return DbObjStageQuery::create()
+//            ->select([
+//                ObjProjectTableMap::COL_ID,
+//                ObjSubprojectTableMap::COL_ID,
+//                ObjGroupTableMap::COL_ID,
+//                ObjHouseTableMap::COL_ID,
+//                ObjStageTableMap::COL_ID,
+//            ])
+//            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+//                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+//                    ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+//                        ->leftJoinObjProject()
+//                    ->endUse()
+//                ->endUse()
+//            ->endUse()
+//            ->where($col.'=?', $objId)
+//            ->findOne();
+
+//        $col = self::getColIdByLvl($lvl);
+//
+//        return  ObjProjectQuery::create()
+//            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+//            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+//            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+//            ->leftJoinObjStage()
+//            ->endUse()
+//            ->endUse()
+//            ->endUse()
+//            ->where($col.'=?', $objectId)
+//            ->findOne()
+//            ->getId() ?? null;
 
     }
 

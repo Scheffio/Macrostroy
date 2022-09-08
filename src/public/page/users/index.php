@@ -105,16 +105,11 @@
                     <div class="modal-body__name">
                         <input type="text">
                     </div>
-                    <div class="modal-body__number">
-                        <input type="tel">
-                    </div>
                     <div class="modal-body__email">
                         <input type="email">
                     </div>
                     <div class="modal-body__role">
                         <select>
-                            <option value="В процессе">Инженер</option>
-                            <option value="Завершён">Бухгалтер</option>
                         </select>
                     </div>
                 </div>

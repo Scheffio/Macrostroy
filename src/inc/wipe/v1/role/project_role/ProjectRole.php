@@ -156,10 +156,9 @@ class ProjectRole
 
     #region Static Access Control Functions
 
-    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $objId, int $userId)
+    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $objId, int $userId): bool
     {
-        return self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
-//        return self::getCrudUsersObject($lvl, $projectId, $objId, $userId);
+        return self::getCrudUsersObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -267,6 +266,7 @@ class ProjectRole
         return new ProjectRole();
     }
     #endregion
+
     #region Static Select Functions
     /**
      * Возвращает массив разрешений пользователей.
@@ -562,8 +562,8 @@ class ProjectRole
             return $userCrud['isCrud'];
         }
 
-        if ($isAccessObjectViewer) return false;
         if ($isAccessManageObjects) return true;
+        if ($isAccessObjectViewer) return false;
 
         return null;
     }

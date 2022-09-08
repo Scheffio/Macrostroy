@@ -29,7 +29,7 @@ try {
                 ])
                 ->leftJoinUserRole()
                 ->filterByIsAvailable(1)
-                ->findPk($user_id) ?: throw new Exception('Пользователь не был найден');
+                ->findPk($user_id) ?: throw new Exception('Неизвестный пользователь');
 
     JsonOutput::success([
         'id' => $user['users.id'],
@@ -44,9 +44,9 @@ try {
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');
 } catch (NoRoleFoundException $e) {
-    JsonOutput::error('Роль не была найдена');
+    JsonOutput::error('Некорректная роль');
 } catch (NoUserFoundException $e) {
-    JsonOutput::error('Пользователь не был найден');
+    JsonOutput::error('Неизвестный пользователь');
 } catch (Exception|PropelException $e) {
     JsonOutput::error($e->getMessage());
 }

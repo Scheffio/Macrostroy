@@ -37,9 +37,9 @@ try {
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');
 } catch (NoRoleFoundException $e) {
-    JsonOutput::error('Роль не была найдена');
+    JsonOutput::error('Некорретная роль');
 } catch (NoUserFoundException $e) {
-    JsonOutput::success('Пользователь не был найден');
+    JsonOutput::success('Неизвестный пользователь');
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
 }

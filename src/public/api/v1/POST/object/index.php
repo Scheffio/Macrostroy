@@ -11,31 +11,40 @@ use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
+use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\user_role\AuthUserRole;
+use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 use wipe\inc\v1\role\user_role\UserRole;
 
-$user = new UserRole();
 $request = new Request();
 
 try {
-    JsonOutput::success(
-        ProjectRole::isAccessCrudByLvl(1, 1, 1, 17)
-    );
-//    if (!$user->isManageUsers() && !$user->isManageObjects()) {
-//        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
-//    }
-
-    $request->checkRequestVariablesOrError('lvl', 'name', 'status', 'is_public');
-
-    $lvl = $request->getRequest('lvl');
+    $lvl = $request->getRequestOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
+
+    $parentId = $lvl !== eLvlObjInt::PROJECT->value ? $request->getRequestOrThrow('parent_id') : 1;
+    $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
+
+    // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+    $projectId = Objects::getObject(id: $parentId, lvl: $parentLvl)
+                ->isEditableOrThrow()
+                ->getProjectIdObjOrThrow();
+
+    if (!AuthUserRole::isAccessManageUsers() &&
+        !AuthUserRole::isAccessManageObjects() &&
+        ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())) {
+        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
+    }
+
+    $request->checkRequestVariablesOrError('name', 'status', 'is_public');
 
     $name = $request->getRequest('name');
     $status = $request->getRequest('status');
     $isPublic = $request->getRequest('is_public');
-    $parentId = $lvl !== eLvlObjInt::PROJECT->value ? $request->getRequestOrThrow('parent_id') : null;
 
     switch ($lvl) {
         case eLvlObjInt::PROJECT->value:
@@ -101,4 +110,10 @@ try {
     JsonOutput::error('Объект не был найден');
 } catch (PropelException|AccessDeniedException $e) {
     JsonOutput::error($e->getMessage());
+} catch (ObjectIsNotEditableException $e) {
+    JsonOutput::error('Объект недоступен для редактирования');
+} catch (NoRoleFoundException $e) {
+    JsonOutput::error('Некорректная роль');
+} catch (NoUserFoundException $e) {
+    JsonOutput::error('Неизвестный пользователь');
 }

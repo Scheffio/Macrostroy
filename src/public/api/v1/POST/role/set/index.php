@@ -26,7 +26,7 @@ try {
 
     JsonOutput::success();
 } catch (NoRoleFoundException $e) {
-    JsonOutput::error('Роль не была найдена');
+    JsonOutput::error('Некорректная роль');
 } catch (NoUserFoundException $e) {
     JsonOutput::error('Пользователь не найден');
 } catch (NoAccessManageUsersException $e) {

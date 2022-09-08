@@ -425,6 +425,11 @@ class ProjectRole
         }
     }
 
+    private static function filterUsersDataByObjId(int &$objId, array &$users): void
+    {
+
+    }
+
     /**
      * Проверка, что массив CRUD разрешений пользователя - ассоциативный.
      * @param array $crud Массив CRUD разрешений пользователя.
@@ -434,8 +439,6 @@ class ProjectRole
     {
         return array_keys($crud) !== range(0, count($crud) - 1);
     }
-
-
     #endregion
 
     #region Static Select Functions

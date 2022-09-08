@@ -85,6 +85,10 @@ modal.addEventListener('click', (e) => {
     if(e.target == modal) modalSystem.hide()
 })
 
+document.addEventListener('keydown', (e) => {
+    if(e.keyCode === 27) modalSystem.hide()
+})
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"

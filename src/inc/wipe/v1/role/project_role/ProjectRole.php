@@ -283,7 +283,7 @@ class ProjectRole
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
         $r = self::getUsersQuery($lvl, $projectId)->find()->getData();
-        $r = self::mergingUsersDataById($lvl, $objId, $r);
+        $r = self::formingUsersDataById($r);
 
         return $r;
     }
@@ -327,28 +327,37 @@ class ProjectRole
         return $query;
     }
 
-    public static function mergingUsersDataById(int $lvl, int $objId, array $users): array
+    /**
+     * Формирование данных о пользователе и его разрешениях по ID.
+     * @param array $users Массив данных пользователей.
+     * @return array
+     */
+    public static function formingUsersDataById(array &$users): array
     {
-        $result = [];
-
         foreach ($users as &$user) {
-            $userId = $user['users.id'];
+            $user['crud'] = [];
 
-            if (!array_key_exists($userId, $result)) {
-                self::formingUserData($userId, $result, $user);
+            if ($user['lvl'] === null) {
+                self::formingUserCrudIsNull($user);
+            } else {
+                self::formingUserCrud($user);
             }
 
-            if ($user['lvl'] !== null) {
-                self::formingUserCrud($userId, $result, $user);
-            }
+            self::formingUserData($user, $user['crud']);
         }
 
-        return $result;
+        return $users;
     }
 
-    private static function formingUserData(int &$userId, array &$result, array &$user): void
+    /**
+     * Формирование основных данных о пользователе.
+     * @param array $user Массив пользователя.
+     * @param array $crud Массив CRUD пользователя.
+     * @return void
+     */
+    private static function formingUserData(array &$user, array &$crud): void
     {
-        $result[$userId] = [
+        $user = [
             'user' => [
                 'id' => $user['users.id'],
                 'name' => $user['users.username'],
@@ -356,23 +365,42 @@ class ProjectRole
                 'objectViewer' => (bool) $user['user_role.object_viewer'],
                 'manageObjects' => (bool) $user['user_role.manage_objects'],
             ],
-            'crud' => []
+            'crud' => $crud
         ];
     }
 
-    private static function formingUserCrud(int &$userId, array &$result, array &$user): void
+    /**
+     * Формирование CRUD данных о пользователе.
+     * @param array $user Массив пользователя.
+     * @return void
+     */
+    private static function formingUserCrud(array &$user): void
     {
         $arrLvl = explode(',', $user['lvl']);
         $arrCrud = explode(',', $user['is_crud']);
         $arrObj = explode(',', $user['object_id']);
 
         for ($i = 0; $i < count($arrLvl); $i++) {
-            $result[$userId]['crud'][] = [
+            $user['crud'][] = [
                 'lvl' => (int)$arrLvl[$i],
                 'isCrud' => (bool)$arrCrud[$i],
                 'object_id' => (int)$arrObj[$i],
             ];
         }
+    }
+
+    /**
+     * Формирование пустого CRUD пользователя.
+     * @param array $user Массив пользователя.
+     * @return void
+     */
+    private static function formingUserCrudIsNull(array &$user): void
+    {
+        $user['crud'] = [
+            'lvl' => null,
+            'isCrud' => null,
+            'object_id' => null,
+        ];
     }
     #endregion
 

@@ -389,6 +389,7 @@
             display: none;
             @include MainTitle;
             flex-direction: column;
+            padding: 25px 50px 30px 50px;
             span {
                 width: 25px;
                 height: 25px;
@@ -432,7 +433,12 @@
                 align-items: center;
             }
             .modal-body {
-
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                input {
+                    @include Input(100%, 50px);
+                }
             }
             .modal-footer {
 

@@ -95,8 +95,8 @@ const nameField = document.querySelector('.modal-body__name')
 const emailInput = document.querySelector('.modal-body__email > input')
 const emailField = document.querySelector('.modal-body__email')
 
-nameField.addEventListener('click', () => {if(nameInput.value != '') nameInput.focus()})
-emailField.addEventListener('click', () => {if(emailInput.value != '') emailInput.focus()})
+nameField.addEventListener('click', () => {nameInput.focus()})
+emailField.addEventListener('click', () => {emailInput.focus()})
 
 nameInput.addEventListener('focus', () => {
     if(nameInput.value != '') {
@@ -153,17 +153,16 @@ function parseRoles() {
 
 
 function addUser() {
-    console.log(select[select.selectedIndex].dataset.id);
     const username = document.querySelector(".modal-body__name").value
     const email = document.querySelector('.modal-body__email').value
     const select = document.querySelector('.modal-body__role > select')
-    
+
     fetch("/api/v1/admin/create_account", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({user_email: email, user_nickname: username, user_role_id: select[selectedIndex].dataset.id})
+          body: JSON.stringify({user_email: email, user_nickname: username, user_role_id: select[select.selectedIndex].dataset.id})
     })
     .then(function(res) {
         return res.json();

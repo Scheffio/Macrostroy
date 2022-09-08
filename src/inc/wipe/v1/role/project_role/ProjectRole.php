@@ -155,8 +155,17 @@ class ProjectRole
     #endregion
 
     #region Static Access Control Functions
-
-    public static function isAccessCrudByLvl(int $lvl, int $projectId, int $objId, int $userId): bool
+    /**
+     * Разрешен ли пользователю CRUD.
+     * @param int $lvl Номер уровня доступа.
+     * @param int $projectId ID проекта.
+     * @param int $objId ID объекта.
+     * @param int $userId ID пользователя.
+     * @return bool
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    public static function isAccessCrudObj(int $lvl, int $projectId, int $objId, int $userId): bool
     {
         return self::getCrudUsersObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
     }

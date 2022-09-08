@@ -111,6 +111,23 @@ class AccessLvl
     {
         return is_string($lvl) ? self::getAccessLvlIntObjByStr($lvl) : self::isAccessLvlIntObjOrThrow($lvl);
     }
+
+    /**
+     * @param int $lvl Номер уровня доступа.
+     * @return int Номер предыдещего уровня (родителя).
+     * @throws InvalidAccessLvlIntException
+     */
+    public static function getPreLvlIntObj(int $lvl): int
+    {
+        return match ($lvl) {
+            eLvlObjInt::PROJECT->value,
+            eLvlObjInt::SUBPROJECT->value => eLvlObjInt::PROJECT->value,
+            eLvlObjInt::GROUP->value => eLvlObjInt::SUBPROJECT->value,
+            eLvlObjInt::HOUSE->value => eLvlObjInt::GROUP->value,
+            eLvlObjInt::STAGE->value => eLvlObjInt::HOUSE->value,
+            default => throw new InvalidAccessLvlIntException()
+        };
+    }
     #endregion
 
     #region Access Lvl Vol

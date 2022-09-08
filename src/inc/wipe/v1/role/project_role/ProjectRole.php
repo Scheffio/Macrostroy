@@ -298,19 +298,10 @@ class ProjectRole
     #region Static Select Functions
     public static function getMerg(int $lvl, int $projectId, int $objId, ?int $userId = null)
     {
-//        echo json_encode([
-//            '$lvl' => $lvl,
-//            '$colName' => Objects::getColIdByLvl($lvl),
-//            '$projectId' => $projectId,
-//            '$objId' => $objId,
-//        ]);
-
         $r = [
             'parents' => self::getParentsId($lvl, $objId),
             'users' => self::getUsersQuery($lvl, $projectId)->find()->getData()
         ];
-
-//        echo json_encode(['$r[parents]' => $r['parents']]);
 
         self::formingUsersDataById($r['users']);
         self::filterUsersCrudByLvl($lvl, $r['users']);
@@ -465,6 +456,33 @@ class ProjectRole
             'isCrud' => null,
             'object_id' => null,
         ];
+    }
+
+    private static function formingUsersCrud(array &$users): void
+    {
+        foreach ($users as $user) {
+
+        }
+    }
+
+    private static function getIsCrudByArray(
+        array $userCrud,
+        bool $isAccessManageObjects,
+        bool $isAccessObjectViewer
+    ): bool
+    {
+        $userCrud = array_replace($userCrud);
+
+        foreach ($userCrud as $crud) {
+            if (is_int($crud['isCrud'])) {
+                return (bool)$crud['isCrud'];
+            }
+        }
+
+        if ($isAccessObjectViewer) return false;
+        if ($isAccessManageObjects) return true;
+
+        return false;
     }
 
     /**

@@ -462,7 +462,7 @@ body.fixated {
 .modal .modal-wrap {
   background-color: white;
   width: 600px;
-  height: 545px;
+  height: 460px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -568,43 +568,6 @@ body.fixated {
   transition: 0.3s;
 }
 .modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before {
-  padding: 5px 5px;
-  left: 10px;
-  top: -17px;
-  opacity: 1;
-  transition: 0.3s;
-}
-.modal .modal-wrap .add-user .modal-body .modal-body__number {
-  position: relative;
-}
-.modal .modal-wrap .add-user .modal-body .modal-body__number:hover {
-  cursor: text;
-}
-.modal .modal-wrap .add-user .modal-body .modal-body__number input {
-  width: 500px;
-  height: 50px;
-  border: 1px solid black;
-  outline: 0;
-  border-radius: 5px;
-  padding-left: 10px;
-  font-family: "Jost", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-}
-.modal .modal-wrap .add-user .modal-body .modal-body__number::before {
-  content: "Номер телефона";
-  display: block;
-  position: absolute;
-  top: 33%;
-  left: 10px;
-  opacity: 0.6;
-  background-color: white;
-  font-family: "Jost", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-.modal .modal-wrap .add-user .modal-body .modal-body__number.focused::before {
   padding: 5px 5px;
   left: 10px;
   top: -17px;

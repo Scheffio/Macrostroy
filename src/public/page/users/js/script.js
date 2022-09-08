@@ -128,6 +128,12 @@ emailInput.addEventListener('blur', () => {
     }
 })
 
+function resetInputs() {
+    document.querySelector('.modal-body > input').forEach((elem) => {
+        elem.value = ''
+    })
+}
+
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
     let url = new URL('https://artemy.net/api/v1/roles')
@@ -145,23 +151,37 @@ function parseRoles() {
     })
 }
 
-function addUser() {
-    console.log(select[select.selectedIndex].value);
-    // const username = document.querySelector(".modal-body__name").value
-    // const email = document.querySelector('.modal-body__email').value
 
-    // fetch("/api/v1/admin/create_account", {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: JSON.stringify({user_email: email, user_nickname: username})
-    // })
-    // .then(function(res) {
-    //     return res.json();
-    // })
-    // .then(function(json) {
-    // })
+function addUser() {
+    console.log(select[select.selectedIndex].dataset.id);
+    const username = document.querySelector(".modal-body__name").value
+    const email = document.querySelector('.modal-body__email').value
+    const select = document.querySelector('.modal-body__role > select')
+    
+    fetch("/api/v1/admin/create_account", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user_email: email, user_nickname: username, user_role_id: select[selectedIndex].dataset.id})
+    })
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(json) {
+        if(json.status === 'error') {
+            if(json.error_message === 'Недостаточно прав') {
+                alert(json.error_message)
+            }else if (json.error_message === 'Роль не была найдена') {
+                alert(json.error_message)
+            }else if (json.error_message === 'Пользователь не найден') {
+                alert(json.error_message)
+            }
+        }else {
+            resetInputs()
+            modalSystem.hide()
+        }
+    })
 }
 
 
@@ -170,5 +190,3 @@ titleChecker.checkTitle(document.title)
 window.location = "#users"
 parseRoles()
 
-
-const select = document.querySelector('.modal-body__role > select')

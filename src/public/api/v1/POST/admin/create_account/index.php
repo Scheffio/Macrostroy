@@ -1,7 +1,7 @@
 <?php
 
 
-use DB\RoleQuery;
+use DB\UserRoleQuery;
 use DB\UsersQuery;
 use Delight\Auth\InvalidEmailException;
 use Delight\Auth\InvalidPasswordException;
@@ -25,7 +25,7 @@ use wipe\inc\v1\role\user_role\UserRole;
 $request = new Request();
 $request->checkRequestVariables("user_nickname", "user_email", "user_role_id");
 
-$role = RoleQuery::create()->findOneById($request->getRequest("user_role_id"));
+$role = UserRoleQuery::create()->findOneById($request->getRequest("user_role_id"));
 if ($role === null) JsonOutput::error("Неизвестная роль");
 
 if (!empty($request->getRequest("user_nickname"))) {
@@ -43,12 +43,12 @@ try {
         MailSender::sendAccountCreatedByAdmin($request->getRequest("user_email"), $link);
     });
 
-    UsersQuery::create()->findOneById($user_id)->setRole($role)->save();
+    UsersQuery::create()->findOneById($user_id)->setRoleId($role->getId())->save();
 
     JsonOutput::success([
                             "id" => $user_id,
                             "username" => $username,
-                            "REMAINDER" => "ДОБАВИТЬ ПРОВЕРКУ НА РОЛИ!!!!!!!!!"
+                            "REMAINDER" => "ДОБАВИТЬ ПРОВЕРКУ НА РОЛИ С КЛАССА ЛЕРЫ!!!!!!!!!"
                         ]);
 } catch (InvalidEmailException $e) {
     JsonOutput::error("Неверная почта");

@@ -337,6 +337,9 @@ body.fixated {
   justify-content: flex-end;
   margin-top: 50px;
 }
+.wrap .add-project.hidden {
+  display: none;
+}
 .wrap .add-project .add-project__button {
   display: flex;
   justify-content: center;

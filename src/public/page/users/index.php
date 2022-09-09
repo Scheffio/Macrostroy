@@ -36,11 +36,50 @@
                 </div>
             </div>
             <div id="roles" class="tabs-container__tab-element">
-                
+                <div class="content">
+                    <div class="users">
+                        <div class="search-bar">
+                            <div class="search-bar__input-wrap">
+                                <input type="text" placeholder="Введите имя пользователя">
+                            </div>
+                        </div>
+                        <div class="users__list">
+
+                        </div>
+                    </div>
+                    <div class="permissions">
+                        <div class="permission">
+                            <div class="permission__checkbox">
+                                <div class="all">
+                                    <input type="radio" name="access-radio" id="all">
+                                    <label for="all">Все разрешения</label>
+                                </div>
+                            </div>
+                            <p class="permission__description">Пользователь с таким разрешением имеет доступ ко всем
+                                CRUD -
+                                опциям.</p>
+                        </div>
+                        <div class="underline"></div>
+                        <div class="permission">
+                            <div class="permission__checkbox">
+                                <div class="watch">
+                                    <input type="radio" name="access-radio" id="watch">
+                                    <label for="watch">Просмотр</label>
+                                </div>
+                            </div>
+                            <p class="permission__description">Пользователь с таким разрешением имеет доступ к просмотру
+                                этого
+                                раздела.</p>
+                        </div>
+                        <p class="admin-alert">Этот пользователь является администратором, Вы не можете редактировать
+                            его разрешения.</p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="add-project">
-            <button class="add-project__button" onclick="modalSystem.show('add')"><span class="add"></span>Добавить</button>
+            <button class="add-project__button" onclick="modalSystem.show('add')"><span
+                    class="add"></span>Добавить</button>
         </div>
     </div>
     <div class="modal">

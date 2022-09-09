@@ -270,6 +270,9 @@
         display: flex;
         justify-content: flex-end;
         margin-top: 50px;
+        &.hidden {
+            display: none;
+        }
 
         .add-project__button {
             display: flex;

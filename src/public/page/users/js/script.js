@@ -186,13 +186,14 @@ function addUser() {
     })
 }
 
-window.onload = () => {
     titleChecker.resetClasses()
     titleChecker.checkTitle(document.title)
-    window.location = "#roles"
+    window.location = "#users"
     parseRoles()
 
-    window.location.hash == "#roles" ? 
-}
+    window.onhashchange = () => {
+        window.location.hash == "#roles" ? addProject.classList.add('hidden') : addProject.classList.remove('hidden')
+    }
+
 
 

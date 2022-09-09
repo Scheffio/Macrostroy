@@ -44,7 +44,51 @@
                             </div>
                         </div>
                         <div class="users__list">
-
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
+                            <div class="users__user-field">
+                                <p data-id="15">Ivan</p>
+                            </div>
                         </div>
                     </div>
                     <div class="permissions">

@@ -36,58 +36,7 @@
                 </div>
             </div>
             <div id="roles" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
+                
             </div>
         </div>
         <div class="add-project">

@@ -15,11 +15,11 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
-try {
-    AuthUserRole::isAccessManageUsersOrThrow(); //спасибо лера
-} catch (Exception $e) {
-    JsonOutput::error($e);
-}
+//try {
+//    AuthUserRole::isAccessManageUsersOrThrow(); //спасибо лера
+//} catch (Exception $e) {
+//    JsonOutput::error($e);
+//}
 
 
 $request = new Request();
@@ -47,7 +47,8 @@ try {
 
     JsonOutput::success([
                             "id" => $user_id,
-                            "username" => $username
+                            "username" => $username,
+                            "REMAINDER" => "ДОБАВИТЬ ПРОВЕРКУ НА РОЛИ!!!!!!!!!"
                         ]);
 } catch (InvalidEmailException $e) {
     JsonOutput::error("Неверная почта");

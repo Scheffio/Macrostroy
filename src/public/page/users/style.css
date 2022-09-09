@@ -231,14 +231,14 @@ body.fixated {
   text-align: center;
   margin: 0px 0px 20px 0px;
 }
-.wrap .tabs-container .users-list {
+.wrap .tabs-container .users__list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   height: auto;
   width: clamp(768px, 90vw, 1660px);
 }
-.wrap .tabs-container .users-list .users__users-field {
+.wrap .tabs-container .users__list .users__user-field {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -246,8 +246,9 @@ body.fixated {
   height: 49px;
   border-radius: 10px;
   background-color: #F4F4F4;
+  position: relative;
 }
-.wrap .tabs-container .users-list .users__users-field p {
+.wrap .tabs-container .users__list .users__user-field p {
   font-family: "Jost", sans-serif;
   font-size: 20px;
   font-weight: 500;
@@ -255,6 +256,29 @@ body.fixated {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+.wrap .tabs-container .users__list .users__close-btn {
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  transition: 0.3s;
+}
+.wrap .tabs-container .users__list .users__close-btn::after {
+  content: "";
+  background: url(../../../static/icons/buttons/delete.svg);
+  display: block;
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.wrap .tabs-container .users__list .users__close-btn:hover {
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 0.6;
 }
 .wrap .tabs-container .search-bar {
   display: flex;
@@ -306,6 +330,66 @@ body.fixated {
 }
 .wrap .tabs-container .tabs-container__tab-element:target {
   display: block;
+}
+.wrap .add-project {
+  width: clamp(768px, 90vw, 1555px);
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 50px;
+}
+.wrap .add-project .add-project__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 40px;
+  background-color: #7E99AD;
+  color: #E5EBEF;
+  border-radius: 5px;
+  transition: 0.3s;
+  border: 2px solid transparent;
+  outline: 0;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.wrap .add-project .add-project__button:hover {
+  transition: 0.3s;
+  background-color: white;
+  border: 2px solid #7E99AD;
+  color: #7E99AD;
+}
+.wrap .add-project .add-project__button:hover .add::before, .wrap .add-project .add-project__button:hover .add::after {
+  background-color: #7E99AD;
+  transition: 0.3s;
+}
+.wrap .add-project .add-project__button .add {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+.wrap .add-project .add-project__button .add::before {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 15px;
+  position: absolute;
+  background-color: #E5EBEF;
+  top: 3px;
+  left: 5px;
+  transition: 0.3s;
+}
+.wrap .add-project .add-project__button .add::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 15px;
+  background-color: #E5EBEF;
+  transform: rotate(90deg);
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  transition: 0.3s;
 }
 
 @-webkit-keyframes showModal {
@@ -377,11 +461,10 @@ body.fixated {
 }
 .modal .modal-wrap {
   background-color: white;
-  width: 540px;
-  height: 495px;
+  width: 600px;
+  height: 545px;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
   position: relative;
@@ -396,7 +479,14 @@ body.fixated {
   transition: 0.6s;
   top: -1000px;
 }
-.modal .modal-wrap span {
+.modal .modal-wrap .add-user {
+  display: none;
+  font-family: "Jost", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  flex-direction: column;
+}
+.modal .modal-wrap .add-user span {
   width: 25px;
   height: 25px;
   display: flex;
@@ -407,7 +497,7 @@ body.fixated {
   transition: 0.3s;
   right: 20px;
 }
-.modal .modal-wrap span::before {
+.modal .modal-wrap .add-user span::before {
   content: "";
   display: block;
   width: 15px;
@@ -416,7 +506,7 @@ body.fixated {
   transform: rotate(-45deg);
   position: absolute;
 }
-.modal .modal-wrap span::after {
+.modal .modal-wrap .add-user span::after {
   content: "";
   display: block;
   width: 15px;
@@ -425,32 +515,36 @@ body.fixated {
   transform: rotate(45deg);
   position: absolute;
 }
-.modal .modal-wrap span:hover {
+.modal .modal-wrap .add-user span:hover {
   cursor: pointer;
   opacity: 0.6;
   transition: 0.3s;
 }
-.modal .modal-wrap .modal-header {
-  position: relative;
+.modal .modal-wrap .add-user.opened {
+  display: flex;
 }
-.modal .modal-wrap .modal-header .title {
-  font-family: "Jost", sans-serif;
-  font-size: 36px;
-  font-weight: 700;
+.modal .modal-wrap .add-user .modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 35px 0px 40px 0px;
 }
-.modal .modal-wrap .modal-body form {
-  gap: 30px;
+.modal .modal-wrap .add-user .modal-header p {
+  margin: 0;
+}
+.modal .modal-wrap .add-user .modal-body {
   display: flex;
   flex-direction: column;
+  gap: 30px;
 }
-.modal .modal-wrap .modal-body form .modal-body__name {
+.modal .modal-wrap .add-user .modal-body .modal-body__name {
   position: relative;
 }
-.modal .modal-wrap .modal-body form .modal-body__name:hover {
+.modal .modal-wrap .add-user .modal-body .modal-body__name:hover {
   cursor: text;
 }
-.modal .modal-wrap .modal-body form .modal-body__name input {
-  width: 405px;
+.modal .modal-wrap .add-user .modal-body .modal-body__name input {
+  width: 500px;
   height: 50px;
   border: 1px solid black;
   outline: 0;
@@ -460,11 +554,11 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
 }
-.modal .modal-wrap .modal-body form .modal-body__name::before {
-  content: "Название";
+.modal .modal-wrap .add-user .modal-body .modal-body__name::before {
+  content: "Имя пользователя";
   display: block;
   position: absolute;
-  top: 20%;
+  top: 33%;
   left: 10px;
   opacity: 0.6;
   background-color: white;
@@ -473,21 +567,22 @@ body.fixated {
   font-weight: 500;
   transition: 0.3s;
 }
-.modal .modal-wrap .modal-body form .modal-body__name.focused::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before {
   padding: 5px 5px;
   left: 10px;
-  top: -25px;
+  top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
-.modal .modal-wrap .modal-body form .modal-body__status {
-  margin-top: 30px;
+.modal .modal-wrap .add-user .modal-body .modal-body__number {
   position: relative;
 }
-.modal .modal-wrap .modal-body form .modal-body__status select {
-  background-color: white;
-  width: 250px;
-  height: 45px;
+.modal .modal-wrap .add-user .modal-body .modal-body__number:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number input {
+  width: 500px;
+  height: 50px;
   border: 1px solid black;
   outline: 0;
   border-radius: 5px;
@@ -496,11 +591,83 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
 }
-.modal .modal-wrap .modal-body form .modal-body__status::before {
-  content: "Статус";
+.modal .modal-wrap .add-user .modal-body .modal-body__number::before {
+  content: "Номер телефона";
   display: block;
   position: absolute;
-  top: -20px;
+  top: 33%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__number.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -17px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email input {
+  width: 500px;
+  height: 50px;
+  border: 1px solid black;
+  outline: 0;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email::before {
+  content: "Электронная почта";
+  display: block;
+  position: absolute;
+  top: 33%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__email.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -17px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role {
+  position: relative;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role select {
+  background-color: white;
+  width: 250px;
+  height: 50px;
+  border: 1px solid black;
+  outline: 0;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.modal .modal-wrap .add-user .modal-body .modal-body__role::before {
+  content: "Роль";
+  display: block;
+  position: absolute;
+  top: -11px;
   left: 10px;
   background-color: white;
   font-family: "Jost", sans-serif;
@@ -508,89 +675,17 @@ body.fixated {
   font-weight: 500;
   padding: 0px 5px;
 }
-.modal .modal-wrap .modal-body form .modal-body__access label {
-  font-family: "Jost", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes {
-  margin-top: 5px;
+.modal .modal-wrap .add-user .modal-footer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex;
-  gap: 5px;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes label {
-  font-family: "Jost", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private {
-  display: flex;
+  justify-content: center;
   align-items: center;
 }
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public label,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private label {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public input[type=radio],
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private input[type=radio] {
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public input[type=radio]:checked + label::after,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private input[type=radio]:checked + label::after {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 5.5px;
-  left: 4px;
-  background-color: black;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public input[type=radio]:checked + label::before,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private input[type=radio]:checked + label::before {
-  content: "";
-  width: 1em;
-  height: 1em;
-  display: block;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public input[type=radio] + label,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private input[type=radio] + label {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-}
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .public input[type=radio] + label::before,
-.modal .modal-wrap .modal-body form .modal-body__access .checkboxes .private input[type=radio] + label::before {
-  content: "";
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  flex-shrink: 0;
-  flex-grow: 0;
-  border: 2px solid black;
-  margin-right: 0.5em;
-}
-.modal .modal-wrap .modal-footer {
+.modal .modal-wrap .add-user .modal-footer button {
   margin-top: 30px;
-}
-.modal .modal-wrap .modal-footer button {
   width: 140px;
   height: 40px;
   background-color: #7E99AD;
-  color: #E5EBEF;
+  color: white;
   border-radius: 5px;
   transition: 0.3s;
   border: 2px solid transparent;
@@ -599,9 +694,27 @@ body.fixated {
   font-size: 20px;
   font-weight: 400;
 }
-.modal .modal-wrap .modal-footer button:hover {
+.modal .modal-wrap .add-user .modal-footer button:hover {
   transition: 0.3s;
   background-color: white;
   border: 2px solid #7E99AD;
   color: #7E99AD;
+}
+.modal .modal-wrap .delete-user {
+  display: none;
+}
+.modal .modal-wrap .delete-user.opened {
+  display: flex;
+}
+.modal .modal-wrap .info-user {
+  display: none;
+}
+.modal .modal-wrap .info-user.opened {
+  display: flex;
+}
+.modal .modal-wrap .edit-user {
+  display: none;
+}
+.modal .modal-wrap .edit-user.opened {
+  display: flex;
 }/*# sourceMappingURL=style.css.map */

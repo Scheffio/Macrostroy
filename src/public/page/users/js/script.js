@@ -185,9 +185,16 @@ function addUser() {
     })
 }
 
+window.onload = () => {
+    titleChecker.resetClasses()
+    titleChecker.checkTitle(document.title)
+    window.location = "#users"
+    parseRoles()
+    if(window.location == "users") {
+        document.querySelector('.add-project').classList.add('hided')
+    }else {
+        document.querySelector('.add-project').classList.remove('hided')
+    }
+}
 
-titleChecker.resetClasses()
-titleChecker.checkTitle(document.title)
-window.location = "#users"
-parseRoles()
 

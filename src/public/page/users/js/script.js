@@ -1,4 +1,5 @@
 const usersList = document.querySelector('.users__list')
+const addProject = document.querySelector('.add-project')
 
 let url = new URL('https://artemy.net/api/v1/users')
 
@@ -188,13 +189,10 @@ function addUser() {
 window.onload = () => {
     titleChecker.resetClasses()
     titleChecker.checkTitle(document.title)
-    window.location = "#users"
+    window.location = "#roles"
     parseRoles()
-    if(window.location == "users") {
-        document.querySelector('.add-project').classList.add('hided')
-    }else {
-        document.querySelector('.add-project').classList.remove('hided')
-    }
+
+    window.location.hash == "#roles" ? 
 }
 
 

@@ -374,6 +374,12 @@
       <index-column name="material_id"/>
     </index>
 
+    <behavior name="versionable">
+      <parameter name="log_created_at" value="true" />
+      <parameter name="log_created_by" value="true" />
+      <parameter name="log_comment" value="true" />
+    </behavior>
+
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
@@ -398,6 +404,12 @@
     <index name="technic_id">
       <index-column name="technic_id"/>
     </index>
+
+    <behavior name="versionable">
+      <parameter name="log_created_at" value="true" />
+      <parameter name="log_created_by" value="true" />
+      <parameter name="log_comment" value="true" />
+    </behavior>
 
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>

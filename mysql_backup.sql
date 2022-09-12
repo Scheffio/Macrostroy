@@ -621,7 +621,7 @@ CREATE TABLE `propel_migration` (
 
 LOCK TABLES `propel_migration` WRITE;
 /*!40000 ALTER TABLE `propel_migration` DISABLE KEYS */;
-INSERT INTO `propel_migration` VALUES (1661943879),(1661953065),(1661953852);
+INSERT INTO `propel_migration` VALUES (1661943879),(1661953065),(1661953852),(1662977956);
 /*!40000 ALTER TABLE `propel_migration` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -889,6 +889,8 @@ CREATE TABLE `vol_material_version` (
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_material_ids` text,
   `obj_stage_material_versions` text,
+  `vol_work_material_ids` text,
+  `vol_work_material_versions` text,
   PRIMARY KEY (`id`,`version`),
   CONSTRAINT `vol_material_version_fk_d64a59` FOREIGN KEY (`id`) REFERENCES `vol_material` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -954,6 +956,8 @@ CREATE TABLE `vol_technic_version` (
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_technic_ids` text,
   `obj_stage_technic_versions` text,
+  `vol_work_technic_ids` text,
+  `vol_work_technic_versions` text,
   PRIMARY KEY (`id`,`version`),
   CONSTRAINT `vol_technic_version_fk_e379d9` FOREIGN KEY (`id`) REFERENCES `vol_technic` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -1036,6 +1040,10 @@ CREATE TABLE `vol_work_material` (
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `work_id` int unsigned NOT NULL COMMENT 'ID работы',
   `material_id` int unsigned NOT NULL COMMENT 'ID материала',
+  `version` int DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `work_id` (`work_id`),
   KEY `material_id` (`material_id`),
@@ -1054,6 +1062,38 @@ LOCK TABLES `vol_work_material` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `vol_work_material_version`
+--
+
+DROP TABLE IF EXISTS `vol_work_material_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work_material_version` (
+  `id` int unsigned NOT NULL COMMENT 'ID материала работы',
+  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `material_id` int unsigned NOT NULL COMMENT 'ID материала',
+  `version` int NOT NULL DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  `work_id_version` int DEFAULT '0',
+  `material_id_version` int DEFAULT '0',
+  PRIMARY KEY (`id`,`version`),
+  CONSTRAINT `vol_work_material_version_fk_c76e40` FOREIGN KEY (`id`) REFERENCES `vol_work_material` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work_material_version`
+--
+
+LOCK TABLES `vol_work_material_version` WRITE;
+/*!40000 ALTER TABLE `vol_work_material_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work_material_version` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `vol_work_technic`
 --
 
@@ -1065,6 +1105,10 @@ CREATE TABLE `vol_work_technic` (
   `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
   `work_id` int unsigned NOT NULL COMMENT 'ID работы',
   `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
+  `version` int DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `work_id` (`work_id`),
   KEY `technic_id` (`technic_id`),
@@ -1080,6 +1124,38 @@ CREATE TABLE `vol_work_technic` (
 LOCK TABLES `vol_work_technic` WRITE;
 /*!40000 ALTER TABLE `vol_work_technic` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vol_work_technic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vol_work_technic_version`
+--
+
+DROP TABLE IF EXISTS `vol_work_technic_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vol_work_technic_version` (
+  `id` int unsigned NOT NULL COMMENT 'ID техники работы',
+  `amount` decimal(19,2) unsigned NOT NULL COMMENT 'Кол-во',
+  `work_id` int unsigned NOT NULL COMMENT 'ID работы',
+  `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
+  `version` int NOT NULL DEFAULT '0',
+  `version_created_at` timestamp NULL DEFAULT NULL,
+  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_comment` varchar(255) DEFAULT NULL,
+  `work_id_version` int DEFAULT '0',
+  `technic_id_version` int DEFAULT '0',
+  PRIMARY KEY (`id`,`version`),
+  CONSTRAINT `vol_work_technic_version_fk_3ecfb8` FOREIGN KEY (`id`) REFERENCES `vol_work_technic` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vol_work_technic_version`
+--
+
+LOCK TABLES `vol_work_technic_version` WRITE;
+/*!40000 ALTER TABLE `vol_work_technic_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vol_work_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1101,6 +1177,10 @@ CREATE TABLE `vol_work_version` (
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_work_ids` text,
   `obj_stage_work_versions` text,
+  `vol_work_material_ids` text,
+  `vol_work_material_versions` text,
+  `vol_work_technic_ids` text,
+  `vol_work_technic_versions` text,
   PRIMARY KEY (`id`,`version`),
   CONSTRAINT `vol_work_version_fk_b92c65` FOREIGN KEY (`id`) REFERENCES `vol_work` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

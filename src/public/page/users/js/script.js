@@ -138,7 +138,7 @@ const selectableUsers = {
     roles: document.querySelectorAll('.roles > .users__user-field'),
     click(elem) {
         this.reset()
-        elem.classList.toggle('selected')
+        elem.classList.add('selected')
     },
     reset() {
         this.users.forEach((elem) => {
@@ -200,6 +200,8 @@ function addUser() {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-window.location = "#users"
+window.location = "#roles"
 parseRoles()
+
+document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {console.log(elem)})
 

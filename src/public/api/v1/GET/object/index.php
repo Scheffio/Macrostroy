@@ -26,6 +26,8 @@ try {
     $work->setName('TestWork')->setPrice(100)->setUnitId($unitId)->save();
     $workId = $work->getId();
 
+    $workMaterial = new \DB\VolWorkMaterial();
+
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 1,

@@ -63,7 +63,7 @@ class VolMaterialVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 11;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class VolMaterialVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 11;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -131,6 +131,16 @@ class VolMaterialVersionTableMap extends TableMap
     public const COL_OBJ_STAGE_MATERIAL_VERSIONS = 'vol_material_version.obj_stage_material_versions';
 
     /**
+     * the column name for the vol_work_material_ids field
+     */
+    public const COL_VOL_WORK_MATERIAL_IDS = 'vol_material_version.vol_work_material_ids';
+
+    /**
+     * the column name for the vol_work_material_versions field
+     */
+    public const COL_VOL_WORK_MATERIAL_VERSIONS = 'vol_material_version.vol_work_material_versions';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -144,11 +154,11 @@ class VolMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'ObjStageMaterialIds', 'ObjStageMaterialVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'objStageMaterialIds', 'objStageMaterialVersions', ],
-        self::TYPE_COLNAME       => [VolMaterialVersionTableMap::COL_ID, VolMaterialVersionTableMap::COL_NAME, VolMaterialVersionTableMap::COL_PRICE, VolMaterialVersionTableMap::COL_IS_AVAILABLE, VolMaterialVersionTableMap::COL_UNIT_ID, VolMaterialVersionTableMap::COL_VERSION, VolMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolMaterialVersionTableMap::COL_VERSION_COMMENT, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'obj_stage_material_ids', 'obj_stage_material_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'ObjStageMaterialIds', 'ObjStageMaterialVersions', 'VolWorkMaterialIds', 'VolWorkMaterialVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'objStageMaterialIds', 'objStageMaterialVersions', 'volWorkMaterialIds', 'volWorkMaterialVersions', ],
+        self::TYPE_COLNAME       => [VolMaterialVersionTableMap::COL_ID, VolMaterialVersionTableMap::COL_NAME, VolMaterialVersionTableMap::COL_PRICE, VolMaterialVersionTableMap::COL_IS_AVAILABLE, VolMaterialVersionTableMap::COL_UNIT_ID, VolMaterialVersionTableMap::COL_VERSION, VolMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolMaterialVersionTableMap::COL_VERSION_COMMENT, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS, VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS, VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'obj_stage_material_ids', 'obj_stage_material_versions', 'vol_work_material_ids', 'vol_work_material_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -160,11 +170,11 @@ class VolMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'ObjStageMaterialIds' => 9, 'ObjStageMaterialVersions' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'objStageMaterialIds' => 9, 'objStageMaterialVersions' => 10, ],
-        self::TYPE_COLNAME       => [VolMaterialVersionTableMap::COL_ID => 0, VolMaterialVersionTableMap::COL_NAME => 1, VolMaterialVersionTableMap::COL_PRICE => 2, VolMaterialVersionTableMap::COL_IS_AVAILABLE => 3, VolMaterialVersionTableMap::COL_UNIT_ID => 4, VolMaterialVersionTableMap::COL_VERSION => 5, VolMaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, VolMaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, VolMaterialVersionTableMap::COL_VERSION_COMMENT => 8, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS => 9, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'obj_stage_material_ids' => 9, 'obj_stage_material_versions' => 10, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'ObjStageMaterialIds' => 9, 'ObjStageMaterialVersions' => 10, 'VolWorkMaterialIds' => 11, 'VolWorkMaterialVersions' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'objStageMaterialIds' => 9, 'objStageMaterialVersions' => 10, 'volWorkMaterialIds' => 11, 'volWorkMaterialVersions' => 12, ],
+        self::TYPE_COLNAME       => [VolMaterialVersionTableMap::COL_ID => 0, VolMaterialVersionTableMap::COL_NAME => 1, VolMaterialVersionTableMap::COL_PRICE => 2, VolMaterialVersionTableMap::COL_IS_AVAILABLE => 3, VolMaterialVersionTableMap::COL_UNIT_ID => 4, VolMaterialVersionTableMap::COL_VERSION => 5, VolMaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, VolMaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, VolMaterialVersionTableMap::COL_VERSION_COMMENT => 8, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS => 9, VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS => 10, VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS => 11, VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'obj_stage_material_ids' => 9, 'obj_stage_material_versions' => 10, 'vol_work_material_ids' => 11, 'vol_work_material_versions' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -257,6 +267,22 @@ class VolMaterialVersionTableMap extends TableMap
         'COL_OBJ_STAGE_MATERIAL_VERSIONS' => 'OBJ_STAGE_MATERIAL_VERSIONS',
         'obj_stage_material_versions' => 'OBJ_STAGE_MATERIAL_VERSIONS',
         'vol_material_version.obj_stage_material_versions' => 'OBJ_STAGE_MATERIAL_VERSIONS',
+        'VolWorkMaterialIds' => 'VOL_WORK_MATERIAL_IDS',
+        'VolMaterialVersion.VolWorkMaterialIds' => 'VOL_WORK_MATERIAL_IDS',
+        'volWorkMaterialIds' => 'VOL_WORK_MATERIAL_IDS',
+        'volMaterialVersion.volWorkMaterialIds' => 'VOL_WORK_MATERIAL_IDS',
+        'VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS' => 'VOL_WORK_MATERIAL_IDS',
+        'COL_VOL_WORK_MATERIAL_IDS' => 'VOL_WORK_MATERIAL_IDS',
+        'vol_work_material_ids' => 'VOL_WORK_MATERIAL_IDS',
+        'vol_material_version.vol_work_material_ids' => 'VOL_WORK_MATERIAL_IDS',
+        'VolWorkMaterialVersions' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'VolMaterialVersion.VolWorkMaterialVersions' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'volWorkMaterialVersions' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'volMaterialVersion.volWorkMaterialVersions' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'COL_VOL_WORK_MATERIAL_VERSIONS' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'vol_work_material_versions' => 'VOL_WORK_MATERIAL_VERSIONS',
+        'vol_material_version.vol_work_material_versions' => 'VOL_WORK_MATERIAL_VERSIONS',
     ];
 
     /**
@@ -287,6 +313,8 @@ class VolMaterialVersionTableMap extends TableMap
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('obj_stage_material_ids', 'ObjStageMaterialIds', 'ARRAY', false, null, null);
         $this->addColumn('obj_stage_material_versions', 'ObjStageMaterialVersions', 'ARRAY', false, null, null);
+        $this->addColumn('vol_work_material_ids', 'VolWorkMaterialIds', 'ARRAY', false, null, null);
+        $this->addColumn('vol_work_material_versions', 'VolWorkMaterialVersions', 'ARRAY', false, null, null);
     }
 
     /**
@@ -524,6 +552,8 @@ class VolMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn(VolMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS);
             $criteria->addSelectColumn(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS);
+            $criteria->addSelectColumn(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS);
+            $criteria->addSelectColumn(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -536,6 +566,8 @@ class VolMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.obj_stage_material_ids');
             $criteria->addSelectColumn($alias . '.obj_stage_material_versions');
+            $criteria->addSelectColumn($alias . '.vol_work_material_ids');
+            $criteria->addSelectColumn($alias . '.vol_work_material_versions');
         }
     }
 
@@ -565,6 +597,8 @@ class VolMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn(VolMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_IDS);
             $criteria->removeSelectColumn(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS);
+            $criteria->removeSelectColumn(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS);
+            $criteria->removeSelectColumn(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
@@ -577,6 +611,8 @@ class VolMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.obj_stage_material_ids');
             $criteria->removeSelectColumn($alias . '.obj_stage_material_versions');
+            $criteria->removeSelectColumn($alias . '.vol_work_material_ids');
+            $criteria->removeSelectColumn($alias . '.vol_work_material_versions');
         }
     }
 

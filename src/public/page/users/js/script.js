@@ -161,7 +161,7 @@ function parseRoles() {
             option.value = roles.name
             option.textContent = roles.name
             select.appendChild(option)
-            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
+            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`).addEventListener('click', selectableUsers.click(this)))
         })
     })
 }

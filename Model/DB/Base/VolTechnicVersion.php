@@ -159,6 +159,34 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
     protected $obj_stage_technic_versions_unserialized;
 
     /**
+     * The value for the vol_work_technic_ids field.
+     *
+     * @var        array|null
+     */
+    protected $vol_work_technic_ids;
+
+    /**
+     * The unserialized $vol_work_technic_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $vol_work_technic_ids_unserialized;
+
+    /**
+     * The value for the vol_work_technic_versions field.
+     *
+     * @var        array|null
+     */
+    protected $vol_work_technic_versions;
+
+    /**
+     * The unserialized $vol_work_technic_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $vol_work_technic_versions_unserialized;
+
+    /**
      * @var        ChildVolTechnic
      */
     protected $aVolTechnic;
@@ -582,6 +610,64 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [vol_work_technic_ids] column value.
+     *
+     * @return array|null
+     */
+    public function getVolWorkTechnicIds()
+    {
+        if (null === $this->vol_work_technic_ids_unserialized) {
+            $this->vol_work_technic_ids_unserialized = [];
+        }
+        if (!$this->vol_work_technic_ids_unserialized && null !== $this->vol_work_technic_ids) {
+            $vol_work_technic_ids_unserialized = substr($this->vol_work_technic_ids, 2, -2);
+            $this->vol_work_technic_ids_unserialized = '' !== $vol_work_technic_ids_unserialized ? explode(' | ', $vol_work_technic_ids_unserialized) : array();
+        }
+
+        return $this->vol_work_technic_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [vol_work_technic_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasVolWorkTechnicId($value): bool
+    {
+        return in_array($value, $this->getVolWorkTechnicIds());
+    }
+
+    /**
+     * Get the [vol_work_technic_versions] column value.
+     *
+     * @return array|null
+     */
+    public function getVolWorkTechnicVersions()
+    {
+        if (null === $this->vol_work_technic_versions_unserialized) {
+            $this->vol_work_technic_versions_unserialized = [];
+        }
+        if (!$this->vol_work_technic_versions_unserialized && null !== $this->vol_work_technic_versions) {
+            $vol_work_technic_versions_unserialized = substr($this->vol_work_technic_versions, 2, -2);
+            $this->vol_work_technic_versions_unserialized = '' !== $vol_work_technic_versions_unserialized ? explode(' | ', $vol_work_technic_versions_unserialized) : array();
+        }
+
+        return $this->vol_work_technic_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [vol_work_technic_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasVolWorkTechnicVersion($value): bool
+    {
+        return in_array($value, $this->getVolWorkTechnicVersions());
+    }
+
+    /**
      * Set the value of [id] column.
      * ID техники
      * @param int $v New value
@@ -876,6 +962,108 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [vol_work_technic_ids] column.
+     *
+     * @param array|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkTechnicIds($v)
+    {
+        if ($this->vol_work_technic_ids_unserialized !== $v) {
+            $this->vol_work_technic_ids_unserialized = $v;
+            $this->vol_work_technic_ids = '| ' . implode(' | ', $v) . ' |';
+            $this->modifiedColumns[VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [vol_work_technic_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkTechnicId($value)
+    {
+        $currentArray = $this->getVolWorkTechnicIds();
+        $currentArray []= $value;
+        $this->setVolWorkTechnicIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [vol_work_technic_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkTechnicId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getVolWorkTechnicIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setVolWorkTechnicIds($targetArray);
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [vol_work_technic_versions] column.
+     *
+     * @param array|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkTechnicVersions($v)
+    {
+        if ($this->vol_work_technic_versions_unserialized !== $v) {
+            $this->vol_work_technic_versions_unserialized = $v;
+            $this->vol_work_technic_versions = '| ' . implode(' | ', $v) . ' |';
+            $this->modifiedColumns[VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [vol_work_technic_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkTechnicVersion($value)
+    {
+        $currentArray = $this->getVolWorkTechnicVersions();
+        $currentArray []= $value;
+        $this->setVolWorkTechnicVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [vol_work_technic_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkTechnicVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getVolWorkTechnicVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setVolWorkTechnicVersions($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -956,6 +1144,14 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : VolTechnicVersionTableMap::translateFieldName('ObjStageTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
             $this->obj_stage_technic_versions = $col;
             $this->obj_stage_technic_versions_unserialized = null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : VolTechnicVersionTableMap::translateFieldName('VolWorkTechnicIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->vol_work_technic_ids = $col;
+            $this->vol_work_technic_ids_unserialized = null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : VolTechnicVersionTableMap::translateFieldName('VolWorkTechnicVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->vol_work_technic_versions = $col;
+            $this->vol_work_technic_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -964,7 +1160,7 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = VolTechnicVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = VolTechnicVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\VolTechnicVersion'), 0, $e);
@@ -1211,6 +1407,12 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
         if ($this->isColumnModified(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS)) {
             $modifiedColumns[':p' . $index++]  = 'obj_stage_technic_versions';
         }
+        if ($this->isColumnModified(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS)) {
+            $modifiedColumns[':p' . $index++]  = 'vol_work_technic_ids';
+        }
+        if ($this->isColumnModified(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS)) {
+            $modifiedColumns[':p' . $index++]  = 'vol_work_technic_versions';
+        }
 
         $sql = sprintf(
             'INSERT INTO vol_technic_version (%s) VALUES (%s)',
@@ -1254,6 +1456,12 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
                         break;
                     case 'obj_stage_technic_versions':
                         $stmt->bindValue($identifier, $this->obj_stage_technic_versions, PDO::PARAM_STR);
+                        break;
+                    case 'vol_work_technic_ids':
+                        $stmt->bindValue($identifier, $this->vol_work_technic_ids, PDO::PARAM_STR);
+                        break;
+                    case 'vol_work_technic_versions':
+                        $stmt->bindValue($identifier, $this->vol_work_technic_versions, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1343,6 +1551,12 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
             case 10:
                 return $this->getObjStageTechnicVersions();
 
+            case 11:
+                return $this->getVolWorkTechnicIds();
+
+            case 12:
+                return $this->getVolWorkTechnicVersions();
+
             default:
                 return null;
         } // switch()
@@ -1382,6 +1596,8 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
             $keys[8] => $this->getVersionComment(),
             $keys[9] => $this->getObjStageTechnicIds(),
             $keys[10] => $this->getObjStageTechnicVersions(),
+            $keys[11] => $this->getVolWorkTechnicIds(),
+            $keys[12] => $this->getVolWorkTechnicVersions(),
         ];
         if ($result[$keys[6]] instanceof \DateTimeInterface) {
             $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
@@ -1485,6 +1701,20 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
                 }
                 $this->setObjStageTechnicVersions($value);
                 break;
+            case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
+                $this->setVolWorkTechnicIds($value);
+                break;
+            case 12:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
+                $this->setVolWorkTechnicVersions($value);
+                break;
         } // switch()
 
         return $this;
@@ -1543,6 +1773,12 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
         }
         if (array_key_exists($keys[10], $arr)) {
             $this->setObjStageTechnicVersions($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setVolWorkTechnicIds($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setVolWorkTechnicVersions($arr[$keys[12]]);
         }
 
         return $this;
@@ -1619,6 +1855,12 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
         }
         if ($this->isColumnModified(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS)) {
             $criteria->add(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS, $this->obj_stage_technic_versions);
+        }
+        if ($this->isColumnModified(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS)) {
+            $criteria->add(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS, $this->vol_work_technic_ids);
+        }
+        if ($this->isColumnModified(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS)) {
+            $criteria->add(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS, $this->vol_work_technic_versions);
         }
 
         return $criteria;
@@ -1734,6 +1976,8 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
         $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setObjStageTechnicIds($this->getObjStageTechnicIds());
         $copyObj->setObjStageTechnicVersions($this->getObjStageTechnicVersions());
+        $copyObj->setVolWorkTechnicIds($this->getVolWorkTechnicIds());
+        $copyObj->setVolWorkTechnicVersions($this->getVolWorkTechnicVersions());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1837,6 +2081,10 @@ abstract class VolTechnicVersion implements ActiveRecordInterface
         $this->obj_stage_technic_ids_unserialized = null;
         $this->obj_stage_technic_versions = null;
         $this->obj_stage_technic_versions_unserialized = null;
+        $this->vol_work_technic_ids = null;
+        $this->vol_work_technic_ids_unserialized = null;
+        $this->vol_work_technic_versions = null;
+        $this->vol_work_technic_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

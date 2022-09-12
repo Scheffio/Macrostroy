@@ -16,11 +16,13 @@ use DB\VolUnit as ChildVolUnit;
 use DB\VolUnitQuery as ChildVolUnitQuery;
 use DB\VolWorkTechnic as ChildVolWorkTechnic;
 use DB\VolWorkTechnicQuery as ChildVolWorkTechnicQuery;
+use DB\VolWorkTechnicVersionQuery as ChildVolWorkTechnicVersionQuery;
 use DB\Map\ObjStageTechnicTableMap;
 use DB\Map\ObjStageTechnicVersionTableMap;
 use DB\Map\VolTechnicTableMap;
 use DB\Map\VolTechnicVersionTableMap;
 use DB\Map\VolWorkTechnicTableMap;
+use DB\Map\VolWorkTechnicVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -2690,6 +2692,22 @@ abstract class VolTechnic implements ActiveRecordInterface
             $this->alreadyInSave = false;
         }
 
+        if ($this->collVolWorkTechnics) {
+
+            // to avoid infinite loops, emulate in save
+            $this->alreadyInSave = true;
+
+            foreach ($this->getVolWorkTechnics(null, $con) as $relatedObject) {
+
+                if ($relatedObject->isVersioningNecessary($con)) {
+
+                    $this->alreadyInSave = false;
+                    return true;
+                }
+            }
+            $this->alreadyInSave = false;
+        }
+
 
         return false;
     }
@@ -2722,6 +2740,14 @@ abstract class VolTechnic implements ActiveRecordInterface
         if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
             $version->setObjStageTechnicIds(array_keys($relateds));
             $version->setObjStageTechnicVersions(array_values($relateds));
+        }
+
+        $object = $this->getVolWorkTechnics(null, $con);
+
+
+        if ($object && $relateds = $object->toKeyValue('Id', 'Version')) {
+            $version->setVolWorkTechnicIds(array_keys($relateds));
+            $version->setVolWorkTechnicVersions(array_values($relateds));
         }
 
         $version->save($con);
@@ -2789,6 +2815,28 @@ abstract class VolTechnic implements ActiveRecordInterface
                 }
                 $this->addObjStageTechnic($related);
                 $this->collObjStageTechnicsPartial = false;
+            }
+        }
+        if ($fkValues = $version->getVolWorkTechnicIds()) {
+            $this->clearVolWorkTechnic();
+            $fkVersions = $version->getVolWorkTechnicVersions();
+            $query = ChildVolWorkTechnicVersionQuery::create();
+            foreach ($fkValues as $key => $value) {
+                $c1 = $query->getNewCriterion(VolWorkTechnicVersionTableMap::COL_ID, $value);
+                $c2 = $query->getNewCriterion(VolWorkTechnicVersionTableMap::COL_VERSION, $fkVersions[$key]);
+                $c1->addAnd($c2);
+                $query->addOr($c1);
+            }
+            foreach ($query->find($con) as $relatedVersion) {
+                if (isset($loadedObjects['ChildVolWorkTechnic']) && isset($loadedObjects['ChildVolWorkTechnic'][$relatedVersion->getId()]) && isset($loadedObjects['ChildVolWorkTechnic'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
+                    $related = $loadedObjects['ChildVolWorkTechnic'][$relatedVersion->getId()][$relatedVersion->getVersion()];
+                } else {
+                    $related = new ChildVolWorkTechnic();
+                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                    $related->setNew(false);
+                }
+                $this->addVolWorkTechnic($related);
+                $this->collVolWorkTechnicPartial = false;
             }
         }
 

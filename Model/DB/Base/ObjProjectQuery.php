@@ -82,7 +82,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\ProjectRoleQuery|\DB\ObjSubprojectQuery|\DB\ObjProjectVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildObjProject|null findOne(?ConnectionInterface $con = null) Return the first ChildObjProject matching the query
- * @method     ChildObjProject findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildObjProject matching the query, or a new ChildObjProject object populated from the query conditions when no m@tch is found
+ * @method     ChildObjProject findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildObjProject matching the query, or a new ChildObjProject object populated from the query conditions when no match is found
  *
  * @method     ChildObjProject|null findOneById(int $id) Return the first ChildObjProject filtered by the id column
  * @method     ChildObjProject|null findOneByName(string $name) Return the first ChildObjProject filtered by the name column

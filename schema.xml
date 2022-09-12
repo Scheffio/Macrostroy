@@ -388,6 +388,7 @@
   <table name="vol_work_technic" idMethod="native" phpName="VolWorkTechnic">
     <column name="id" phpName="Id" type="INTEGER" sqlType="int unsigned" description="ID техники работы" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="amount" phpName="Amount" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Кол-во" required="true"/>
+    <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
     <column name="technic_id" phpName="TechnicId" type="INTEGER" sqlType="int unsigned" description="ID техники" required="true"/>
 

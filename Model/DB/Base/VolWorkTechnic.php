@@ -2,25 +2,34 @@
 
 namespace DB\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use DB\VolTechnic as ChildVolTechnic;
 use DB\VolTechnicQuery as ChildVolTechnicQuery;
+use DB\VolTechnicVersionQuery as ChildVolTechnicVersionQuery;
 use DB\VolWork as ChildVolWork;
 use DB\VolWorkQuery as ChildVolWorkQuery;
+use DB\VolWorkTechnic as ChildVolWorkTechnic;
 use DB\VolWorkTechnicQuery as ChildVolWorkTechnicQuery;
+use DB\VolWorkTechnicVersion as ChildVolWorkTechnicVersion;
+use DB\VolWorkTechnicVersionQuery as ChildVolWorkTechnicVersionQuery;
+use DB\VolWorkVersionQuery as ChildVolWorkVersionQuery;
 use DB\Map\VolWorkTechnicTableMap;
+use DB\Map\VolWorkTechnicVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'vol_work_technic' table.
@@ -94,6 +103,35 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
     protected $technic_id;
 
     /**
+     * The value for the version field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int|null
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     *
+     * @var        DateTime|null
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     *
+     * @var        string|null
+     */
+    protected $version_created_by;
+
+    /**
+     * The value for the version_comment field.
+     *
+     * @var        string|null
+     */
+    protected $version_comment;
+
+    /**
      * @var        ChildVolWork
      */
     protected $aVolWork;
@@ -104,6 +142,13 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
     protected $aVolTechnic;
 
     /**
+     * @var        ObjectCollection|ChildVolWorkTechnicVersion[] Collection to store aggregation of ChildVolWorkTechnicVersion objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkTechnicVersion> Collection to store aggregation of ChildVolWorkTechnicVersion objects.
+     */
+    protected $collVolWorkTechnicVersions;
+    protected $collVolWorkTechnicVersionsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -111,11 +156,39 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // versionable behavior
+
+
+    /**
+     * @var bool
+     */
+    protected $enforceVersion = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolWorkTechnicVersion[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkTechnicVersion>
+     */
+    protected $volWorkTechnicVersionsScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->version = 0;
+    }
+
     /**
      * Initializes internal state of DB\Base\VolWorkTechnic object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -378,6 +451,58 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version] column value.
+     *
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
+     */
+    public function getVersionCreatedAt($format = null)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
+     * Get the [version_comment] column value.
+     *
+     * @return string|null
+     */
+    public function getVersionComment()
+    {
+        return $this->version_comment;
+    }
+
+    /**
      * Set the value of [id] column.
      * ID техники работы
      * @param int $v New value
@@ -466,6 +591,86 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[VolWorkTechnicTableMap::COL_VERSION] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($this->version_created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->version_created_at->format("Y-m-d H:i:s.u")) {
+                $this->version_created_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[VolWorkTechnicTableMap::COL_VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[VolWorkTechnicTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [version_comment] column.
+     *
+     * @param string|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionComment($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->version_comment !== $v) {
+            $this->version_comment = $v;
+            $this->modifiedColumns[VolWorkTechnicTableMap::COL_VERSION_COMMENT] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -475,6 +680,10 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->version !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -512,6 +721,21 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : VolWorkTechnicTableMap::translateFieldName('TechnicId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->technic_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : VolWorkTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VolWorkTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VolWorkTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VolWorkTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_comment = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -520,7 +744,7 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = VolWorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = VolWorkTechnicTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\VolWorkTechnic'), 0, $e);
@@ -590,6 +814,8 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
 
             $this->aVolWork = null;
             $this->aVolTechnic = null;
+            $this->collVolWorkTechnicVersions = null;
+
         } // if (deep)
     }
 
@@ -654,6 +880,14 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -667,6 +901,10 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 VolWorkTechnicTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -723,6 +961,23 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->volWorkTechnicVersionsScheduledForDeletion !== null) {
+                if (!$this->volWorkTechnicVersionsScheduledForDeletion->isEmpty()) {
+                    \DB\VolWorkTechnicVersionQuery::create()
+                        ->filterByPrimaryKeys($this->volWorkTechnicVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volWorkTechnicVersionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolWorkTechnicVersions !== null) {
+                foreach ($this->collVolWorkTechnicVersions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -761,6 +1016,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(VolWorkTechnicTableMap::COL_TECHNIC_ID)) {
             $modifiedColumns[':p' . $index++]  = 'technic_id';
         }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'version';
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_at';
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_COMMENT)) {
+            $modifiedColumns[':p' . $index++]  = 'version_comment';
+        }
 
         $sql = sprintf(
             'INSERT INTO vol_work_technic (%s) VALUES (%s)',
@@ -783,6 +1050,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
                         break;
                     case 'technic_id':
                         $stmt->bindValue($identifier, $this->technic_id, PDO::PARAM_INT);
+                        break;
+                    case 'version':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'version_created_at':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
+                        break;
+                    case 'version_comment':
+                        $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -858,6 +1137,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
             case 3:
                 return $this->getTechnicId();
 
+            case 4:
+                return $this->getVersion();
+
+            case 5:
+                return $this->getVersionCreatedAt();
+
+            case 6:
+                return $this->getVersionCreatedBy();
+
+            case 7:
+                return $this->getVersionComment();
+
             default:
                 return null;
         } // switch()
@@ -890,7 +1181,15 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
             $keys[1] => $this->getAmount(),
             $keys[2] => $this->getWorkId(),
             $keys[3] => $this->getTechnicId(),
+            $keys[4] => $this->getVersion(),
+            $keys[5] => $this->getVersionCreatedAt(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersionComment(),
         ];
+        if ($result[$keys[5]] instanceof \DateTimeInterface) {
+            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -926,6 +1225,21 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aVolTechnic->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collVolWorkTechnicVersions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volWorkTechnicVersions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_work_technic_versions';
+                        break;
+                    default:
+                        $key = 'VolWorkTechnicVersions';
+                }
+
+                $result[$key] = $this->collVolWorkTechnicVersions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -975,6 +1289,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
             case 3:
                 $this->setTechnicId($value);
                 break;
+            case 4:
+                $this->setVersion($value);
+                break;
+            case 5:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 6:
+                $this->setVersionCreatedBy($value);
+                break;
+            case 7:
+                $this->setVersionComment($value);
+                break;
         } // switch()
 
         return $this;
@@ -1012,6 +1338,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setTechnicId($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setVersion($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setVersionCreatedAt($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setVersionCreatedBy($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setVersionComment($arr[$keys[7]]);
         }
 
         return $this;
@@ -1067,6 +1405,18 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         }
         if ($this->isColumnModified(VolWorkTechnicTableMap::COL_TECHNIC_ID)) {
             $criteria->add(VolWorkTechnicTableMap::COL_TECHNIC_ID, $this->technic_id);
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION)) {
+            $criteria->add(VolWorkTechnicTableMap::COL_VERSION, $this->version);
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_CREATED_AT)) {
+            $criteria->add(VolWorkTechnicTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
+        if ($this->isColumnModified(VolWorkTechnicTableMap::COL_VERSION_COMMENT)) {
+            $criteria->add(VolWorkTechnicTableMap::COL_VERSION_COMMENT, $this->version_comment);
         }
 
         return $criteria;
@@ -1159,6 +1509,24 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         $copyObj->setAmount($this->getAmount());
         $copyObj->setWorkId($this->getWorkId());
         $copyObj->setTechnicId($this->getTechnicId());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
+        $copyObj->setVersionComment($this->getVersionComment());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getVolWorkTechnicVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolWorkTechnicVersion($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1289,6 +1657,265 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         return $this->aVolTechnic;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('VolWorkTechnicVersion' === $relationName) {
+            $this->initVolWorkTechnicVersions();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collVolWorkTechnicVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolWorkTechnicVersions()
+     */
+    public function clearVolWorkTechnicVersions()
+    {
+        $this->collVolWorkTechnicVersions = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolWorkTechnicVersions collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolWorkTechnicVersions($v = true): void
+    {
+        $this->collVolWorkTechnicVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolWorkTechnicVersions collection.
+     *
+     * By default this just sets the collVolWorkTechnicVersions collection to an empty array (like clearcollVolWorkTechnicVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolWorkTechnicVersions(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolWorkTechnicVersions && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolWorkTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolWorkTechnicVersions = new $collectionClassName;
+        $this->collVolWorkTechnicVersions->setModel('\DB\VolWorkTechnicVersion');
+    }
+
+    /**
+     * Gets an array of ChildVolWorkTechnicVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildVolWorkTechnic is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolWorkTechnicVersion[] List of ChildVolWorkTechnicVersion objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkTechnicVersion> List of ChildVolWorkTechnicVersion objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolWorkTechnicVersions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolWorkTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collVolWorkTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolWorkTechnicVersions) {
+                    $this->initVolWorkTechnicVersions();
+                } else {
+                    $collectionClassName = VolWorkTechnicVersionTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolWorkTechnicVersions = new $collectionClassName;
+                    $collVolWorkTechnicVersions->setModel('\DB\VolWorkTechnicVersion');
+
+                    return $collVolWorkTechnicVersions;
+                }
+            } else {
+                $collVolWorkTechnicVersions = ChildVolWorkTechnicVersionQuery::create(null, $criteria)
+                    ->filterByVolWorkTechnic($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolWorkTechnicVersionsPartial && count($collVolWorkTechnicVersions)) {
+                        $this->initVolWorkTechnicVersions(false);
+
+                        foreach ($collVolWorkTechnicVersions as $obj) {
+                            if (false == $this->collVolWorkTechnicVersions->contains($obj)) {
+                                $this->collVolWorkTechnicVersions->append($obj);
+                            }
+                        }
+
+                        $this->collVolWorkTechnicVersionsPartial = true;
+                    }
+
+                    return $collVolWorkTechnicVersions;
+                }
+
+                if ($partial && $this->collVolWorkTechnicVersions) {
+                    foreach ($this->collVolWorkTechnicVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolWorkTechnicVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolWorkTechnicVersions = $collVolWorkTechnicVersions;
+                $this->collVolWorkTechnicVersionsPartial = false;
+            }
+        }
+
+        return $this->collVolWorkTechnicVersions;
+    }
+
+    /**
+     * Sets a collection of ChildVolWorkTechnicVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volWorkTechnicVersions A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkTechnicVersions(Collection $volWorkTechnicVersions, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolWorkTechnicVersion[] $volWorkTechnicVersionsToDelete */
+        $volWorkTechnicVersionsToDelete = $this->getVolWorkTechnicVersions(new Criteria(), $con)->diff($volWorkTechnicVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->volWorkTechnicVersionsScheduledForDeletion = clone $volWorkTechnicVersionsToDelete;
+
+        foreach ($volWorkTechnicVersionsToDelete as $volWorkTechnicVersionRemoved) {
+            $volWorkTechnicVersionRemoved->setVolWorkTechnic(null);
+        }
+
+        $this->collVolWorkTechnicVersions = null;
+        foreach ($volWorkTechnicVersions as $volWorkTechnicVersion) {
+            $this->addVolWorkTechnicVersion($volWorkTechnicVersion);
+        }
+
+        $this->collVolWorkTechnicVersions = $volWorkTechnicVersions;
+        $this->collVolWorkTechnicVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolWorkTechnicVersion objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolWorkTechnicVersion objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolWorkTechnicVersions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolWorkTechnicVersionsPartial && !$this->isNew();
+        if (null === $this->collVolWorkTechnicVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolWorkTechnicVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolWorkTechnicVersions());
+            }
+
+            $query = ChildVolWorkTechnicVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByVolWorkTechnic($this)
+                ->count($con);
+        }
+
+        return count($this->collVolWorkTechnicVersions);
+    }
+
+    /**
+     * Method called to associate a ChildVolWorkTechnicVersion object to this object
+     * through the ChildVolWorkTechnicVersion foreign key attribute.
+     *
+     * @param ChildVolWorkTechnicVersion $l ChildVolWorkTechnicVersion
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkTechnicVersion(ChildVolWorkTechnicVersion $l)
+    {
+        if ($this->collVolWorkTechnicVersions === null) {
+            $this->initVolWorkTechnicVersions();
+            $this->collVolWorkTechnicVersionsPartial = true;
+        }
+
+        if (!$this->collVolWorkTechnicVersions->contains($l)) {
+            $this->doAddVolWorkTechnicVersion($l);
+
+            if ($this->volWorkTechnicVersionsScheduledForDeletion and $this->volWorkTechnicVersionsScheduledForDeletion->contains($l)) {
+                $this->volWorkTechnicVersionsScheduledForDeletion->remove($this->volWorkTechnicVersionsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolWorkTechnicVersion $volWorkTechnicVersion The ChildVolWorkTechnicVersion object to add.
+     */
+    protected function doAddVolWorkTechnicVersion(ChildVolWorkTechnicVersion $volWorkTechnicVersion): void
+    {
+        $this->collVolWorkTechnicVersions[]= $volWorkTechnicVersion;
+        $volWorkTechnicVersion->setVolWorkTechnic($this);
+    }
+
+    /**
+     * @param ChildVolWorkTechnicVersion $volWorkTechnicVersion The ChildVolWorkTechnicVersion object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkTechnicVersion(ChildVolWorkTechnicVersion $volWorkTechnicVersion)
+    {
+        if ($this->getVolWorkTechnicVersions()->contains($volWorkTechnicVersion)) {
+            $pos = $this->collVolWorkTechnicVersions->search($volWorkTechnicVersion);
+            $this->collVolWorkTechnicVersions->remove($pos);
+            if (null === $this->volWorkTechnicVersionsScheduledForDeletion) {
+                $this->volWorkTechnicVersionsScheduledForDeletion = clone $this->collVolWorkTechnicVersions;
+                $this->volWorkTechnicVersionsScheduledForDeletion->clear();
+            }
+            $this->volWorkTechnicVersionsScheduledForDeletion[]= clone $volWorkTechnicVersion;
+            $volWorkTechnicVersion->setVolWorkTechnic(null);
+        }
+
+        return $this;
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1308,8 +1935,13 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         $this->amount = null;
         $this->work_id = null;
         $this->technic_id = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
+        $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1329,8 +1961,14 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collVolWorkTechnicVersions) {
+                foreach ($this->collVolWorkTechnicVersions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collVolWorkTechnicVersions = null;
         $this->aVolWork = null;
         $this->aVolTechnic = null;
         return $this;
@@ -1346,6 +1984,335 @@ abstract class VolWorkTechnic implements ActiveRecordInterface
         return (string) $this->exportTo(VolWorkTechnicTableMap::DEFAULT_STRING_FORMAT);
     }
 
+    // versionable behavior
+
+    /**
+     * Enforce a new Version of this object upon next save.
+     *
+     * @return $this
+     */
+    public function enforceVersioning()
+    {
+        $this->enforceVersion = true;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether the current state must be recorded as a version
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @return bool
+     */
+    public function isVersioningNecessary(?ConnectionInterface $con = null): bool
+    {
+        if ($this->alreadyInSave) {
+            return false;
+        }
+
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildVolWorkTechnicQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+        if (null !== ($object = $this->getVolWork($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+        if (null !== ($object = $this->getVolTechnic($con)) && $object->isVersioningNecessary($con)) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ChildVolWorkTechnicVersion A version object
+     */
+    public function addVersion(?ConnectionInterface $con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildVolWorkTechnicVersion();
+        $version->setId($this->getId());
+        $version->setAmount($this->getAmount());
+        $version->setWorkId($this->getWorkId());
+        $version->setTechnicId($this->getTechnicId());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setVersionComment($this->getVersionComment());
+        $version->setVolWorkTechnic($this);
+        if (($related = $this->getVolWork(null, $con)) && $related->getVersion()) {
+            $version->setWorkIdVersion($related->getVersion());
+        }
+        if (($related = $this->getVolTechnic(null, $con)) && $related->getVersion()) {
+            $version->setTechnicIdVersion($related->getVersion());
+        }
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, ?ConnectionInterface $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildVolWorkTechnic object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildVolWorkTechnicVersion $version The version object to use
+     * @param ConnectionInterface $con the connection to use
+     * @param array $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = [])
+    {
+        $loadedObjects['ChildVolWorkTechnic'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setAmount($version->getAmount());
+        $this->setWorkId($version->getWorkId());
+        $this->setTechnicId($version->getTechnicId());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+        $this->setVersionComment($version->getVersionComment());
+        if ($fkValue = $version->getWorkId()) {
+            if (isset($loadedObjects['ChildVolWork']) && isset($loadedObjects['ChildVolWork'][$fkValue]) && isset($loadedObjects['ChildVolWork'][$fkValue][$version->getWorkIdVersion()])) {
+                $related = $loadedObjects['ChildVolWork'][$fkValue][$version->getWorkIdVersion()];
+            } else {
+                $related = new ChildVolWork();
+                $relatedVersion = ChildVolWorkVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getWorkIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setVolWork($related);
+        }
+        if ($fkValue = $version->getTechnicId()) {
+            if (isset($loadedObjects['ChildVolTechnic']) && isset($loadedObjects['ChildVolTechnic'][$fkValue]) && isset($loadedObjects['ChildVolTechnic'][$fkValue][$version->getTechnicIdVersion()])) {
+                $related = $loadedObjects['ChildVolTechnic'][$fkValue][$version->getTechnicIdVersion()];
+            } else {
+                $related = new ChildVolTechnic();
+                $relatedVersion = ChildVolTechnicVersionQuery::create()
+                    ->filterById($fkValue)
+                    ->filterByVersionComment($version->getTechnicIdVersion())
+                    ->findOne($con);
+                $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
+                $related->setNew(false);
+            }
+            $this->setVolTechnic($related);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return int
+     */
+    public function getLastVersionNumber(?ConnectionInterface $con = null): int
+    {
+        $v = ChildVolWorkTechnicVersionQuery::create()
+            ->filterByVolWorkTechnic($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return bool
+     */
+    public function isLastVersion(?ConnectionInterface $con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param int $versionNumber The version number to read
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     *
+     * @return ChildVolWorkTechnicVersion A version object
+     */
+    public function getOneVersion(int $versionNumber, ?ConnectionInterface $con = null)
+    {
+        return ChildVolWorkTechnicVersionQuery::create()
+            ->filterByVolWorkTechnic($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return ObjectCollection|ChildVolWorkTechnicVersion[] A list of ChildVolWorkTechnicVersion objects
+     */
+    public function getAllVersions(?ConnectionInterface $con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(VolWorkTechnicVersionTableMap::COL_VERSION);
+
+        return $this->getVolWorkTechnicVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $versionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersion(int $versionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param int $fromVersionNumber
+     * @param int $toVersionNumber
+     * @param string $keys Main key used for the result diff (versions|columns)
+     * @param ConnectionInterface|null $con The ConnectionInterface connection to use.
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    public function compareVersions(int $fromVersionNumber, int $toVersionNumber, string $keys = 'columns', ?ConnectionInterface $con = null, array $ignoredColumns = []): array
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param array $fromVersion     An array representing the original version.
+     * @param array $toVersion       An array representing the destination version.
+     * @param string $keys            Main key used for the result diff (versions|columns).
+     * @param array $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = [])
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+            'VersionComment',
+        ), $ignoredColumns);
+        $diff = [];
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = [
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        ];
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number The number of record to return.
+     * @param Criteria $criteria The Criteria object containing modified values.
+     * @param ConnectionInterface $con The ConnectionInterface connection to use.
+     *
+     * @return PropelCollection|\DB\VolWorkTechnicVersion[] List of \DB\VolWorkTechnicVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $criteria = ChildVolWorkTechnicVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(VolWorkTechnicVersionTableMap::COL_VERSION);
+        $criteria->limit($number);
+
+        return $this->getVolWorkTechnicVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param ConnectionInterface|null $con

@@ -63,7 +63,7 @@ class VolTechnicVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 11;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class VolTechnicVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 11;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -131,6 +131,16 @@ class VolTechnicVersionTableMap extends TableMap
     public const COL_OBJ_STAGE_TECHNIC_VERSIONS = 'vol_technic_version.obj_stage_technic_versions';
 
     /**
+     * the column name for the vol_work_technic_ids field
+     */
+    public const COL_VOL_WORK_TECHNIC_IDS = 'vol_technic_version.vol_work_technic_ids';
+
+    /**
+     * the column name for the vol_work_technic_versions field
+     */
+    public const COL_VOL_WORK_TECHNIC_VERSIONS = 'vol_technic_version.vol_work_technic_versions';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -144,11 +154,11 @@ class VolTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'ObjStageTechnicIds', 'ObjStageTechnicVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'objStageTechnicIds', 'objStageTechnicVersions', ],
-        self::TYPE_COLNAME       => [VolTechnicVersionTableMap::COL_ID, VolTechnicVersionTableMap::COL_NAME, VolTechnicVersionTableMap::COL_PRICE, VolTechnicVersionTableMap::COL_IS_AVAILABLE, VolTechnicVersionTableMap::COL_UNIT_ID, VolTechnicVersionTableMap::COL_VERSION, VolTechnicVersionTableMap::COL_VERSION_CREATED_AT, VolTechnicVersionTableMap::COL_VERSION_CREATED_BY, VolTechnicVersionTableMap::COL_VERSION_COMMENT, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'obj_stage_technic_ids', 'obj_stage_technic_versions', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'ObjStageTechnicIds', 'ObjStageTechnicVersions', 'VolWorkTechnicIds', 'VolWorkTechnicVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'objStageTechnicIds', 'objStageTechnicVersions', 'volWorkTechnicIds', 'volWorkTechnicVersions', ],
+        self::TYPE_COLNAME       => [VolTechnicVersionTableMap::COL_ID, VolTechnicVersionTableMap::COL_NAME, VolTechnicVersionTableMap::COL_PRICE, VolTechnicVersionTableMap::COL_IS_AVAILABLE, VolTechnicVersionTableMap::COL_UNIT_ID, VolTechnicVersionTableMap::COL_VERSION, VolTechnicVersionTableMap::COL_VERSION_CREATED_AT, VolTechnicVersionTableMap::COL_VERSION_CREATED_BY, VolTechnicVersionTableMap::COL_VERSION_COMMENT, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS, VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS, VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'obj_stage_technic_ids', 'obj_stage_technic_versions', 'vol_work_technic_ids', 'vol_work_technic_versions', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -160,11 +170,11 @@ class VolTechnicVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'ObjStageTechnicIds' => 9, 'ObjStageTechnicVersions' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'objStageTechnicIds' => 9, 'objStageTechnicVersions' => 10, ],
-        self::TYPE_COLNAME       => [VolTechnicVersionTableMap::COL_ID => 0, VolTechnicVersionTableMap::COL_NAME => 1, VolTechnicVersionTableMap::COL_PRICE => 2, VolTechnicVersionTableMap::COL_IS_AVAILABLE => 3, VolTechnicVersionTableMap::COL_UNIT_ID => 4, VolTechnicVersionTableMap::COL_VERSION => 5, VolTechnicVersionTableMap::COL_VERSION_CREATED_AT => 6, VolTechnicVersionTableMap::COL_VERSION_CREATED_BY => 7, VolTechnicVersionTableMap::COL_VERSION_COMMENT => 8, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS => 9, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'obj_stage_technic_ids' => 9, 'obj_stage_technic_versions' => 10, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'ObjStageTechnicIds' => 9, 'ObjStageTechnicVersions' => 10, 'VolWorkTechnicIds' => 11, 'VolWorkTechnicVersions' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'objStageTechnicIds' => 9, 'objStageTechnicVersions' => 10, 'volWorkTechnicIds' => 11, 'volWorkTechnicVersions' => 12, ],
+        self::TYPE_COLNAME       => [VolTechnicVersionTableMap::COL_ID => 0, VolTechnicVersionTableMap::COL_NAME => 1, VolTechnicVersionTableMap::COL_PRICE => 2, VolTechnicVersionTableMap::COL_IS_AVAILABLE => 3, VolTechnicVersionTableMap::COL_UNIT_ID => 4, VolTechnicVersionTableMap::COL_VERSION => 5, VolTechnicVersionTableMap::COL_VERSION_CREATED_AT => 6, VolTechnicVersionTableMap::COL_VERSION_CREATED_BY => 7, VolTechnicVersionTableMap::COL_VERSION_COMMENT => 8, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS => 9, VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS => 10, VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS => 11, VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'obj_stage_technic_ids' => 9, 'obj_stage_technic_versions' => 10, 'vol_work_technic_ids' => 11, 'vol_work_technic_versions' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -257,6 +267,22 @@ class VolTechnicVersionTableMap extends TableMap
         'COL_OBJ_STAGE_TECHNIC_VERSIONS' => 'OBJ_STAGE_TECHNIC_VERSIONS',
         'obj_stage_technic_versions' => 'OBJ_STAGE_TECHNIC_VERSIONS',
         'vol_technic_version.obj_stage_technic_versions' => 'OBJ_STAGE_TECHNIC_VERSIONS',
+        'VolWorkTechnicIds' => 'VOL_WORK_TECHNIC_IDS',
+        'VolTechnicVersion.VolWorkTechnicIds' => 'VOL_WORK_TECHNIC_IDS',
+        'volWorkTechnicIds' => 'VOL_WORK_TECHNIC_IDS',
+        'volTechnicVersion.volWorkTechnicIds' => 'VOL_WORK_TECHNIC_IDS',
+        'VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS' => 'VOL_WORK_TECHNIC_IDS',
+        'COL_VOL_WORK_TECHNIC_IDS' => 'VOL_WORK_TECHNIC_IDS',
+        'vol_work_technic_ids' => 'VOL_WORK_TECHNIC_IDS',
+        'vol_technic_version.vol_work_technic_ids' => 'VOL_WORK_TECHNIC_IDS',
+        'VolWorkTechnicVersions' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'VolTechnicVersion.VolWorkTechnicVersions' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'volWorkTechnicVersions' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'volTechnicVersion.volWorkTechnicVersions' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'COL_VOL_WORK_TECHNIC_VERSIONS' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'vol_work_technic_versions' => 'VOL_WORK_TECHNIC_VERSIONS',
+        'vol_technic_version.vol_work_technic_versions' => 'VOL_WORK_TECHNIC_VERSIONS',
     ];
 
     /**
@@ -287,6 +313,8 @@ class VolTechnicVersionTableMap extends TableMap
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('obj_stage_technic_ids', 'ObjStageTechnicIds', 'ARRAY', false, null, null);
         $this->addColumn('obj_stage_technic_versions', 'ObjStageTechnicVersions', 'ARRAY', false, null, null);
+        $this->addColumn('vol_work_technic_ids', 'VolWorkTechnicIds', 'ARRAY', false, null, null);
+        $this->addColumn('vol_work_technic_versions', 'VolWorkTechnicVersions', 'ARRAY', false, null, null);
     }
 
     /**
@@ -524,6 +552,8 @@ class VolTechnicVersionTableMap extends TableMap
             $criteria->addSelectColumn(VolTechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS);
             $criteria->addSelectColumn(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS);
+            $criteria->addSelectColumn(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS);
+            $criteria->addSelectColumn(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -536,6 +566,8 @@ class VolTechnicVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.obj_stage_technic_ids');
             $criteria->addSelectColumn($alias . '.obj_stage_technic_versions');
+            $criteria->addSelectColumn($alias . '.vol_work_technic_ids');
+            $criteria->addSelectColumn($alias . '.vol_work_technic_versions');
         }
     }
 
@@ -565,6 +597,8 @@ class VolTechnicVersionTableMap extends TableMap
             $criteria->removeSelectColumn(VolTechnicVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_IDS);
             $criteria->removeSelectColumn(VolTechnicVersionTableMap::COL_OBJ_STAGE_TECHNIC_VERSIONS);
+            $criteria->removeSelectColumn(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_IDS);
+            $criteria->removeSelectColumn(VolTechnicVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.name');
@@ -577,6 +611,8 @@ class VolTechnicVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.obj_stage_technic_ids');
             $criteria->removeSelectColumn($alias . '.obj_stage_technic_versions');
+            $criteria->removeSelectColumn($alias . '.vol_work_technic_ids');
+            $criteria->removeSelectColumn($alias . '.vol_work_technic_versions');
         }
     }
 

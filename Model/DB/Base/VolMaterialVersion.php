@@ -159,6 +159,34 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
     protected $obj_stage_material_versions_unserialized;
 
     /**
+     * The value for the vol_work_material_ids field.
+     *
+     * @var        array|null
+     */
+    protected $vol_work_material_ids;
+
+    /**
+     * The unserialized $vol_work_material_ids value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $vol_work_material_ids_unserialized;
+
+    /**
+     * The value for the vol_work_material_versions field.
+     *
+     * @var        array|null
+     */
+    protected $vol_work_material_versions;
+
+    /**
+     * The unserialized $vol_work_material_versions value - i.e. the persisted object.
+     * This is necessary to avoid repeated calls to unserialize() at runtime.
+     * @var object
+     */
+    protected $vol_work_material_versions_unserialized;
+
+    /**
      * @var        ChildVolMaterial
      */
     protected $aVolMaterial;
@@ -582,6 +610,64 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [vol_work_material_ids] column value.
+     *
+     * @return array|null
+     */
+    public function getVolWorkMaterialIds()
+    {
+        if (null === $this->vol_work_material_ids_unserialized) {
+            $this->vol_work_material_ids_unserialized = [];
+        }
+        if (!$this->vol_work_material_ids_unserialized && null !== $this->vol_work_material_ids) {
+            $vol_work_material_ids_unserialized = substr($this->vol_work_material_ids, 2, -2);
+            $this->vol_work_material_ids_unserialized = '' !== $vol_work_material_ids_unserialized ? explode(' | ', $vol_work_material_ids_unserialized) : array();
+        }
+
+        return $this->vol_work_material_ids_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [vol_work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasVolWorkMaterialId($value): bool
+    {
+        return in_array($value, $this->getVolWorkMaterialIds());
+    }
+
+    /**
+     * Get the [vol_work_material_versions] column value.
+     *
+     * @return array|null
+     */
+    public function getVolWorkMaterialVersions()
+    {
+        if (null === $this->vol_work_material_versions_unserialized) {
+            $this->vol_work_material_versions_unserialized = [];
+        }
+        if (!$this->vol_work_material_versions_unserialized && null !== $this->vol_work_material_versions) {
+            $vol_work_material_versions_unserialized = substr($this->vol_work_material_versions, 2, -2);
+            $this->vol_work_material_versions_unserialized = '' !== $vol_work_material_versions_unserialized ? explode(' | ', $vol_work_material_versions_unserialized) : array();
+        }
+
+        return $this->vol_work_material_versions_unserialized;
+    }
+
+    /**
+     * Test the presence of a value in the [vol_work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function hasVolWorkMaterialVersion($value): bool
+    {
+        return in_array($value, $this->getVolWorkMaterialVersions());
+    }
+
+    /**
      * Set the value of [id] column.
      * ID материала
      * @param int $v New value
@@ -876,6 +962,108 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [vol_work_material_ids] column.
+     *
+     * @param array|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkMaterialIds($v)
+    {
+        if ($this->vol_work_material_ids_unserialized !== $v) {
+            $this->vol_work_material_ids_unserialized = $v;
+            $this->vol_work_material_ids = '| ' . implode(' | ', $v) . ' |';
+            $this->modifiedColumns[VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [vol_work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkMaterialId($value)
+    {
+        $currentArray = $this->getVolWorkMaterialIds();
+        $currentArray []= $value;
+        $this->setVolWorkMaterialIds($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [vol_work_material_ids] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkMaterialId($value)
+    {
+        $targetArray = [];
+        foreach ($this->getVolWorkMaterialIds() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setVolWorkMaterialIds($targetArray);
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [vol_work_material_versions] column.
+     *
+     * @param array|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkMaterialVersions($v)
+    {
+        if ($this->vol_work_material_versions_unserialized !== $v) {
+            $this->vol_work_material_versions_unserialized = $v;
+            $this->vol_work_material_versions = '| ' . implode(' | ', $v) . ' |';
+            $this->modifiedColumns[VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds a value to the [vol_work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkMaterialVersion($value)
+    {
+        $currentArray = $this->getVolWorkMaterialVersions();
+        $currentArray []= $value;
+        $this->setVolWorkMaterialVersions($currentArray);
+
+        return $this;
+    }
+
+    /**
+     * Removes a value from the [vol_work_material_versions] array column value.
+     * @param mixed $value
+     *
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkMaterialVersion($value)
+    {
+        $targetArray = [];
+        foreach ($this->getVolWorkMaterialVersions() as $element) {
+            if ($element != $value) {
+                $targetArray []= $element;
+            }
+        }
+        $this->setVolWorkMaterialVersions($targetArray);
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -956,6 +1144,14 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : VolMaterialVersionTableMap::translateFieldName('ObjStageMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
             $this->obj_stage_material_versions = $col;
             $this->obj_stage_material_versions_unserialized = null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : VolMaterialVersionTableMap::translateFieldName('VolWorkMaterialIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->vol_work_material_ids = $col;
+            $this->vol_work_material_ids_unserialized = null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : VolMaterialVersionTableMap::translateFieldName('VolWorkMaterialVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->vol_work_material_versions = $col;
+            $this->vol_work_material_versions_unserialized = null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -964,7 +1160,7 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = VolMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = VolMaterialVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DB\\VolMaterialVersion'), 0, $e);
@@ -1211,6 +1407,12 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
         if ($this->isColumnModified(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS)) {
             $modifiedColumns[':p' . $index++]  = 'obj_stage_material_versions';
         }
+        if ($this->isColumnModified(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS)) {
+            $modifiedColumns[':p' . $index++]  = 'vol_work_material_ids';
+        }
+        if ($this->isColumnModified(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS)) {
+            $modifiedColumns[':p' . $index++]  = 'vol_work_material_versions';
+        }
 
         $sql = sprintf(
             'INSERT INTO vol_material_version (%s) VALUES (%s)',
@@ -1254,6 +1456,12 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
                         break;
                     case 'obj_stage_material_versions':
                         $stmt->bindValue($identifier, $this->obj_stage_material_versions, PDO::PARAM_STR);
+                        break;
+                    case 'vol_work_material_ids':
+                        $stmt->bindValue($identifier, $this->vol_work_material_ids, PDO::PARAM_STR);
+                        break;
+                    case 'vol_work_material_versions':
+                        $stmt->bindValue($identifier, $this->vol_work_material_versions, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1343,6 +1551,12 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
             case 10:
                 return $this->getObjStageMaterialVersions();
 
+            case 11:
+                return $this->getVolWorkMaterialIds();
+
+            case 12:
+                return $this->getVolWorkMaterialVersions();
+
             default:
                 return null;
         } // switch()
@@ -1382,6 +1596,8 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
             $keys[8] => $this->getVersionComment(),
             $keys[9] => $this->getObjStageMaterialIds(),
             $keys[10] => $this->getObjStageMaterialVersions(),
+            $keys[11] => $this->getVolWorkMaterialIds(),
+            $keys[12] => $this->getVolWorkMaterialVersions(),
         ];
         if ($result[$keys[6]] instanceof \DateTimeInterface) {
             $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
@@ -1485,6 +1701,20 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
                 }
                 $this->setObjStageMaterialVersions($value);
                 break;
+            case 11:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
+                $this->setVolWorkMaterialIds($value);
+                break;
+            case 12:
+                if (!is_array($value)) {
+                    $v = trim(substr($value, 2, -2));
+                    $value = $v ? explode(' | ', $v) : array();
+                }
+                $this->setVolWorkMaterialVersions($value);
+                break;
         } // switch()
 
         return $this;
@@ -1543,6 +1773,12 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
         }
         if (array_key_exists($keys[10], $arr)) {
             $this->setObjStageMaterialVersions($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setVolWorkMaterialIds($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setVolWorkMaterialVersions($arr[$keys[12]]);
         }
 
         return $this;
@@ -1619,6 +1855,12 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
         }
         if ($this->isColumnModified(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS)) {
             $criteria->add(VolMaterialVersionTableMap::COL_OBJ_STAGE_MATERIAL_VERSIONS, $this->obj_stage_material_versions);
+        }
+        if ($this->isColumnModified(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS)) {
+            $criteria->add(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_IDS, $this->vol_work_material_ids);
+        }
+        if ($this->isColumnModified(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS)) {
+            $criteria->add(VolMaterialVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS, $this->vol_work_material_versions);
         }
 
         return $criteria;
@@ -1734,6 +1976,8 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
         $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setObjStageMaterialIds($this->getObjStageMaterialIds());
         $copyObj->setObjStageMaterialVersions($this->getObjStageMaterialVersions());
+        $copyObj->setVolWorkMaterialIds($this->getVolWorkMaterialIds());
+        $copyObj->setVolWorkMaterialVersions($this->getVolWorkMaterialVersions());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1837,6 +2081,10 @@ abstract class VolMaterialVersion implements ActiveRecordInterface
         $this->obj_stage_material_ids_unserialized = null;
         $this->obj_stage_material_versions = null;
         $this->obj_stage_material_versions_unserialized = null;
+        $this->vol_work_material_ids = null;
+        $this->vol_work_material_ids_unserialized = null;
+        $this->vol_work_material_versions = null;
+        $this->vol_work_material_versions_unserialized = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

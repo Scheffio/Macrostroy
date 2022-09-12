@@ -66,7 +66,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     \DB\UsersQuery|\DB\ObjProjectQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildProjectRole|null findOne(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query
- * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no m@tch is found
+ * @method     ChildProjectRole findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProjectRole matching the query, or a new ChildProjectRole object populated from the query conditions when no match is found
  *
  * @method     ChildProjectRole|null findOneById(int $id) Return the first ChildProjectRole filtered by the id column
  * @method     ChildProjectRole|null findOneByLvl(int $lvl) Return the first ChildProjectRole filtered by the lvl column

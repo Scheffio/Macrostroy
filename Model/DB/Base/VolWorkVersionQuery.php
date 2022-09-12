@@ -32,6 +32,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildVolWorkVersionQuery orderByObjStageWorkIds($order = Criteria::ASC) Order by the obj_stage_work_ids column
  * @method     ChildVolWorkVersionQuery orderByObjStageWorkVersions($order = Criteria::ASC) Order by the obj_stage_work_versions column
+ * @method     ChildVolWorkVersionQuery orderByVolWorkMaterialIds($order = Criteria::ASC) Order by the vol_work_material_ids column
+ * @method     ChildVolWorkVersionQuery orderByVolWorkMaterialVersions($order = Criteria::ASC) Order by the vol_work_material_versions column
+ * @method     ChildVolWorkVersionQuery orderByVolWorkTechnicIds($order = Criteria::ASC) Order by the vol_work_technic_ids column
+ * @method     ChildVolWorkVersionQuery orderByVolWorkTechnicVersions($order = Criteria::ASC) Order by the vol_work_technic_versions column
  *
  * @method     ChildVolWorkVersionQuery groupById() Group by the id column
  * @method     ChildVolWorkVersionQuery groupByName() Group by the name column
@@ -44,6 +48,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildVolWorkVersionQuery groupByObjStageWorkIds() Group by the obj_stage_work_ids column
  * @method     ChildVolWorkVersionQuery groupByObjStageWorkVersions() Group by the obj_stage_work_versions column
+ * @method     ChildVolWorkVersionQuery groupByVolWorkMaterialIds() Group by the vol_work_material_ids column
+ * @method     ChildVolWorkVersionQuery groupByVolWorkMaterialVersions() Group by the vol_work_material_versions column
+ * @method     ChildVolWorkVersionQuery groupByVolWorkTechnicIds() Group by the vol_work_technic_ids column
+ * @method     ChildVolWorkVersionQuery groupByVolWorkTechnicVersions() Group by the vol_work_technic_versions column
  *
  * @method     ChildVolWorkVersionQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildVolWorkVersionQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -78,7 +86,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolWorkVersion filtered by the version_created_by column
  * @method     ChildVolWorkVersion|null findOneByVersionComment(string $version_comment) Return the first ChildVolWorkVersion filtered by the version_comment column
  * @method     ChildVolWorkVersion|null findOneByObjStageWorkIds(array $obj_stage_work_ids) Return the first ChildVolWorkVersion filtered by the obj_stage_work_ids column
- * @method     ChildVolWorkVersion|null findOneByObjStageWorkVersions(array $obj_stage_work_versions) Return the first ChildVolWorkVersion filtered by the obj_stage_work_versions column *
+ * @method     ChildVolWorkVersion|null findOneByObjStageWorkVersions(array $obj_stage_work_versions) Return the first ChildVolWorkVersion filtered by the obj_stage_work_versions column
+ * @method     ChildVolWorkVersion|null findOneByVolWorkMaterialIds(array $vol_work_material_ids) Return the first ChildVolWorkVersion filtered by the vol_work_material_ids column
+ * @method     ChildVolWorkVersion|null findOneByVolWorkMaterialVersions(array $vol_work_material_versions) Return the first ChildVolWorkVersion filtered by the vol_work_material_versions column
+ * @method     ChildVolWorkVersion|null findOneByVolWorkTechnicIds(array $vol_work_technic_ids) Return the first ChildVolWorkVersion filtered by the vol_work_technic_ids column
+ * @method     ChildVolWorkVersion|null findOneByVolWorkTechnicVersions(array $vol_work_technic_versions) Return the first ChildVolWorkVersion filtered by the vol_work_technic_versions column *
 
  * @method     ChildVolWorkVersion requirePk($key, ?ConnectionInterface $con = null) Return the ChildVolWorkVersion by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkVersion requireOne(?ConnectionInterface $con = null) Return the first ChildVolWorkVersion matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -94,6 +106,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkVersion requireOneByVersionComment(string $version_comment) Return the first ChildVolWorkVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkVersion requireOneByObjStageWorkIds(array $obj_stage_work_ids) Return the first ChildVolWorkVersion filtered by the obj_stage_work_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkVersion requireOneByObjStageWorkVersions(array $obj_stage_work_versions) Return the first ChildVolWorkVersion filtered by the obj_stage_work_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkVersion requireOneByVolWorkMaterialIds(array $vol_work_material_ids) Return the first ChildVolWorkVersion filtered by the vol_work_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkVersion requireOneByVolWorkMaterialVersions(array $vol_work_material_versions) Return the first ChildVolWorkVersion filtered by the vol_work_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkVersion requireOneByVolWorkTechnicIds(array $vol_work_technic_ids) Return the first ChildVolWorkVersion filtered by the vol_work_technic_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkVersion requireOneByVolWorkTechnicVersions(array $vol_work_technic_versions) Return the first ChildVolWorkVersion filtered by the vol_work_technic_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVolWorkVersion[]|Collection find(?ConnectionInterface $con = null) Return ChildVolWorkVersion objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildVolWorkVersion> find(?ConnectionInterface $con = null) Return ChildVolWorkVersion objects based on current ModelCriteria
@@ -119,6 +135,14 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByObjStageWorkIds(array $obj_stage_work_ids) Return ChildVolWorkVersion objects filtered by the obj_stage_work_ids column
  * @method     ChildVolWorkVersion[]|Collection findByObjStageWorkVersions(array $obj_stage_work_versions) Return ChildVolWorkVersion objects filtered by the obj_stage_work_versions column
  * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByObjStageWorkVersions(array $obj_stage_work_versions) Return ChildVolWorkVersion objects filtered by the obj_stage_work_versions column
+ * @method     ChildVolWorkVersion[]|Collection findByVolWorkMaterialIds(array $vol_work_material_ids) Return ChildVolWorkVersion objects filtered by the vol_work_material_ids column
+ * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByVolWorkMaterialIds(array $vol_work_material_ids) Return ChildVolWorkVersion objects filtered by the vol_work_material_ids column
+ * @method     ChildVolWorkVersion[]|Collection findByVolWorkMaterialVersions(array $vol_work_material_versions) Return ChildVolWorkVersion objects filtered by the vol_work_material_versions column
+ * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByVolWorkMaterialVersions(array $vol_work_material_versions) Return ChildVolWorkVersion objects filtered by the vol_work_material_versions column
+ * @method     ChildVolWorkVersion[]|Collection findByVolWorkTechnicIds(array $vol_work_technic_ids) Return ChildVolWorkVersion objects filtered by the vol_work_technic_ids column
+ * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByVolWorkTechnicIds(array $vol_work_technic_ids) Return ChildVolWorkVersion objects filtered by the vol_work_technic_ids column
+ * @method     ChildVolWorkVersion[]|Collection findByVolWorkTechnicVersions(array $vol_work_technic_versions) Return ChildVolWorkVersion objects filtered by the vol_work_technic_versions column
+ * @psalm-method Collection&\Traversable<ChildVolWorkVersion> findByVolWorkTechnicVersions(array $vol_work_technic_versions) Return ChildVolWorkVersion objects filtered by the vol_work_technic_versions column
  * @method     ChildVolWorkVersion[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildVolWorkVersion> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -218,7 +242,7 @@ abstract class VolWorkVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, price, is_available, unit_id, version, version_created_at, version_created_by, version_comment, obj_stage_work_ids, obj_stage_work_versions FROM vol_work_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, price, is_available, unit_id, version, version_created_at, version_created_by, version_comment, obj_stage_work_ids, obj_stage_work_versions, vol_work_material_ids, vol_work_material_versions, vol_work_technic_ids, vol_work_technic_versions FROM vol_work_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -820,6 +844,346 @@ abstract class VolWorkVersionQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(VolWorkVersionTableMap::COL_OBJ_STAGE_WORK_VERSIONS, $objStageWorkVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_material_ids column
+     *
+     * @param array $volWorkMaterialIds The values to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkMaterialIds($volWorkMaterialIds = null, ?string $comparison = null)
+    {
+        $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_IDS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($volWorkMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($volWorkMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($volWorkMaterialIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_IDS, $volWorkMaterialIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_material_ids column
+     * @param mixed $volWorkMaterialIds The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkMaterialId($volWorkMaterialIds = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($volWorkMaterialIds)) {
+                $volWorkMaterialIds = '%| ' . $volWorkMaterialIds . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $volWorkMaterialIds = '%| ' . $volWorkMaterialIds . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_IDS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $volWorkMaterialIds, $comparison);
+            } else {
+                $this->addAnd($key, $volWorkMaterialIds, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_IDS, $volWorkMaterialIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_material_versions column
+     *
+     * @param array $volWorkMaterialVersions The values to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkMaterialVersions($volWorkMaterialVersions = null, ?string $comparison = null)
+    {
+        $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($volWorkMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($volWorkMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($volWorkMaterialVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS, $volWorkMaterialVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_material_versions column
+     * @param mixed $volWorkMaterialVersions The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkMaterialVersion($volWorkMaterialVersions = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($volWorkMaterialVersions)) {
+                $volWorkMaterialVersions = '%| ' . $volWorkMaterialVersions . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $volWorkMaterialVersions = '%| ' . $volWorkMaterialVersions . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $volWorkMaterialVersions, $comparison);
+            } else {
+                $this->addAnd($key, $volWorkMaterialVersions, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_MATERIAL_VERSIONS, $volWorkMaterialVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_technic_ids column
+     *
+     * @param array $volWorkTechnicIds The values to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkTechnicIds($volWorkTechnicIds = null, ?string $comparison = null)
+    {
+        $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_IDS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($volWorkTechnicIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($volWorkTechnicIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($volWorkTechnicIds as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_IDS, $volWorkTechnicIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_technic_ids column
+     * @param mixed $volWorkTechnicIds The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkTechnicId($volWorkTechnicIds = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($volWorkTechnicIds)) {
+                $volWorkTechnicIds = '%| ' . $volWorkTechnicIds . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $volWorkTechnicIds = '%| ' . $volWorkTechnicIds . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_IDS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $volWorkTechnicIds, $comparison);
+            } else {
+                $this->addAnd($key, $volWorkTechnicIds, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_IDS, $volWorkTechnicIds, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_technic_versions column
+     *
+     * @param array $volWorkTechnicVersions The values to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkTechnicVersions($volWorkTechnicVersions = null, ?string $comparison = null)
+    {
+        $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS);
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            foreach ($volWorkTechnicVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_SOME) {
+            foreach ($volWorkTechnicVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addOr($key, $value, Criteria::LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::LIKE);
+                }
+            }
+
+            return $this;
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            foreach ($volWorkTechnicVersions as $value) {
+                $value = '%| ' . $value . ' |%';
+                if ($this->containsKey($key)) {
+                    $this->addAnd($key, $value, Criteria::NOT_LIKE);
+                } else {
+                    $this->add($key, $value, Criteria::NOT_LIKE);
+                }
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS, $volWorkTechnicVersions, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the vol_work_technic_versions column
+     * @param mixed $volWorkTechnicVersions The value to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::CONTAINS_ALL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkTechnicVersion($volWorkTechnicVersions = null, ?string $comparison = null)
+    {
+        if (null === $comparison || $comparison == Criteria::CONTAINS_ALL) {
+            if (is_scalar($volWorkTechnicVersions)) {
+                $volWorkTechnicVersions = '%| ' . $volWorkTechnicVersions . ' |%';
+                $comparison = Criteria::LIKE;
+            }
+        } elseif ($comparison == Criteria::CONTAINS_NONE) {
+            $volWorkTechnicVersions = '%| ' . $volWorkTechnicVersions . ' |%';
+            $comparison = Criteria::NOT_LIKE;
+            $key = $this->getAliasedColName(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS);
+            if ($this->containsKey($key)) {
+                $this->addAnd($key, $volWorkTechnicVersions, $comparison);
+            } else {
+                $this->addAnd($key, $volWorkTechnicVersions, $comparison);
+            }
+            $this->addOr($key, null, Criteria::ISNULL);
+
+            return $this;
+        }
+
+        $this->addUsingAlias(VolWorkVersionTableMap::COL_VOL_WORK_TECHNIC_VERSIONS, $volWorkTechnicVersions, $comparison);
 
         return $this;
     }

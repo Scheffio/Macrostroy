@@ -373,7 +373,7 @@ class Objects
         return $query;
     }
 
-    public static function getObjectsPriceQuery(string $colId)
+    public static function getObjectsPriceQuery(string $colId, int $objId)
     {
         return ObjProjectQuery::create()
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
@@ -382,7 +382,8 @@ class Objects
                         ->leftJoinObjStage()
                     ->endUse()
                 ->endUse()
-            ->endUse();
+            ->endUse()
+            ->where();
     }
     #endregion
 

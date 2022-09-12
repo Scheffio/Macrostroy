@@ -349,28 +349,22 @@ class Objects
 
         $tableName = self::getClassNameObjByLvl($lvl);
 
-        JsonOutput::success(
-            self::getObjectsPriceQuery(
-                colId: $colId,
-                objId: $objId
-            )
-//            ->toString()
-            ->find()->getData()
+        $query = PropelQuery::from($tableName);
+//                ->select([
+//                    $colId,
+//                    $colStatus,
+//                    $colIsPublic,
+//                    $colCreatedBy
+//                ]);
+
+        $query->addSelectQuery(
+            self::getObjectsPriceQuery(), 'ASQ'
         );
 
-        $query = PropelQuery::from($tableName)
-                ->select([
-                    $colId,
-                    $colStatus,
-                    $colIsPublic,
-                    $colCreatedBy
-                ])
-                ->addSelectQuery(
-                    self::getObjectsPriceQuery(
-                        colId: $colId,
-                        objId: $objId
-                    )
-                );
+        JsonOutput::success(
+            $query
+                ->toString()
+        );
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
@@ -393,7 +387,7 @@ class Objects
         return $query;
     }
 
-    public static function getObjectsPriceQuery(string $colId, int $objId)
+    public static function getObjectsPriceQuery()
     {
         $colSwPrice = ObjStageWorkTableMap::COL_PRICE;
         $colSwAmount = ObjStageWorkTableMap::COL_AMOUNT;
@@ -412,9 +406,6 @@ class Objects
                 ObjStageWorkTableMap::COL_ID
             ])
             ->withColumn("($colSwPrice*$colSwAmount) + ($colSmPrice*$colSmAmount) + ($colStPrice*$colStAmount)", 'price')
-//            ->withColumn(ObjStageWorkTableMap::COL_PRICE, 'price_work')
-//            ->withColumn(ObjStageMaterialTableMap::COL_PRICE, 'price_material')
-//            ->withColumn(ObjStageTechnicTableMap::COL_PRICE, 'price_technic')
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)

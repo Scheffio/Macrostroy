@@ -380,9 +380,16 @@ body.fixated {
   height: 51px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input {
-  outline: none;
-  border: 1px solid black;
-  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  display: block;
+  border: 2px solid black;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes {
   display: flex;

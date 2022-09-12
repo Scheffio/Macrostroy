@@ -303,8 +303,15 @@
                                 width: 310px;
                                 height: 51px;
                                 input {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
                                     &::before {
                                         content: '';
+                                        width: 26px;
+                                        height: 26px;
+                                        display: block;
+                                        border: 2px solid black;
                                     }
                                 }
                             }

@@ -277,15 +277,23 @@ class ProjectRole
     #endregion
 
     #region Static Select Objects
-    public static function getObject()
+    public static function getObjects(int $lvl, int $parentId, int $parentLvl, int $projectId, int $useId)
     {
-        IsCrud: true
-        Objects: {
-                Id:
-                Name:
-                IsCrud:
-                IsAdmin:
-    }
+        $isCrud = self::isAccessCrudObj(
+            lvl: $lvl,
+            projectId: $projectId,
+            objId: $parentId,
+            userId: $useId
+        );
+
+//        IsCrud: true
+//        Objects: {
+//                Id:
+//                Name:
+//                IsCrud:
+//                IsAdmin:
+//        }
+
     }
     #endregion
 
@@ -294,27 +302,34 @@ class ProjectRole
      * Возвращает массив разрешений пользователей.
      * @param int $lvl Номер уровня доступа.
      * @param int $projectId ID проекта.
-     * @param int $objId ID объекта.
+     * @param int|null $objId ID объекта.
      * @param int|null $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getCrudUsersObject(int $lvl, int $projectId, int $objId, ?int $userId = null): array
+    public static function getCrudUsersObject(int $lvl, int $projectId, ?int $objId = null, ?int $userId = null): array
     {
-        $r = [
-            'parents' => self::getParentsId($lvl, $objId),
-            'users' => self::getUsersQuery($lvl, $projectId, $userId)->find()->getData()
-        ];
+        $parents = null;
 
-        if ($r['users']) {
-            self::formingUsersDataById($r['users']);
-            self::filterUsersCrudByLvl($lvl, $r['users']);
-            self::filterUsersCrudDataByParents($r['parents'], $r['users']);
-            self::formingUsersCrud($r['users']);
+        if ($objId) {
+            $parents = self::getParentsId($lvl, $objId);
         }
 
-        return $r['users'];
+        $users = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
+
+        if ($users) {
+            self::formingUsersDataById($users);
+            self::filterUsersCrudByLvl($lvl, $users);
+
+            if ($parents) {
+                self::filterUsersCrudDataByParents($parents, $users);
+            }
+
+            self::formingUsersCrud($users);
+        }
+
+        return $users;
     }
 
     /**

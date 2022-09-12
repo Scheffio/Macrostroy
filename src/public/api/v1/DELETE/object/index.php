@@ -24,13 +24,11 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    $request->checkRequestVariablesOrError('id', 'lvl');
-
-    $id = $request->getRequest('id');
-    $lvl = $request->getRequest('lvl');
+    $id = $request->getQueryOrThrow('id');
+    $lvl = $request->getQueryOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+    // ID проекта, с проверкой доступа на удаление, т.е. статус не равен "Удален".
     $projectId = Objects::getObject(id: $id, lvl: $lvl)
         ->isNotDeletedTableOrThrow()
         ->getProjectIdObjOrThrow();

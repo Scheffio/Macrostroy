@@ -279,7 +279,13 @@ class ProjectRole
     #region Static Select Objects
     public static function getObject()
     {
-
+        IsCrud: true
+        Objects: {
+                Id:
+                Name:
+                IsCrud:
+                IsAdmin:
+    }
     }
     #endregion
 

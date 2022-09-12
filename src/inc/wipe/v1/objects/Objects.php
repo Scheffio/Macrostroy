@@ -31,6 +31,7 @@ use wipe\inc\v1\objects\children\Subproject;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 
@@ -165,7 +166,7 @@ class Objects
     }
 
     /**
-     * Данный объект доступен для редатирова
+     * Данный объект доступен для редатирования.
      * @return bool
      * @throws IncorrectLvlException
      */
@@ -180,7 +181,7 @@ class Objects
     }
 
     /**
-     *
+     * Данный объект доступен для редатирования, иначе - ошибка.
      * @return Objects
      * @throws IncorrectLvlException
      * @throws ObjectIsNotEditableException
@@ -188,6 +189,32 @@ class Objects
     public function isEditableOrThrow(): Objects
     {
         return $this->isEditable() ? $this : throw new ObjectIsNotEditableException();
+    }
+
+    /**
+     * Данный объект не является удаленным.
+     * @return bool
+     * @throws IncorrectLvlException
+     */
+    public function isNotDeletedTable(): bool
+    {
+        $colStatus = self::getColStatusByLvl($this->lvlInt);
+        $className = self::getClassNameObjByLvl($this->lvlInt);
+
+        return  PropelQuery::from($className)
+                ->where($colStatus . '!=?', self::ATTRIBUTE_STATUS_DELETED)
+                ->findPk($this->id) !== null;
+    }
+
+    /**
+     * Данный объект не является удаленным, иначе - ошибка.
+     * @return Objects
+     * @throws IncorrectLvlException
+     * @throws ObjectIsDeletedException
+     */
+    public function isNotDeletedTableOrThrow(): Objects
+    {
+        return self::isNotDeletedTable() ? $this : throw new ObjectIsDeletedException();
     }
     #endregion
 

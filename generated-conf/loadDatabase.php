@@ -33,8 +33,10 @@ $serviceContainer->initDatabaseMaps(array (
     27 => '\\DB\\Map\\VolTechnicVersionTableMap',
     28 => '\\DB\\Map\\VolUnitTableMap',
     29 => '\\DB\\Map\\VolWorkMaterialTableMap',
-    30 => '\\DB\\Map\\VolWorkTableMap',
-    31 => '\\DB\\Map\\VolWorkTechnicTableMap',
-    32 => '\\DB\\Map\\VolWorkVersionTableMap',
+    30 => '\\DB\\Map\\VolWorkMaterialVersionTableMap',
+    31 => '\\DB\\Map\\VolWorkTableMap',
+    32 => '\\DB\\Map\\VolWorkTechnicTableMap',
+//    33 => '\\DB\\Map\\VolWorkTechnicVersionTableMap',
+//    34 => '\\DB\\Map\\VolWorkVersionTableMap',
   ),
 ));

@@ -8,6 +8,7 @@ fetch(url).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
     })
+    
 })
 
 const userGenerator = {
@@ -141,7 +142,7 @@ const selectableUsers = {
         elem.classList.add('selected')
     },
     reset() {
-        this.users.forEach((elem) => {
+        this.roles.forEach((elem) => {
             elem.classList.remove('selected')
         })
     }
@@ -202,6 +203,3 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#roles"
 parseRoles()
-
-document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {console.log(elem)})
-

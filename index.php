@@ -18,12 +18,6 @@ require "generated-conf/config.php";
 DevelopmentMode::on();
 setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 
-if (RouterParser::getFirstUrlCatalog() === "status") {
-//    Auth::getUser();
-    require "src/public/page/status/index.php";
-    die();
-}
-
 ////token adder
 //if (!empty($_GET["E5645T2u345cu3T_addtoken_4oi3E24o3vm2T4So"])) {
 //    setcookie("E5645T2u345cu3T_browser_security_4oi3E24o3vm2T4So", "4oi3E24o3vm2T4So3i2vTSDRE4o3T24uvi34op56mu635vouTU36v3R5v6E5645T2u345cu3T", time() + 1000 * 24 * 60 * 60, "/");
@@ -45,8 +39,8 @@ $_REQUEST += $_POST;
 //подключение статических файлов
 if (Router::isStatic()) {
     try {
-        MimeType::setContentTypeHeader(MimeType::getMimeType(RouterParser::getFile()));
         Output::outputStatic();
+        MimeType::setContentTypeHeader(MimeType::getMimeType(RouterParser::getFile()));
     } catch (FileNotFoundException $e) {
         Output::outputError404();
     }
@@ -70,7 +64,6 @@ if (Router::isApi()) {
                 "message" => $e->getMessage(),
                 "file" => $e->getFile(),
                 "line" => $e->getLine(),
-                "previous" => $e->getPrevious(),
                 "trace" => $e->getTrace()
             ]);
         } else {

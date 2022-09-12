@@ -41,7 +41,6 @@ try {
     $name = $request->getRequest('name');
     $status = $request->getRequest('status');
     $isPublic = $request->getRequest('is_public');
-    $isAvailable = $request->getRequest('is_available');
 
     switch ($lvl) {
         case eLvlObjInt::PROJECT->value:
@@ -51,7 +50,6 @@ try {
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
-                    isAvailable: $isAvailable,
                 )
                 ->update();
             break;
@@ -62,7 +60,6 @@ try {
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
-                    isAvailable: $isAvailable,
                 )
                 ->update();
             break;
@@ -73,7 +70,6 @@ try {
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
-                    isAvailable: $isAvailable,
                 )
                 ->update();
             break;
@@ -84,7 +80,6 @@ try {
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
-                    isAvailable: $isAvailable,
                 )
                 ->update();
             break;
@@ -95,7 +90,6 @@ try {
                     name: $name,
                     status: $status,
                     isPublic: $isPublic,
-                    isAvailable: $isAvailable,
                 )
                 ->update();
             break;

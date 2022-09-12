@@ -63,7 +63,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 10;
+    public const NUM_COLUMNS = 11;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 10;
+    public const NUM_HYDRATE_COLUMNS = 11;
 
     /**
      * the column name for the id field
@@ -84,6 +84,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * the column name for the amount field
      */
     public const COL_AMOUNT = 'vol_work_material_version.amount';
+
+    /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'vol_work_material_version.is_available';
 
     /**
      * the column name for the work_id field
@@ -139,11 +144,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Amount', 'WorkId', 'MaterialId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'amount', 'workId', 'materialId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
-        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID, VolWorkMaterialVersionTableMap::COL_AMOUNT, VolWorkMaterialVersionTableMap::COL_WORK_ID, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID, VolWorkMaterialVersionTableMap::COL_VERSION, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'amount', 'work_id', 'material_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'material_id_version', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id', 'Amount', 'IsAvailable', 'WorkId', 'MaterialId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'amount', 'isAvailable', 'workId', 'materialId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
+        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID, VolWorkMaterialVersionTableMap::COL_AMOUNT, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE, VolWorkMaterialVersionTableMap::COL_WORK_ID, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID, VolWorkMaterialVersionTableMap::COL_VERSION, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'amount', 'is_available', 'work_id', 'material_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'material_id_version', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
     /**
@@ -155,11 +160,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'WorkId' => 2, 'MaterialId' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, 'WorkIdVersion' => 8, 'MaterialIdVersion' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'workId' => 2, 'materialId' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, 'workIdVersion' => 8, 'materialIdVersion' => 9, ],
-        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID => 0, VolWorkMaterialVersionTableMap::COL_AMOUNT => 1, VolWorkMaterialVersionTableMap::COL_WORK_ID => 2, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID => 3, VolWorkMaterialVersionTableMap::COL_VERSION => 4, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 5, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 6, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT => 7, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 8, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 9, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'work_id' => 2, 'material_id' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, 'work_id_version' => 8, 'material_id_version' => 9, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'IsAvailable' => 2, 'WorkId' => 3, 'MaterialId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'WorkIdVersion' => 9, 'MaterialIdVersion' => 10, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'isAvailable' => 2, 'workId' => 3, 'materialId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'workIdVersion' => 9, 'materialIdVersion' => 10, ],
+        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID => 0, VolWorkMaterialVersionTableMap::COL_AMOUNT => 1, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE => 2, VolWorkMaterialVersionTableMap::COL_WORK_ID => 3, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID => 4, VolWorkMaterialVersionTableMap::COL_VERSION => 5, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT => 8, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 9, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'is_available' => 2, 'work_id' => 3, 'material_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'work_id_version' => 9, 'material_id_version' => 10, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
     /**
@@ -182,6 +187,14 @@ class VolWorkMaterialVersionTableMap extends TableMap
         'VolWorkMaterialVersionTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'vol_work_material_version.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'VolWorkMaterialVersion.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'volWorkMaterialVersion.isAvailable' => 'IS_AVAILABLE',
+        'VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'vol_work_material_version.is_available' => 'IS_AVAILABLE',
         'WorkId' => 'WORK_ID',
         'VolWorkMaterialVersion.WorkId' => 'WORK_ID',
         'workId' => 'WORK_ID',
@@ -266,6 +279,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         // columns
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'vol_work_material', 'id', true, null, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('work_id', 'WorkId', 'INTEGER', true, null, null);
         $this->addColumn('material_id', 'MaterialId', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
@@ -365,11 +379,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -395,7 +409,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 4 + $offset
+                ? 5 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -502,6 +516,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_ID);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION);
@@ -513,6 +528,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.material_id');
             $criteria->addSelectColumn($alias . '.version');
@@ -541,6 +557,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_ID);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION);
@@ -552,6 +569,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.material_id');
             $criteria->removeSelectColumn($alias . '.version');

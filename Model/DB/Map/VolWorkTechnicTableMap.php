@@ -63,7 +63,7 @@ class VolWorkTechnicTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 8;
+    public const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class VolWorkTechnicTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 8;
+    public const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -84,6 +84,11 @@ class VolWorkTechnicTableMap extends TableMap
      * the column name for the amount field
      */
     public const COL_AMOUNT = 'vol_work_technic.amount';
+
+    /**
+     * the column name for the is_available field
+     */
+    public const COL_IS_AVAILABLE = 'vol_work_technic.is_available';
 
     /**
      * the column name for the work_id field
@@ -129,11 +134,11 @@ class VolWorkTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Amount', 'WorkId', 'TechnicId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'amount', 'workId', 'technicId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [VolWorkTechnicTableMap::COL_ID, VolWorkTechnicTableMap::COL_AMOUNT, VolWorkTechnicTableMap::COL_WORK_ID, VolWorkTechnicTableMap::COL_TECHNIC_ID, VolWorkTechnicTableMap::COL_VERSION, VolWorkTechnicTableMap::COL_VERSION_CREATED_AT, VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, VolWorkTechnicTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'amount', 'work_id', 'technic_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id', 'Amount', 'IsAvailable', 'WorkId', 'TechnicId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'amount', 'isAvailable', 'workId', 'technicId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
+        self::TYPE_COLNAME       => [VolWorkTechnicTableMap::COL_ID, VolWorkTechnicTableMap::COL_AMOUNT, VolWorkTechnicTableMap::COL_IS_AVAILABLE, VolWorkTechnicTableMap::COL_WORK_ID, VolWorkTechnicTableMap::COL_TECHNIC_ID, VolWorkTechnicTableMap::COL_VERSION, VolWorkTechnicTableMap::COL_VERSION_CREATED_AT, VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, VolWorkTechnicTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'amount', 'is_available', 'work_id', 'technic_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -145,11 +150,11 @@ class VolWorkTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'WorkId' => 2, 'TechnicId' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'VersionComment' => 7, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'workId' => 2, 'technicId' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'versionComment' => 7, ],
-        self::TYPE_COLNAME       => [VolWorkTechnicTableMap::COL_ID => 0, VolWorkTechnicTableMap::COL_AMOUNT => 1, VolWorkTechnicTableMap::COL_WORK_ID => 2, VolWorkTechnicTableMap::COL_TECHNIC_ID => 3, VolWorkTechnicTableMap::COL_VERSION => 4, VolWorkTechnicTableMap::COL_VERSION_CREATED_AT => 5, VolWorkTechnicTableMap::COL_VERSION_CREATED_BY => 6, VolWorkTechnicTableMap::COL_VERSION_COMMENT => 7, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'work_id' => 2, 'technic_id' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'version_comment' => 7, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'IsAvailable' => 2, 'WorkId' => 3, 'TechnicId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'isAvailable' => 2, 'workId' => 3, 'technicId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
+        self::TYPE_COLNAME       => [VolWorkTechnicTableMap::COL_ID => 0, VolWorkTechnicTableMap::COL_AMOUNT => 1, VolWorkTechnicTableMap::COL_IS_AVAILABLE => 2, VolWorkTechnicTableMap::COL_WORK_ID => 3, VolWorkTechnicTableMap::COL_TECHNIC_ID => 4, VolWorkTechnicTableMap::COL_VERSION => 5, VolWorkTechnicTableMap::COL_VERSION_CREATED_AT => 6, VolWorkTechnicTableMap::COL_VERSION_CREATED_BY => 7, VolWorkTechnicTableMap::COL_VERSION_COMMENT => 8, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'is_available' => 2, 'work_id' => 3, 'technic_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
     /**
@@ -172,6 +177,14 @@ class VolWorkTechnicTableMap extends TableMap
         'VolWorkTechnicTableMap::COL_AMOUNT' => 'AMOUNT',
         'COL_AMOUNT' => 'AMOUNT',
         'vol_work_technic.amount' => 'AMOUNT',
+        'IsAvailable' => 'IS_AVAILABLE',
+        'VolWorkTechnic.IsAvailable' => 'IS_AVAILABLE',
+        'isAvailable' => 'IS_AVAILABLE',
+        'volWorkTechnic.isAvailable' => 'IS_AVAILABLE',
+        'VolWorkTechnicTableMap::COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
+        'is_available' => 'IS_AVAILABLE',
+        'vol_work_technic.is_available' => 'IS_AVAILABLE',
         'WorkId' => 'WORK_ID',
         'VolWorkTechnic.WorkId' => 'WORK_ID',
         'workId' => 'WORK_ID',
@@ -240,6 +253,7 @@ class VolWorkTechnicTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('amount', 'Amount', 'DECIMAL', true, 19, null);
+        $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addForeignKey('work_id', 'WorkId', 'INTEGER', 'vol_work', 'id', true, null, null);
         $this->addForeignKey('technic_id', 'TechnicId', 'INTEGER', 'vol_technic', 'id', true, null, null);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
@@ -445,6 +459,7 @@ class VolWorkTechnicTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_ID);
             $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_TECHNIC_ID);
             $criteria->addSelectColumn(VolWorkTechnicTableMap::COL_VERSION);
@@ -454,6 +469,7 @@ class VolWorkTechnicTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.amount');
+            $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.technic_id');
             $criteria->addSelectColumn($alias . '.version');
@@ -480,6 +496,7 @@ class VolWorkTechnicTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_ID);
             $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_TECHNIC_ID);
             $criteria->removeSelectColumn(VolWorkTechnicTableMap::COL_VERSION);
@@ -489,6 +506,7 @@ class VolWorkTechnicTableMap extends TableMap
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.amount');
+            $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.technic_id');
             $criteria->removeSelectColumn($alias . '.version');

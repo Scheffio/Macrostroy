@@ -23,6 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkTechnicQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildVolWorkTechnicQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildVolWorkTechnicQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildVolWorkTechnicQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildVolWorkTechnicQuery orderByTechnicId($order = Criteria::ASC) Order by the technic_id column
  * @method     ChildVolWorkTechnicQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -32,6 +33,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkTechnicQuery groupById() Group by the id column
  * @method     ChildVolWorkTechnicQuery groupByAmount() Group by the amount column
+ * @method     ChildVolWorkTechnicQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildVolWorkTechnicQuery groupByWorkId() Group by the work_id column
  * @method     ChildVolWorkTechnicQuery groupByTechnicId() Group by the technic_id column
  * @method     ChildVolWorkTechnicQuery groupByVersion() Group by the version column
@@ -84,6 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkTechnic|null findOneById(int $id) Return the first ChildVolWorkTechnic filtered by the id column
  * @method     ChildVolWorkTechnic|null findOneByAmount(string $amount) Return the first ChildVolWorkTechnic filtered by the amount column
+ * @method     ChildVolWorkTechnic|null findOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnic filtered by the is_available column
  * @method     ChildVolWorkTechnic|null findOneByWorkId(int $work_id) Return the first ChildVolWorkTechnic filtered by the work_id column
  * @method     ChildVolWorkTechnic|null findOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnic filtered by the technic_id column
  * @method     ChildVolWorkTechnic|null findOneByVersion(int $version) Return the first ChildVolWorkTechnic filtered by the version column
@@ -96,6 +99,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkTechnic requireOneById(int $id) Return the first ChildVolWorkTechnic filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByAmount(string $amount) Return the first ChildVolWorkTechnic filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkTechnic requireOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnic filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByWorkId(int $work_id) Return the first ChildVolWorkTechnic filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnic filtered by the technic_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByVersion(int $version) Return the first ChildVolWorkTechnic filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -109,6 +113,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findById(int $id) Return ChildVolWorkTechnic objects filtered by the id column
  * @method     ChildVolWorkTechnic[]|Collection findByAmount(string $amount) Return ChildVolWorkTechnic objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByAmount(string $amount) Return ChildVolWorkTechnic objects filtered by the amount column
+ * @method     ChildVolWorkTechnic[]|Collection findByIsAvailable(boolean $is_available) Return ChildVolWorkTechnic objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByIsAvailable(boolean $is_available) Return ChildVolWorkTechnic objects filtered by the is_available column
  * @method     ChildVolWorkTechnic[]|Collection findByWorkId(int $work_id) Return ChildVolWorkTechnic objects filtered by the work_id column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByWorkId(int $work_id) Return ChildVolWorkTechnic objects filtered by the work_id column
  * @method     ChildVolWorkTechnic[]|Collection findByTechnicId(int $technic_id) Return ChildVolWorkTechnic objects filtered by the technic_id column
@@ -227,7 +233,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, amount, work_id, technic_id, version, version_created_at, version_created_by, version_comment FROM vol_work_technic WHERE id = :p0';
+        $sql = 'SELECT id, amount, is_available, work_id, technic_id, version, version_created_at, version_created_by, version_comment FROM vol_work_technic WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -403,6 +409,35 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         $this->addUsingAlias(VolWorkTechnicTableMap::COL_AMOUNT, $amount, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(VolWorkTechnicTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }

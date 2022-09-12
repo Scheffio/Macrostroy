@@ -23,6 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkMaterialQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildVolWorkMaterialQuery orderByAmount($order = Criteria::ASC) Order by the amount column
+ * @method     ChildVolWorkMaterialQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildVolWorkMaterialQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildVolWorkMaterialQuery orderByMaterialId($order = Criteria::ASC) Order by the material_id column
  * @method     ChildVolWorkMaterialQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -32,6 +33,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkMaterialQuery groupById() Group by the id column
  * @method     ChildVolWorkMaterialQuery groupByAmount() Group by the amount column
+ * @method     ChildVolWorkMaterialQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildVolWorkMaterialQuery groupByWorkId() Group by the work_id column
  * @method     ChildVolWorkMaterialQuery groupByMaterialId() Group by the material_id column
  * @method     ChildVolWorkMaterialQuery groupByVersion() Group by the version column
@@ -84,6 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkMaterial|null findOneById(int $id) Return the first ChildVolWorkMaterial filtered by the id column
  * @method     ChildVolWorkMaterial|null findOneByAmount(string $amount) Return the first ChildVolWorkMaterial filtered by the amount column
+ * @method     ChildVolWorkMaterial|null findOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkMaterial filtered by the is_available column
  * @method     ChildVolWorkMaterial|null findOneByWorkId(int $work_id) Return the first ChildVolWorkMaterial filtered by the work_id column
  * @method     ChildVolWorkMaterial|null findOneByMaterialId(int $material_id) Return the first ChildVolWorkMaterial filtered by the material_id column
  * @method     ChildVolWorkMaterial|null findOneByVersion(int $version) Return the first ChildVolWorkMaterial filtered by the version column
@@ -96,6 +99,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildVolWorkMaterial requireOneById(int $id) Return the first ChildVolWorkMaterial filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkMaterial requireOneByAmount(string $amount) Return the first ChildVolWorkMaterial filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkMaterial requireOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkMaterial filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkMaterial requireOneByWorkId(int $work_id) Return the first ChildVolWorkMaterial filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkMaterial requireOneByMaterialId(int $material_id) Return the first ChildVolWorkMaterial filtered by the material_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkMaterial requireOneByVersion(int $version) Return the first ChildVolWorkMaterial filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -109,6 +113,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolWorkMaterial> findById(int $id) Return ChildVolWorkMaterial objects filtered by the id column
  * @method     ChildVolWorkMaterial[]|Collection findByAmount(string $amount) Return ChildVolWorkMaterial objects filtered by the amount column
  * @psalm-method Collection&\Traversable<ChildVolWorkMaterial> findByAmount(string $amount) Return ChildVolWorkMaterial objects filtered by the amount column
+ * @method     ChildVolWorkMaterial[]|Collection findByIsAvailable(boolean $is_available) Return ChildVolWorkMaterial objects filtered by the is_available column
+ * @psalm-method Collection&\Traversable<ChildVolWorkMaterial> findByIsAvailable(boolean $is_available) Return ChildVolWorkMaterial objects filtered by the is_available column
  * @method     ChildVolWorkMaterial[]|Collection findByWorkId(int $work_id) Return ChildVolWorkMaterial objects filtered by the work_id column
  * @psalm-method Collection&\Traversable<ChildVolWorkMaterial> findByWorkId(int $work_id) Return ChildVolWorkMaterial objects filtered by the work_id column
  * @method     ChildVolWorkMaterial[]|Collection findByMaterialId(int $material_id) Return ChildVolWorkMaterial objects filtered by the material_id column
@@ -227,7 +233,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, amount, work_id, material_id, version, version_created_at, version_created_by, version_comment FROM vol_work_material WHERE id = :p0';
+        $sql = 'SELECT id, amount, is_available, work_id, material_id, version, version_created_at, version_created_by, version_comment FROM vol_work_material WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -403,6 +409,35 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         }
 
         $this->addUsingAlias(VolWorkMaterialTableMap::COL_AMOUNT, $amount, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the is_available column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsAvailable(true); // WHERE is_available = true
+     * $query->filterByIsAvailable('yes'); // WHERE is_available = true
+     * </code>
+     *
+     * @param bool|string $isAvailable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByIsAvailable($isAvailable = null, ?string $comparison = null)
+    {
+        if (is_string($isAvailable)) {
+            $isAvailable = in_array(strtolower($isAvailable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(VolWorkMaterialTableMap::COL_IS_AVAILABLE, $isAvailable, $comparison);
 
         return $this;
     }

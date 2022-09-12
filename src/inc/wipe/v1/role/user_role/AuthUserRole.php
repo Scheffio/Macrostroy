@@ -44,15 +44,27 @@ class AuthUserRole
     #endregion
 
     #region Getter Functions
-    /** @return int|null ID пользователя. */
+    /**
+     * @return int|null ID пользователя.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function getUserId(): ?int
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
+
         return self::$userId;
     }
 
-    /** @return UserRole|null Объект роли. */
+    /**
+     * @return UserRole|null Объект роли.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
     public static function getUserRoleObj(): ?UserRole
     {
+        self::isNoEmptyRoleObjOrApplyDefault();
+
         return self::$userRoleObj;
     }
     #endregion

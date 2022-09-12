@@ -173,7 +173,7 @@ CREATE TABLE `obj_project` (
   `version_created_by` varchar(100) DEFAULT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +182,7 @@ CREATE TABLE `obj_project` (
 
 LOCK TABLES `obj_project` WRITE;
 /*!40000 ALTER TABLE `obj_project` DISABLE KEYS */;
-INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert'),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete'),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert');
+INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert'),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete'),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert'),(7,'ProjectTest1','in_process',1,1,1,'2022-09-12 07:44:34','12','insert');
 /*!40000 ALTER TABLE `obj_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,7 +216,7 @@ CREATE TABLE `obj_project_version` (
 
 LOCK TABLES `obj_project_version` WRITE;
 /*!40000 ALTER TABLE `obj_project_version` DISABLE KEYS */;
-INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12','12','insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update','| 3 |','| 1 |'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete','| 3 |','| 3 |'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert',NULL,NULL),(5,'Project4','in_process',1,1,1,'2022-09-06 12:39:45','12','insert',NULL,NULL),(5,'PutTestProject1','in_process',1,1,2,'2022-09-06 12:43:17','12','update',NULL,NULL),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete',NULL,NULL),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert',NULL,NULL);
+INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12','12','insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update','| 3 |','| 1 |'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete','| 3 |','| 3 |'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert',NULL,NULL),(5,'Project4','in_process',1,1,1,'2022-09-06 12:39:45','12','insert',NULL,NULL),(5,'PutTestProject1','in_process',1,1,2,'2022-09-06 12:43:17','12','update',NULL,NULL),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete',NULL,NULL),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert',NULL,NULL),(7,'ProjectTest1','in_process',1,1,1,'2022-09-12 07:44:34','12','insert',NULL,NULL);
 /*!40000 ALTER TABLE `obj_project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,7 +522,7 @@ CREATE TABLE `obj_subproject` (
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   CONSTRAINT `subproject_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -531,7 +531,7 @@ CREATE TABLE `obj_subproject` (
 
 LOCK TABLES `obj_subproject` WRITE;
 /*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
-INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert');
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert'),(5,'SubProjectTest1','in_process',1,1,7,1,'2022-09-12 07:46:43','12','insert');
 /*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,7 +567,7 @@ CREATE TABLE `obj_subproject_version` (
 
 LOCK TABLES `obj_subproject_version` WRITE;
 /*!40000 ALTER TABLE `obj_subproject_version` DISABLE KEYS */;
-INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert',3,NULL,NULL);
+INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert',3,NULL,NULL),(5,'SubProjectTest1','in_process',1,1,7,1,'2022-09-12 07:46:43','12','insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_subproject_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,7 +719,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662968018,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662728524,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,4,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1),(28,'rewrer@artemy.net',NULL,'$2y$10$aUeARdgHlZ5RarrEF6/EXuZjP2ky5tFGupLiPfvxN4AVDMAUQgQK6','nick',0,NULL,0,1,0,1662706931,NULL,0,1),(30,'refgfdwrer@artemy.net',NULL,'$2y$10$nI7t/bRoMLXy7E5coN1hvO2KhCQ4bmruLYxWfSe.ThcegyPyfIkqW','nick',0,5,0,1,0,1662707063,NULL,0,1);
+INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662968674,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662728524,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,4,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1),(28,'rewrer@artemy.net',NULL,'$2y$10$aUeARdgHlZ5RarrEF6/EXuZjP2ky5tFGupLiPfvxN4AVDMAUQgQK6','nick',0,NULL,0,1,0,1662706931,NULL,0,1),(30,'refgfdwrer@artemy.net',NULL,'$2y$10$nI7t/bRoMLXy7E5coN1hvO2KhCQ4bmruLYxWfSe.ThcegyPyfIkqW','nick',0,5,0,1,0,1662707063,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

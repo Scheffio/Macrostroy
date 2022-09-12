@@ -276,7 +276,14 @@ class ProjectRole
     }
     #endregion
 
-    #region Static Select Functions
+    #region Static Select Objects
+    public static function getObject()
+    {
+
+    }
+    #endregion
+
+    #region Static Select Get CRUD Users Object
     /**
      * Возвращает массив разрешений пользователей.
      * @param int $lvl Номер уровня доступа.

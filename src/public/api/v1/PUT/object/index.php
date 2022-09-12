@@ -14,7 +14,6 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
@@ -108,8 +107,6 @@ try {
     JsonOutput::error('Некорректный номер уровня доступа');
 } catch (InvalidAccessLvlStrException $e) {
     JsonOutput::error('Некорректное наименование уровня доступа');
-} catch (NoProjectRoleFoundException $e) {
-    JsonOutput::error('Некорректная роль проекта');
 } catch (IncorrectStatusException $e) {
     JsonOutput::error('Некорректный статус объекта');
 } catch (NoFindObjectException $e) {

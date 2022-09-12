@@ -50,7 +50,7 @@ try {
     JsonOutput::success([
                             "id" => $user_id,
                             "username" => $username,
-                            "REMAINDER" => "ДОБАВИТЬ ПРОВЕРКУ НА РОЛИ С КЛАССА ЛЕРЫ!!!!!!!!!"
+//                            "REMAINDER" => "ДОБАВИТЬ ПРОВЕРКУ НА РОЛИ С КЛАССА ЛЕРЫ!!!!!!!!!"
                         ]);
 } catch (InvalidEmailException $e) {
     JsonOutput::error("Неверная почта");

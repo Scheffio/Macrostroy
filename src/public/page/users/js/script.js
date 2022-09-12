@@ -157,7 +157,6 @@ function addUser() {
     const email = document.querySelector('.modal-body__email > input')
     const select = document.querySelector('.modal-body__role > select')
     
-    console.log(username);
     fetch("/api/v1/admin/create_account", {
         method: 'POST',
         headers: {
@@ -169,7 +168,6 @@ function addUser() {
         return res.json();
     })
     .then(function(json) {
-        console.log(json);
         if(json.status === 'error') {
             if(json.error_message === 'Недостаточно прав') {
                 alert(json.error_message)

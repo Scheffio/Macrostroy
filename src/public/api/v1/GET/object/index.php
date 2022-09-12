@@ -8,26 +8,6 @@ use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 try {
-    $stageId = 3;
-
-    $unit = new \DB\VolUnit();
-    $unit->setName('test')->save();
-    $unitId = $unit->getId();
-
-    $material = new \ext\VolMaterial();
-    $material->setName('TestMaterial')->setPrice(100)->setUnitId($unitId)->save();
-    $materialId = $material->getId();
-
-    $technic = new \ext\VolTechnic();
-    $technic->setName('TestTechnic')->setPrice(100)->setUnitId($unitId)->save();
-    $technicId = $technic->getId();
-
-    $work = new \ext\VolTechnic();
-    $work->setName('TestWork')->setPrice(100)->setUnitId($unitId)->save();
-    $workId = $work->getId();
-
-//    $workMaterial = new \DB\VolWorkMaterial();
-
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 1,

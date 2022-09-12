@@ -241,7 +241,7 @@ CREATE TABLE `obj_stage` (
   PRIMARY KEY (`id`),
   KEY `house_id` (`house_id`),
   CONSTRAINT `stage_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `obj_house` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +250,7 @@ CREATE TABLE `obj_stage` (
 
 LOCK TABLES `obj_stage` WRITE;
 /*!40000 ALTER TABLE `obj_stage` DISABLE KEYS */;
-INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete'),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert');
+INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete'),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert'),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42','12','insert');
 /*!40000 ALTER TABLE `obj_stage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,7 +277,7 @@ CREATE TABLE `obj_stage_material` (
   KEY `stage_work_id` (`stage_work_id`),
   CONSTRAINT `stage_material_ibfk_1` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`),
   CONSTRAINT `stage_material_ibfk_2` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,6 +286,7 @@ CREATE TABLE `obj_stage_material` (
 
 LOCK TABLES `obj_stage_material` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material` DISABLE KEYS */;
+INSERT INTO `obj_stage_material` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
 /*!40000 ALTER TABLE `obj_stage_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -320,6 +321,7 @@ CREATE TABLE `obj_stage_material_version` (
 
 LOCK TABLES `obj_stage_material_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material_version` DISABLE KEYS */;
+INSERT INTO `obj_stage_material_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +348,7 @@ CREATE TABLE `obj_stage_technic` (
   KEY `technic_id` (`technic_id`),
   CONSTRAINT `stage_technic_ibfk_1` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`),
   CONSTRAINT `stage_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,6 +357,7 @@ CREATE TABLE `obj_stage_technic` (
 
 LOCK TABLES `obj_stage_technic` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic` DISABLE KEYS */;
+INSERT INTO `obj_stage_technic` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
 /*!40000 ALTER TABLE `obj_stage_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,6 +392,7 @@ CREATE TABLE `obj_stage_technic_version` (
 
 LOCK TABLES `obj_stage_technic_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic_version` DISABLE KEYS */;
+INSERT INTO `obj_stage_technic_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -424,7 +428,7 @@ CREATE TABLE `obj_stage_version` (
 
 LOCK TABLES `obj_stage_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert',1,NULL,NULL);
+INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert',1,NULL,NULL),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42','12','insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -451,7 +455,7 @@ CREATE TABLE `obj_stage_work` (
   KEY `stage_work_ibfi_6` (`stage_id`),
   CONSTRAINT `stage_work_ibfk_5` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `stage_work_ibfk_6` FOREIGN KEY (`stage_id`) REFERENCES `obj_stage` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -460,6 +464,7 @@ CREATE TABLE `obj_stage_work` (
 
 LOCK TABLES `obj_stage_work` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work` DISABLE KEYS */;
+INSERT INTO `obj_stage_work` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert');
 /*!40000 ALTER TABLE `obj_stage_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,6 +503,7 @@ CREATE TABLE `obj_stage_work_version` (
 
 LOCK TABLES `obj_stage_work_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work_version` DISABLE KEYS */;
+INSERT INTO `obj_stage_work_version` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert',1,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -858,7 +864,7 @@ CREATE TABLE `vol_material` (
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
   CONSTRAINT `material_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -867,6 +873,7 @@ CREATE TABLE `vol_material` (
 
 LOCK TABLES `vol_material` WRITE;
 /*!40000 ALTER TABLE `vol_material` DISABLE KEYS */;
+INSERT INTO `vol_material` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13','12','insert');
 /*!40000 ALTER TABLE `vol_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -902,6 +909,7 @@ CREATE TABLE `vol_material_version` (
 
 LOCK TABLES `vol_material_version` WRITE;
 /*!40000 ALTER TABLE `vol_material_version` DISABLE KEYS */;
+INSERT INTO `vol_material_version` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13','12','insert',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -925,7 +933,7 @@ CREATE TABLE `vol_technic` (
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
   CONSTRAINT `technic_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -934,6 +942,7 @@ CREATE TABLE `vol_technic` (
 
 LOCK TABLES `vol_technic` WRITE;
 /*!40000 ALTER TABLE `vol_technic` DISABLE KEYS */;
+INSERT INTO `vol_technic` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13','12','insert'),(2,'TestWork',100.00,1,1,1,'2022-09-12 11:11:13','12','insert');
 /*!40000 ALTER TABLE `vol_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -969,6 +978,7 @@ CREATE TABLE `vol_technic_version` (
 
 LOCK TABLES `vol_technic_version` WRITE;
 /*!40000 ALTER TABLE `vol_technic_version` DISABLE KEYS */;
+INSERT INTO `vol_technic_version` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13','12','insert',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -984,7 +994,7 @@ CREATE TABLE `vol_unit` (
   `name` varchar(255) NOT NULL COMMENT 'Наименование',
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -993,6 +1003,7 @@ CREATE TABLE `vol_unit` (
 
 LOCK TABLES `vol_unit` WRITE;
 /*!40000 ALTER TABLE `vol_unit` DISABLE KEYS */;
+INSERT INTO `vol_unit` VALUES (1,'test',1);
 /*!40000 ALTER TABLE `vol_unit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1016,7 +1027,7 @@ CREATE TABLE `vol_work` (
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
   CONSTRAINT `work_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1025,6 +1036,7 @@ CREATE TABLE `vol_work` (
 
 LOCK TABLES `vol_work` WRITE;
 /*!40000 ALTER TABLE `vol_work` DISABLE KEYS */;
+INSERT INTO `vol_work` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23','12','insert');
 /*!40000 ALTER TABLE `vol_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,7 +1062,7 @@ CREATE TABLE `vol_work_material` (
   KEY `material_id` (`material_id`),
   CONSTRAINT `work_material_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `work_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1059,6 +1071,7 @@ CREATE TABLE `vol_work_material` (
 
 LOCK TABLES `vol_work_material` WRITE;
 /*!40000 ALTER TABLE `vol_work_material` DISABLE KEYS */;
+INSERT INTO `vol_work_material` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert');
 /*!40000 ALTER TABLE `vol_work_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1092,6 +1105,7 @@ CREATE TABLE `vol_work_material_version` (
 
 LOCK TABLES `vol_work_material_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_material_version` DISABLE KEYS */;
+INSERT INTO `vol_work_material_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert',1,1);
 /*!40000 ALTER TABLE `vol_work_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1117,7 +1131,7 @@ CREATE TABLE `vol_work_technic` (
   KEY `technic_id` (`technic_id`),
   CONSTRAINT `work_technic_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `work_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1126,6 +1140,7 @@ CREATE TABLE `vol_work_technic` (
 
 LOCK TABLES `vol_work_technic` WRITE;
 /*!40000 ALTER TABLE `vol_work_technic` DISABLE KEYS */;
+INSERT INTO `vol_work_technic` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert');
 /*!40000 ALTER TABLE `vol_work_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1159,6 +1174,7 @@ CREATE TABLE `vol_work_technic_version` (
 
 LOCK TABLES `vol_work_technic_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_technic_version` DISABLE KEYS */;
+INSERT INTO `vol_work_technic_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert',1,1);
 /*!40000 ALTER TABLE `vol_work_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1196,6 +1212,7 @@ CREATE TABLE `vol_work_version` (
 
 LOCK TABLES `vol_work_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_version` DISABLE KEYS */;
+INSERT INTO `vol_work_version` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23','12','insert',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

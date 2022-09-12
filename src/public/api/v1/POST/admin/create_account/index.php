@@ -15,11 +15,11 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\UserRole;
 
-//try {
-//    AuthUserRole::isAccessManageUsersOrThrow(); //спасибо лера
-//} catch (Exception $e) {
-//    JsonOutput::error($e);
-//}
+try {
+    AuthUserRole::isAccessManageUsersOrThrow(); //спасибо лера
+} catch (Exception $e) {
+    JsonOutput::error($e);
+}
 
 
 $request = new Request();
@@ -28,12 +28,14 @@ $request->checkRequestVariables("user_nickname", "user_email", "user_role_id");
 $role = UserRoleQuery::create()->findOneById($request->getRequest("user_role_id"));
 if ($role === null) JsonOutput::error("Неизвестная роль");
 
-if (!empty($request->getRequest("user_nickname"))) {
-    $username = $request->getRequest("user_nickname");
-} else {
-    $request->checkRequestVariablesOrError("user_name", "user_surname", "user_patronymic");
-    $username = $request->getRequest("user_surname") . " " . $request->getRequest("user_name") . " " . $request->getRequest("user_patronymic");
-}
+$username = $request->getRequestOrThrow("user_nickname");
+
+//if (!empty($request->getRequest("user_nickname"))) {
+//    $username = $request->getRequest("user_nickname");
+//} else {
+//    $request->checkRequestVariablesOrError("user_name", "user_surname", "user_patronymic");
+//    $username = $request->getRequest("user_surname") . " " . $request->getRequest("user_name") . " " . $request->getRequest("user_patronymic");
+//}
 try {
     $user_id = Auth::getUser()->register($request->getRequest("user_email"), Auth::createUuid(), $username, function ($selector, $token)
     use ($request) {

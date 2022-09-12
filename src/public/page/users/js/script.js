@@ -1,5 +1,4 @@
 const usersList = document.querySelector('.users__list')
-const addProject = document.querySelector('.add-project')
 
 let url = new URL('https://artemy.net/api/v1/users')
 
@@ -154,20 +153,20 @@ function parseRoles() {
 
 
 function addUser() {
-    const username = document.querySelector(".modal-body__name").value
-    const email = document.querySelector('.modal-body__email').value
+    const username = document.querySelector(".modal-body__name > input")
+    const email = document.querySelector('.modal-body__email > input')
     const select = document.querySelector('.modal-body__role > select')
-
+    
+    console.log(username);
     fetch("/api/v1/admin/create_account", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({user_email: email, user_nickname: username, user_role_id: select[select.selectedIndex].dataset.id})
+          body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
     })
     .then(function(res) {
         return res.json();
-        console.log(json);
     })
     .then(function(json) {
         console.log(json);
@@ -186,14 +185,9 @@ function addUser() {
     })
 }
 
-    titleChecker.resetClasses()
-    titleChecker.checkTitle(document.title)
-    window.location = "#users"
-    parseRoles()
 
-    window.onhashchange = () => {
-        window.location.hash == "#roles" ? addProject.classList.add('hidden') : addProject.classList.remove('hidden')
-    }
-
-
+titleChecker.resetClasses()
+titleChecker.checkTitle(document.title)
+window.location = "#users"
+parseRoles()
 

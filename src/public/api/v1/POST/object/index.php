@@ -18,7 +18,6 @@ use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
-use wipe\inc\v1\role\user_role\UserRole;
 
 $request = new Request();
 
@@ -26,14 +25,12 @@ try {
     $lvl = $request->getRequestOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    $parentId = 1;
+    $flag = false;
+    $parentId = null;
+    $parentLvl = null;
+    $projectId = null;
 
-    if ($lvl === eLvlObjInt::PROJECT->value) {
-        if (AuthUserRole::isAccessManageUsers() &&
-            !AuthUserRole::isAccessManageObjects()) {
-            throw new AccessDeniedException('Недостаточно прав для добавления объекта');
-        }
-    } else {
+    if ($lvl !== eLvlObjInt::PROJECT->value) {
         $parentId = $request->getRequestOrThrow('parent_id');
         $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
 
@@ -42,12 +39,13 @@ try {
                     ->isEditableOrThrow()
                     ->getProjectIdObjOrThrow();
 
-        if (!AuthUserRole::isAccessManageUsers() &&
-            !AuthUserRole::isAccessManageObjects() &&
-            !ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId())
-        ) {
-            throw new AccessDeniedException('Недостаточно прав для добавления объекта');
-        }
+        $flag = ProjectRole::isAccessCrudObj($parentLvl, $projectId, $parentId, AuthUserRole::getUserId());
+    }
+
+    if (!AuthUserRole::isAccessManageUsers() &&
+        !AuthUserRole::isAccessManageObjects() &&
+        !$flag) {
+        throw new AccessDeniedException('Недостаточно прав для добавления объекта');
     }
 
     $request->checkRequestVariablesOrError('name', 'status', 'is_public');

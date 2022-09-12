@@ -8,6 +8,7 @@
 
 namespace Propel\Runtime\Map;
 
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;

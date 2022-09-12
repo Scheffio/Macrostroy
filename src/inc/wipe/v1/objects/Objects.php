@@ -335,7 +335,7 @@ class Objects
 //        }
     }
 
-    public function getObjectsQuery(int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
+    public static function getObjectsQuery(int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
     {
         $colId = self::getColIdByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
@@ -344,28 +344,24 @@ class Objects
 
         $tableName = self::getClassNameObjByLvl($lvl);
 
-        $query = PropelQuery::from($tableName)->select([
-            $colId,
-            $colStatus,
-            $colIsPublic,
-            $colCreatedBy
-        ]);
+        $query = PropelQuery::from($tableName);
 
         if (!$isAccessManageUsers) {
+//            $query->where($colStatus . '!=', self::ATTRIBUTE_STATUS_DELETED);
             $query->filterBy(
-                column: $colStatus,
-                value:self::ATTRIBUTE_STATUS_DELETED,
+                column: 'Status',
+                value: self::ATTRIBUTE_STATUS_DELETED,
                 comparison: Criteria::ALT_NOT_EQUAL
             );
         }
-
-        if ($limitFrom) {
-            $query->filterBy(
-                column: $colId,
-                value: $limitFrom,
-                comparison: Criteria::GREATER_THAN
-            );
-        }
+//
+//        if ($limitFrom) {
+//            $query->filterBy(
+//                column: $colId,
+//                value: $limitFrom,
+//                comparison: Criteria::GREATER_THAN
+//            );
+//        }
 
         $query->limit($limit);
 

@@ -148,6 +148,10 @@ function parseRoles() {
             option.textContent = roles.name
             select.appendChild(option)
         })
+
+        json.data.forEach((elem) => {
+            usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+        })
     })
 }
 

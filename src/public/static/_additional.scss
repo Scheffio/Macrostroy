@@ -154,6 +154,50 @@ $EstiminColor8: #E5EBEF;
     @include InputRegularText;
 }
 
+@mixin Checkbox {
+    display: flex;
+    align-items: center;
+    label {
+        user-select: none;
+    }
+    input[type="radio"] {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+        &:checked+label::after {
+            content: '';
+            display: block;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            top: 9px;
+            left: 5px;
+            background-color: black;
+        }
+        &:checked+label::before{
+            content: '';
+            width: 1em;
+            height: 1em;
+            display: block;
+        }
+        &+label {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                flex-shrink: 0;
+                flex-grow: 0;
+                border: 2px solid black;
+                margin-right: 0.5em;
+            }
+        }
+    }
+}
+
 // Avatar
 .user-avatar {
     width: 50px;
@@ -161,6 +205,7 @@ $EstiminColor8: #E5EBEF;
     border-radius: 100%;
     background: url("../auth/icons/avatar.jpg") no-repeat center/200%;
 }
+
 
 // Text
 

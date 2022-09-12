@@ -54,37 +54,45 @@
                                     <label for="all">Администратор</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Пользователь с таким параметром имеет доступ ко всему функционалу. А также создавать и редактировать учётные записи пользователей.
-</p>
+                            <p class="permission__description">Пользователь с таким параметром имеет доступ ко всему
+                                функционалу. А также создавать и редактировать учётные записи пользователей.
+                            </p>
                         </div>
                         <div class="underline"></div>
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="object-crud">
-                                    <input type="radio" name="access-radio" id="watch">
-                                    <input type="radio" name="access-radio" id="watch">
-                                    <label for="watch">CRUD объектов</label>
+                                    <div class="object-crud-checkboxes">
+                                        <input type="radio" name="object-crud-radio" id="object-crud">
+                                        <input type="radio" name="object-crud-radio" id="object-crud">
+                                        <label for="object-crud">CRUD объектов</label>
+                                    </div>
                                 </div>
                             </div>
-                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать объекты.</p>
+                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать
+                                объекты.</p>
                         </div>
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="volume-crud">
-                                    <input type="radio" name="access-radio" id="watch">
-                                    <label for="watch">CRUD объёмы</label>
+                                    <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                    <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                    <label for="volume-crud">CRUD объёмы</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать работы, материалы, технику в объемах. Так же, импортировать их из формата xls, формировать графики изменения цен.</p>
+                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать
+                                работы, материалы, технику в объемах. Так же, импортировать их из формата xls,
+                                формировать графики изменения цен.</p>
                         </div>
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="version-control">
-                                    <input type="radio" name="access-radio" id="watch">
-                                    <label for="watch">Управление версиями</label>
+                                    <input type="radio" name="access-radio" id="version-control">
+                                    <label for="version-control">Управление версиями</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Возможность возвращать содержание объектов к предыдущим версиям.</p>
+                            <p class="permission__description">Возможность возвращать содержание объектов к предыдущим
+                                версиям.</p>
                         </div>
                         <div class="permission">
                             <div class="permission__checkbox">
@@ -93,7 +101,8 @@
                                     <label for="watch">Просмотр объектов</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Возможность просматривать объекты, и формировать сметы по ним.</p>
+                            <p class="permission__description">Возможность просматривать объекты, и формировать сметы по
+                                ним.</p>
                         </div>
                         <p class="admin-alert">Этот пользователь является администратором, Вы не можете редактировать
                             его разрешения.</p>

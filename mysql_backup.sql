@@ -286,7 +286,7 @@ CREATE TABLE `obj_stage_material` (
 
 LOCK TABLES `obj_stage_material` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material` DISABLE KEYS */;
-INSERT INTO `obj_stage_material` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
+INSERT INTO `obj_stage_material` VALUES (1,100.55,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
 /*!40000 ALTER TABLE `obj_stage_material` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -373,9 +373,16 @@ class Objects
         return $query;
     }
 
-    public static function getObjectsPriceQuery()
+    public static function getObjectsPriceQuery(string $colId)
     {
-
+        return ObjProjectQuery::create()
+            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                        ->leftJoinObjStage()
+                    ->endUse()
+                ->endUse()
+            ->endUse();
     }
     #endregion
 

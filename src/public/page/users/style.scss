@@ -296,8 +296,11 @@
                                 @include PermissionTitle;
                                 user-select: none;
                             }
-                            .all,
-                            .watch {
+                            .object-crud,
+                            .volume-crud,
+                            .version-control,
+                            .watch,
+                            .admin {
                                 display: flex;
                                 align-items: center;
                                 label {
@@ -344,6 +347,7 @@
                         .permission__description {
                             margin: 0;
                             @include InputRegularText;
+                            max-width: 600px;
                         }
                     }
                     .underline {

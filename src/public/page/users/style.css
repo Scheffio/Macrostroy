@@ -372,26 +372,38 @@ body.fixated {
       -ms-user-select: none;
           user-select: none;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin {
   display: flex;
   align-items: center;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all label,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch label {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin label {
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all input[type=radio],
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio] {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud input[type=radio],
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud input[type=radio],
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input[type=radio],
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio],
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin input[type=radio] {
   position: absolute;
   z-index: -1;
   opacity: 0;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all input[type=radio]:checked + label::after,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio]:checked + label::after {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud input[type=radio]:checked + label::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud input[type=radio]:checked + label::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input[type=radio]:checked + label::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio]:checked + label::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin input[type=radio]:checked + label::after {
   content: "";
   display: block;
   width: 18px;
@@ -401,21 +413,30 @@ body.fixated {
   left: 5px;
   background-color: black;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all input[type=radio]:checked + label::before,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio]:checked + label::before {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud input[type=radio]:checked + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud input[type=radio]:checked + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input[type=radio]:checked + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio]:checked + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin input[type=radio]:checked + label::before {
   content: "";
   width: 1em;
   height: 1em;
   display: block;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all input[type=radio] + label,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio] + label {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud input[type=radio] + label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud input[type=radio] + label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input[type=radio] + label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio] + label,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin input[type=radio] + label {
   display: inline-flex;
   align-items: center;
   position: relative;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .all input[type=radio] + label::before,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio] + label::before {
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud input[type=radio] + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud input[type=radio] + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input[type=radio] + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch input[type=radio] + label::before,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .admin input[type=radio] + label::before {
   content: "";
   display: inline-block;
   width: 1em;
@@ -430,6 +451,7 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
+  max-width: 600px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .underline {
   margin-left: -17px;

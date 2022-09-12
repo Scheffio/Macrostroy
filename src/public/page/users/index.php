@@ -49,26 +49,51 @@
                     <div class="permissions">
                         <div class="permission">
                             <div class="permission__checkbox">
-                                <div class="all">
+                                <div class="admin">
                                     <input type="radio" name="access-radio" id="all">
-                                    <label for="all">Все разрешения</label>
+                                    <label for="all">Администратор</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Пользователь с таким разрешением имеет доступ ко всем
-                                CRUD -
-                                опциям.</p>
+                            <p class="permission__description">Пользователь с таким параметром имеет доступ ко всему функционалу. А также создавать и редактировать учётные записи пользователей.
+</p>
                         </div>
                         <div class="underline"></div>
                         <div class="permission">
                             <div class="permission__checkbox">
-                                <div class="watch">
+                                <div class="object-crud">
                                     <input type="radio" name="access-radio" id="watch">
-                                    <label for="watch">Просмотр</label>
+                                    <input type="radio" name="access-radio" id="watch">
+                                    <label for="watch">CRUD объектов</label>
                                 </div>
                             </div>
-                            <p class="permission__description">Пользователь с таким разрешением имеет доступ к просмотру
-                                этого
-                                раздела.</p>
+                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать объекты.</p>
+                        </div>
+                        <div class="permission">
+                            <div class="permission__checkbox">
+                                <div class="volume-crud">
+                                    <input type="radio" name="access-radio" id="watch">
+                                    <label for="watch">CRUD объёмы</label>
+                                </div>
+                            </div>
+                            <p class="permission__description">Возможность создавать, редактировать, удалять, копировать работы, материалы, технику в объемах. Так же, импортировать их из формата xls, формировать графики изменения цен.</p>
+                        </div>
+                        <div class="permission">
+                            <div class="permission__checkbox">
+                                <div class="version-control">
+                                    <input type="radio" name="access-radio" id="watch">
+                                    <label for="watch">Управление версиями</label>
+                                </div>
+                            </div>
+                            <p class="permission__description">Возможность возвращать содержание объектов к предыдущим версиям.</p>
+                        </div>
+                        <div class="permission">
+                            <div class="permission__checkbox">
+                                <div class="watch">
+                                    <input type="radio" name="access-radio" id="watch">
+                                    <label for="watch">Просмотр объектов</label>
+                                </div>
+                            </div>
+                            <p class="permission__description">Возможность просматривать объекты, и формировать сметы по ним.</p>
                         </div>
                         <p class="admin-alert">Этот пользователь является администратором, Вы не можете редактировать
                             его разрешения.</p>

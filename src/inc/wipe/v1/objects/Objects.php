@@ -354,8 +354,8 @@ class Objects
                 colId: $colId,
                 objId: $objId
             )
-            ->toString()
-                //->find()->getData()
+//            ->toString()
+            ->find()->getData()
         );
 
         $query = PropelQuery::from($tableName)
@@ -396,13 +396,25 @@ class Objects
     public static function getObjectsPriceQuery(string $colId, int $objId)
     {
         return ObjProjectQuery::create()
-            ->withColumn(ObjStageWorkTableMap::COL_PRICE, 'price_work')
-            ->withColumn(ObjStageMaterialTableMap::COL_PRICE, 'price_material')
-            ->withColumn(ObjStageTechnicTableMap::COL_PRICE, 'price_technic')
+            ->select([
+                ObjProjectTableMap::COL_ID,
+                ObjStageTableMap::COL_ID,
+                ObjStageWorkTableMap::COL_PRICE,
+                ObjStageMaterialTableMap::COL_PRICE,
+                ObjStageTechnicTableMap::COL_PRICE,
+            ])
+//            ->withColumn(ObjStageWorkTableMap::COL_PRICE, 'price_work')
+//            ->withColumn(ObjStageMaterialTableMap::COL_PRICE, 'price_material')
+//            ->withColumn(ObjStageTechnicTableMap::COL_PRICE, 'price_technic')
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                        ->leftJoinObjStage()
+                        ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
+                            ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
+                                ->leftJoinObjStageMaterial()
+                                ->leftJoinObjStageTechnic()
+                            ->endUse()
+                        ->endUse()
                     ->endUse()
                 ->endUse()
             ->endUse();

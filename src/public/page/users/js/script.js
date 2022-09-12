@@ -135,30 +135,11 @@ function resetInputs() {
     })
 }
 
-const selectableUsers = {
-    roles: document.querySelectorAll('.roles > .users__user-field'),
-    click(elem) {
-        this.reset()
-        elem.classList.toggle('selected')
-    },
-    reset() {
-        this.roles.forEach((elem) => {
-            elem.classList.remove('selected')
-        })
-    }
-}
-
-document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
-    console.log(elem);
-    elem.addEventListener('click', () => {
-        selectableUsers.click(elem)
-    })
-})
 
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
     let url = new URL('https://artemy.net/api/v1/roles')
-
+    
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
@@ -170,6 +151,29 @@ function parseRoles() {
             select.appendChild(option)
             document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
         })
+
+        
+        const selectableUsers = {
+            roles: document.querySelectorAll('.roles > .users__user-field'),
+            click(elem) {
+                this.reset()
+                elem.classList.toggle('selected')
+            },
+            reset() {
+                this.roles.forEach((elem) => {
+                    elem.classList.remove('selected')
+                })
+            }
+        }
+        
+        selectableUsers.click(document.querySelector('.roles').children[0])
+        
+        document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
+            elem.addEventListener('click', () => {
+                selectableUsers.click(elem)
+            })
+        })
+        
     })
 }
 
@@ -183,8 +187,8 @@ function addUser() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
+        },
+        body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
     })
     .then(function(res) {
         return res.json();

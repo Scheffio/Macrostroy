@@ -186,6 +186,6 @@ function addUser() {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-window.location = "#users"
+window.location = "#roles"
 parseRoles()
 

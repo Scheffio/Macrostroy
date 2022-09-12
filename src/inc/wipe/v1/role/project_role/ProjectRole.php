@@ -165,9 +165,9 @@ class ProjectRole
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function isAccessCrudObj(int $lvl, int $projectId, int $objId, int $userId): bool
+    public static function isAccessCrudObj(int $lvl, int $projectId, int $userId, ?int $objId = null): bool
     {
-        return self::getCrudUsersObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
+        return self::getCrudUsersByObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -282,8 +282,8 @@ class ProjectRole
         $isCrud = self::isAccessCrudObj(
             lvl: $lvl,
             projectId: $projectId,
-            objId: $parentId,
-            userId: $useId
+            userId: $useId,
+            objId: $parentId
         );
 
 //        IsCrud: true
@@ -295,6 +295,8 @@ class ProjectRole
 //        }
 
     }
+
+
     #endregion
 
     #region Static Select Get CRUD Users Object
@@ -308,7 +310,7 @@ class ProjectRole
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getCrudUsersObject(int $lvl, int $projectId, ?int $objId = null, ?int $userId = null): array
+    public static function getCrudUsersByObject(int $lvl, int $projectId, ?int $objId = null, ?int $userId = null): array
     {
         $parents = null;
 

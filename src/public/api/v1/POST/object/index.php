@@ -42,8 +42,8 @@ try {
         $flag = ProjectRole::isAccessCrudObj(
             lvl: $parentLvl,
             projectId: $projectId,
-            objId: $parentId,
-            userId: AuthUserRole::getUserId()
+            userId: AuthUserRole::getUserId(),
+            objId: $parentId
         );
     }
 

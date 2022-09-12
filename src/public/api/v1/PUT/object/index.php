@@ -33,7 +33,11 @@ try {
 
     if (!AuthUserRole::isAccessManageUsers() &&
         !AuthUserRole::isAccessManageObjects() &&
-        !ProjectRole::isAccessCrudObj($lvl, $projectId, $id, AuthUserRole::getUserId())
+        !ProjectRole::isAccessCrudObj(
+            lvl: $lvl,
+            projectId: $projectId,
+            userId: AuthUserRole::getUserId(),
+            objId: $id)
     ) {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }

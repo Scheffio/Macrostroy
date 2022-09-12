@@ -296,14 +296,13 @@ body.fixated {
   font-weight: 400;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .users .users__list {
-  max-height: 750px;
+  max-height: 470px;
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
   width: 100%;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .users .users__list .users__user-field {
-  width: 220px;
+  width: 460px;
   padding: 10px 10px;
   border-radius: 10px;
   background-color: #F4F4F4;

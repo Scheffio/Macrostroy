@@ -16,6 +16,7 @@ use ext\ObjHouse;
 use ext\ObjProject;
 use ext\ObjStage;
 use ext\ObjSubproject;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\PropelQuery;
 use wipe\inc\v1\access_lvl\AccessLvl;
@@ -316,6 +317,15 @@ class Objects
             objId: $parentId
         );
 
+        $objects = self::getObjectsQuery(
+            lvl: $lvl,
+            limit: $limit,
+            limitFrom: $limitFrom,
+            isAccessManageUsers: $isAccessManageUsers
+        )->find()->getData();
+
+        return $objects;
+
 //        IsCrud: true
 //        Objects: {
 //                Id:
@@ -327,17 +337,23 @@ class Objects
 
     public function getObjectsQuery(int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
     {
-        $colIdName = self::getColIdByLvl($lvl);
-        $colStatusName = self::getColStatusByLvl($lvl);
+        $colId = self::getColIdByLvl($lvl);
+        $colStatus = self::getColStatusByLvl($lvl);
+        $colIsPublic = self::getColIsPublicByLvl($lvl);
+        $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
+
         $tableName = self::getClassNameObjByLvl($lvl);
 
         $query = PropelQuery::from($tableName)->select([
-            $colIdName,
+            $colId,
+            $colStatus,
+            $colIsPublic,
+            $colCreatedBy
         ]);
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
-                column: $colStatusName,
+                column: $colStatus,
                 value:self::ATTRIBUTE_STATUS_DELETED,
                 comparison: Criteria::ALT_NOT_EQUAL
             );
@@ -345,7 +361,7 @@ class Objects
 
         if ($limitFrom) {
             $query->filterBy(
-                column: $colIdName,
+                column: $colId,
                 value: $limitFrom,
                 comparison: Criteria::GREATER_THAN
             );
@@ -461,6 +477,60 @@ class Objects
 
             eLvlObjStr::STAGE->value,
             eLvlObjInt::STAGE->value => ObjStageTableMap::COL_NAME,
+
+            default => throw new IncorrectLvlException()
+        };
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @return string Наименование атрибута, в котором хранится доступ (публичный, приватный) родителя.
+     * @throws IncorrectLvlException
+     */
+    public static function getColIsPublicByLvl(int|string $lvl): string
+    {
+        return match ($lvl) {
+            eLvlObjStr::PROJECT->value,
+            eLvlObjInt::PROJECT->value => ObjProjectTableMap::COL_IS_PUBLIC,
+
+            eLvlObjStr::SUBPROJECT->value,
+            eLvlObjInt::SUBPROJECT->value => ObjSubprojectTableMap::COL_IS_PUBLIC,
+
+            eLvlObjStr::GROUP->value,
+            eLvlObjInt::GROUP->value => ObjGroupTableMap::COL_IS_PUBLIC,
+
+            eLvlObjStr::HOUSE->value,
+            eLvlObjInt::HOUSE->value => ObjHouseTableMap::COL_IS_PUBLIC,
+
+            eLvlObjStr::STAGE->value,
+            eLvlObjInt::STAGE->value => ObjStageTableMap::COL_IS_PUBLIC,
+
+            default => throw new IncorrectLvlException()
+        };
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @return string Наименование атрибута, в котором хранится ID пользователя родителя, который редактировал его в последний раз.
+     * @throws IncorrectLvlException
+     */
+    public static function getColCreatedUserIdByLvl(int|string $lvl): string
+    {
+        return match ($lvl) {
+            eLvlObjStr::PROJECT->value,
+            eLvlObjInt::PROJECT->value => ObjProjectTableMap::COL_VERSION_CREATED_BY,
+
+            eLvlObjStr::SUBPROJECT->value,
+            eLvlObjInt::SUBPROJECT->value => ObjSubprojectTableMap::COL_VERSION_CREATED_BY,
+
+            eLvlObjStr::GROUP->value,
+            eLvlObjInt::GROUP->value => ObjGroupTableMap::COL_VERSION_CREATED_BY,
+
+            eLvlObjStr::HOUSE->value,
+            eLvlObjInt::HOUSE->value => ObjHouseTableMap::COL_VERSION_CREATED_BY,
+
+            eLvlObjStr::STAGE->value,
+            eLvlObjInt::STAGE->value => ObjStageTableMap::COL_VERSION_CREATED_BY,
 
             default => throw new IncorrectLvlException()
         };

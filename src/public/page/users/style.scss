@@ -232,13 +232,12 @@
                         }
                     }
                     .users__list {
-                        max-height: 750px;
+                        max-height: 470px;
                         display: flex;
-                        flex-wrap: wrap;
                         gap: 20px;
                         width: 100%;
                         .users__user-field {
-                            width: 220px;
+                            width: 460px;
                             padding: 10px 10px;
                             border-radius: 10px;
                             background-color: $EstiminBackground5;

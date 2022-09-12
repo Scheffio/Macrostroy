@@ -14,6 +14,11 @@ use DB\Map\ObjStageTableMap;
 use DB\Map\ObjStageTechnicTableMap;
 use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
+use DB\ObjStageMaterialVersionQuery;
+use DB\ObjStageTechnicVersionQuery;
+use DB\VolMaterialQuery;
+use DB\VolUnitQuery;
+use DB\VolWorkMaterialQuery;
 use ext\ObjGroup;
 use ext\ObjHouse;
 use ext\ObjProject;
@@ -355,11 +360,19 @@ class Objects
             ->withColumn($colIsPublic)
             ->withColumn($colCreatedBy);
 
-        JsonOutput::success([
-            '$lvl' => $lvl,
-            '$objId' => $objId,
-            'query' => $query->find()->getData(),
-        ]);
+//        JsonOutput::success([
+//            '$lvl' => $lvl,
+//            '$objId' => $objId,
+//            'query' => $query->find()->getData(),
+//        ]);
+
+        if (!$isAccessManageUsers) {
+            $query->filterBy(
+                column: 'Status',
+                value: self::ATTRIBUTE_STATUS_DELETED,
+                comparison: Criteria::ALT_NOT_EQUAL
+            );
+        }
 
 //        if (!$isAccessManageUsers) {
 //            $query->filterBy(
@@ -368,7 +381,7 @@ class Objects
 //                comparison: Criteria::ALT_NOT_EQUAL
 //            );
 //        }
-
+//
 //        if ($limitFrom) {
 //            $query->filterBy(
 //                column: 'Id',
@@ -382,7 +395,7 @@ class Objects
 //        return $query;
     }
 
-    public static function getObjectsPriceQuery(int &$lvl, int &$objId)
+    public static function getObjectsPriceQuery(int $lvl, int $objId)
     {
         $colSwPrice = ObjStageWorkTableMap::COL_PRICE;
         $colSwAmount = ObjStageWorkTableMap::COL_AMOUNT;

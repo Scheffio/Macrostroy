@@ -106,7 +106,7 @@ CREATE TABLE `obj_house` (
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   CONSTRAINT `house_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `obj_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,7 +115,7 @@ CREATE TABLE `obj_house` (
 
 LOCK TABLES `obj_house` WRITE;
 /*!40000 ALTER TABLE `obj_house` DISABLE KEYS */;
-INSERT INTO `obj_house` VALUES (1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete');
+INSERT INTO `obj_house` VALUES (1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12','12','insert');
 /*!40000 ALTER TABLE `obj_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +151,7 @@ CREATE TABLE `obj_house_version` (
 
 LOCK TABLES `obj_house_version` WRITE;
 /*!40000 ALTER TABLE `obj_house_version` DISABLE KEYS */;
-INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16','12','update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update',2,'| 1 |','| 1 |'),(1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete',2,'| 1 | 2 |','| 3 | 2 |');
+INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16','12','update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update',2,'| 1 |','| 1 |'),(1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete',2,'| 1 | 2 |','| 3 | 2 |'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12','12','insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_house_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,7 +241,7 @@ CREATE TABLE `obj_stage` (
   PRIMARY KEY (`id`),
   KEY `house_id` (`house_id`),
   CONSTRAINT `stage_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `obj_house` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +250,7 @@ CREATE TABLE `obj_stage` (
 
 LOCK TABLES `obj_stage` WRITE;
 /*!40000 ALTER TABLE `obj_stage` DISABLE KEYS */;
-INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete');
+INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete'),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert');
 /*!40000 ALTER TABLE `obj_stage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -424,7 +424,7 @@ CREATE TABLE `obj_stage_version` (
 
 LOCK TABLES `obj_stage_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL);
+INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,7 +719,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,1,1,1,0,1661160115,1662968674,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662969091,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,4,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1),(28,'rewrer@artemy.net',NULL,'$2y$10$aUeARdgHlZ5RarrEF6/EXuZjP2ky5tFGupLiPfvxN4AVDMAUQgQK6','nick',0,NULL,0,1,0,1662706931,NULL,0,1),(30,'refgfdwrer@artemy.net',NULL,'$2y$10$nI7t/bRoMLXy7E5coN1hvO2KhCQ4bmruLYxWfSe.ThcegyPyfIkqW','nick',0,5,0,1,0,1662707063,NULL,0,1),(31,'lev@mail.ru',NULL,'$2y$10$7MQszEVyFbmUSH7.vFx4G.sEUVv0wcrtkGrxzX.AQFLEPKTl5XY7a','lev',0,1,0,1,0,1662969523,NULL,0,1);
+INSERT INTO `users` VALUES (12,'me@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','Artemy',0,2,1,1,0,1661160115,1662968674,1,1),(13,'this@artemy.net',NULL,'$2y$10$/BMJHVxfam5v6djudvn6feFYjERwlgcLiMb8Q3D5eCZjuaRZRfXkG','Timur',0,1,1,1,0,1661162813,1661955056,0,0),(14,'scheffio@bk.ru',NULL,'$2y$10$R0HMdKrqDNsDmjZupdp9feUei2Nni.7AEaeHuNWTes7hnVijaKgoS','Scheffio',0,2,1,1,0,1661249739,1662969091,2,1),(15,'scheffio1@bk.ru',NULL,'$2y$10$2tTfRY84RZVskI0QedaY0uEFgQiwmupFqGmy0hIxOvRwsJ/HVLFSe','Ivan',0,3,1,1,0,1661250790,NULL,0,1),(16,'scheffio2@bk.ru',NULL,'$2y$10$YfZfIF5aji5OUHe7Dh6eYeFh92xm9npdkAVSPB2Tm0NZHmmjgr9Ue','Petrovich',0,4,1,1,0,1661250794,NULL,0,1),(17,'scheffio3@bk.ru',NULL,'$2y$10$D/MJVxhSEaRLNFxtS4I3pOzOKirnFppSYOb3LIHkiK6qtkhlFlDmO','Mammy',0,4,1,1,0,1661250800,NULL,0,1),(18,'scheffio4@bk.ru',NULL,'$2y$10$cBmYIJBgmqa5VnahpPBRTOlzX6RLvRtTqiYtNV1Pwpa8M2/tRw0TO','Dodo',0,1,1,1,0,1661250838,NULL,0,1),(19,'scheffio5@bk.ru',NULL,'$2y$10$jVkJdpzhz5cAZaylOuc9cuKBYsIZtfh9d.2vtFG344x2kSAmgLMOW','Bubl',0,1,1,1,0,1661250868,NULL,0,1),(20,'scheffio6@bk.ru',NULL,'$2y$10$ZteOgPemdWRv4iJOElLCfOo1IF6y82YhG1JHex522W/24wIKYZwDa','Tor',0,1,1,1,0,1661250873,NULL,0,1),(21,'test@artemy.net',NULL,'$2y$10$ulGCUMmSuJFG8fnywJHN5OAGRYsl4dMQy/KVdJxReWpJPPF460MKm','SweetNick',0,1,0,1,0,1661256274,NULL,0,1),(22,'tes1t@artemy.net',NULL,'$2y$10$AC8jgP2nSjHmGV2NKzH6y.efsxJO.tNj6cilIBR1mu0sbvU0FBiHO','NickDick',0,1,0,1,0,1661256292,NULL,0,1),(27,'not_verified@example.com',NULL,'$2y$10$bC3HWTFKS5Nvh56DnkAL0eJO0OlDS9nbgrLDjtlT8dlfaieXuG8eG','Not Verified Email',0,5,0,1,0,1662384341,NULL,0,1),(28,'rewrer@artemy.net',NULL,'$2y$10$aUeARdgHlZ5RarrEF6/EXuZjP2ky5tFGupLiPfvxN4AVDMAUQgQK6','nick',0,NULL,0,1,0,1662706931,NULL,0,1),(30,'refgfdwrer@artemy.net',NULL,'$2y$10$nI7t/bRoMLXy7E5coN1hvO2KhCQ4bmruLYxWfSe.ThcegyPyfIkqW','nick',0,5,0,1,0,1662707063,NULL,0,1),(31,'lev@mail.ru',NULL,'$2y$10$7MQszEVyFbmUSH7.vFx4G.sEUVv0wcrtkGrxzX.AQFLEPKTl5XY7a','lev',0,1,0,1,0,1662969523,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

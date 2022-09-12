@@ -134,6 +134,19 @@ function resetInputs() {
     })
 }
 
+const selectableUsers = {
+    roles: document.querySelectorAll('.roles > .users__user-field'),
+    click(elem) {
+        this.reset()
+        elem.classList.toggle('selected')
+    },
+    reset() {
+        this.users.forEach((elem) => {
+            elem.classList.remove('selected')
+        })
+    }
+}
+
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
     let url = new URL('https://artemy.net/api/v1/roles')
@@ -147,10 +160,7 @@ function parseRoles() {
             option.value = roles.name
             option.textContent = roles.name
             select.appendChild(option)
-        })
-
-        json.data.forEach((elem) => {
-            usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.name}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
         })
     })
 }
@@ -190,6 +200,6 @@ function addUser() {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-window.location = "#roles"
+window.location = "#users"
 parseRoles()
 

@@ -43,7 +43,7 @@
                                 <input type="text" placeholder="Введите имя пользователя">
                             </div>
                         </div>
-                        <div class="users__list">
+                        <div class="users__list roles">
                         </div>
                     </div>
                     <div class="permissions">

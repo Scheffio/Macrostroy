@@ -18,6 +18,7 @@ use ext\ObjStage;
 use ext\ObjSubproject;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveQuery\PropelQuery;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
@@ -344,28 +345,37 @@ class Objects
 
         $tableName = self::getClassNameObjByLvl($lvl);
 
-        $query = PropelQuery::from($tableName);
+        $query = PropelQuery::from($tableName)->select([
+            $colId,
+            $colStatus,
+            $colIsPublic,
+            $colCreatedBy
+        ]);
 
         if (!$isAccessManageUsers) {
-//            $query->where($colStatus . '!=', self::ATTRIBUTE_STATUS_DELETED);
             $query->filterBy(
                 column: 'Status',
                 value: self::ATTRIBUTE_STATUS_DELETED,
                 comparison: Criteria::ALT_NOT_EQUAL
             );
         }
-//
-//        if ($limitFrom) {
-//            $query->filterBy(
-//                column: $colId,
-//                value: $limitFrom,
-//                comparison: Criteria::GREATER_THAN
-//            );
-//        }
+
+        if ($limitFrom) {
+            $query->filterBy(
+                column: 'Id',
+                value: $limitFrom,
+                comparison: Criteria::GREATER_THAN
+            );
+        }
 
         $query->limit($limit);
 
         return $query;
+    }
+
+    public static function getObjectsPriceQuery()
+    {
+
     }
     #endregion
 

@@ -8,6 +8,24 @@ use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 try {
+    $stageId = 3;
+
+    $unit = new \DB\VolUnit();
+    $unit->setName('test')->save();
+    $unitId = $unit->getId();
+
+    $material = new \ext\VolMaterial();
+    $material->setName('TestMaterial')->setPrice(100)->setUnitId($unitId)->save();
+    $materialId = $material->getId();
+
+    $technic = new \ext\VolTechnic();
+    $technic->setName('TestTechnic')->setPrice(100)->setUnitId($unitId)->save();
+    $technicId = $technic->getId();
+
+    $work = new \ext\VolTechnic();
+    $work->setName('TestWork')->setPrice(100)->setUnitId($unitId)->save();
+    $workId = $work->getId();
+
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 1,
@@ -23,7 +41,9 @@ try {
         )
     );
 } catch (NoRoleFoundException $e) {
-    JsonOutput::success('Неизвестная роль');
+    JsonOutput::error('Неизвестная роль');
 } catch (NoUserFoundException $e) {
-    JsonOutput::success('Неизвестный пользователь');
+    JsonOutput::error('Неизвестный пользователь');
+} catch (\Propel\Runtime\Exception\PropelException $e) {
+    JsonOutput::error($e->getMessage());
 }

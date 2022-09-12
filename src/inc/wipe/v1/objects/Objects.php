@@ -343,16 +343,22 @@ class Objects
     public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
     {
         $colId = self::getColIdByLvl($lvl);
+        $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
         $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
 
-        $tableName = self::getClassNameObjByLvl($lvl);
+        $query = self::getObjectsPriceQuery($lvl, $objId)
+            ->withColumn($colId)
+            ->withColumn($colName)
+            ->withColumn($colStatus)
+            ->withColumn($colIsPublic)
+            ->withColumn($colCreatedBy);
 
         JsonOutput::success([
             '$lvl' => $lvl,
             '$objId' => $objId,
-            'query' => self::getObjectsPriceQuery($lvl, $objId)->find()->getData()
+            'query' => $query->find()->getData(),
         ]);
 
 //        if (!$isAccessManageUsers) {

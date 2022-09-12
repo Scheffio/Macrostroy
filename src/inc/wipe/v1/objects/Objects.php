@@ -350,7 +350,7 @@ class Objects
             $colStatus,
             $colIsPublic,
             $colCreatedBy
-        ]);
+        ])->addSelectQuery();
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
@@ -383,7 +383,7 @@ class Objects
                     ->endUse()
                 ->endUse()
             ->endUse()
-            ->where();
+            ->where($colId . '=?', $objId);
     }
     #endregion
 

@@ -276,29 +276,6 @@ class ProjectRole
     }
     #endregion
 
-    #region Static Select Objects
-    public static function getObjects(int $lvl, int $parentId, int $parentLvl, int $projectId, int $useId)
-    {
-        $isCrud = self::isAccessCrudObj(
-            lvl: $lvl,
-            projectId: $projectId,
-            userId: $useId,
-            objId: $parentId
-        );
-
-//        IsCrud: true
-//        Objects: {
-//                Id:
-//                Name:
-//                IsCrud:
-//                IsAdmin:
-//        }
-
-    }
-
-
-    #endregion
-
     #region Static Select Get CRUD Users Object
     /**
      * Возвращает массив разрешений пользователей.

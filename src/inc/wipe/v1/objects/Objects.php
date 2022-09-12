@@ -34,6 +34,8 @@ use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 
 class Objects
 {
@@ -290,6 +292,51 @@ class Objects
     public function getProjectIdObjOrThrow(): int
     {
         return self::getProjectIdByChildOrThrow($this->lvlInt, $this->id);
+    }
+    #endregion
+
+    #region Static Select Objects
+    public static function getObjectsByLvl(
+        int $lvl,
+        int $parentId,
+        int $parentLvl,
+        int $projectId,
+        int $useId,
+        bool $isAccessManageUsers,
+        bool $isAccessManageObjects,
+        bool $isAccessObjectViewer
+    )
+    {
+        $isCrud = ProjectRole::isAccessCrudObj(
+            lvl: $lvl,
+            projectId: $projectId,
+            userId: $useId,
+            objId: $parentId
+        );
+
+//        IsCrud: true
+//        Objects: {
+//                Id:
+//                Name:
+//                IsCrud:
+//                IsAdmin:
+//        }
+    }
+
+    public function getObjects(int &$lvl, bool &$isAccessManageUsers)
+    {
+        $colName = self::getColStatusByLvl($lvl);
+        $tableName = self::getClassNameObjByLvl($lvl);
+        $query = PropelQuery::from($tableName);
+
+        if (!$isAccessManageUsers) {
+            $query->filterBy(
+                column: $colName,
+                value:self::ATTRIBUTE_STATUS_DELETED,
+                comparison: Criteria::ALT_NOT_EQUAL
+            );
+        }
+
     }
     #endregion
 

@@ -569,7 +569,6 @@ body.fixated {
   width: clamp(768px, 90vw, 1555px);
   display: flex;
   justify-content: flex-end;
-  margin-top: 50px;
 }
 .wrap .add-project .add-project__button {
   display: flex;

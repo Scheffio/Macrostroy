@@ -6,7 +6,7 @@
     flex-direction: column;
     margin-top: 80px;
     width: 100%;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
 
     .tabs-controller {
         display: flex;
@@ -466,7 +466,6 @@
         width: clamp(768px, 90vw, 1555px);
         display: flex;
         justify-content: flex-end;
-        margin-top: 50px;
 
         .add-project__button {
             display: flex;

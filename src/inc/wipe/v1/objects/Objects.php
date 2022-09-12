@@ -9,7 +9,10 @@ use DB\Base\ObjSubprojectQuery;
 use DB\Map\ObjGroupTableMap;
 use DB\Map\ObjHouseTableMap;
 use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageMaterialTableMap;
 use DB\Map\ObjStageTableMap;
+use DB\Map\ObjStageTechnicTableMap;
+use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
 use ext\ObjGroup;
 use ext\ObjHouse;
@@ -319,6 +322,7 @@ class Objects
         );
 
         $objects = self::getObjectsQuery(
+            objId: $parentId,
             lvl: $lvl,
             limit: $limit,
             limitFrom: $limitFrom,
@@ -336,7 +340,7 @@ class Objects
 //        }
     }
 
-    public static function getObjectsQuery(int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
+    public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
     {
         $colId = self::getColIdByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
@@ -345,12 +349,28 @@ class Objects
 
         $tableName = self::getClassNameObjByLvl($lvl);
 
-        $query = PropelQuery::from($tableName)->select([
-            $colId,
-            $colStatus,
-            $colIsPublic,
-            $colCreatedBy
-        ])->addSelectQuery();
+        JsonOutput::success(
+            self::getObjectsPriceQuery(
+                colId: $colId,
+                objId: $objId
+            )
+            ->toString()
+                //->find()->getData()
+        );
+
+        $query = PropelQuery::from($tableName)
+                ->select([
+                    $colId,
+                    $colStatus,
+                    $colIsPublic,
+                    $colCreatedBy
+                ])
+                ->addSelectQuery(
+                    self::getObjectsPriceQuery(
+                        colId: $colId,
+                        objId: $objId
+                    )
+                );
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
@@ -376,14 +396,16 @@ class Objects
     public static function getObjectsPriceQuery(string $colId, int $objId)
     {
         return ObjProjectQuery::create()
+            ->withColumn(ObjStageWorkTableMap::COL_PRICE, 'price_work')
+            ->withColumn(ObjStageMaterialTableMap::COL_PRICE, 'price_material')
+            ->withColumn(ObjStageTechnicTableMap::COL_PRICE, 'price_technic')
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
                         ->leftJoinObjStage()
                     ->endUse()
                 ->endUse()
-            ->endUse()
-            ->where($colId . '=?', $objId);
+            ->endUse();
     }
     #endregion
 

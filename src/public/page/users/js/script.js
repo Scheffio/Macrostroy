@@ -139,7 +139,7 @@ const selectableUsers = {
     roles: document.querySelectorAll('.roles > .users__user-field'),
     click(elem) {
         this.reset()
-        elem.classList.add('selected')
+        elem.classList.toggle('selected')
     },
     reset() {
         this.roles.forEach((elem) => {
@@ -147,6 +147,13 @@ const selectableUsers = {
         })
     }
 }
+
+document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
+    console.log(elem);
+    elem.addEventListener('click', () => {
+        selectableUsers.click(elem)
+    })
+})
 
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
@@ -161,7 +168,7 @@ function parseRoles() {
             option.value = roles.name
             option.textContent = roles.name
             select.appendChild(option)
-            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`).addEventListener('click', selectableUsers.click(this)))
+            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
         })
     })
 }

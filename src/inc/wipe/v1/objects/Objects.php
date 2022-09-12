@@ -302,9 +302,11 @@ class Objects
         int $parentLvl,
         int $projectId,
         int $useId,
-        bool $isAccessManageUsers,
-        bool $isAccessManageObjects,
-        bool $isAccessObjectViewer
+        int $limit = 10,
+        int $limitFrom = 0,
+        bool $isAccessManageUsers = false,
+        bool $isAccessManageObjects = false,
+        bool $isAccessObjectViewer = false,
     )
     {
         $isCrud = ProjectRole::isAccessCrudObj(
@@ -323,20 +325,35 @@ class Objects
 //        }
     }
 
-    public function getObjects(int &$lvl, bool &$isAccessManageUsers)
+    public function getObjectsQuery(int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
     {
-        $colName = self::getColStatusByLvl($lvl);
+        $colIdName = self::getColIdByLvl($lvl);
+        $colStatusName = self::getColStatusByLvl($lvl);
         $tableName = self::getClassNameObjByLvl($lvl);
-        $query = PropelQuery::from($tableName);
+
+        $query = PropelQuery::from($tableName)->select([
+            $colIdName,
+        ]);
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
-                column: $colName,
+                column: $colStatusName,
                 value:self::ATTRIBUTE_STATUS_DELETED,
                 comparison: Criteria::ALT_NOT_EQUAL
             );
         }
 
+        if ($limitFrom) {
+            $query->filterBy(
+                column: $colIdName,
+                value: $limitFrom,
+                comparison: Criteria::GREATER_THAN
+            );
+        }
+
+        $query->limit($limit);
+
+        return $query;
     }
     #endregion
 
@@ -417,6 +434,33 @@ class Objects
 
             eLvlObjStr::STAGE->value,
             eLvlObjInt::STAGE->value => ObjStageTableMap::COL_STATUS,
+
+            default => throw new IncorrectLvlException()
+        };
+    }
+
+    /**
+     * @param int|string $lvl Уровень доступа.
+     * @return string Наименование атрибута, в котором хранится наименование родителя.
+     * @throws IncorrectLvlException
+     */
+    public static function getColNameByLvl(int|string $lvl): string
+    {
+        return match ($lvl) {
+            eLvlObjStr::PROJECT->value,
+            eLvlObjInt::PROJECT->value => ObjProjectTableMap::COL_NAME,
+
+            eLvlObjStr::SUBPROJECT->value,
+            eLvlObjInt::SUBPROJECT->value => ObjSubprojectTableMap::COL_NAME,
+
+            eLvlObjStr::GROUP->value,
+            eLvlObjInt::GROUP->value => ObjGroupTableMap::COL_NAME,
+
+            eLvlObjStr::HOUSE->value,
+            eLvlObjInt::HOUSE->value => ObjHouseTableMap::COL_NAME,
+
+            eLvlObjStr::STAGE->value,
+            eLvlObjInt::STAGE->value => ObjStageTableMap::COL_NAME,
 
             default => throw new IncorrectLvlException()
         };

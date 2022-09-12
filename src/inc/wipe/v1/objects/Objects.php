@@ -321,15 +321,13 @@ class Objects
             objId: $parentId
         );
 
-        $objects = self::getObjectsQuery(
+        self::getObjectsQuery(
             objId: $parentId,
             lvl: $lvl,
             limit: $limit,
             limitFrom: $limitFrom,
             isAccessManageUsers: $isAccessManageUsers
-        )->find()->getData();
-
-        return $objects;
+        );
 
 //        IsCrud: true
 //        Objects: {
@@ -338,6 +336,8 @@ class Objects
 //                IsCrud:
 //                IsAdmin:
 //        }
+
+        return true;
     }
 
     public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
@@ -349,45 +349,34 @@ class Objects
 
         $tableName = self::getClassNameObjByLvl($lvl);
 
-        $query = PropelQuery::from($tableName);
-//                ->select([
-//                    $colId,
-//                    $colStatus,
-//                    $colIsPublic,
-//                    $colCreatedBy
-//                ]);
+        JsonOutput::success([
+            '$lvl' => $lvl,
+            '$objId' => $objId,
+            'query' => self::getObjectsPriceQuery($lvl, $objId)->find()->getData()
+        ]);
 
-        $query->addSelectQuery(
-            self::getObjectsPriceQuery(), 'ASQ'
-        );
+//        if (!$isAccessManageUsers) {
+//            $query->filterBy(
+//                column: 'Status',
+//                value: self::ATTRIBUTE_STATUS_DELETED,
+//                comparison: Criteria::ALT_NOT_EQUAL
+//            );
+//        }
 
-        JsonOutput::success(
-            $query
-                ->toString()
-        );
-
-        if (!$isAccessManageUsers) {
-            $query->filterBy(
-                column: 'Status',
-                value: self::ATTRIBUTE_STATUS_DELETED,
-                comparison: Criteria::ALT_NOT_EQUAL
-            );
-        }
-
-        if ($limitFrom) {
-            $query->filterBy(
-                column: 'Id',
-                value: $limitFrom,
-                comparison: Criteria::GREATER_THAN
-            );
-        }
-
-        $query->limit($limit);
-
-        return $query;
+//        if ($limitFrom) {
+//            $query->filterBy(
+//                column: 'Id',
+//                value: $limitFrom,
+//                comparison: Criteria::GREATER_THAN
+//            );
+//        }
+//
+//        $query->limit($limit);
+//
+//        return $query;
     }
 
-    public static function getObjectsPriceQuery()
+    public static function getObjectsPriceQuery(int &$lvl, int &$objId)
     {
         $colSwPrice = ObjStageWorkTableMap::COL_PRICE;
         $colSwAmount = ObjStageWorkTableMap::COL_AMOUNT;
@@ -396,28 +385,38 @@ class Objects
         $colStPrice = ObjStageMaterialTableMap::COL_PRICE;
         $colStAmount = ObjStageMaterialTableMap::COL_AMOUNT;
 
-        return ObjProjectQuery::create()
-            ->select([
-                ObjProjectTableMap::COL_ID,
-                ObjSubprojectTableMap::COL_ID,
-                ObjGroupTableMap::COL_ID,
-                ObjHouseTableMap::COL_ID,
-                ObjStageTableMap::COL_ID,
-                ObjStageWorkTableMap::COL_ID
-            ])
-            ->withColumn("($colSwPrice*$colSwAmount) + ($colSmPrice*$colSmAmount) + ($colStPrice*$colStAmount)", 'price')
-            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                        ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
-                            ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
-                                ->leftJoinObjStageMaterial()
-                                ->leftJoinObjStageTechnic()
+        $query = ObjProjectQuery::create()
+                ->select([
+                    ObjProjectTableMap::COL_ID,
+                    ObjSubprojectTableMap::COL_ID,
+                    ObjGroupTableMap::COL_ID,
+                    ObjHouseTableMap::COL_ID,
+                    ObjStageTableMap::COL_ID,
+                    ObjStageWorkTableMap::COL_ID
+                ])
+                ->withColumn(
+                    "($colSwPrice*$colSwAmount) + ($colSmPrice*$colSmAmount) + ($colStPrice*$colStAmount)",
+                    'price'
+                )
+                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                            ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
+                                ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
+                                    ->leftJoinObjStageMaterial()
+                                    ->leftJoinObjStageTechnic()
+                                ->endUse()
                             ->endUse()
                         ->endUse()
                     ->endUse()
-                ->endUse()
-            ->endUse();
+                ->endUse();
+
+        if ($objId) {
+            $colId = self::getColIdByLvl($lvl);
+            $query->where($colId . '=?', $objId);
+        }
+
+        return $query;
     }
     #endregion
 

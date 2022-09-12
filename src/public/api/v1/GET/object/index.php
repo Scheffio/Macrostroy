@@ -11,7 +11,7 @@ try {
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 1,
-            parentId: 0,
+            parentId: 1,
             parentLvl: 1,
             projectId: 0,
             useId: AuthUserRole::getUserId(),

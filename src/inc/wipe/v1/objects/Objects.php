@@ -395,14 +395,23 @@ class Objects
 
     public static function getObjectsPriceQuery(string $colId, int $objId)
     {
+        $colSwPrice = ObjStageWorkTableMap::COL_PRICE;
+        $colSwAmount = ObjStageWorkTableMap::COL_AMOUNT;
+        $colSmPrice = ObjStageTechnicTableMap::COL_PRICE;
+        $colSmAmount = ObjStageTechnicTableMap::COL_AMOUNT;
+        $colStPrice = ObjStageMaterialTableMap::COL_PRICE;
+        $colStAmount = ObjStageMaterialTableMap::COL_AMOUNT;
+
         return ObjProjectQuery::create()
             ->select([
                 ObjProjectTableMap::COL_ID,
+                ObjSubprojectTableMap::COL_ID,
+                ObjGroupTableMap::COL_ID,
+                ObjHouseTableMap::COL_ID,
                 ObjStageTableMap::COL_ID,
-                ObjStageWorkTableMap::COL_PRICE,
-                ObjStageMaterialTableMap::COL_PRICE,
-                ObjStageTechnicTableMap::COL_PRICE,
+                ObjStageWorkTableMap::COL_ID
             ])
+            ->withColumn("($colSwPrice*$colSwAmount) + ($colSmPrice*$colSmAmount) + ($colStPrice*$colStAmount)", 'price')
 //            ->withColumn(ObjStageWorkTableMap::COL_PRICE, 'price_work')
 //            ->withColumn(ObjStageMaterialTableMap::COL_PRICE, 'price_material')
 //            ->withColumn(ObjStageTechnicTableMap::COL_PRICE, 'price_technic')

@@ -75,9 +75,11 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="volume-crud">
-                                    <input type="radio" name="volume-crud-radio" id="volume-crud">
-                                    <input type="radio" name="volume-crud-radio" id="volume-crud">
-                                    <label for="volume-crud">CRUD объёмы</label>
+                                    <div class="volume-crud-checkboxes">
+                                        <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                        <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                        <label for="volume-crud">CRUD объектов</label>
+                                    </div>
                                 </div>
                             </div>
                             <p class="permission__description">Возможность создавать, редактировать, удалять, копировать
@@ -87,7 +89,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="version-control">
-                                    <input type="radio" name="access-radio" id="version-control">
+                                    <input type="radio" name="version-control-radio" id="version-control">
                                     <label for="version-control">Управление версиями</label>
                                 </div>
                             </div>
@@ -97,7 +99,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="watch">
-                                    <input type="radio" name="access-radio" id="watch">
+                                    <input type="radio" name="watch-radio" id="watch">
                                     <label for="watch">Просмотр объектов</label>
                                 </div>
                             </div>

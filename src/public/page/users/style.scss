@@ -298,12 +298,23 @@
                             }
                             .object-crud-checkboxes {
                                 display: flex;
+                                align-items: center;
                                 gap: 20px;
-                                width: 110px;
+                                width: 310px;
                                 height: 51px;
-                                @include Checkbox();
+                                input {
+                                    &::before {
+                                        content: '';
+                                    }
+                                }
                             }
-                            .volume-crud,
+                            .volume-crud-checkboxes {
+                                display: flex;
+                                align-items: center;
+                                gap: 20px;
+                                width: 310px;
+                                height: 51px;
+                            }
                             .version-control,
                             .watch,
                             .admin {

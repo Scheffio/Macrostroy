@@ -277,7 +277,7 @@ CREATE TABLE `obj_stage_material` (
   KEY `stage_work_id` (`stage_work_id`),
   CONSTRAINT `stage_material_ibfk_1` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`),
   CONSTRAINT `stage_material_ibfk_2` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +286,7 @@ CREATE TABLE `obj_stage_material` (
 
 LOCK TABLES `obj_stage_material` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material` DISABLE KEYS */;
-INSERT INTO `obj_stage_material` VALUES (1,100.55,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
+INSERT INTO `obj_stage_material` VALUES (1,100.55,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert');
 /*!40000 ALTER TABLE `obj_stage_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +321,7 @@ CREATE TABLE `obj_stage_material_version` (
 
 LOCK TABLES `obj_stage_material_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_material_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1);
+INSERT INTO `obj_stage_material_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +348,7 @@ CREATE TABLE `obj_stage_technic` (
   KEY `technic_id` (`technic_id`),
   CONSTRAINT `stage_technic_ibfk_1` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`),
   CONSTRAINT `stage_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,7 +357,7 @@ CREATE TABLE `obj_stage_technic` (
 
 LOCK TABLES `obj_stage_technic` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic` DISABLE KEYS */;
-INSERT INTO `obj_stage_technic` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert');
+INSERT INTO `obj_stage_technic` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert');
 /*!40000 ALTER TABLE `obj_stage_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,7 +392,7 @@ CREATE TABLE `obj_stage_technic_version` (
 
 LOCK TABLES `obj_stage_technic_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_technic_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1);
+INSERT INTO `obj_stage_technic_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -455,7 +455,7 @@ CREATE TABLE `obj_stage_work` (
   KEY `stage_work_ibfi_6` (`stage_id`),
   CONSTRAINT `stage_work_ibfk_5` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `stage_work_ibfk_6` FOREIGN KEY (`stage_id`) REFERENCES `obj_stage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -464,7 +464,7 @@ CREATE TABLE `obj_stage_work` (
 
 LOCK TABLES `obj_stage_work` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work` DISABLE KEYS */;
-INSERT INTO `obj_stage_work` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert');
+INSERT INTO `obj_stage_work` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert'),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49','12','insert');
 /*!40000 ALTER TABLE `obj_stage_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -503,7 +503,7 @@ CREATE TABLE `obj_stage_work_version` (
 
 LOCK TABLES `obj_stage_work_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_work_version` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert',1,1,NULL,NULL,NULL,NULL);
+INSERT INTO `obj_stage_work_version` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert',1,1,NULL,NULL,NULL,NULL),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49','12','insert',1,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 

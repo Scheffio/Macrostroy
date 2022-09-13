@@ -357,8 +357,6 @@ class Objects
 //                IsCrud:
 //                IsAdmin:
 //        }
-
-        return true;
     }
 
     /**
@@ -540,30 +538,27 @@ class Objects
         ?int &$projectId = null
     ): array
     {
-        if ($access['manageUsers']) {
-            return [
-                'isCrud' => true,
-                'isAdmin' => true,
-            ];
-        }
+        $isAdmin = false;
 
-        if ($projectId) {
-            $isCrud = ProjectRole::isAccessCrudObj(
-                $lvl,
-                $projectId,
-                $userId,
-                $parentId
-            );
+        if ($access['manageUsers'] === false) {
+            if ($projectId) {
+                $isCrud = ProjectRole::isAccessCrudObj(
+                    lvl: $lvl,
+                    projectId: $projectId,
+                    userId: $userId,
+                    objId: $parentId
+                );
+            } else {
+                $isCrud = $access['manageObjects'];
+            }
         } else {
-            return [
-                'isCrud' => $access['objectViewer'] ,
-                'isAdmin' => false,
-            ];
+            $isCrud = true;
+            $isAdmin = true;
         }
 
         return [
-            'isCrud' => false,
-            'isAdmin' => false,
+            'isCrud' => $isCrud,
+            'isAdmin' => $isAdmin,
         ];
     }
     #endregion

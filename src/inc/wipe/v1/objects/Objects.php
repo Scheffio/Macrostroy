@@ -479,32 +479,38 @@ class Objects
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
+        $count = count($objs);
 
-        foreach ($objs as &$obj) {
-            $obj = [
-                'obj' => [
-                    'id' => $obj[$colId],
-                    'name' => $obj[$colName],
-                    'status' => $obj[$colStatus],
-                    'isPublic' => $obj[$colIsPublic],
-                    'user' => [
-                        'id' => $obj[UsersTableMap::COL_ID],
-                        'name' => $obj[UsersTableMap::COL_USERNAME],
+        for ($i = 0; $i < $count; $i++) {
+            $isCrud = self::isAccessCrud($access, $crud, $objs[$i]);
+
+            if ($isCrud === null) unset($objs[$i]);
+            else {
+                $objs[$i] = [
+                    'obj' => [
+                        'id' => $objs[$i][$colId],
+                        'name' => $objs[$i][$colName],
+                        'status' => $objs[$i][$colStatus],
+                        'isPublic' => $objs[$i][$colIsPublic],
+                        'user' => [
+                            'id' => $objs[$i][UsersTableMap::COL_ID],
+                            'name' => $objs[$i][UsersTableMap::COL_USERNAME],
+                        ],
+                        'price' => $objs[$i]['price'] ?? 0,
                     ],
-                    'price' => $obj['price'] ?? 0,
-                ],
-                'isCrud' => self::isAccessCrud($access, $crud, $obj)
-//                'parents' => [
-//                    ObjProjectTableMap::COL_ID => $obj[ObjProjectTableMap::COL_ID],
-//                    ObjSubprojectTableMap::COL_ID => $obj[ObjSubprojectTableMap::COL_ID],
-//                    ObjGroupTableMap::COL_ID => $obj[ObjGroupTableMap::COL_ID],
-//                    ObjHouseTableMap::COL_ID => $obj[ObjHouseTableMap::COL_ID],
-//                    ObjStageTableMap::COL_ID => $obj[ObjStageTableMap::COL_ID],
-//                ]
-            ];
+                    'isCrud' => $isCrud
+                ];
+            }
         }
     }
 
+    /**
+     * @param array $access
+     * @param array $crud
+     * @param array $obj
+     * @return bool|null
+     * @throws IncorrectLvlException
+     */
     private static function isAccessCrud(array &$access, array &$crud, array &$obj): ?bool
     {
         if ($access['manageUsers']) return true;

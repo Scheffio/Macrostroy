@@ -208,6 +208,20 @@ function parsePermissions(id, elem) {
                     let parameter = json.data
                     if(parameter.object_viewer) {
                         watchobjectsCheckbox.checked = true
+                    }else if(parameter.manage_history) {
+                        versionControlCheckbox.checked = true
+                    }else if(parameter.manage_objects) {
+                        objectCrudAllCheckbox.checked = true
+                        objectCrudExactCheckbox.checked = false
+                    }else if(!parameter.manage_objects) {
+                        objectCrudAllCheckbox.checked = false
+                        objectCrudExactCheckbox.checked = true
+                    }else if(parameter.manage_volumes) {
+                        volumeCrudAllCheckbox.checked = true
+                        volumeCrudExactCheckbox.checked = false
+                    }else if(!parameter.manage_volumes) {
+                        volumeCrudAllCheckbox.checked = false
+                        volumeCrudExactCheckbox.checked = true
                     }
                 }
             }else {

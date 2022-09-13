@@ -199,17 +199,25 @@ function parsePermissions(id) {
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
+        console.log(json);
         for(let i = 0; i < json.data.length; i++) {
             if(elem.children[0].dataset.id == json.data[i].id) {
+                console.log(json);
                 let parameter = json.data[i]
                 if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
                     adminCheckbox.checked = true
                 }else if (parameter.object_viewer == true) {
-                    watchobjectsCheckbox = true
+                    watchobjectsCheckbox.checked = true
                 }else if (parameter.manage_history == true) {
-                    versionControlCheckbox = true
+                    versionControlCheckbox.checked = true
                 }else if (parameter.manage_objects == true) {
-                    
+                    objectCrudAllCheckbox.checked = true
+                }else if (parameter.manage_objects == false) {
+                    objectCrudExactCheckbox.checked = true
+                }else if (parameter.manage_volumes == true) {
+                    volumeCrudAllCheckbox.checked = true
+                }else if (parameter.manage_volumes == false) {
+                    volumeCrudExactCheckbox.checked = true
                 }
             }
         }

@@ -453,44 +453,63 @@ class Objects
             if (array_key_exists($id, $result)) {
 
             } else {
-                $result[$id] = [
-                    'obj' => [
-                        'name' => $obj[$colName],
-                        'status' => $obj[$colStatus],
-                        'isPublic' => $obj[$colIsPublic],
-                        'user' => [
-                            'id' => $obj[UsersTableMap::COL_ID],
-                            'name' => $obj[UsersTableMap::COL_USERNAME],
-                        ],
-                        'price' => $obj['price'] ?? 0,
-                    ],
-                    'parents' => [
-                        [
-                            'id' => $obj[ObjProjectTableMap::COL_ID],
-                            'lvl' => eLvlObjInt::PROJECT->value,
-                        ],
-                        [
-                            'id' => $obj[ObjSubprojectTableMap::COL_ID],
-                            'lvl' => eLvlObjInt::PROJECT->value,
-                        ],
-                        [
-                            'id' => $obj[ObjGroupTableMap::COL_ID],
-                            'lvl' => eLvlObjInt::PROJECT->value,
-                        ],
-                        [
-                            'id' => $obj[ObjHouseTableMap::COL_ID],
-                            'lvl' => eLvlObjInt::PROJECT->value,
-                        ],
-                        [
-                            'id' => $obj[ObjStageTableMap::COL_ID],
-                            'lvl' => eLvlObjInt::PROJECT->value,
-                        ]
-                    ]
-                ];
+                self::pushObjById(
+                id: $id,
+                colName: $colName,
+                colStatus: $colStatus,
+                colIsPublic: $colIsPublic,
+                obj: $obj,
+                result: $result,
+                );
             }
         }
 
         return $result;
+    }
+
+    private static function pushObjById(
+        int &$id,
+        string &$colName,
+        string &$colStatus,
+        string &$colIsPublic,
+        array &$obj,
+        array &$result
+    ): void
+    {
+        $result[$id] = [
+            'obj' => [
+                'name' => $obj[$colName],
+                'status' => $obj[$colStatus],
+                'isPublic' => $obj[$colIsPublic],
+                'user' => [
+                    'id' => $obj[UsersTableMap::COL_ID],
+                    'name' => $obj[UsersTableMap::COL_USERNAME],
+                ],
+                'price' => $obj['price'] ?? 0,
+            ],
+            'parents' => [
+                [
+                    'id' => $obj[ObjProjectTableMap::COL_ID],
+                    'lvl' => eLvlObjInt::PROJECT->value,
+                ],
+                [
+                    'id' => $obj[ObjSubprojectTableMap::COL_ID],
+                    'lvl' => eLvlObjInt::PROJECT->value,
+                ],
+                [
+                    'id' => $obj[ObjGroupTableMap::COL_ID],
+                    'lvl' => eLvlObjInt::PROJECT->value,
+                ],
+                [
+                    'id' => $obj[ObjHouseTableMap::COL_ID],
+                    'lvl' => eLvlObjInt::PROJECT->value,
+                ],
+                [
+                    'id' => $obj[ObjStageTableMap::COL_ID],
+                    'lvl' => eLvlObjInt::PROJECT->value,
+                ]
+            ]
+        ];
     }
     #endregion
 

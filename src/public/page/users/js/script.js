@@ -178,8 +178,17 @@ function parseRoles() {
     })
 }
 
-function 
-
+function parsePermissions() {
+    let url = new URL('https://artemy.net/api/v1/role')
+    let obj = {
+        role_id: 
+    }
+    fetch(url).then((elem) => {
+        return elem.json()
+    }).then((json) => {
+        console.log(json);
+    })
+}
 
 function addUser() {
     const username = document.querySelector(".modal-body__name > input")
@@ -219,3 +228,4 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#roles"
 parseRoles()
+parsePermissions()

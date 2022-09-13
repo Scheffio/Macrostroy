@@ -700,13 +700,13 @@ body.fixated {
 
 .no-access-window {
   margin-top: 300px;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 .no-access-window.show {
-  display: none;
+  display: flex;
 }
 .no-access-window p {
   font-family: "Jost", sans-serif;

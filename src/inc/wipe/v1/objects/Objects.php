@@ -351,10 +351,10 @@ class Objects
         );
 
         JsonOutput::success([
-            'crud' => $crud,
-            'access' => $access,
+//            'crud' => $crud,
+//            'access' => $access,
             'objects' => $objects,
-            'isCrud' => $basicCrud
+//            'isCrud' => $basicCrud
         ]);
     }
 
@@ -432,7 +432,7 @@ class Objects
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
         $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
-        $sumStr = "($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr)";
+        $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
 
         $query = ObjProjectQuery::create()
                 ->select([
@@ -496,7 +496,10 @@ class Objects
             if ($isCrud === null) continue;
 
             if (array_key_exists($id, $result)) {
-                $result[$id]['price'] += $obj['price'] ?? 0;
+                JsonOutput::success([
+                    $result[$id]['price'], (float)$obj['price']
+                ]);
+                $result[$id]['price'] += (float)$obj['price'];
             } else {
                 $result[$id] = [
                     'id' => $obj[$colId],
@@ -507,7 +510,7 @@ class Objects
                         'id' => $obj[UsersTableMap::COL_ID],
                         'name' => $obj[UsersTableMap::COL_USERNAME],
                     ],
-                    'price' => $obj['price'] ?? 0,
+                    'price' => (float)$obj['price'],
                     'isCrud' => $isCrud,
                     'isHistory' => $isCrud ? $access['manageHistory'] : false,
                 ];

@@ -8,7 +8,6 @@ use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 try {
-
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 1,

@@ -274,6 +274,17 @@ class ProjectRole
     {
         return new ProjectRole();
     }
+
+    public static function getUserCrudById(int $lvl, int $userId, ?int $projectId)
+    {
+        $user = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
+
+        if ($user) {
+            self::formingUsersDataById($user);
+        }
+
+        return $user;
+    }
     #endregion
 
     #region Static Select CRUD Users Object
@@ -314,12 +325,12 @@ class ProjectRole
     /**
      * Получить запрос на вывод пользователей.
      * @param int $lvl Номер уровня доступа.
-     * @param int $projectId ID проекта.
+     * @param int|null $projectId ID проекта.
      * @param int|null $userId ID пользователя.
      * @return DbUsersQuery
      * @throws PropelException
      */
-    private static function getUsersQuery(int $lvl, int $projectId, ?int $userId = null): DbUsersQuery
+    private static function getUsersQuery(int $lvl, ?int $projectId = null, ?int $userId = null): DbUsersQuery
     {
         $query = UsersQuery::create()
                 ->select([
@@ -336,12 +347,15 @@ class ProjectRole
                 ->groupById()
                 ->leftJoinUserRole()
                 ->leftJoinProjectRole()
-                    ->addJoinCondition(
+                ->filterByIsAvailable(1);
+
+        if ($projectId) {
+            $query->addJoinCondition(
                         name: 'ProjectRole',
                         clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
                         value: $projectId
-                    )
-                ->filterByIsAvailable(1);
+                    );
+        }
 
         if ($userId) {
             $query->filterById($userId);

@@ -12,14 +12,14 @@ try {
         Objects::getObjectsByLvl(
             lvl: 2,
             parentId: 0,
-            parentLvl: 1,
             projectId: 0,
-            useId: AuthUserRole::getUserId(),
+            userId: 17,
             limit: 10,
             limitFrom: 0,
-            isAccessManageUsers: AuthUserRole::isAccessManageUsers(),
-            isAccessManageObjects: AuthUserRole::isAccessManageObjects(),
-            isAccessObjectViewer: AuthUserRole::isAccessObjectViewer(),
+//            userId: AuthUserRole::getUserId(),
+//            isAccessManageUsers: AuthUserRole::isAccessManageUsers(),
+//            isAccessManageObjects: AuthUserRole::isAccessManageObjects(),
+//            isAccessObjectViewer: AuthUserRole::isAccessObjectViewer(),
         )
     );
 } catch (NoRoleFoundException $e) {

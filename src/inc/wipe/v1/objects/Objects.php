@@ -309,30 +309,32 @@ class Objects
     public static function getObjectsByLvl(
         int $lvl,
         int $parentId,
-        int $parentLvl,
         int $projectId,
-        int $useId,
+        int $userId,
         int $limit = 10,
         int $limitFrom = 0,
-        bool $isAccessManageUsers = false,
-        bool $isAccessManageObjects = false,
-        bool $isAccessObjectViewer = false,
     )
     {
-        $isCrud = ProjectRole::isAccessCrudObj(
-            lvl: $lvl,
-            projectId: $projectId,
-            userId: $useId,
-            objId: $parentId
+        JsonOutput::success(
+            ProjectRole::getUserCrudById($lvl, $userId, $projectId)
+//            ProjectRole::getCrudUsersByObject($lvl, $projectId, $parentId, $userId)
+//            ProjectRole::getUsersQuery($lvl, $projectId, $userId)->find()->getData()
         );
 
-        self::getObjectsQuery(
-            objId: $parentId,
-            lvl: $lvl,
-            limit: $limit,
-            limitFrom: $limitFrom,
-            isAccessManageUsers: $isAccessManageUsers
-        );
+//        $isCrud = ProjectRole::isAccessCrudObj(
+//            lvl: $lvl,
+//            projectId: $projectId,
+//            userId: $userId,
+//            objId: $parentId
+//        );
+//
+//        self::getObjectsQuery(
+//            objId: $parentId,
+//            lvl: $lvl,
+//            limit: $limit,
+//            limitFrom: $limitFrom,
+//            isAccessManageUsers: $isAccessManageUsers
+//        );
 
 //        IsCrud: true
 //        Objects: {
@@ -360,12 +362,6 @@ class Objects
             ->withColumn($colIsPublic)
             ->withColumn($colCreatedBy);
 
-//        JsonOutput::success([
-//            '$lvl' => $lvl,
-//            '$objId' => $objId,
-//            'query' => $query->find()->getData(),
-//        ]);
-
         if (!$isAccessManageUsers) {
             $query->filterBy(
                 column: 'Status',
@@ -374,14 +370,6 @@ class Objects
             );
         }
 
-//        if (!$isAccessManageUsers) {
-//            $query->filterBy(
-//                column: 'Status',
-//                value: self::ATTRIBUTE_STATUS_DELETED,
-//                comparison: Criteria::ALT_NOT_EQUAL
-//            );
-//        }
-//
 //        if ($limitFrom) {
 //            $query->filterBy(
 //                column: 'Id',

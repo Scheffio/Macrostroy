@@ -347,6 +347,12 @@ class Objects
             'crud' => $crud,
             'access' => $access,
             'objects' => $objects,
+            'isCrud' => ProjectRole::isAccessCrudObj(
+                $lvl,
+                $projectId,
+                $userId,
+                $parentId
+            )
         ]);
 
 //        IsCrud: true

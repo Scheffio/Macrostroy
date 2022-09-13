@@ -158,7 +158,7 @@ function parseRoles() {
             click(elem) {
                 this.reset()
                 elem.classList.toggle('selected')
-                parsePermissions(elem.children[0].dataset.id)
+                parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
                 this.roles.forEach((elem) => {
@@ -181,7 +181,7 @@ function parseRoles() {
     })
 }
 
-function parsePermissions(id) {
+function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
     let obj = {
         role_id: id 
@@ -199,7 +199,33 @@ function parsePermissions(id) {
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
-        
+        if(json.status === "success") {
+            for(let i = 0; i < json.data.length; i++) {
+                if(elem.children[0].dataset.id == json.data[i].id) {
+                    let parameter = json.data[i]
+                    if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
+                        adminCheckbox.checked = true
+                    }else if (parameter.object_viewer == true) {
+                        watchobjectsCheckbox.checked = true
+                    }else if (parameter.manage_history == true) {
+                        versionControlCheckbox.checked = true
+                    }else if (parameter.manage_objects == true) {
+                        objectCrudAllCheckbox.checked = true
+                    }else if (parameter.manage_objects == false) {
+                        objectCrudExactCheckbox.checked = true
+                    }else if (parameter.manage_volumes == true) {
+                        volumeCrudAllCheckbox.checked = true
+                    }else if (parameter.manage_volumes == false) {
+                        volumeCrudExactCheckbox.checked = true
+                    }
+                }
+            }
+        }else {
+            if(json.error_message == 'Недостаточно прав') {
+                document.querySelector('.no-access-window').classList.add('show')
+                document.querySelector('.wrap').classList.add('show')
+            }
+        }
     })
 }
 

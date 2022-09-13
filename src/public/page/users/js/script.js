@@ -8,6 +8,7 @@ fetch(url).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
     })
+
     
 })
 
@@ -177,6 +178,8 @@ function parseRoles() {
     })
 }
 
+function 
+
 
 function addUser() {
     const username = document.querySelector(".modal-body__name > input")
@@ -208,6 +211,8 @@ function addUser() {
         }
     })
 }
+
+
 
 
 titleChecker.resetClasses()

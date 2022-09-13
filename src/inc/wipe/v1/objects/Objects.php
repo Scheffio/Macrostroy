@@ -14,6 +14,7 @@ use DB\Map\ObjStageTableMap;
 use DB\Map\ObjStageTechnicTableMap;
 use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
+use DB\Map\UsersTableMap;
 use DB\ObjStageMaterialVersionQuery;
 use DB\ObjStageTechnicVersionQuery;
 use DB\ObjStageVersionQuery;
@@ -406,15 +407,17 @@ class Objects
                     self::getColNameByLvl($lvl),
                     self::getColStatusByLvl($lvl),
                     self::getColIsPublicByLvl($lvl),
-                    self::getColCreatedUserIdByLvl($lvl),
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
                     ObjGroupTableMap::COL_ID,
                     ObjHouseTableMap::COL_ID,
                     ObjStageTableMap::COL_ID,
-                    ObjStageWorkTableMap::COL_ID
+                    ObjStageWorkTableMap::COL_ID,
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
                 ])
-                ->withColumn($sumStr, 'price')->leftJoinUsers()
+                ->withColumn($sumStr, 'price')
+                ->leftJoinUsers()
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -443,7 +446,6 @@ class Objects
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
-        $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
 
         foreach ($objs as $obj) {
             $id =& $obj[$colId];
@@ -452,15 +454,37 @@ class Objects
 
             } else {
                 $result[$id] = [
-                    'basic' => [
+                    'obj' => [
                         'name' => $obj[$colName],
                         'status' => $obj[$colStatus],
                         'isPublic' => $obj[$colIsPublic],
-                        'userId' => $obj[$colCreatedBy],
+                        'user' => [
+                            'id' => $obj[UsersTableMap::COL_ID],
+                            'name' => $obj[UsersTableMap::COL_USERNAME],
+                        ],
                         'price' => $obj['price'] ?? 0,
                     ],
                     'parents' => [
-
+                        [
+                            'id' => $obj[ObjProjectTableMap::COL_ID],
+                            'lvl' => eLvlObjInt::PROJECT->value,
+                        ],
+                        [
+                            'id' => $obj[ObjSubprojectTableMap::COL_ID],
+                            'lvl' => eLvlObjInt::PROJECT->value,
+                        ],
+                        [
+                            'id' => $obj[ObjGroupTableMap::COL_ID],
+                            'lvl' => eLvlObjInt::PROJECT->value,
+                        ],
+                        [
+                            'id' => $obj[ObjHouseTableMap::COL_ID],
+                            'lvl' => eLvlObjInt::PROJECT->value,
+                        ],
+                        [
+                            'id' => $obj[ObjStageTableMap::COL_ID],
+                            'lvl' => eLvlObjInt::PROJECT->value,
+                        ]
                     ]
                 ];
             }

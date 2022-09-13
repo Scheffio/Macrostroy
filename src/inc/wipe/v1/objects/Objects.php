@@ -334,6 +334,8 @@ class Objects
                         isAccessManageUsers: $access['manageObjects']
                     )->find()->getData();
 
+        $objects = self::formingObjects($lvl, $objects);
+
         JsonOutput::success([
             'crud' => $crud,
             'access' => $access,
@@ -439,11 +441,10 @@ class Objects
         return $query;
     }
 
-    private static function formingObjects(int $lvl, array $objs)
+    private static function formingObjects(int &$lvl, array &$objs)
     {
         $result = [];
         $colId = self::getColIdByLvl($lvl);
-//        $colPreId = self::getColIdByLvl()
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
@@ -452,7 +453,12 @@ class Objects
             $id =& $obj[$colId];
 
             if (array_key_exists($id, $result)) {
-
+                JsonOutput::success($result);
+                self::pushObjParentsById(
+                id: $id,
+                result: $result,
+                obj: $obj,
+                );
             } else {
                 self::pushObjById(
                 id: $id,
@@ -488,28 +494,19 @@ class Objects
                 ],
                 'price' => $obj['price'] ?? 0,
             ],
-            'parents' => self::getObjParents($obj)
+            'parents' => []
         ];
+
+        self::pushObjParentsById($id, $result, $obj);
     }
 
     private static function pushObjParentsById(int &$id, array &$result, array &$obj): void
     {
         $resParents =& $result[$id]['parents'];
         $objParents = self::getObjParents($obj);
-
-        
-//        if ($parents) {
-//            foreach ($parents as &$parent) {
-//                $lvl =& $parent['lvl'];
-//                $colId = self::getColIdByLvl($lvl);
-//                
-//                if ($obj[$colId] === )
-//            }
-//        }
-        
-        $result[$id]['parents'] = [];
+        $resParents = array_push($resParents, $objParents);
     }
-    
+
     private static function getObjParents(array &$obj): array
     {
         return [

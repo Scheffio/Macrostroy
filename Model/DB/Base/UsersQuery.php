@@ -79,7 +79,137 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery rightJoinWithProjectRole() Adds a RIGHT JOIN clause and with to the query using the ProjectRole relation
  * @method     ChildUsersQuery innerJoinWithProjectRole() Adds a INNER JOIN clause and with to the query using the ProjectRole relation
  *
- * @method     \DB\UserRoleQuery|\DB\ProjectRoleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUsersQuery leftJoinObjProject($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjProject relation
+ * @method     ChildUsersQuery rightJoinObjProject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjProject relation
+ * @method     ChildUsersQuery innerJoinObjProject($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjProject relation
+ *
+ * @method     ChildUsersQuery joinWithObjProject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjProject relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjProject() Adds a LEFT JOIN clause and with to the query using the ObjProject relation
+ * @method     ChildUsersQuery rightJoinWithObjProject() Adds a RIGHT JOIN clause and with to the query using the ObjProject relation
+ * @method     ChildUsersQuery innerJoinWithObjProject() Adds a INNER JOIN clause and with to the query using the ObjProject relation
+ *
+ * @method     ChildUsersQuery leftJoinObjSubproject($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjSubproject relation
+ * @method     ChildUsersQuery rightJoinObjSubproject($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjSubproject relation
+ * @method     ChildUsersQuery innerJoinObjSubproject($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjSubproject relation
+ *
+ * @method     ChildUsersQuery joinWithObjSubproject($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjSubproject relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjSubproject() Adds a LEFT JOIN clause and with to the query using the ObjSubproject relation
+ * @method     ChildUsersQuery rightJoinWithObjSubproject() Adds a RIGHT JOIN clause and with to the query using the ObjSubproject relation
+ * @method     ChildUsersQuery innerJoinWithObjSubproject() Adds a INNER JOIN clause and with to the query using the ObjSubproject relation
+ *
+ * @method     ChildUsersQuery leftJoinObjGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjGroup relation
+ * @method     ChildUsersQuery rightJoinObjGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjGroup relation
+ * @method     ChildUsersQuery innerJoinObjGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjGroup relation
+ *
+ * @method     ChildUsersQuery joinWithObjGroup($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjGroup relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjGroup() Adds a LEFT JOIN clause and with to the query using the ObjGroup relation
+ * @method     ChildUsersQuery rightJoinWithObjGroup() Adds a RIGHT JOIN clause and with to the query using the ObjGroup relation
+ * @method     ChildUsersQuery innerJoinWithObjGroup() Adds a INNER JOIN clause and with to the query using the ObjGroup relation
+ *
+ * @method     ChildUsersQuery leftJoinObjHouse($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjHouse relation
+ * @method     ChildUsersQuery rightJoinObjHouse($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjHouse relation
+ * @method     ChildUsersQuery innerJoinObjHouse($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjHouse relation
+ *
+ * @method     ChildUsersQuery joinWithObjHouse($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjHouse relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjHouse() Adds a LEFT JOIN clause and with to the query using the ObjHouse relation
+ * @method     ChildUsersQuery rightJoinWithObjHouse() Adds a RIGHT JOIN clause and with to the query using the ObjHouse relation
+ * @method     ChildUsersQuery innerJoinWithObjHouse() Adds a INNER JOIN clause and with to the query using the ObjHouse relation
+ *
+ * @method     ChildUsersQuery leftJoinObjStage($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjStage relation
+ * @method     ChildUsersQuery rightJoinObjStage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjStage relation
+ * @method     ChildUsersQuery innerJoinObjStage($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjStage relation
+ *
+ * @method     ChildUsersQuery joinWithObjStage($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjStage relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjStage() Adds a LEFT JOIN clause and with to the query using the ObjStage relation
+ * @method     ChildUsersQuery rightJoinWithObjStage() Adds a RIGHT JOIN clause and with to the query using the ObjStage relation
+ * @method     ChildUsersQuery innerJoinWithObjStage() Adds a INNER JOIN clause and with to the query using the ObjStage relation
+ *
+ * @method     ChildUsersQuery leftJoinObjStageWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjStageWork relation
+ * @method     ChildUsersQuery rightJoinObjStageWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjStageWork relation
+ * @method     ChildUsersQuery innerJoinObjStageWork($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjStageWork relation
+ *
+ * @method     ChildUsersQuery joinWithObjStageWork($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjStageWork relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjStageWork() Adds a LEFT JOIN clause and with to the query using the ObjStageWork relation
+ * @method     ChildUsersQuery rightJoinWithObjStageWork() Adds a RIGHT JOIN clause and with to the query using the ObjStageWork relation
+ * @method     ChildUsersQuery innerJoinWithObjStageWork() Adds a INNER JOIN clause and with to the query using the ObjStageWork relation
+ *
+ * @method     ChildUsersQuery leftJoinObjStageMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjStageMaterial relation
+ * @method     ChildUsersQuery rightJoinObjStageMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjStageMaterial relation
+ * @method     ChildUsersQuery innerJoinObjStageMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjStageMaterial relation
+ *
+ * @method     ChildUsersQuery joinWithObjStageMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjStageMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjStageMaterial() Adds a LEFT JOIN clause and with to the query using the ObjStageMaterial relation
+ * @method     ChildUsersQuery rightJoinWithObjStageMaterial() Adds a RIGHT JOIN clause and with to the query using the ObjStageMaterial relation
+ * @method     ChildUsersQuery innerJoinWithObjStageMaterial() Adds a INNER JOIN clause and with to the query using the ObjStageMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinObjStageTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the ObjStageTechnic relation
+ * @method     ChildUsersQuery rightJoinObjStageTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ObjStageTechnic relation
+ * @method     ChildUsersQuery innerJoinObjStageTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the ObjStageTechnic relation
+ *
+ * @method     ChildUsersQuery joinWithObjStageTechnic($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ObjStageTechnic relation
+ *
+ * @method     ChildUsersQuery leftJoinWithObjStageTechnic() Adds a LEFT JOIN clause and with to the query using the ObjStageTechnic relation
+ * @method     ChildUsersQuery rightJoinWithObjStageTechnic() Adds a RIGHT JOIN clause and with to the query using the ObjStageTechnic relation
+ * @method     ChildUsersQuery innerJoinWithObjStageTechnic() Adds a INNER JOIN clause and with to the query using the ObjStageTechnic relation
+ *
+ * @method     ChildUsersQuery leftJoinVolMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolMaterial relation
+ * @method     ChildUsersQuery rightJoinVolMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolMaterial relation
+ * @method     ChildUsersQuery innerJoinVolMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the VolMaterial relation
+ *
+ * @method     ChildUsersQuery joinWithVolMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the VolMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinWithVolMaterial() Adds a LEFT JOIN clause and with to the query using the VolMaterial relation
+ * @method     ChildUsersQuery rightJoinWithVolMaterial() Adds a RIGHT JOIN clause and with to the query using the VolMaterial relation
+ * @method     ChildUsersQuery innerJoinWithVolMaterial() Adds a INNER JOIN clause and with to the query using the VolMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinVolTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolTechnic relation
+ * @method     ChildUsersQuery rightJoinVolTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolTechnic relation
+ * @method     ChildUsersQuery innerJoinVolTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the VolTechnic relation
+ *
+ * @method     ChildUsersQuery joinWithVolTechnic($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the VolTechnic relation
+ *
+ * @method     ChildUsersQuery leftJoinWithVolTechnic() Adds a LEFT JOIN clause and with to the query using the VolTechnic relation
+ * @method     ChildUsersQuery rightJoinWithVolTechnic() Adds a RIGHT JOIN clause and with to the query using the VolTechnic relation
+ * @method     ChildUsersQuery innerJoinWithVolTechnic() Adds a INNER JOIN clause and with to the query using the VolTechnic relation
+ *
+ * @method     ChildUsersQuery leftJoinVolWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolWork relation
+ * @method     ChildUsersQuery rightJoinVolWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolWork relation
+ * @method     ChildUsersQuery innerJoinVolWork($relationAlias = null) Adds a INNER JOIN clause to the query using the VolWork relation
+ *
+ * @method     ChildUsersQuery joinWithVolWork($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the VolWork relation
+ *
+ * @method     ChildUsersQuery leftJoinWithVolWork() Adds a LEFT JOIN clause and with to the query using the VolWork relation
+ * @method     ChildUsersQuery rightJoinWithVolWork() Adds a RIGHT JOIN clause and with to the query using the VolWork relation
+ * @method     ChildUsersQuery innerJoinWithVolWork() Adds a INNER JOIN clause and with to the query using the VolWork relation
+ *
+ * @method     ChildUsersQuery leftJoinVolWorkMaterial($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolWorkMaterial relation
+ * @method     ChildUsersQuery rightJoinVolWorkMaterial($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolWorkMaterial relation
+ * @method     ChildUsersQuery innerJoinVolWorkMaterial($relationAlias = null) Adds a INNER JOIN clause to the query using the VolWorkMaterial relation
+ *
+ * @method     ChildUsersQuery joinWithVolWorkMaterial($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the VolWorkMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinWithVolWorkMaterial() Adds a LEFT JOIN clause and with to the query using the VolWorkMaterial relation
+ * @method     ChildUsersQuery rightJoinWithVolWorkMaterial() Adds a RIGHT JOIN clause and with to the query using the VolWorkMaterial relation
+ * @method     ChildUsersQuery innerJoinWithVolWorkMaterial() Adds a INNER JOIN clause and with to the query using the VolWorkMaterial relation
+ *
+ * @method     ChildUsersQuery leftJoinVolWorkTechnic($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolWorkTechnic relation
+ * @method     ChildUsersQuery rightJoinVolWorkTechnic($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolWorkTechnic relation
+ * @method     ChildUsersQuery innerJoinVolWorkTechnic($relationAlias = null) Adds a INNER JOIN clause to the query using the VolWorkTechnic relation
+ *
+ * @method     ChildUsersQuery joinWithVolWorkTechnic($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the VolWorkTechnic relation
+ *
+ * @method     ChildUsersQuery leftJoinWithVolWorkTechnic() Adds a LEFT JOIN clause and with to the query using the VolWorkTechnic relation
+ * @method     ChildUsersQuery rightJoinWithVolWorkTechnic() Adds a RIGHT JOIN clause and with to the query using the VolWorkTechnic relation
+ * @method     ChildUsersQuery innerJoinWithVolWorkTechnic() Adds a INNER JOIN clause and with to the query using the VolWorkTechnic relation
+ *
+ * @method     \DB\UserRoleQuery|\DB\ProjectRoleQuery|\DB\ObjProjectQuery|\DB\ObjSubprojectQuery|\DB\ObjGroupQuery|\DB\ObjHouseQuery|\DB\ObjStageQuery|\DB\ObjStageWorkQuery|\DB\ObjStageMaterialQuery|\DB\ObjStageTechnicQuery|\DB\VolMaterialQuery|\DB\VolTechnicQuery|\DB\VolWorkQuery|\DB\VolWorkMaterialQuery|\DB\VolWorkTechnicQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUsers|null findOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query
  * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match is found
@@ -1135,6 +1265,1722 @@ abstract class UsersQuery extends ModelCriteria
     public function useProjectRoleNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('ProjectRole', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjProject object
+     *
+     * @param \DB\ObjProject|ObjectCollection $objProject the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjProject($objProject, ?string $comparison = null)
+    {
+        if ($objProject instanceof \DB\ObjProject) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objProject->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objProject instanceof ObjectCollection) {
+            $this
+                ->useObjProjectQuery()
+                ->filterByPrimaryKeys($objProject->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjProject() only accepts arguments of type \DB\ObjProject or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjProject relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjProject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjProject');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjProject');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjProject relation ObjProject object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjProjectQuery A secondary query class using the current class as primary query
+     */
+    public function useObjProjectQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjProject($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjProject', '\DB\ObjProjectQuery');
+    }
+
+    /**
+     * Use the ObjProject relation ObjProject object
+     *
+     * @param callable(\DB\ObjProjectQuery):\DB\ObjProjectQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjProjectQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjProjectQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjProject table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjProjectQuery The inner query object of the EXISTS statement
+     */
+    public function useObjProjectExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjProject', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjProject table for a NOT EXISTS query.
+     *
+     * @see useObjProjectExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjProjectQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjProjectNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjProject', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjSubproject object
+     *
+     * @param \DB\ObjSubproject|ObjectCollection $objSubproject the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjSubproject($objSubproject, ?string $comparison = null)
+    {
+        if ($objSubproject instanceof \DB\ObjSubproject) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objSubproject->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objSubproject instanceof ObjectCollection) {
+            $this
+                ->useObjSubprojectQuery()
+                ->filterByPrimaryKeys($objSubproject->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjSubproject() only accepts arguments of type \DB\ObjSubproject or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjSubproject relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjSubproject(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjSubproject');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjSubproject');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjSubproject relation ObjSubproject object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjSubprojectQuery A secondary query class using the current class as primary query
+     */
+    public function useObjSubprojectQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjSubproject($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjSubproject', '\DB\ObjSubprojectQuery');
+    }
+
+    /**
+     * Use the ObjSubproject relation ObjSubproject object
+     *
+     * @param callable(\DB\ObjSubprojectQuery):\DB\ObjSubprojectQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjSubprojectQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjSubprojectQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjSubproject table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjSubprojectQuery The inner query object of the EXISTS statement
+     */
+    public function useObjSubprojectExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjSubproject', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjSubproject table for a NOT EXISTS query.
+     *
+     * @see useObjSubprojectExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjSubprojectQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjSubprojectNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjSubproject', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjGroup object
+     *
+     * @param \DB\ObjGroup|ObjectCollection $objGroup the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjGroup($objGroup, ?string $comparison = null)
+    {
+        if ($objGroup instanceof \DB\ObjGroup) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objGroup->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objGroup instanceof ObjectCollection) {
+            $this
+                ->useObjGroupQuery()
+                ->filterByPrimaryKeys($objGroup->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjGroup() only accepts arguments of type \DB\ObjGroup or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjGroup relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjGroup(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjGroup');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjGroup');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjGroup relation ObjGroup object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjGroupQuery A secondary query class using the current class as primary query
+     */
+    public function useObjGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjGroup($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjGroup', '\DB\ObjGroupQuery');
+    }
+
+    /**
+     * Use the ObjGroup relation ObjGroup object
+     *
+     * @param callable(\DB\ObjGroupQuery):\DB\ObjGroupQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjGroupQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjGroupQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjGroup table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjGroupQuery The inner query object of the EXISTS statement
+     */
+    public function useObjGroupExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjGroup', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjGroup table for a NOT EXISTS query.
+     *
+     * @see useObjGroupExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjGroupQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjGroupNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjGroup', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjHouse object
+     *
+     * @param \DB\ObjHouse|ObjectCollection $objHouse the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjHouse($objHouse, ?string $comparison = null)
+    {
+        if ($objHouse instanceof \DB\ObjHouse) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objHouse->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objHouse instanceof ObjectCollection) {
+            $this
+                ->useObjHouseQuery()
+                ->filterByPrimaryKeys($objHouse->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjHouse() only accepts arguments of type \DB\ObjHouse or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjHouse relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjHouse(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjHouse');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjHouse');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjHouse relation ObjHouse object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjHouseQuery A secondary query class using the current class as primary query
+     */
+    public function useObjHouseQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjHouse($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjHouse', '\DB\ObjHouseQuery');
+    }
+
+    /**
+     * Use the ObjHouse relation ObjHouse object
+     *
+     * @param callable(\DB\ObjHouseQuery):\DB\ObjHouseQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjHouseQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjHouseQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjHouse table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjHouseQuery The inner query object of the EXISTS statement
+     */
+    public function useObjHouseExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjHouse', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjHouse table for a NOT EXISTS query.
+     *
+     * @see useObjHouseExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjHouseQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjHouseNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjHouse', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjStage object
+     *
+     * @param \DB\ObjStage|ObjectCollection $objStage the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjStage($objStage, ?string $comparison = null)
+    {
+        if ($objStage instanceof \DB\ObjStage) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objStage->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objStage instanceof ObjectCollection) {
+            $this
+                ->useObjStageQuery()
+                ->filterByPrimaryKeys($objStage->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjStage() only accepts arguments of type \DB\ObjStage or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjStage relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjStage(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjStage');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjStage');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjStage relation ObjStage object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjStageQuery A secondary query class using the current class as primary query
+     */
+    public function useObjStageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjStage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjStage', '\DB\ObjStageQuery');
+    }
+
+    /**
+     * Use the ObjStage relation ObjStage object
+     *
+     * @param callable(\DB\ObjStageQuery):\DB\ObjStageQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjStageQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjStageQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjStage table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjStageQuery The inner query object of the EXISTS statement
+     */
+    public function useObjStageExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjStage', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjStage table for a NOT EXISTS query.
+     *
+     * @see useObjStageExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjStageQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjStageNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjStage', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjStageWork object
+     *
+     * @param \DB\ObjStageWork|ObjectCollection $objStageWork the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjStageWork($objStageWork, ?string $comparison = null)
+    {
+        if ($objStageWork instanceof \DB\ObjStageWork) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objStageWork->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objStageWork instanceof ObjectCollection) {
+            $this
+                ->useObjStageWorkQuery()
+                ->filterByPrimaryKeys($objStageWork->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjStageWork() only accepts arguments of type \DB\ObjStageWork or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjStageWork relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjStageWork(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjStageWork');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjStageWork');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjStageWork relation ObjStageWork object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjStageWorkQuery A secondary query class using the current class as primary query
+     */
+    public function useObjStageWorkQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjStageWork($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjStageWork', '\DB\ObjStageWorkQuery');
+    }
+
+    /**
+     * Use the ObjStageWork relation ObjStageWork object
+     *
+     * @param callable(\DB\ObjStageWorkQuery):\DB\ObjStageWorkQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjStageWorkQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjStageWorkQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjStageWork table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjStageWorkQuery The inner query object of the EXISTS statement
+     */
+    public function useObjStageWorkExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjStageWork', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjStageWork table for a NOT EXISTS query.
+     *
+     * @see useObjStageWorkExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjStageWorkQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjStageWorkNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjStageWork', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjStageMaterial object
+     *
+     * @param \DB\ObjStageMaterial|ObjectCollection $objStageMaterial the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjStageMaterial($objStageMaterial, ?string $comparison = null)
+    {
+        if ($objStageMaterial instanceof \DB\ObjStageMaterial) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objStageMaterial->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objStageMaterial instanceof ObjectCollection) {
+            $this
+                ->useObjStageMaterialQuery()
+                ->filterByPrimaryKeys($objStageMaterial->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjStageMaterial() only accepts arguments of type \DB\ObjStageMaterial or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjStageMaterial relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjStageMaterial(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjStageMaterial');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjStageMaterial');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjStageMaterial relation ObjStageMaterial object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjStageMaterialQuery A secondary query class using the current class as primary query
+     */
+    public function useObjStageMaterialQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjStageMaterial($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjStageMaterial', '\DB\ObjStageMaterialQuery');
+    }
+
+    /**
+     * Use the ObjStageMaterial relation ObjStageMaterial object
+     *
+     * @param callable(\DB\ObjStageMaterialQuery):\DB\ObjStageMaterialQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjStageMaterialQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjStageMaterialQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjStageMaterial table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjStageMaterialQuery The inner query object of the EXISTS statement
+     */
+    public function useObjStageMaterialExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjStageMaterial', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjStageMaterial table for a NOT EXISTS query.
+     *
+     * @see useObjStageMaterialExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjStageMaterialQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjStageMaterialNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjStageMaterial', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\ObjStageTechnic object
+     *
+     * @param \DB\ObjStageTechnic|ObjectCollection $objStageTechnic the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByObjStageTechnic($objStageTechnic, ?string $comparison = null)
+    {
+        if ($objStageTechnic instanceof \DB\ObjStageTechnic) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $objStageTechnic->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($objStageTechnic instanceof ObjectCollection) {
+            $this
+                ->useObjStageTechnicQuery()
+                ->filterByPrimaryKeys($objStageTechnic->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByObjStageTechnic() only accepts arguments of type \DB\ObjStageTechnic or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ObjStageTechnic relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinObjStageTechnic(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ObjStageTechnic');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ObjStageTechnic');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ObjStageTechnic relation ObjStageTechnic object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\ObjStageTechnicQuery A secondary query class using the current class as primary query
+     */
+    public function useObjStageTechnicQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinObjStageTechnic($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ObjStageTechnic', '\DB\ObjStageTechnicQuery');
+    }
+
+    /**
+     * Use the ObjStageTechnic relation ObjStageTechnic object
+     *
+     * @param callable(\DB\ObjStageTechnicQuery):\DB\ObjStageTechnicQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withObjStageTechnicQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useObjStageTechnicQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to ObjStageTechnic table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\ObjStageTechnicQuery The inner query object of the EXISTS statement
+     */
+    public function useObjStageTechnicExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ObjStageTechnic', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to ObjStageTechnic table for a NOT EXISTS query.
+     *
+     * @see useObjStageTechnicExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\ObjStageTechnicQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useObjStageTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ObjStageTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\VolMaterial object
+     *
+     * @param \DB\VolMaterial|ObjectCollection $volMaterial the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolMaterial($volMaterial, ?string $comparison = null)
+    {
+        if ($volMaterial instanceof \DB\VolMaterial) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $volMaterial->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($volMaterial instanceof ObjectCollection) {
+            $this
+                ->useVolMaterialQuery()
+                ->filterByPrimaryKeys($volMaterial->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByVolMaterial() only accepts arguments of type \DB\VolMaterial or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the VolMaterial relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinVolMaterial(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('VolMaterial');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'VolMaterial');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the VolMaterial relation VolMaterial object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\VolMaterialQuery A secondary query class using the current class as primary query
+     */
+    public function useVolMaterialQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinVolMaterial($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'VolMaterial', '\DB\VolMaterialQuery');
+    }
+
+    /**
+     * Use the VolMaterial relation VolMaterial object
+     *
+     * @param callable(\DB\VolMaterialQuery):\DB\VolMaterialQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withVolMaterialQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useVolMaterialQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to VolMaterial table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\VolMaterialQuery The inner query object of the EXISTS statement
+     */
+    public function useVolMaterialExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('VolMaterial', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to VolMaterial table for a NOT EXISTS query.
+     *
+     * @see useVolMaterialExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\VolMaterialQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useVolMaterialNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('VolMaterial', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\VolTechnic object
+     *
+     * @param \DB\VolTechnic|ObjectCollection $volTechnic the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolTechnic($volTechnic, ?string $comparison = null)
+    {
+        if ($volTechnic instanceof \DB\VolTechnic) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $volTechnic->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($volTechnic instanceof ObjectCollection) {
+            $this
+                ->useVolTechnicQuery()
+                ->filterByPrimaryKeys($volTechnic->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByVolTechnic() only accepts arguments of type \DB\VolTechnic or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the VolTechnic relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinVolTechnic(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('VolTechnic');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'VolTechnic');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the VolTechnic relation VolTechnic object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\VolTechnicQuery A secondary query class using the current class as primary query
+     */
+    public function useVolTechnicQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinVolTechnic($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'VolTechnic', '\DB\VolTechnicQuery');
+    }
+
+    /**
+     * Use the VolTechnic relation VolTechnic object
+     *
+     * @param callable(\DB\VolTechnicQuery):\DB\VolTechnicQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withVolTechnicQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useVolTechnicQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to VolTechnic table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\VolTechnicQuery The inner query object of the EXISTS statement
+     */
+    public function useVolTechnicExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('VolTechnic', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to VolTechnic table for a NOT EXISTS query.
+     *
+     * @see useVolTechnicExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\VolTechnicQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useVolTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('VolTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\VolWork object
+     *
+     * @param \DB\VolWork|ObjectCollection $volWork the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWork($volWork, ?string $comparison = null)
+    {
+        if ($volWork instanceof \DB\VolWork) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $volWork->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($volWork instanceof ObjectCollection) {
+            $this
+                ->useVolWorkQuery()
+                ->filterByPrimaryKeys($volWork->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByVolWork() only accepts arguments of type \DB\VolWork or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the VolWork relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinVolWork(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('VolWork');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'VolWork');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the VolWork relation VolWork object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\VolWorkQuery A secondary query class using the current class as primary query
+     */
+    public function useVolWorkQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinVolWork($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'VolWork', '\DB\VolWorkQuery');
+    }
+
+    /**
+     * Use the VolWork relation VolWork object
+     *
+     * @param callable(\DB\VolWorkQuery):\DB\VolWorkQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withVolWorkQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useVolWorkQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to VolWork table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\VolWorkQuery The inner query object of the EXISTS statement
+     */
+    public function useVolWorkExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('VolWork', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to VolWork table for a NOT EXISTS query.
+     *
+     * @see useVolWorkExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\VolWorkQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useVolWorkNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('VolWork', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\VolWorkMaterial object
+     *
+     * @param \DB\VolWorkMaterial|ObjectCollection $volWorkMaterial the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkMaterial($volWorkMaterial, ?string $comparison = null)
+    {
+        if ($volWorkMaterial instanceof \DB\VolWorkMaterial) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $volWorkMaterial->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($volWorkMaterial instanceof ObjectCollection) {
+            $this
+                ->useVolWorkMaterialQuery()
+                ->filterByPrimaryKeys($volWorkMaterial->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByVolWorkMaterial() only accepts arguments of type \DB\VolWorkMaterial or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the VolWorkMaterial relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinVolWorkMaterial(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('VolWorkMaterial');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'VolWorkMaterial');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the VolWorkMaterial relation VolWorkMaterial object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\VolWorkMaterialQuery A secondary query class using the current class as primary query
+     */
+    public function useVolWorkMaterialQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinVolWorkMaterial($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'VolWorkMaterial', '\DB\VolWorkMaterialQuery');
+    }
+
+    /**
+     * Use the VolWorkMaterial relation VolWorkMaterial object
+     *
+     * @param callable(\DB\VolWorkMaterialQuery):\DB\VolWorkMaterialQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withVolWorkMaterialQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useVolWorkMaterialQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to VolWorkMaterial table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\VolWorkMaterialQuery The inner query object of the EXISTS statement
+     */
+    public function useVolWorkMaterialExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('VolWorkMaterial', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to VolWorkMaterial table for a NOT EXISTS query.
+     *
+     * @see useVolWorkMaterialExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\VolWorkMaterialQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useVolWorkMaterialNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('VolWorkMaterial', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \DB\VolWorkTechnic object
+     *
+     * @param \DB\VolWorkTechnic|ObjectCollection $volWorkTechnic the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVolWorkTechnic($volWorkTechnic, ?string $comparison = null)
+    {
+        if ($volWorkTechnic instanceof \DB\VolWorkTechnic) {
+            $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $volWorkTechnic->getVersionCreatedBy(), $comparison);
+
+            return $this;
+        } elseif ($volWorkTechnic instanceof ObjectCollection) {
+            $this
+                ->useVolWorkTechnicQuery()
+                ->filterByPrimaryKeys($volWorkTechnic->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByVolWorkTechnic() only accepts arguments of type \DB\VolWorkTechnic or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the VolWorkTechnic relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinVolWorkTechnic(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('VolWorkTechnic');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'VolWorkTechnic');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the VolWorkTechnic relation VolWorkTechnic object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\VolWorkTechnicQuery A secondary query class using the current class as primary query
+     */
+    public function useVolWorkTechnicQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinVolWorkTechnic($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'VolWorkTechnic', '\DB\VolWorkTechnicQuery');
+    }
+
+    /**
+     * Use the VolWorkTechnic relation VolWorkTechnic object
+     *
+     * @param callable(\DB\VolWorkTechnicQuery):\DB\VolWorkTechnicQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withVolWorkTechnicQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useVolWorkTechnicQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to VolWorkTechnic table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\VolWorkTechnicQuery The inner query object of the EXISTS statement
+     */
+    public function useVolWorkTechnicExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('VolWorkTechnic', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to VolWorkTechnic table for a NOT EXISTS query.
+     *
+     * @see useVolWorkTechnicExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\VolWorkTechnicQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useVolWorkTechnicNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('VolWorkTechnic', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result

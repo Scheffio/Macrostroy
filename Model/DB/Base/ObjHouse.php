@@ -15,6 +15,8 @@ use DB\ObjHouseVersionQuery as ChildObjHouseVersionQuery;
 use DB\ObjStage as ChildObjStage;
 use DB\ObjStageQuery as ChildObjStageQuery;
 use DB\ObjStageVersionQuery as ChildObjStageVersionQuery;
+use DB\Users as ChildUsers;
+use DB\UsersQuery as ChildUsersQuery;
 use DB\Map\ObjHouseTableMap;
 use DB\Map\ObjHouseVersionTableMap;
 use DB\Map\ObjStageTableMap;
@@ -122,6 +124,13 @@ abstract class ObjHouse implements ActiveRecordInterface
     protected $group_id;
 
     /**
+     * The value for the version_created_by field.
+     *
+     * @var        int
+     */
+    protected $version_created_by;
+
+    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -137,18 +146,16 @@ abstract class ObjHouse implements ActiveRecordInterface
     protected $version_created_at;
 
     /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
-
-    /**
      * The value for the version_comment field.
      *
      * @var        string|null
      */
     protected $version_comment;
+
+    /**
+     * @var        ChildUsers
+     */
+    protected $aUsers;
 
     /**
      * @var        ChildObjGroup
@@ -522,6 +529,16 @@ abstract class ObjHouse implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version_created_by] column value.
+     *
+     * @return int
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
      * Get the [version] column value.
      *
      * @return int|null
@@ -551,16 +568,6 @@ abstract class ObjHouse implements ActiveRecordInterface
         } else {
             return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
         }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
     }
 
     /**
@@ -714,6 +721,30 @@ abstract class ObjHouse implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[ObjHouseTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        if ($this->aUsers !== null && $this->aUsers->getId() !== $v) {
+            $this->aUsers = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [version] column.
      *
      * @param int|null $v New value
@@ -749,26 +780,6 @@ abstract class ObjHouse implements ActiveRecordInterface
                 $this->modifiedColumns[ObjHouseTableMap::COL_VERSION_CREATED_AT] = true;
             }
         } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[ObjHouseTableMap::COL_VERSION_CREATED_BY] = true;
-        }
 
         return $this;
     }
@@ -863,17 +874,17 @@ abstract class ObjHouse implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ObjHouseTableMap::translateFieldName('GroupId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->group_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjHouseTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjHouseTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjHouseTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjHouseTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjHouseTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjHouseTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ObjHouseTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
@@ -910,6 +921,9 @@ abstract class ObjHouse implements ActiveRecordInterface
     {
         if ($this->aObjGroup !== null && $this->group_id !== $this->aObjGroup->getId()) {
             $this->aObjGroup = null;
+        }
+        if ($this->aUsers !== null && $this->version_created_by !== $this->aUsers->getId()) {
+            $this->aUsers = null;
         }
     }
 
@@ -950,6 +964,7 @@ abstract class ObjHouse implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aUsers = null;
             $this->aObjGroup = null;
             $this->collObjStages = null;
 
@@ -1075,6 +1090,13 @@ abstract class ObjHouse implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aUsers !== null) {
+                if ($this->aUsers->isModified() || $this->aUsers->isNew()) {
+                    $affectedRows += $this->aUsers->save($con);
+                }
+                $this->setUsers($this->aUsers);
+            }
+
             if ($this->aObjGroup !== null) {
                 if ($this->aObjGroup->isModified() || $this->aObjGroup->isNew()) {
                     $affectedRows += $this->aObjGroup->save($con);
@@ -1171,14 +1193,14 @@ abstract class ObjHouse implements ActiveRecordInterface
         if ($this->isColumnModified(ObjHouseTableMap::COL_GROUP_ID)) {
             $modifiedColumns[':p' . $index++]  = 'group_id';
         }
+        if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
         }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'version_comment';
@@ -1212,14 +1234,14 @@ abstract class ObjHouse implements ActiveRecordInterface
                     case 'group_id':
                         $stmt->bindValue($identifier, $this->group_id, PDO::PARAM_INT);
                         break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_INT);
+                        break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
                     case 'version_created_at':
                         $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                     case 'version_comment':
                         $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
@@ -1305,13 +1327,13 @@ abstract class ObjHouse implements ActiveRecordInterface
                 return $this->getGroupId();
 
             case 6:
-                return $this->getVersion();
+                return $this->getVersionCreatedBy();
 
             case 7:
-                return $this->getVersionCreatedAt();
+                return $this->getVersion();
 
             case 8:
-                return $this->getVersionCreatedBy();
+                return $this->getVersionCreatedAt();
 
             case 9:
                 return $this->getVersionComment();
@@ -1350,13 +1372,13 @@ abstract class ObjHouse implements ActiveRecordInterface
             $keys[3] => $this->getIsPublic(),
             $keys[4] => $this->getIsAvailable(),
             $keys[5] => $this->getGroupId(),
-            $keys[6] => $this->getVersion(),
-            $keys[7] => $this->getVersionCreatedAt(),
-            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersion(),
+            $keys[8] => $this->getVersionCreatedAt(),
             $keys[9] => $this->getVersionComment(),
         ];
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[8]] instanceof \DateTimeInterface) {
+            $result[$keys[8]] = $result[$keys[8]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1365,6 +1387,21 @@ abstract class ObjHouse implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aUsers) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'users';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'users';
+                        break;
+                    default:
+                        $key = 'Users';
+                }
+
+                $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aObjGroup) {
 
                 switch ($keyType) {
@@ -1465,13 +1502,13 @@ abstract class ObjHouse implements ActiveRecordInterface
                 $this->setGroupId($value);
                 break;
             case 6:
-                $this->setVersion($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 7:
-                $this->setVersionCreatedAt($value);
+                $this->setVersion($value);
                 break;
             case 8:
-                $this->setVersionCreatedBy($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 9:
                 $this->setVersionComment($value);
@@ -1521,13 +1558,13 @@ abstract class ObjHouse implements ActiveRecordInterface
             $this->setGroupId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setVersion($arr[$keys[6]]);
+            $this->setVersionCreatedBy($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[7]]);
+            $this->setVersion($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[8]]);
+            $this->setVersionCreatedAt($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
             $this->setVersionComment($arr[$keys[9]]);
@@ -1593,14 +1630,14 @@ abstract class ObjHouse implements ActiveRecordInterface
         if ($this->isColumnModified(ObjHouseTableMap::COL_GROUP_ID)) {
             $criteria->add(ObjHouseTableMap::COL_GROUP_ID, $this->group_id);
         }
+        if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(ObjHouseTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION)) {
             $criteria->add(ObjHouseTableMap::COL_VERSION, $this->version);
         }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_AT)) {
             $criteria->add(ObjHouseTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(ObjHouseTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
         }
         if ($this->isColumnModified(ObjHouseTableMap::COL_VERSION_COMMENT)) {
             $criteria->add(ObjHouseTableMap::COL_VERSION_COMMENT, $this->version_comment);
@@ -1698,9 +1735,9 @@ abstract class ObjHouse implements ActiveRecordInterface
         $copyObj->setIsPublic($this->getIsPublic());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setGroupId($this->getGroupId());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersion($this->getVersion());
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
@@ -1748,6 +1785,57 @@ abstract class ObjHouse implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+    /**
+     * Declares an association between this object and a ChildUsers object.
+     *
+     * @param ChildUsers $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setUsers(ChildUsers $v = null)
+    {
+        if ($v === null) {
+            $this->setVersionCreatedBy(NULL);
+        } else {
+            $this->setVersionCreatedBy($v->getId());
+        }
+
+        $this->aUsers = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUsers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addObjHouse($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildUsers object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildUsers The associated ChildUsers object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getUsers(?ConnectionInterface $con = null)
+    {
+        if ($this->aUsers === null && ($this->version_created_by != 0)) {
+            $this->aUsers = ChildUsersQuery::create()->findPk($this->version_created_by, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUsers->addObjHouses($this);
+             */
+        }
+
+        return $this->aUsers;
     }
 
     /**
@@ -2061,6 +2149,32 @@ abstract class ObjHouse implements ActiveRecordInterface
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this ObjHouse is new, it will return
+     * an empty collection; or if this ObjHouse has previously
+     * been saved, it will retrieve related ObjStages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in ObjHouse.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStage[] List of ChildObjStage objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStage}> List of ChildObjStage objects
+     */
+    public function getObjStagesJoinUsers(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageQuery::create(null, $criteria);
+        $query->joinWith('Users', $joinBehavior);
+
+        return $this->getObjStages($query, $con);
+    }
+
     /**
      * Clears out the collObjHouseVersions collection
      *
@@ -2312,6 +2426,9 @@ abstract class ObjHouse implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aUsers) {
+            $this->aUsers->removeObjHouse($this);
+        }
         if (null !== $this->aObjGroup) {
             $this->aObjGroup->removeObjHouse($this);
         }
@@ -2321,9 +2438,9 @@ abstract class ObjHouse implements ActiveRecordInterface
         $this->is_public = null;
         $this->is_available = null;
         $this->group_id = null;
+        $this->version_created_by = null;
         $this->version = null;
         $this->version_created_at = null;
-        $this->version_created_by = null;
         $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -2361,6 +2478,7 @@ abstract class ObjHouse implements ActiveRecordInterface
 
         $this->collObjStages = null;
         $this->collObjHouseVersions = null;
+        $this->aUsers = null;
         $this->aObjGroup = null;
         return $this;
     }
@@ -2450,9 +2568,9 @@ abstract class ObjHouse implements ActiveRecordInterface
         $version->setIsPublic($this->getIsPublic());
         $version->setIsAvailable($this->getIsAvailable());
         $version->setGroupId($this->getGroupId());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersion($this->getVersion());
         $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersionComment($this->getVersionComment());
         $version->setObjHouse($this);
         if (($related = $this->getObjGroup(null, $con)) && $related->getVersion()) {
@@ -2508,9 +2626,9 @@ abstract class ObjHouse implements ActiveRecordInterface
         $this->setIsPublic($version->getIsPublic());
         $this->setIsAvailable($version->getIsAvailable());
         $this->setGroupId($version->getGroupId());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersion($version->getVersion());
         $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersionComment($version->getVersionComment());
         if ($fkValue = $version->getGroupId()) {
             if (isset($loadedObjects['ChildObjGroup']) && isset($loadedObjects['ChildObjGroup'][$fkValue]) && isset($loadedObjects['ChildObjGroup'][$fkValue][$version->getGroupIdVersion()])) {

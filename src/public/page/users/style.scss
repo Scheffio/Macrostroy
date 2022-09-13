@@ -7,6 +7,9 @@
     margin-top: 80px;
     width: 100%;
     padding-bottom: 20px;
+    &.no-access {
+        display: none;
+    }
 
     .tabs-controller {
         display: flex;
@@ -531,23 +534,26 @@
             }
         }
     }
-    .no-access-window {
-        margin-top: 300px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        p {
-            font-family: 'Jost', sans-serif;
-        }
-        a {
-            text-decoration: none;
-            @include MenuItemText;
-            
-        }
-    }
 }
 
+.no-access-window {
+    margin-top: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    &.show {
+        display: none;
+    }
+    p {
+        font-family: 'Jost', sans-serif;
+    }
+    a {
+        text-decoration: none;
+        @include MenuItemText;
+        color: $EstiminColor4;
+    }
+}
 
 @keyframes showModal {
     0% {

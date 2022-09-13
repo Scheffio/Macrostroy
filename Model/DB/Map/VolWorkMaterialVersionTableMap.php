@@ -101,6 +101,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
     public const COL_MATERIAL_ID = 'vol_work_material_version.material_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'vol_work_material_version.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'vol_work_material_version.version';
@@ -109,11 +114,6 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'vol_work_material_version.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'vol_work_material_version.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -144,10 +144,10 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Amount', 'IsAvailable', 'WorkId', 'MaterialId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'amount', 'isAvailable', 'workId', 'materialId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
-        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID, VolWorkMaterialVersionTableMap::COL_AMOUNT, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE, VolWorkMaterialVersionTableMap::COL_WORK_ID, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID, VolWorkMaterialVersionTableMap::COL_VERSION, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'amount', 'is_available', 'work_id', 'material_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'work_id_version', 'material_id_version', ],
+        self::TYPE_PHPNAME       => ['Id', 'Amount', 'IsAvailable', 'WorkId', 'MaterialId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', 'WorkIdVersion', 'MaterialIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'amount', 'isAvailable', 'workId', 'materialId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', 'workIdVersion', 'materialIdVersion', ],
+        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID, VolWorkMaterialVersionTableMap::COL_AMOUNT, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE, VolWorkMaterialVersionTableMap::COL_WORK_ID, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY, VolWorkMaterialVersionTableMap::COL_VERSION, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'amount', 'is_available', 'work_id', 'material_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', 'work_id_version', 'material_id_version', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
@@ -160,10 +160,10 @@ class VolWorkMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'IsAvailable' => 2, 'WorkId' => 3, 'MaterialId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'WorkIdVersion' => 9, 'MaterialIdVersion' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'isAvailable' => 2, 'workId' => 3, 'materialId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'workIdVersion' => 9, 'materialIdVersion' => 10, ],
-        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID => 0, VolWorkMaterialVersionTableMap::COL_AMOUNT => 1, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE => 2, VolWorkMaterialVersionTableMap::COL_WORK_ID => 3, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID => 4, VolWorkMaterialVersionTableMap::COL_VERSION => 5, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 6, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 7, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT => 8, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 9, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'is_available' => 2, 'work_id' => 3, 'material_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'work_id_version' => 9, 'material_id_version' => 10, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Amount' => 1, 'IsAvailable' => 2, 'WorkId' => 3, 'MaterialId' => 4, 'VersionCreatedBy' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionComment' => 8, 'WorkIdVersion' => 9, 'MaterialIdVersion' => 10, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'amount' => 1, 'isAvailable' => 2, 'workId' => 3, 'materialId' => 4, 'versionCreatedBy' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionComment' => 8, 'workIdVersion' => 9, 'materialIdVersion' => 10, ],
+        self::TYPE_COLNAME       => [VolWorkMaterialVersionTableMap::COL_ID => 0, VolWorkMaterialVersionTableMap::COL_AMOUNT => 1, VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE => 2, VolWorkMaterialVersionTableMap::COL_WORK_ID => 3, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID => 4, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY => 5, VolWorkMaterialVersionTableMap::COL_VERSION => 6, VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT => 7, VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT => 8, VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION => 9, VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'amount' => 1, 'is_available' => 2, 'work_id' => 3, 'material_id' => 4, 'version_created_by' => 5, 'version' => 6, 'version_created_at' => 7, 'version_comment' => 8, 'work_id_version' => 9, 'material_id_version' => 10, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
@@ -211,6 +211,14 @@ class VolWorkMaterialVersionTableMap extends TableMap
         'COL_MATERIAL_ID' => 'MATERIAL_ID',
         'material_id' => 'MATERIAL_ID',
         'vol_work_material_version.material_id' => 'MATERIAL_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'VolWorkMaterialVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'volWorkMaterialVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'vol_work_material_version.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'VolWorkMaterialVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -226,14 +234,6 @@ class VolWorkMaterialVersionTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'vol_work_material_version.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'VolWorkMaterialVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'volWorkMaterialVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'vol_work_material_version.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'VolWorkMaterialVersion.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -282,9 +282,9 @@ class VolWorkMaterialVersionTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('work_id', 'WorkId', 'INTEGER', true, null, null);
         $this->addColumn('material_id', 'MaterialId', 'INTEGER', true, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('work_id_version', 'WorkIdVersion', 'INTEGER', false, null, 0);
         $this->addColumn('material_id_version', 'MaterialIdVersion', 'INTEGER', false, null, 0);
@@ -379,11 +379,11 @@ class VolWorkMaterialVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -409,7 +409,7 @@ class VolWorkMaterialVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 5 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -519,9 +519,9 @@ class VolWorkMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID);
+            $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION);
             $criteria->addSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION);
@@ -531,9 +531,9 @@ class VolWorkMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.material_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.work_id_version');
             $criteria->addSelectColumn($alias . '.material_id_version');
@@ -560,9 +560,9 @@ class VolWorkMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID);
+            $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_WORK_ID_VERSION);
             $criteria->removeSelectColumn(VolWorkMaterialVersionTableMap::COL_MATERIAL_ID_VERSION);
@@ -572,9 +572,9 @@ class VolWorkMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.material_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.work_id_version');
             $criteria->removeSelectColumn($alias . '.material_id_version');

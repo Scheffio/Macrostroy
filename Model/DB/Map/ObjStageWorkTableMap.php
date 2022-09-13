@@ -106,6 +106,11 @@ class ObjStageWorkTableMap extends TableMap
     public const COL_STAGE_ID = 'obj_stage_work.stage_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'obj_stage_work.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'obj_stage_work.version';
@@ -114,11 +119,6 @@ class ObjStageWorkTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'obj_stage_work.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'obj_stage_work.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -139,10 +139,10 @@ class ObjStageWorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'IsAvailable', 'WorkId', 'StageId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'isAvailable', 'workId', 'stageId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [ObjStageWorkTableMap::COL_ID, ObjStageWorkTableMap::COL_PRICE, ObjStageWorkTableMap::COL_AMOUNT, ObjStageWorkTableMap::COL_IS_AVAILABLE, ObjStageWorkTableMap::COL_WORK_ID, ObjStageWorkTableMap::COL_STAGE_ID, ObjStageWorkTableMap::COL_VERSION, ObjStageWorkTableMap::COL_VERSION_CREATED_AT, ObjStageWorkTableMap::COL_VERSION_CREATED_BY, ObjStageWorkTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'is_available', 'work_id', 'stage_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'IsAvailable', 'WorkId', 'StageId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'isAvailable', 'workId', 'stageId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', ],
+        self::TYPE_COLNAME       => [ObjStageWorkTableMap::COL_ID, ObjStageWorkTableMap::COL_PRICE, ObjStageWorkTableMap::COL_AMOUNT, ObjStageWorkTableMap::COL_IS_AVAILABLE, ObjStageWorkTableMap::COL_WORK_ID, ObjStageWorkTableMap::COL_STAGE_ID, ObjStageWorkTableMap::COL_VERSION_CREATED_BY, ObjStageWorkTableMap::COL_VERSION, ObjStageWorkTableMap::COL_VERSION_CREATED_AT, ObjStageWorkTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'is_available', 'work_id', 'stage_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
@@ -155,10 +155,10 @@ class ObjStageWorkTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'IsAvailable' => 3, 'WorkId' => 4, 'StageId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'isAvailable' => 3, 'workId' => 4, 'stageId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, ],
-        self::TYPE_COLNAME       => [ObjStageWorkTableMap::COL_ID => 0, ObjStageWorkTableMap::COL_PRICE => 1, ObjStageWorkTableMap::COL_AMOUNT => 2, ObjStageWorkTableMap::COL_IS_AVAILABLE => 3, ObjStageWorkTableMap::COL_WORK_ID => 4, ObjStageWorkTableMap::COL_STAGE_ID => 5, ObjStageWorkTableMap::COL_VERSION => 6, ObjStageWorkTableMap::COL_VERSION_CREATED_AT => 7, ObjStageWorkTableMap::COL_VERSION_CREATED_BY => 8, ObjStageWorkTableMap::COL_VERSION_COMMENT => 9, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'is_available' => 3, 'work_id' => 4, 'stage_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'IsAvailable' => 3, 'WorkId' => 4, 'StageId' => 5, 'VersionCreatedBy' => 6, 'Version' => 7, 'VersionCreatedAt' => 8, 'VersionComment' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'isAvailable' => 3, 'workId' => 4, 'stageId' => 5, 'versionCreatedBy' => 6, 'version' => 7, 'versionCreatedAt' => 8, 'versionComment' => 9, ],
+        self::TYPE_COLNAME       => [ObjStageWorkTableMap::COL_ID => 0, ObjStageWorkTableMap::COL_PRICE => 1, ObjStageWorkTableMap::COL_AMOUNT => 2, ObjStageWorkTableMap::COL_IS_AVAILABLE => 3, ObjStageWorkTableMap::COL_WORK_ID => 4, ObjStageWorkTableMap::COL_STAGE_ID => 5, ObjStageWorkTableMap::COL_VERSION_CREATED_BY => 6, ObjStageWorkTableMap::COL_VERSION => 7, ObjStageWorkTableMap::COL_VERSION_CREATED_AT => 8, ObjStageWorkTableMap::COL_VERSION_COMMENT => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'is_available' => 3, 'work_id' => 4, 'stage_id' => 5, 'version_created_by' => 6, 'version' => 7, 'version_created_at' => 8, 'version_comment' => 9, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
@@ -213,6 +213,14 @@ class ObjStageWorkTableMap extends TableMap
         'COL_STAGE_ID' => 'STAGE_ID',
         'stage_id' => 'STAGE_ID',
         'obj_stage_work.stage_id' => 'STAGE_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageWork.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'objStageWork.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageWorkTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'obj_stage_work.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'ObjStageWork.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -228,14 +236,6 @@ class ObjStageWorkTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'obj_stage_work.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageWork.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'objStageWork.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageWorkTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'obj_stage_work.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'ObjStageWork.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -269,9 +269,9 @@ class ObjStageWorkTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addForeignKey('work_id', 'WorkId', 'INTEGER', 'vol_work', 'id', true, null, null);
         $this->addForeignKey('stage_id', 'StageId', 'INTEGER', 'obj_stage', 'id', true, null, null);
+        $this->addForeignKey('version_created_by', 'VersionCreatedBy', 'INTEGER', 'users', 'id', true, null, null);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
@@ -282,6 +282,13 @@ class ObjStageWorkTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Users', '\\DB\\Users', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, null, false);
         $this->addRelation('VolWork', '\\DB\\VolWork', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -490,9 +497,9 @@ class ObjStageWorkTableMap extends TableMap
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_WORK_ID);
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_STAGE_ID);
+            $criteria->addSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_VERSION);
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageWorkTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -501,9 +508,9 @@ class ObjStageWorkTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.work_id');
             $criteria->addSelectColumn($alias . '.stage_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
@@ -529,9 +536,9 @@ class ObjStageWorkTableMap extends TableMap
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_WORK_ID);
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_STAGE_ID);
+            $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_VERSION);
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageWorkTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
@@ -540,9 +547,9 @@ class ObjStageWorkTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.work_id');
             $criteria->removeSelectColumn($alias . '.stage_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }

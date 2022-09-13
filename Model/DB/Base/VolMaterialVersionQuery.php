@@ -26,9 +26,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolMaterialVersionQuery orderByPrice($order = Criteria::ASC) Order by the price column
  * @method     ChildVolMaterialVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildVolMaterialVersionQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
+ * @method     ChildVolMaterialVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolMaterialVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildVolMaterialVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
- * @method     ChildVolMaterialVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolMaterialVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildVolMaterialVersionQuery orderByObjStageMaterialIds($order = Criteria::ASC) Order by the obj_stage_material_ids column
  * @method     ChildVolMaterialVersionQuery orderByObjStageMaterialVersions($order = Criteria::ASC) Order by the obj_stage_material_versions column
@@ -40,9 +40,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolMaterialVersionQuery groupByPrice() Group by the price column
  * @method     ChildVolMaterialVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildVolMaterialVersionQuery groupByUnitId() Group by the unit_id column
+ * @method     ChildVolMaterialVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolMaterialVersionQuery groupByVersion() Group by the version column
  * @method     ChildVolMaterialVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
- * @method     ChildVolMaterialVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolMaterialVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildVolMaterialVersionQuery groupByObjStageMaterialIds() Group by the obj_stage_material_ids column
  * @method     ChildVolMaterialVersionQuery groupByObjStageMaterialVersions() Group by the obj_stage_material_versions column
@@ -77,9 +77,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolMaterialVersion|null findOneByPrice(string $price) Return the first ChildVolMaterialVersion filtered by the price column
  * @method     ChildVolMaterialVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildVolMaterialVersion filtered by the is_available column
  * @method     ChildVolMaterialVersion|null findOneByUnitId(int $unit_id) Return the first ChildVolMaterialVersion filtered by the unit_id column
+ * @method     ChildVolMaterialVersion|null findOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolMaterialVersion filtered by the version_created_by column
  * @method     ChildVolMaterialVersion|null findOneByVersion(int $version) Return the first ChildVolMaterialVersion filtered by the version column
  * @method     ChildVolMaterialVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolMaterialVersion filtered by the version_created_at column
- * @method     ChildVolMaterialVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolMaterialVersion filtered by the version_created_by column
  * @method     ChildVolMaterialVersion|null findOneByVersionComment(string $version_comment) Return the first ChildVolMaterialVersion filtered by the version_comment column
  * @method     ChildVolMaterialVersion|null findOneByObjStageMaterialIds(array $obj_stage_material_ids) Return the first ChildVolMaterialVersion filtered by the obj_stage_material_ids column
  * @method     ChildVolMaterialVersion|null findOneByObjStageMaterialVersions(array $obj_stage_material_versions) Return the first ChildVolMaterialVersion filtered by the obj_stage_material_versions column
@@ -94,9 +94,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolMaterialVersion requireOneByPrice(string $price) Return the first ChildVolMaterialVersion filtered by the price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildVolMaterialVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByUnitId(int $unit_id) Return the first ChildVolMaterialVersion filtered by the unit_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolMaterialVersion requireOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolMaterialVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByVersion(int $version) Return the first ChildVolMaterialVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolMaterialVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildVolMaterialVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolMaterialVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByVersionComment(string $version_comment) Return the first ChildVolMaterialVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByObjStageMaterialIds(array $obj_stage_material_ids) Return the first ChildVolMaterialVersion filtered by the obj_stage_material_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolMaterialVersion requireOneByObjStageMaterialVersions(array $obj_stage_material_versions) Return the first ChildVolMaterialVersion filtered by the obj_stage_material_versions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -115,12 +115,12 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByIsAvailable(boolean $is_available) Return ChildVolMaterialVersion objects filtered by the is_available column
  * @method     ChildVolMaterialVersion[]|Collection findByUnitId(int $unit_id) Return ChildVolMaterialVersion objects filtered by the unit_id column
  * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByUnitId(int $unit_id) Return ChildVolMaterialVersion objects filtered by the unit_id column
+ * @method     ChildVolMaterialVersion[]|Collection findByVersionCreatedBy(int $version_created_by) Return ChildVolMaterialVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByVersionCreatedBy(int $version_created_by) Return ChildVolMaterialVersion objects filtered by the version_created_by column
  * @method     ChildVolMaterialVersion[]|Collection findByVersion(int $version) Return ChildVolMaterialVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByVersion(int $version) Return ChildVolMaterialVersion objects filtered by the version column
  * @method     ChildVolMaterialVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildVolMaterialVersion objects filtered by the version_created_at column
  * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByVersionCreatedAt(string $version_created_at) Return ChildVolMaterialVersion objects filtered by the version_created_at column
- * @method     ChildVolMaterialVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildVolMaterialVersion objects filtered by the version_created_by column
- * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByVersionCreatedBy(string $version_created_by) Return ChildVolMaterialVersion objects filtered by the version_created_by column
  * @method     ChildVolMaterialVersion[]|Collection findByVersionComment(string $version_comment) Return ChildVolMaterialVersion objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildVolMaterialVersion> findByVersionComment(string $version_comment) Return ChildVolMaterialVersion objects filtered by the version_comment column
  * @method     ChildVolMaterialVersion[]|Collection findByObjStageMaterialIds(array $obj_stage_material_ids) Return ChildVolMaterialVersion objects filtered by the obj_stage_material_ids column
@@ -230,7 +230,7 @@ abstract class VolMaterialVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, price, is_available, unit_id, version, version_created_at, version_created_by, version_comment, obj_stage_material_ids, obj_stage_material_versions, vol_work_material_ids, vol_work_material_versions FROM vol_material_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, price, is_available, unit_id, version_created_by, version, version_created_at, version_comment, obj_stage_material_ids, obj_stage_material_versions, vol_work_material_ids, vol_work_material_versions FROM vol_material_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -523,6 +523,49 @@ abstract class VolMaterialVersionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy(1234); // WHERE version_created_by = 1234
+     * $query->filterByVersionCreatedBy(array(12, 34)); // WHERE version_created_by IN (12, 34)
+     * $query->filterByVersionCreatedBy(array('min' => 12)); // WHERE version_created_by > 12
+     * </code>
+     *
+     * @param mixed $versionCreatedBy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedBy)) {
+            $useMinMax = false;
+            if (isset($versionCreatedBy['min'])) {
+                $this->addUsingAlias(VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedBy['max'])) {
+                $this->addUsingAlias(VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the version column
      *
      * Example usage:
@@ -606,34 +649,6 @@ abstract class VolMaterialVersionQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(VolMaterialVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version_created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
-     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
-     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $versionCreatedBy The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($versionCreatedBy)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(VolMaterialVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
 
         return $this;
     }

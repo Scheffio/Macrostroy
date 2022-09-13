@@ -5,6 +5,8 @@ namespace DB\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use DB\Users as ChildUsers;
+use DB\UsersQuery as ChildUsersQuery;
 use DB\VolMaterial as ChildVolMaterial;
 use DB\VolMaterialQuery as ChildVolMaterialQuery;
 use DB\VolMaterialVersionQuery as ChildVolMaterialVersionQuery;
@@ -111,6 +113,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
     protected $material_id;
 
     /**
+     * The value for the version_created_by field.
+     *
+     * @var        int
+     */
+    protected $version_created_by;
+
+    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -126,18 +135,16 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
     protected $version_created_at;
 
     /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
-
-    /**
      * The value for the version_comment field.
      *
      * @var        string|null
      */
     protected $version_comment;
+
+    /**
+     * @var        ChildUsers
+     */
+    protected $aUsers;
 
     /**
      * @var        ChildVolWork
@@ -480,6 +487,16 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version_created_by] column value.
+     *
+     * @return int
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
      * Get the [version] column value.
      *
      * @return int|null
@@ -509,16 +526,6 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         } else {
             return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
         }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
     }
 
     /**
@@ -648,6 +655,30 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[VolWorkMaterialTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        if ($this->aUsers !== null && $this->aUsers->getId() !== $v) {
+            $this->aUsers = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [version] column.
      *
      * @param int|null $v New value
@@ -683,26 +714,6 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
                 $this->modifiedColumns[VolWorkMaterialTableMap::COL_VERSION_CREATED_AT] = true;
             }
         } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[VolWorkMaterialTableMap::COL_VERSION_CREATED_BY] = true;
-        }
 
         return $this;
     }
@@ -786,17 +797,17 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : VolWorkMaterialTableMap::translateFieldName('MaterialId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->material_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VolWorkMaterialTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VolWorkMaterialTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VolWorkMaterialTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VolWorkMaterialTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VolWorkMaterialTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VolWorkMaterialTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : VolWorkMaterialTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
@@ -837,6 +848,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         if ($this->aVolMaterial !== null && $this->material_id !== $this->aVolMaterial->getId()) {
             $this->aVolMaterial = null;
         }
+        if ($this->aUsers !== null && $this->version_created_by !== $this->aUsers->getId()) {
+            $this->aUsers = null;
+        }
     }
 
     /**
@@ -876,6 +890,7 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aUsers = null;
             $this->aVolWork = null;
             $this->aVolMaterial = null;
             $this->collVolWorkMaterialVersions = null;
@@ -1000,6 +1015,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aUsers !== null) {
+                if ($this->aUsers->isModified() || $this->aUsers->isNew()) {
+                    $affectedRows += $this->aUsers->save($con);
+                }
+                $this->setUsers($this->aUsers);
+            }
+
             if ($this->aVolWork !== null) {
                 if ($this->aVolWork->isModified() || $this->aVolWork->isNew()) {
                     $affectedRows += $this->aVolWork->save($con);
@@ -1083,14 +1105,14 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_MATERIAL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'material_id';
         }
+        if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
         }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'version_comment';
@@ -1121,14 +1143,14 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
                     case 'material_id':
                         $stmt->bindValue($identifier, $this->material_id, PDO::PARAM_INT);
                         break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_INT);
+                        break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
                     case 'version_created_at':
                         $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                     case 'version_comment':
                         $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
@@ -1211,13 +1233,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
                 return $this->getMaterialId();
 
             case 5:
-                return $this->getVersion();
+                return $this->getVersionCreatedBy();
 
             case 6:
-                return $this->getVersionCreatedAt();
+                return $this->getVersion();
 
             case 7:
-                return $this->getVersionCreatedBy();
+                return $this->getVersionCreatedAt();
 
             case 8:
                 return $this->getVersionComment();
@@ -1255,13 +1277,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
             $keys[2] => $this->getIsAvailable(),
             $keys[3] => $this->getWorkId(),
             $keys[4] => $this->getMaterialId(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getVersionCreatedAt(),
-            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[5] => $this->getVersionCreatedBy(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
             $keys[8] => $this->getVersionComment(),
         ];
-        if ($result[$keys[6]] instanceof \DateTimeInterface) {
-            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1270,6 +1292,21 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aUsers) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'users';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'users';
+                        break;
+                    default:
+                        $key = 'Users';
+                }
+
+                $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aVolWork) {
 
                 switch ($keyType) {
@@ -1367,13 +1404,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
                 $this->setMaterialId($value);
                 break;
             case 5:
-                $this->setVersion($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 6:
-                $this->setVersionCreatedAt($value);
+                $this->setVersion($value);
                 break;
             case 7:
-                $this->setVersionCreatedBy($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 8:
                 $this->setVersionComment($value);
@@ -1420,13 +1457,13 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
             $this->setMaterialId($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setVersion($arr[$keys[5]]);
+            $this->setVersionCreatedBy($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[6]]);
+            $this->setVersion($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[7]]);
+            $this->setVersionCreatedAt($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
             $this->setVersionComment($arr[$keys[8]]);
@@ -1489,14 +1526,14 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_MATERIAL_ID)) {
             $criteria->add(VolWorkMaterialTableMap::COL_MATERIAL_ID, $this->material_id);
         }
+        if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION)) {
             $criteria->add(VolWorkMaterialTableMap::COL_VERSION, $this->version);
         }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_AT)) {
             $criteria->add(VolWorkMaterialTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(VolWorkMaterialTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
         }
         if ($this->isColumnModified(VolWorkMaterialTableMap::COL_VERSION_COMMENT)) {
             $criteria->add(VolWorkMaterialTableMap::COL_VERSION_COMMENT, $this->version_comment);
@@ -1593,9 +1630,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setWorkId($this->getWorkId());
         $copyObj->setMaterialId($this->getMaterialId());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersion($this->getVersion());
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
@@ -1637,6 +1674,57 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+    /**
+     * Declares an association between this object and a ChildUsers object.
+     *
+     * @param ChildUsers $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setUsers(ChildUsers $v = null)
+    {
+        if ($v === null) {
+            $this->setVersionCreatedBy(NULL);
+        } else {
+            $this->setVersionCreatedBy($v->getId());
+        }
+
+        $this->aUsers = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUsers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addVolWorkMaterial($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildUsers object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildUsers The associated ChildUsers object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getUsers(?ConnectionInterface $con = null)
+    {
+        if ($this->aUsers === null && ($this->version_created_by != 0)) {
+            $this->aUsers = ChildUsersQuery::create()->findPk($this->version_created_by, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUsers->addVolWorkMaterials($this);
+             */
+        }
+
+        return $this->aUsers;
     }
 
     /**
@@ -2009,6 +2097,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aUsers) {
+            $this->aUsers->removeVolWorkMaterial($this);
+        }
         if (null !== $this->aVolWork) {
             $this->aVolWork->removeVolWorkMaterial($this);
         }
@@ -2020,9 +2111,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         $this->is_available = null;
         $this->work_id = null;
         $this->material_id = null;
+        $this->version_created_by = null;
         $this->version = null;
         $this->version_created_at = null;
-        $this->version_created_by = null;
         $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -2054,6 +2145,7 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collVolWorkMaterialVersions = null;
+        $this->aUsers = null;
         $this->aVolWork = null;
         $this->aVolMaterial = null;
         return $this;
@@ -2131,9 +2223,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         $version->setIsAvailable($this->getIsAvailable());
         $version->setWorkId($this->getWorkId());
         $version->setMaterialId($this->getMaterialId());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersion($this->getVersion());
         $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersionComment($this->getVersionComment());
         $version->setVolWorkMaterial($this);
         if (($related = $this->getVolWork(null, $con)) && $related->getVersion()) {
@@ -2183,9 +2275,9 @@ abstract class VolWorkMaterial implements ActiveRecordInterface
         $this->setIsAvailable($version->getIsAvailable());
         $this->setWorkId($version->getWorkId());
         $this->setMaterialId($version->getMaterialId());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersion($version->getVersion());
         $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersionComment($version->getVersionComment());
         if ($fkValue = $version->getWorkId()) {
             if (isset($loadedObjects['ChildVolWork']) && isset($loadedObjects['ChildVolWork'][$fkValue]) && isset($loadedObjects['ChildVolWork'][$fkValue][$version->getWorkIdVersion()])) {

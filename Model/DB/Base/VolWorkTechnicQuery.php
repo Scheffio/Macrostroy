@@ -26,9 +26,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildVolWorkTechnicQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildVolWorkTechnicQuery orderByTechnicId($order = Criteria::ASC) Order by the technic_id column
+ * @method     ChildVolWorkTechnicQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolWorkTechnicQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildVolWorkTechnicQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
- * @method     ChildVolWorkTechnicQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolWorkTechnicQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  *
  * @method     ChildVolWorkTechnicQuery groupById() Group by the id column
@@ -36,9 +36,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildVolWorkTechnicQuery groupByWorkId() Group by the work_id column
  * @method     ChildVolWorkTechnicQuery groupByTechnicId() Group by the technic_id column
+ * @method     ChildVolWorkTechnicQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolWorkTechnicQuery groupByVersion() Group by the version column
  * @method     ChildVolWorkTechnicQuery groupByVersionCreatedAt() Group by the version_created_at column
- * @method     ChildVolWorkTechnicQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolWorkTechnicQuery groupByVersionComment() Group by the version_comment column
  *
  * @method     ChildVolWorkTechnicQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -48,6 +48,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildVolWorkTechnicQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildVolWorkTechnicQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildVolWorkTechnicQuery leftJoinUsers($relationAlias = null) Adds a LEFT JOIN clause to the query using the Users relation
+ * @method     ChildVolWorkTechnicQuery rightJoinUsers($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Users relation
+ * @method     ChildVolWorkTechnicQuery innerJoinUsers($relationAlias = null) Adds a INNER JOIN clause to the query using the Users relation
+ *
+ * @method     ChildVolWorkTechnicQuery joinWithUsers($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Users relation
+ *
+ * @method     ChildVolWorkTechnicQuery leftJoinWithUsers() Adds a LEFT JOIN clause and with to the query using the Users relation
+ * @method     ChildVolWorkTechnicQuery rightJoinWithUsers() Adds a RIGHT JOIN clause and with to the query using the Users relation
+ * @method     ChildVolWorkTechnicQuery innerJoinWithUsers() Adds a INNER JOIN clause and with to the query using the Users relation
  *
  * @method     ChildVolWorkTechnicQuery leftJoinVolWork($relationAlias = null) Adds a LEFT JOIN clause to the query using the VolWork relation
  * @method     ChildVolWorkTechnicQuery rightJoinVolWork($relationAlias = null) Adds a RIGHT JOIN clause to the query using the VolWork relation
@@ -79,7 +89,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicQuery rightJoinWithVolWorkTechnicVersion() Adds a RIGHT JOIN clause and with to the query using the VolWorkTechnicVersion relation
  * @method     ChildVolWorkTechnicQuery innerJoinWithVolWorkTechnicVersion() Adds a INNER JOIN clause and with to the query using the VolWorkTechnicVersion relation
  *
- * @method     \DB\VolWorkQuery|\DB\VolTechnicQuery|\DB\VolWorkTechnicVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DB\UsersQuery|\DB\VolWorkQuery|\DB\VolTechnicQuery|\DB\VolWorkTechnicVersionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildVolWorkTechnic|null findOne(?ConnectionInterface $con = null) Return the first ChildVolWorkTechnic matching the query
  * @method     ChildVolWorkTechnic findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildVolWorkTechnic matching the query, or a new ChildVolWorkTechnic object populated from the query conditions when no match is found
@@ -89,9 +99,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnic|null findOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnic filtered by the is_available column
  * @method     ChildVolWorkTechnic|null findOneByWorkId(int $work_id) Return the first ChildVolWorkTechnic filtered by the work_id column
  * @method     ChildVolWorkTechnic|null findOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnic filtered by the technic_id column
+ * @method     ChildVolWorkTechnic|null findOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolWorkTechnic filtered by the version_created_by column
  * @method     ChildVolWorkTechnic|null findOneByVersion(int $version) Return the first ChildVolWorkTechnic filtered by the version column
  * @method     ChildVolWorkTechnic|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolWorkTechnic filtered by the version_created_at column
- * @method     ChildVolWorkTechnic|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolWorkTechnic filtered by the version_created_by column
  * @method     ChildVolWorkTechnic|null findOneByVersionComment(string $version_comment) Return the first ChildVolWorkTechnic filtered by the version_comment column *
 
  * @method     ChildVolWorkTechnic requirePk($key, ?ConnectionInterface $con = null) Return the ChildVolWorkTechnic by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -102,9 +112,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnic requireOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnic filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByWorkId(int $work_id) Return the first ChildVolWorkTechnic filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnic filtered by the technic_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkTechnic requireOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolWorkTechnic filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByVersion(int $version) Return the first ChildVolWorkTechnic filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolWorkTechnic filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildVolWorkTechnic requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolWorkTechnic filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnic requireOneByVersionComment(string $version_comment) Return the first ChildVolWorkTechnic filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVolWorkTechnic[]|Collection find(?ConnectionInterface $con = null) Return ChildVolWorkTechnic objects based on current ModelCriteria
@@ -119,12 +129,12 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByWorkId(int $work_id) Return ChildVolWorkTechnic objects filtered by the work_id column
  * @method     ChildVolWorkTechnic[]|Collection findByTechnicId(int $technic_id) Return ChildVolWorkTechnic objects filtered by the technic_id column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByTechnicId(int $technic_id) Return ChildVolWorkTechnic objects filtered by the technic_id column
+ * @method     ChildVolWorkTechnic[]|Collection findByVersionCreatedBy(int $version_created_by) Return ChildVolWorkTechnic objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByVersionCreatedBy(int $version_created_by) Return ChildVolWorkTechnic objects filtered by the version_created_by column
  * @method     ChildVolWorkTechnic[]|Collection findByVersion(int $version) Return ChildVolWorkTechnic objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByVersion(int $version) Return ChildVolWorkTechnic objects filtered by the version column
  * @method     ChildVolWorkTechnic[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildVolWorkTechnic objects filtered by the version_created_at column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByVersionCreatedAt(string $version_created_at) Return ChildVolWorkTechnic objects filtered by the version_created_at column
- * @method     ChildVolWorkTechnic[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildVolWorkTechnic objects filtered by the version_created_by column
- * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByVersionCreatedBy(string $version_created_by) Return ChildVolWorkTechnic objects filtered by the version_created_by column
  * @method     ChildVolWorkTechnic[]|Collection findByVersionComment(string $version_comment) Return ChildVolWorkTechnic objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnic> findByVersionComment(string $version_comment) Return ChildVolWorkTechnic objects filtered by the version_comment column
  * @method     ChildVolWorkTechnic[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -233,7 +243,7 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, amount, is_available, work_id, technic_id, version, version_created_at, version_created_by, version_comment FROM vol_work_technic WHERE id = :p0';
+        $sql = 'SELECT id, amount, is_available, work_id, technic_id, version_created_by, version, version_created_at, version_comment FROM vol_work_technic WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -533,6 +543,51 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy(1234); // WHERE version_created_by = 1234
+     * $query->filterByVersionCreatedBy(array(12, 34)); // WHERE version_created_by IN (12, 34)
+     * $query->filterByVersionCreatedBy(array('min' => 12)); // WHERE version_created_by > 12
+     * </code>
+     *
+     * @see       filterByUsers()
+     *
+     * @param mixed $versionCreatedBy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedBy)) {
+            $useMinMax = false;
+            if (isset($versionCreatedBy['min'])) {
+                $this->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedBy['max'])) {
+                $this->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the version column
      *
      * Example usage:
@@ -621,34 +676,6 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
     }
 
     /**
-     * Filter the query on the version_created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
-     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
-     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $versionCreatedBy The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($versionCreatedBy)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
-
-        return $this;
-    }
-
-    /**
      * Filter the query on the version_comment column
      *
      * Example usage:
@@ -676,6 +703,140 @@ protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityN
         return $this;
     }
 
+    /**
+     * Filter the query by a related \DB\Users object
+     *
+     * @param \DB\Users|ObjectCollection $users The related object(s) to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByUsers($users, ?string $comparison = null)
+    {
+        if ($users instanceof \DB\Users) {
+            return $this
+                ->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $users->getId(), $comparison);
+        } elseif ($users instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            $this
+                ->addUsingAlias(VolWorkTechnicTableMap::COL_VERSION_CREATED_BY, $users->toKeyValue('PrimaryKey', 'Id'), $comparison);
+
+            return $this;
+        } else {
+            throw new PropelException('filterByUsers() only accepts arguments of type \DB\Users or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Users relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinUsers(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Users');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Users');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Users relation Users object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DB\UsersQuery A secondary query class using the current class as primary query
+     */
+    public function useUsersQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinUsers($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Users', '\DB\UsersQuery');
+    }
+
+    /**
+     * Use the Users relation Users object
+     *
+     * @param callable(\DB\UsersQuery):\DB\UsersQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withUsersQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useUsersQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to Users table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DB\UsersQuery The inner query object of the EXISTS statement
+     */
+    public function useUsersExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('Users', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to Users table for a NOT EXISTS query.
+     *
+     * @see useUsersExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DB\UsersQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useUsersNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('Users', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Filter the query by a related \DB\VolWork object
      *

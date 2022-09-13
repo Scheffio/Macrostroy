@@ -127,7 +127,7 @@
     </div>
     <div class="no-access-window">
         <p>К сожалению, у вас нет доступа к этой странице. Попробуйте запросить доступ у Администратора.</p>
-        <a href="#">На главную</a>
+        <a href="/">На главную</a>
     </div>
     <div class="modal">
         <div class="modal-wrap">

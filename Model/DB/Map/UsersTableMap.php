@@ -338,6 +338,97 @@ class UsersTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'ProjectRoles', false);
+        $this->addRelation('ObjProject', '\\DB\\ObjProject', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjProjects', false);
+        $this->addRelation('ObjSubproject', '\\DB\\ObjSubproject', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjSubprojects', false);
+        $this->addRelation('ObjGroup', '\\DB\\ObjGroup', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjGroups', false);
+        $this->addRelation('ObjHouse', '\\DB\\ObjHouse', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjHouses', false);
+        $this->addRelation('ObjStage', '\\DB\\ObjStage', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjStages', false);
+        $this->addRelation('ObjStageWork', '\\DB\\ObjStageWork', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjStageWorks', false);
+        $this->addRelation('ObjStageMaterial', '\\DB\\ObjStageMaterial', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjStageMaterials', false);
+        $this->addRelation('ObjStageTechnic', '\\DB\\ObjStageTechnic', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'ObjStageTechnics', false);
+        $this->addRelation('VolMaterial', '\\DB\\VolMaterial', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'VolMaterials', false);
+        $this->addRelation('VolTechnic', '\\DB\\VolTechnic', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'VolTechnics', false);
+        $this->addRelation('VolWork', '\\DB\\VolWork', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'VolWorks', false);
+        $this->addRelation('VolWorkMaterial', '\\DB\\VolWorkMaterial', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'VolWorkMaterials', false);
+        $this->addRelation('VolWorkTechnic', '\\DB\\VolWorkTechnic', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, 'VolWorkTechnics', false);
     }
 
     /**

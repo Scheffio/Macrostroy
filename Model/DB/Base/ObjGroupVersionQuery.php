@@ -27,9 +27,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildObjGroupVersionQuery orderByIsPublic($order = Criteria::ASC) Order by the is_public column
  * @method     ChildObjGroupVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildObjGroupVersionQuery orderBySubprojectId($order = Criteria::ASC) Order by the subproject_id column
+ * @method     ChildObjGroupVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildObjGroupVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildObjGroupVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
- * @method     ChildObjGroupVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildObjGroupVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildObjGroupVersionQuery orderBySubprojectIdVersion($order = Criteria::ASC) Order by the subproject_id_version column
  * @method     ChildObjGroupVersionQuery orderByObjHouseIds($order = Criteria::ASC) Order by the obj_house_ids column
@@ -41,9 +41,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildObjGroupVersionQuery groupByIsPublic() Group by the is_public column
  * @method     ChildObjGroupVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildObjGroupVersionQuery groupBySubprojectId() Group by the subproject_id column
+ * @method     ChildObjGroupVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildObjGroupVersionQuery groupByVersion() Group by the version column
  * @method     ChildObjGroupVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
- * @method     ChildObjGroupVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildObjGroupVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildObjGroupVersionQuery groupBySubprojectIdVersion() Group by the subproject_id_version column
  * @method     ChildObjGroupVersionQuery groupByObjHouseIds() Group by the obj_house_ids column
@@ -78,9 +78,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildObjGroupVersion|null findOneByIsPublic(boolean $is_public) Return the first ChildObjGroupVersion filtered by the is_public column
  * @method     ChildObjGroupVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildObjGroupVersion filtered by the is_available column
  * @method     ChildObjGroupVersion|null findOneBySubprojectId(int $subproject_id) Return the first ChildObjGroupVersion filtered by the subproject_id column
+ * @method     ChildObjGroupVersion|null findOneByVersionCreatedBy(int $version_created_by) Return the first ChildObjGroupVersion filtered by the version_created_by column
  * @method     ChildObjGroupVersion|null findOneByVersion(int $version) Return the first ChildObjGroupVersion filtered by the version column
  * @method     ChildObjGroupVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildObjGroupVersion filtered by the version_created_at column
- * @method     ChildObjGroupVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildObjGroupVersion filtered by the version_created_by column
  * @method     ChildObjGroupVersion|null findOneByVersionComment(string $version_comment) Return the first ChildObjGroupVersion filtered by the version_comment column
  * @method     ChildObjGroupVersion|null findOneBySubprojectIdVersion(int $subproject_id_version) Return the first ChildObjGroupVersion filtered by the subproject_id_version column
  * @method     ChildObjGroupVersion|null findOneByObjHouseIds(array $obj_house_ids) Return the first ChildObjGroupVersion filtered by the obj_house_ids column
@@ -95,9 +95,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildObjGroupVersion requireOneByIsPublic(boolean $is_public) Return the first ChildObjGroupVersion filtered by the is_public column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildObjGroupVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneBySubprojectId(int $subproject_id) Return the first ChildObjGroupVersion filtered by the subproject_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildObjGroupVersion requireOneByVersionCreatedBy(int $version_created_by) Return the first ChildObjGroupVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneByVersion(int $version) Return the first ChildObjGroupVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildObjGroupVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildObjGroupVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildObjGroupVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneByVersionComment(string $version_comment) Return the first ChildObjGroupVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneBySubprojectIdVersion(int $subproject_id_version) Return the first ChildObjGroupVersion filtered by the subproject_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildObjGroupVersion requireOneByObjHouseIds(array $obj_house_ids) Return the first ChildObjGroupVersion filtered by the obj_house_ids column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -117,12 +117,12 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByIsAvailable(boolean $is_available) Return ChildObjGroupVersion objects filtered by the is_available column
  * @method     ChildObjGroupVersion[]|Collection findBySubprojectId(int $subproject_id) Return ChildObjGroupVersion objects filtered by the subproject_id column
  * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findBySubprojectId(int $subproject_id) Return ChildObjGroupVersion objects filtered by the subproject_id column
+ * @method     ChildObjGroupVersion[]|Collection findByVersionCreatedBy(int $version_created_by) Return ChildObjGroupVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByVersionCreatedBy(int $version_created_by) Return ChildObjGroupVersion objects filtered by the version_created_by column
  * @method     ChildObjGroupVersion[]|Collection findByVersion(int $version) Return ChildObjGroupVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByVersion(int $version) Return ChildObjGroupVersion objects filtered by the version column
  * @method     ChildObjGroupVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildObjGroupVersion objects filtered by the version_created_at column
  * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByVersionCreatedAt(string $version_created_at) Return ChildObjGroupVersion objects filtered by the version_created_at column
- * @method     ChildObjGroupVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildObjGroupVersion objects filtered by the version_created_by column
- * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByVersionCreatedBy(string $version_created_by) Return ChildObjGroupVersion objects filtered by the version_created_by column
  * @method     ChildObjGroupVersion[]|Collection findByVersionComment(string $version_comment) Return ChildObjGroupVersion objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildObjGroupVersion> findByVersionComment(string $version_comment) Return ChildObjGroupVersion objects filtered by the version_comment column
  * @method     ChildObjGroupVersion[]|Collection findBySubprojectIdVersion(int $subproject_id_version) Return ChildObjGroupVersion objects filtered by the subproject_id_version column
@@ -230,7 +230,7 @@ abstract class ObjGroupVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, status, is_public, is_available, subproject_id, version, version_created_at, version_created_by, version_comment, subproject_id_version, obj_house_ids, obj_house_versions FROM obj_group_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, name, status, is_public, is_available, subproject_id, version_created_by, version, version_created_at, version_comment, subproject_id_version, obj_house_ids, obj_house_versions FROM obj_group_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -537,6 +537,49 @@ abstract class ObjGroupVersionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy(1234); // WHERE version_created_by = 1234
+     * $query->filterByVersionCreatedBy(array(12, 34)); // WHERE version_created_by IN (12, 34)
+     * $query->filterByVersionCreatedBy(array('min' => 12)); // WHERE version_created_by > 12
+     * </code>
+     *
+     * @param mixed $versionCreatedBy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedBy)) {
+            $useMinMax = false;
+            if (isset($versionCreatedBy['min'])) {
+                $this->addUsingAlias(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedBy['max'])) {
+                $this->addUsingAlias(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the version column
      *
      * Example usage:
@@ -620,34 +663,6 @@ abstract class ObjGroupVersionQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(ObjGroupVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version_created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
-     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
-     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $versionCreatedBy The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($versionCreatedBy)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
 
         return $this;
     }

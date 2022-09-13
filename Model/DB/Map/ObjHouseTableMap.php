@@ -106,6 +106,11 @@ class ObjHouseTableMap extends TableMap
     public const COL_GROUP_ID = 'obj_house.group_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'obj_house.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'obj_house.version';
@@ -114,11 +119,6 @@ class ObjHouseTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'obj_house.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'obj_house.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -139,10 +139,10 @@ class ObjHouseTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'GroupId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'groupId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [ObjHouseTableMap::COL_ID, ObjHouseTableMap::COL_NAME, ObjHouseTableMap::COL_STATUS, ObjHouseTableMap::COL_IS_PUBLIC, ObjHouseTableMap::COL_IS_AVAILABLE, ObjHouseTableMap::COL_GROUP_ID, ObjHouseTableMap::COL_VERSION, ObjHouseTableMap::COL_VERSION_CREATED_AT, ObjHouseTableMap::COL_VERSION_CREATED_BY, ObjHouseTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'group_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'GroupId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'groupId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', ],
+        self::TYPE_COLNAME       => [ObjHouseTableMap::COL_ID, ObjHouseTableMap::COL_NAME, ObjHouseTableMap::COL_STATUS, ObjHouseTableMap::COL_IS_PUBLIC, ObjHouseTableMap::COL_IS_AVAILABLE, ObjHouseTableMap::COL_GROUP_ID, ObjHouseTableMap::COL_VERSION_CREATED_BY, ObjHouseTableMap::COL_VERSION, ObjHouseTableMap::COL_VERSION_CREATED_AT, ObjHouseTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'group_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
@@ -155,10 +155,10 @@ class ObjHouseTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'GroupId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'groupId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, ],
-        self::TYPE_COLNAME       => [ObjHouseTableMap::COL_ID => 0, ObjHouseTableMap::COL_NAME => 1, ObjHouseTableMap::COL_STATUS => 2, ObjHouseTableMap::COL_IS_PUBLIC => 3, ObjHouseTableMap::COL_IS_AVAILABLE => 4, ObjHouseTableMap::COL_GROUP_ID => 5, ObjHouseTableMap::COL_VERSION => 6, ObjHouseTableMap::COL_VERSION_CREATED_AT => 7, ObjHouseTableMap::COL_VERSION_CREATED_BY => 8, ObjHouseTableMap::COL_VERSION_COMMENT => 9, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'group_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'GroupId' => 5, 'VersionCreatedBy' => 6, 'Version' => 7, 'VersionCreatedAt' => 8, 'VersionComment' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'groupId' => 5, 'versionCreatedBy' => 6, 'version' => 7, 'versionCreatedAt' => 8, 'versionComment' => 9, ],
+        self::TYPE_COLNAME       => [ObjHouseTableMap::COL_ID => 0, ObjHouseTableMap::COL_NAME => 1, ObjHouseTableMap::COL_STATUS => 2, ObjHouseTableMap::COL_IS_PUBLIC => 3, ObjHouseTableMap::COL_IS_AVAILABLE => 4, ObjHouseTableMap::COL_GROUP_ID => 5, ObjHouseTableMap::COL_VERSION_CREATED_BY => 6, ObjHouseTableMap::COL_VERSION => 7, ObjHouseTableMap::COL_VERSION_CREATED_AT => 8, ObjHouseTableMap::COL_VERSION_COMMENT => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'group_id' => 5, 'version_created_by' => 6, 'version' => 7, 'version_created_at' => 8, 'version_comment' => 9, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
@@ -213,6 +213,14 @@ class ObjHouseTableMap extends TableMap
         'COL_GROUP_ID' => 'GROUP_ID',
         'group_id' => 'GROUP_ID',
         'obj_house.group_id' => 'GROUP_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjHouse.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'objHouse.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjHouseTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'obj_house.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'ObjHouse.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -228,14 +236,6 @@ class ObjHouseTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'obj_house.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjHouse.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'objHouse.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjHouseTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'obj_house.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'ObjHouse.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -269,9 +269,9 @@ class ObjHouseTableMap extends TableMap
         $this->addColumn('is_public', 'IsPublic', 'BOOLEAN', true, 1, true);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addForeignKey('group_id', 'GroupId', 'INTEGER', 'obj_group', 'id', true, null, null);
+        $this->addForeignKey('version_created_by', 'VersionCreatedBy', 'INTEGER', 'users', 'id', true, null, null);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
@@ -282,6 +282,13 @@ class ObjHouseTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Users', '\\DB\\Users', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, null, false);
         $this->addRelation('ObjGroup', '\\DB\\ObjGroup', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -476,9 +483,9 @@ class ObjHouseTableMap extends TableMap
             $criteria->addSelectColumn(ObjHouseTableMap::COL_IS_PUBLIC);
             $criteria->addSelectColumn(ObjHouseTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(ObjHouseTableMap::COL_GROUP_ID);
+            $criteria->addSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjHouseTableMap::COL_VERSION);
             $criteria->addSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjHouseTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -487,9 +494,9 @@ class ObjHouseTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_public');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.group_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
@@ -515,9 +522,9 @@ class ObjHouseTableMap extends TableMap
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_IS_PUBLIC);
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_GROUP_ID);
+            $criteria->removeSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_VERSION);
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ObjHouseTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjHouseTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
@@ -526,9 +533,9 @@ class ObjHouseTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_public');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.group_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }

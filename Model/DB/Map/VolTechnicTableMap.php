@@ -101,6 +101,11 @@ class VolTechnicTableMap extends TableMap
     public const COL_UNIT_ID = 'vol_technic.unit_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'vol_technic.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'vol_technic.version';
@@ -109,11 +114,6 @@ class VolTechnicTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'vol_technic.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'vol_technic.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -134,10 +134,10 @@ class VolTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', ],
-        self::TYPE_COLNAME       => [VolTechnicTableMap::COL_ID, VolTechnicTableMap::COL_NAME, VolTechnicTableMap::COL_PRICE, VolTechnicTableMap::COL_IS_AVAILABLE, VolTechnicTableMap::COL_UNIT_ID, VolTechnicTableMap::COL_VERSION, VolTechnicTableMap::COL_VERSION_CREATED_AT, VolTechnicTableMap::COL_VERSION_CREATED_BY, VolTechnicTableMap::COL_VERSION_COMMENT, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', ],
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Price', 'IsAvailable', 'UnitId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'price', 'isAvailable', 'unitId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', ],
+        self::TYPE_COLNAME       => [VolTechnicTableMap::COL_ID, VolTechnicTableMap::COL_NAME, VolTechnicTableMap::COL_PRICE, VolTechnicTableMap::COL_IS_AVAILABLE, VolTechnicTableMap::COL_UNIT_ID, VolTechnicTableMap::COL_VERSION_CREATED_BY, VolTechnicTableMap::COL_VERSION, VolTechnicTableMap::COL_VERSION_CREATED_AT, VolTechnicTableMap::COL_VERSION_COMMENT, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'price', 'is_available', 'unit_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
@@ -150,10 +150,10 @@ class VolTechnicTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, ],
-        self::TYPE_COLNAME       => [VolTechnicTableMap::COL_ID => 0, VolTechnicTableMap::COL_NAME => 1, VolTechnicTableMap::COL_PRICE => 2, VolTechnicTableMap::COL_IS_AVAILABLE => 3, VolTechnicTableMap::COL_UNIT_ID => 4, VolTechnicTableMap::COL_VERSION => 5, VolTechnicTableMap::COL_VERSION_CREATED_AT => 6, VolTechnicTableMap::COL_VERSION_CREATED_BY => 7, VolTechnicTableMap::COL_VERSION_COMMENT => 8, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Price' => 2, 'IsAvailable' => 3, 'UnitId' => 4, 'VersionCreatedBy' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionComment' => 8, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'isAvailable' => 3, 'unitId' => 4, 'versionCreatedBy' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionComment' => 8, ],
+        self::TYPE_COLNAME       => [VolTechnicTableMap::COL_ID => 0, VolTechnicTableMap::COL_NAME => 1, VolTechnicTableMap::COL_PRICE => 2, VolTechnicTableMap::COL_IS_AVAILABLE => 3, VolTechnicTableMap::COL_UNIT_ID => 4, VolTechnicTableMap::COL_VERSION_CREATED_BY => 5, VolTechnicTableMap::COL_VERSION => 6, VolTechnicTableMap::COL_VERSION_CREATED_AT => 7, VolTechnicTableMap::COL_VERSION_COMMENT => 8, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'price' => 2, 'is_available' => 3, 'unit_id' => 4, 'version_created_by' => 5, 'version' => 6, 'version_created_at' => 7, 'version_comment' => 8, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, ]
     ];
 
@@ -200,6 +200,14 @@ class VolTechnicTableMap extends TableMap
         'COL_UNIT_ID' => 'UNIT_ID',
         'unit_id' => 'UNIT_ID',
         'vol_technic.unit_id' => 'UNIT_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'VolTechnic.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'volTechnic.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'VolTechnicTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'vol_technic.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'VolTechnic.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -215,14 +223,6 @@ class VolTechnicTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'vol_technic.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'VolTechnic.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'volTechnic.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'VolTechnicTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'vol_technic.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'VolTechnic.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -255,9 +255,9 @@ class VolTechnicTableMap extends TableMap
         $this->addColumn('price', 'Price', 'DECIMAL', true, 19, null);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addForeignKey('unit_id', 'UnitId', 'INTEGER', 'vol_unit', 'id', true, null, null);
+        $this->addForeignKey('version_created_by', 'VersionCreatedBy', 'INTEGER', 'users', 'id', true, null, null);
         $this->addColumn('version', 'Version', 'INTEGER', false, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
     }
 
@@ -268,6 +268,13 @@ class VolTechnicTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Users', '\\DB\\Users', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':version_created_by',
+    1 => ':id',
+  ),
+), null, null, null, false);
         $this->addRelation('VolUnit', '\\DB\\VolUnit', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -468,9 +475,9 @@ class VolTechnicTableMap extends TableMap
             $criteria->addSelectColumn(VolTechnicTableMap::COL_PRICE);
             $criteria->addSelectColumn(VolTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(VolTechnicTableMap::COL_UNIT_ID);
+            $criteria->addSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(VolTechnicTableMap::COL_VERSION);
             $criteria->addSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(VolTechnicTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -478,9 +485,9 @@ class VolTechnicTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.price');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.unit_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
         }
     }
@@ -505,9 +512,9 @@ class VolTechnicTableMap extends TableMap
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_PRICE);
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_UNIT_ID);
+            $criteria->removeSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_VERSION);
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(VolTechnicTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(VolTechnicTableMap::COL_VERSION_COMMENT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
@@ -515,9 +522,9 @@ class VolTechnicTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.price');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.unit_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
         }
     }

@@ -26,9 +26,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicVersionQuery orderByIsAvailable($order = Criteria::ASC) Order by the is_available column
  * @method     ChildVolWorkTechnicVersionQuery orderByWorkId($order = Criteria::ASC) Order by the work_id column
  * @method     ChildVolWorkTechnicVersionQuery orderByTechnicId($order = Criteria::ASC) Order by the technic_id column
+ * @method     ChildVolWorkTechnicVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolWorkTechnicVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method     ChildVolWorkTechnicVersionQuery orderByVersionCreatedAt($order = Criteria::ASC) Order by the version_created_at column
- * @method     ChildVolWorkTechnicVersionQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  * @method     ChildVolWorkTechnicVersionQuery orderByVersionComment($order = Criteria::ASC) Order by the version_comment column
  * @method     ChildVolWorkTechnicVersionQuery orderByWorkIdVersion($order = Criteria::ASC) Order by the work_id_version column
  * @method     ChildVolWorkTechnicVersionQuery orderByTechnicIdVersion($order = Criteria::ASC) Order by the technic_id_version column
@@ -38,9 +38,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicVersionQuery groupByIsAvailable() Group by the is_available column
  * @method     ChildVolWorkTechnicVersionQuery groupByWorkId() Group by the work_id column
  * @method     ChildVolWorkTechnicVersionQuery groupByTechnicId() Group by the technic_id column
+ * @method     ChildVolWorkTechnicVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolWorkTechnicVersionQuery groupByVersion() Group by the version column
  * @method     ChildVolWorkTechnicVersionQuery groupByVersionCreatedAt() Group by the version_created_at column
- * @method     ChildVolWorkTechnicVersionQuery groupByVersionCreatedBy() Group by the version_created_by column
  * @method     ChildVolWorkTechnicVersionQuery groupByVersionComment() Group by the version_comment column
  * @method     ChildVolWorkTechnicVersionQuery groupByWorkIdVersion() Group by the work_id_version column
  * @method     ChildVolWorkTechnicVersionQuery groupByTechnicIdVersion() Group by the technic_id_version column
@@ -73,9 +73,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicVersion|null findOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnicVersion filtered by the is_available column
  * @method     ChildVolWorkTechnicVersion|null findOneByWorkId(int $work_id) Return the first ChildVolWorkTechnicVersion filtered by the work_id column
  * @method     ChildVolWorkTechnicVersion|null findOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnicVersion filtered by the technic_id column
+ * @method     ChildVolWorkTechnicVersion|null findOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolWorkTechnicVersion filtered by the version_created_by column
  * @method     ChildVolWorkTechnicVersion|null findOneByVersion(int $version) Return the first ChildVolWorkTechnicVersion filtered by the version column
  * @method     ChildVolWorkTechnicVersion|null findOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolWorkTechnicVersion filtered by the version_created_at column
- * @method     ChildVolWorkTechnicVersion|null findOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolWorkTechnicVersion filtered by the version_created_by column
  * @method     ChildVolWorkTechnicVersion|null findOneByVersionComment(string $version_comment) Return the first ChildVolWorkTechnicVersion filtered by the version_comment column
  * @method     ChildVolWorkTechnicVersion|null findOneByWorkIdVersion(int $work_id_version) Return the first ChildVolWorkTechnicVersion filtered by the work_id_version column
  * @method     ChildVolWorkTechnicVersion|null findOneByTechnicIdVersion(int $technic_id_version) Return the first ChildVolWorkTechnicVersion filtered by the technic_id_version column *
@@ -88,9 +88,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVolWorkTechnicVersion requireOneByIsAvailable(boolean $is_available) Return the first ChildVolWorkTechnicVersion filtered by the is_available column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByWorkId(int $work_id) Return the first ChildVolWorkTechnicVersion filtered by the work_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByTechnicId(int $technic_id) Return the first ChildVolWorkTechnicVersion filtered by the technic_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVolWorkTechnicVersion requireOneByVersionCreatedBy(int $version_created_by) Return the first ChildVolWorkTechnicVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByVersion(int $version) Return the first ChildVolWorkTechnicVersion filtered by the version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByVersionCreatedAt(string $version_created_at) Return the first ChildVolWorkTechnicVersion filtered by the version_created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildVolWorkTechnicVersion requireOneByVersionCreatedBy(string $version_created_by) Return the first ChildVolWorkTechnicVersion filtered by the version_created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByVersionComment(string $version_comment) Return the first ChildVolWorkTechnicVersion filtered by the version_comment column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByWorkIdVersion(int $work_id_version) Return the first ChildVolWorkTechnicVersion filtered by the work_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVolWorkTechnicVersion requireOneByTechnicIdVersion(int $technic_id_version) Return the first ChildVolWorkTechnicVersion filtered by the technic_id_version column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -107,12 +107,12 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByWorkId(int $work_id) Return ChildVolWorkTechnicVersion objects filtered by the work_id column
  * @method     ChildVolWorkTechnicVersion[]|Collection findByTechnicId(int $technic_id) Return ChildVolWorkTechnicVersion objects filtered by the technic_id column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByTechnicId(int $technic_id) Return ChildVolWorkTechnicVersion objects filtered by the technic_id column
+ * @method     ChildVolWorkTechnicVersion[]|Collection findByVersionCreatedBy(int $version_created_by) Return ChildVolWorkTechnicVersion objects filtered by the version_created_by column
+ * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByVersionCreatedBy(int $version_created_by) Return ChildVolWorkTechnicVersion objects filtered by the version_created_by column
  * @method     ChildVolWorkTechnicVersion[]|Collection findByVersion(int $version) Return ChildVolWorkTechnicVersion objects filtered by the version column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByVersion(int $version) Return ChildVolWorkTechnicVersion objects filtered by the version column
  * @method     ChildVolWorkTechnicVersion[]|Collection findByVersionCreatedAt(string $version_created_at) Return ChildVolWorkTechnicVersion objects filtered by the version_created_at column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByVersionCreatedAt(string $version_created_at) Return ChildVolWorkTechnicVersion objects filtered by the version_created_at column
- * @method     ChildVolWorkTechnicVersion[]|Collection findByVersionCreatedBy(string $version_created_by) Return ChildVolWorkTechnicVersion objects filtered by the version_created_by column
- * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByVersionCreatedBy(string $version_created_by) Return ChildVolWorkTechnicVersion objects filtered by the version_created_by column
  * @method     ChildVolWorkTechnicVersion[]|Collection findByVersionComment(string $version_comment) Return ChildVolWorkTechnicVersion objects filtered by the version_comment column
  * @psalm-method Collection&\Traversable<ChildVolWorkTechnicVersion> findByVersionComment(string $version_comment) Return ChildVolWorkTechnicVersion objects filtered by the version_comment column
  * @method     ChildVolWorkTechnicVersion[]|Collection findByWorkIdVersion(int $work_id_version) Return ChildVolWorkTechnicVersion objects filtered by the work_id_version column
@@ -218,7 +218,7 @@ abstract class VolWorkTechnicVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, amount, is_available, work_id, technic_id, version, version_created_at, version_created_by, version_comment, work_id_version, technic_id_version FROM vol_work_technic_version WHERE id = :p0 AND version = :p1';
+        $sql = 'SELECT id, amount, is_available, work_id, technic_id, version_created_by, version, version_created_at, version_comment, work_id_version, technic_id_version FROM vol_work_technic_version WHERE id = :p0 AND version = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -526,6 +526,49 @@ abstract class VolWorkTechnicVersionQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the version_created_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersionCreatedBy(1234); // WHERE version_created_by = 1234
+     * $query->filterByVersionCreatedBy(array(12, 34)); // WHERE version_created_by IN (12, 34)
+     * $query->filterByVersionCreatedBy(array('min' => 12)); // WHERE version_created_by > 12
+     * </code>
+     *
+     * @param mixed $versionCreatedBy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
+    {
+        if (is_array($versionCreatedBy)) {
+            $useMinMax = false;
+            if (isset($versionCreatedBy['min'])) {
+                $this->addUsingAlias(VolWorkTechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($versionCreatedBy['max'])) {
+                $this->addUsingAlias(VolWorkTechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(VolWorkTechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
+
+        return $this;
+    }
+
+    /**
      * Filter the query on the version column
      *
      * Example usage:
@@ -609,34 +652,6 @@ abstract class VolWorkTechnicVersionQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(VolWorkTechnicVersionTableMap::COL_VERSION_CREATED_AT, $versionCreatedAt, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the version_created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByVersionCreatedBy('fooValue');   // WHERE version_created_by = 'fooValue'
-     * $query->filterByVersionCreatedBy('%fooValue%', Criteria::LIKE); // WHERE version_created_by LIKE '%fooValue%'
-     * $query->filterByVersionCreatedBy(['foo', 'bar']); // WHERE version_created_by IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $versionCreatedBy The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByVersionCreatedBy($versionCreatedBy = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($versionCreatedBy)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(VolWorkTechnicVersionTableMap::COL_VERSION_CREATED_BY, $versionCreatedBy, $comparison);
 
         return $this;
     }

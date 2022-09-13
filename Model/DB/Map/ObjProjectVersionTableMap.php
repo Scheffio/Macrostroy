@@ -101,6 +101,11 @@ class ObjProjectVersionTableMap extends TableMap
     public const COL_IS_AVAILABLE = 'obj_project_version.is_available';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'obj_project_version.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'obj_project_version.version';
@@ -109,11 +114,6 @@ class ObjProjectVersionTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'obj_project_version.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'obj_project_version.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -144,10 +144,10 @@ class ObjProjectVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'ObjSubprojectIds', 'ObjSubprojectVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'objSubprojectIds', 'objSubprojectVersions', ],
-        self::TYPE_COLNAME       => [ObjProjectVersionTableMap::COL_ID, ObjProjectVersionTableMap::COL_NAME, ObjProjectVersionTableMap::COL_STATUS, ObjProjectVersionTableMap::COL_IS_PUBLIC, ObjProjectVersionTableMap::COL_IS_AVAILABLE, ObjProjectVersionTableMap::COL_VERSION, ObjProjectVersionTableMap::COL_VERSION_CREATED_AT, ObjProjectVersionTableMap::COL_VERSION_CREATED_BY, ObjProjectVersionTableMap::COL_VERSION_COMMENT, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'obj_subproject_ids', 'obj_subproject_versions', ],
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', 'ObjSubprojectIds', 'ObjSubprojectVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', 'objSubprojectIds', 'objSubprojectVersions', ],
+        self::TYPE_COLNAME       => [ObjProjectVersionTableMap::COL_ID, ObjProjectVersionTableMap::COL_NAME, ObjProjectVersionTableMap::COL_STATUS, ObjProjectVersionTableMap::COL_IS_PUBLIC, ObjProjectVersionTableMap::COL_IS_AVAILABLE, ObjProjectVersionTableMap::COL_VERSION_CREATED_BY, ObjProjectVersionTableMap::COL_VERSION, ObjProjectVersionTableMap::COL_VERSION_CREATED_AT, ObjProjectVersionTableMap::COL_VERSION_COMMENT, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'version_created_by', 'version', 'version_created_at', 'version_comment', 'obj_subproject_ids', 'obj_subproject_versions', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
@@ -160,10 +160,10 @@ class ObjProjectVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, 'VersionComment' => 8, 'ObjSubprojectIds' => 9, 'ObjSubprojectVersions' => 10, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, 'versionComment' => 8, 'objSubprojectIds' => 9, 'objSubprojectVersions' => 10, ],
-        self::TYPE_COLNAME       => [ObjProjectVersionTableMap::COL_ID => 0, ObjProjectVersionTableMap::COL_NAME => 1, ObjProjectVersionTableMap::COL_STATUS => 2, ObjProjectVersionTableMap::COL_IS_PUBLIC => 3, ObjProjectVersionTableMap::COL_IS_AVAILABLE => 4, ObjProjectVersionTableMap::COL_VERSION => 5, ObjProjectVersionTableMap::COL_VERSION_CREATED_AT => 6, ObjProjectVersionTableMap::COL_VERSION_CREATED_BY => 7, ObjProjectVersionTableMap::COL_VERSION_COMMENT => 8, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS => 9, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS => 10, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, 'version_comment' => 8, 'obj_subproject_ids' => 9, 'obj_subproject_versions' => 10, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'VersionCreatedBy' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionComment' => 8, 'ObjSubprojectIds' => 9, 'ObjSubprojectVersions' => 10, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'versionCreatedBy' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionComment' => 8, 'objSubprojectIds' => 9, 'objSubprojectVersions' => 10, ],
+        self::TYPE_COLNAME       => [ObjProjectVersionTableMap::COL_ID => 0, ObjProjectVersionTableMap::COL_NAME => 1, ObjProjectVersionTableMap::COL_STATUS => 2, ObjProjectVersionTableMap::COL_IS_PUBLIC => 3, ObjProjectVersionTableMap::COL_IS_AVAILABLE => 4, ObjProjectVersionTableMap::COL_VERSION_CREATED_BY => 5, ObjProjectVersionTableMap::COL_VERSION => 6, ObjProjectVersionTableMap::COL_VERSION_CREATED_AT => 7, ObjProjectVersionTableMap::COL_VERSION_COMMENT => 8, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS => 9, ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS => 10, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'version_created_by' => 5, 'version' => 6, 'version_created_at' => 7, 'version_comment' => 8, 'obj_subproject_ids' => 9, 'obj_subproject_versions' => 10, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ]
     ];
 
@@ -210,6 +210,14 @@ class ObjProjectVersionTableMap extends TableMap
         'COL_IS_AVAILABLE' => 'IS_AVAILABLE',
         'is_available' => 'IS_AVAILABLE',
         'obj_project_version.is_available' => 'IS_AVAILABLE',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjProjectVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'objProjectVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjProjectVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'obj_project_version.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'ObjProjectVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -225,14 +233,6 @@ class ObjProjectVersionTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'obj_project_version.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjProjectVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'objProjectVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjProjectVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'obj_project_version.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'ObjProjectVersion.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -281,9 +281,9 @@ class ObjProjectVersionTableMap extends TableMap
         $this->addColumn('status', 'Status', 'CHAR', true, null, 'in_process');
         $this->addColumn('is_public', 'IsPublic', 'BOOLEAN', true, 1, true);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('obj_subproject_ids', 'ObjSubprojectIds', 'ARRAY', false, null, null);
         $this->addColumn('obj_subproject_versions', 'ObjSubprojectVersions', 'ARRAY', false, null, null);
@@ -378,11 +378,11 @@ class ObjProjectVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 5 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -408,7 +408,7 @@ class ObjProjectVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 5 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -518,9 +518,9 @@ class ObjProjectVersionTableMap extends TableMap
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_STATUS);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_IS_PUBLIC);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_IS_AVAILABLE);
+            $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_VERSION);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS);
             $criteria->addSelectColumn(ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS);
@@ -530,9 +530,9 @@ class ObjProjectVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.status');
             $criteria->addSelectColumn($alias . '.is_public');
             $criteria->addSelectColumn($alias . '.is_available');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.obj_subproject_ids');
             $criteria->addSelectColumn($alias . '.obj_subproject_versions');
@@ -559,9 +559,9 @@ class ObjProjectVersionTableMap extends TableMap
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_STATUS);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_IS_PUBLIC);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_IS_AVAILABLE);
+            $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_VERSION);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_IDS);
             $criteria->removeSelectColumn(ObjProjectVersionTableMap::COL_OBJ_SUBPROJECT_VERSIONS);
@@ -571,9 +571,9 @@ class ObjProjectVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.status');
             $criteria->removeSelectColumn($alias . '.is_public');
             $criteria->removeSelectColumn($alias . '.is_available');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.obj_subproject_ids');
             $criteria->removeSelectColumn($alias . '.obj_subproject_versions');

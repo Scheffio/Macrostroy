@@ -106,6 +106,11 @@ class ObjStageVersionTableMap extends TableMap
     public const COL_HOUSE_ID = 'obj_stage_version.house_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'obj_stage_version.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'obj_stage_version.version';
@@ -114,11 +119,6 @@ class ObjStageVersionTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'obj_stage_version.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'obj_stage_version.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -154,10 +154,10 @@ class ObjStageVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'HouseId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'HouseIdVersion', 'ObjStageWorkIds', 'ObjStageWorkVersions', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'houseId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'houseIdVersion', 'objStageWorkIds', 'objStageWorkVersions', ],
-        self::TYPE_COLNAME       => [ObjStageVersionTableMap::COL_ID, ObjStageVersionTableMap::COL_NAME, ObjStageVersionTableMap::COL_STATUS, ObjStageVersionTableMap::COL_IS_PUBLIC, ObjStageVersionTableMap::COL_IS_AVAILABLE, ObjStageVersionTableMap::COL_HOUSE_ID, ObjStageVersionTableMap::COL_VERSION, ObjStageVersionTableMap::COL_VERSION_CREATED_AT, ObjStageVersionTableMap::COL_VERSION_CREATED_BY, ObjStageVersionTableMap::COL_VERSION_COMMENT, ObjStageVersionTableMap::COL_HOUSE_ID_VERSION, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_VERSIONS, ],
-        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'house_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'house_id_version', 'obj_stage_work_ids', 'obj_stage_work_versions', ],
+        self::TYPE_PHPNAME       => ['Id', 'Name', 'Status', 'IsPublic', 'IsAvailable', 'HouseId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', 'HouseIdVersion', 'ObjStageWorkIds', 'ObjStageWorkVersions', ],
+        self::TYPE_CAMELNAME     => ['id', 'name', 'status', 'isPublic', 'isAvailable', 'houseId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', 'houseIdVersion', 'objStageWorkIds', 'objStageWorkVersions', ],
+        self::TYPE_COLNAME       => [ObjStageVersionTableMap::COL_ID, ObjStageVersionTableMap::COL_NAME, ObjStageVersionTableMap::COL_STATUS, ObjStageVersionTableMap::COL_IS_PUBLIC, ObjStageVersionTableMap::COL_IS_AVAILABLE, ObjStageVersionTableMap::COL_HOUSE_ID, ObjStageVersionTableMap::COL_VERSION_CREATED_BY, ObjStageVersionTableMap::COL_VERSION, ObjStageVersionTableMap::COL_VERSION_CREATED_AT, ObjStageVersionTableMap::COL_VERSION_COMMENT, ObjStageVersionTableMap::COL_HOUSE_ID_VERSION, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_VERSIONS, ],
+        self::TYPE_FIELDNAME     => ['id', 'name', 'status', 'is_public', 'is_available', 'house_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', 'house_id_version', 'obj_stage_work_ids', 'obj_stage_work_versions', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
@@ -170,10 +170,10 @@ class ObjStageVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'HouseId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, 'HouseIdVersion' => 10, 'ObjStageWorkIds' => 11, 'ObjStageWorkVersions' => 12, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'houseId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, 'houseIdVersion' => 10, 'objStageWorkIds' => 11, 'objStageWorkVersions' => 12, ],
-        self::TYPE_COLNAME       => [ObjStageVersionTableMap::COL_ID => 0, ObjStageVersionTableMap::COL_NAME => 1, ObjStageVersionTableMap::COL_STATUS => 2, ObjStageVersionTableMap::COL_IS_PUBLIC => 3, ObjStageVersionTableMap::COL_IS_AVAILABLE => 4, ObjStageVersionTableMap::COL_HOUSE_ID => 5, ObjStageVersionTableMap::COL_VERSION => 6, ObjStageVersionTableMap::COL_VERSION_CREATED_AT => 7, ObjStageVersionTableMap::COL_VERSION_CREATED_BY => 8, ObjStageVersionTableMap::COL_VERSION_COMMENT => 9, ObjStageVersionTableMap::COL_HOUSE_ID_VERSION => 10, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS => 11, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_VERSIONS => 12, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'house_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, 'house_id_version' => 10, 'obj_stage_work_ids' => 11, 'obj_stage_work_versions' => 12, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'Status' => 2, 'IsPublic' => 3, 'IsAvailable' => 4, 'HouseId' => 5, 'VersionCreatedBy' => 6, 'Version' => 7, 'VersionCreatedAt' => 8, 'VersionComment' => 9, 'HouseIdVersion' => 10, 'ObjStageWorkIds' => 11, 'ObjStageWorkVersions' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'isPublic' => 3, 'isAvailable' => 4, 'houseId' => 5, 'versionCreatedBy' => 6, 'version' => 7, 'versionCreatedAt' => 8, 'versionComment' => 9, 'houseIdVersion' => 10, 'objStageWorkIds' => 11, 'objStageWorkVersions' => 12, ],
+        self::TYPE_COLNAME       => [ObjStageVersionTableMap::COL_ID => 0, ObjStageVersionTableMap::COL_NAME => 1, ObjStageVersionTableMap::COL_STATUS => 2, ObjStageVersionTableMap::COL_IS_PUBLIC => 3, ObjStageVersionTableMap::COL_IS_AVAILABLE => 4, ObjStageVersionTableMap::COL_HOUSE_ID => 5, ObjStageVersionTableMap::COL_VERSION_CREATED_BY => 6, ObjStageVersionTableMap::COL_VERSION => 7, ObjStageVersionTableMap::COL_VERSION_CREATED_AT => 8, ObjStageVersionTableMap::COL_VERSION_COMMENT => 9, ObjStageVersionTableMap::COL_HOUSE_ID_VERSION => 10, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS => 11, ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_VERSIONS => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'name' => 1, 'status' => 2, 'is_public' => 3, 'is_available' => 4, 'house_id' => 5, 'version_created_by' => 6, 'version' => 7, 'version_created_at' => 8, 'version_comment' => 9, 'house_id_version' => 10, 'obj_stage_work_ids' => 11, 'obj_stage_work_versions' => 12, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
@@ -228,6 +228,14 @@ class ObjStageVersionTableMap extends TableMap
         'COL_HOUSE_ID' => 'HOUSE_ID',
         'house_id' => 'HOUSE_ID',
         'obj_stage_version.house_id' => 'HOUSE_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'objStageVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'obj_stage_version.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'ObjStageVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -243,14 +251,6 @@ class ObjStageVersionTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'obj_stage_version.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'objStageVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'obj_stage_version.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'ObjStageVersion.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -308,9 +308,9 @@ class ObjStageVersionTableMap extends TableMap
         $this->addColumn('is_public', 'IsPublic', 'BOOLEAN', true, 1, true);
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('house_id', 'HouseId', 'INTEGER', true, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('house_id_version', 'HouseIdVersion', 'INTEGER', false, null, 0);
         $this->addColumn('obj_stage_work_ids', 'ObjStageWorkIds', 'ARRAY', false, null, null);
@@ -406,11 +406,11 @@ class ObjStageVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -436,7 +436,7 @@ class ObjStageVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 6 + $offset
+                ? 7 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -547,9 +547,9 @@ class ObjStageVersionTableMap extends TableMap
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_IS_PUBLIC);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_HOUSE_ID);
+            $criteria->addSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_VERSION);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_HOUSE_ID_VERSION);
             $criteria->addSelectColumn(ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS);
@@ -561,9 +561,9 @@ class ObjStageVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_public');
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.house_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.house_id_version');
             $criteria->addSelectColumn($alias . '.obj_stage_work_ids');
@@ -592,9 +592,9 @@ class ObjStageVersionTableMap extends TableMap
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_IS_PUBLIC);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_HOUSE_ID);
+            $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_VERSION);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_HOUSE_ID_VERSION);
             $criteria->removeSelectColumn(ObjStageVersionTableMap::COL_OBJ_STAGE_WORK_IDS);
@@ -606,9 +606,9 @@ class ObjStageVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_public');
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.house_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.house_id_version');
             $criteria->removeSelectColumn($alias . '.obj_stage_work_ids');

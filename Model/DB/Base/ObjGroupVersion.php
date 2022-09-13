@@ -111,6 +111,13 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
     protected $subproject_id;
 
     /**
+     * The value for the version_created_by field.
+     *
+     * @var        int
+     */
+    protected $version_created_by;
+
+    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -124,13 +131,6 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
      * @var        DateTime|null
      */
     protected $version_created_at;
-
-    /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
 
     /**
      * The value for the version_comment field.
@@ -512,6 +512,16 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version_created_by] column value.
+     *
+     * @return int
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
      * Get the [version] column value.
      *
      * @return int
@@ -541,16 +551,6 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
         } else {
             return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
         }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
     }
 
     /**
@@ -772,6 +772,26 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[ObjGroupVersionTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [version] column.
      *
      * @param int $v New value
@@ -807,26 +827,6 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
                 $this->modifiedColumns[ObjGroupVersionTableMap::COL_VERSION_CREATED_AT] = true;
             }
         } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[ObjGroupVersionTableMap::COL_VERSION_CREATED_BY] = true;
-        }
 
         return $this;
     }
@@ -1047,17 +1047,17 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ObjGroupVersionTableMap::translateFieldName('SubprojectId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->subproject_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjGroupVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjGroupVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjGroupVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjGroupVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjGroupVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjGroupVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ObjGroupVersionTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
@@ -1312,14 +1312,14 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_SUBPROJECT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'subproject_id';
         }
+        if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
         }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'version_comment';
@@ -1362,14 +1362,14 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
                     case 'subproject_id':
                         $stmt->bindValue($identifier, $this->subproject_id, PDO::PARAM_INT);
                         break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_INT);
+                        break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
                     case 'version_created_at':
                         $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                     case 'version_comment':
                         $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
@@ -1457,13 +1457,13 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
                 return $this->getSubprojectId();
 
             case 6:
-                return $this->getVersion();
+                return $this->getVersionCreatedBy();
 
             case 7:
-                return $this->getVersionCreatedAt();
+                return $this->getVersion();
 
             case 8:
-                return $this->getVersionCreatedBy();
+                return $this->getVersionCreatedAt();
 
             case 9:
                 return $this->getVersionComment();
@@ -1511,16 +1511,16 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
             $keys[3] => $this->getIsPublic(),
             $keys[4] => $this->getIsAvailable(),
             $keys[5] => $this->getSubprojectId(),
-            $keys[6] => $this->getVersion(),
-            $keys[7] => $this->getVersionCreatedAt(),
-            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersion(),
+            $keys[8] => $this->getVersionCreatedAt(),
             $keys[9] => $this->getVersionComment(),
             $keys[10] => $this->getSubprojectIdVersion(),
             $keys[11] => $this->getObjHouseIds(),
             $keys[12] => $this->getObjHouseVersions(),
         ];
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[8]] instanceof \DateTimeInterface) {
+            $result[$keys[8]] = $result[$keys[8]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1599,13 +1599,13 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
                 $this->setSubprojectId($value);
                 break;
             case 6:
-                $this->setVersion($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 7:
-                $this->setVersionCreatedAt($value);
+                $this->setVersion($value);
                 break;
             case 8:
-                $this->setVersionCreatedBy($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 9:
                 $this->setVersionComment($value);
@@ -1672,13 +1672,13 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
             $this->setSubprojectId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setVersion($arr[$keys[6]]);
+            $this->setVersionCreatedBy($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[7]]);
+            $this->setVersion($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[8]]);
+            $this->setVersionCreatedAt($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
             $this->setVersionComment($arr[$keys[9]]);
@@ -1753,14 +1753,14 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_SUBPROJECT_ID)) {
             $criteria->add(ObjGroupVersionTableMap::COL_SUBPROJECT_ID, $this->subproject_id);
         }
+        if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION)) {
             $criteria->add(ObjGroupVersionTableMap::COL_VERSION, $this->version);
         }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_AT)) {
             $criteria->add(ObjGroupVersionTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(ObjGroupVersionTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
         }
         if ($this->isColumnModified(ObjGroupVersionTableMap::COL_VERSION_COMMENT)) {
             $criteria->add(ObjGroupVersionTableMap::COL_VERSION_COMMENT, $this->version_comment);
@@ -1883,9 +1883,9 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
         $copyObj->setIsPublic($this->getIsPublic());
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setSubprojectId($this->getSubprojectId());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersion($this->getVersion());
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersionComment($this->getVersionComment());
         $copyObj->setSubprojectIdVersion($this->getSubprojectIdVersion());
         $copyObj->setObjHouseIds($this->getObjHouseIds());
@@ -1986,9 +1986,9 @@ abstract class ObjGroupVersion implements ActiveRecordInterface
         $this->is_public = null;
         $this->is_available = null;
         $this->subproject_id = null;
+        $this->version_created_by = null;
         $this->version = null;
         $this->version_created_at = null;
-        $this->version_created_by = null;
         $this->version_comment = null;
         $this->subproject_id_version = null;
         $this->obj_house_ids = null;

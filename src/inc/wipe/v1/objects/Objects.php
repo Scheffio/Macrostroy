@@ -414,7 +414,7 @@ class Objects
                     ObjStageTableMap::COL_ID,
                     ObjStageWorkTableMap::COL_ID
                 ])
-                ->withColumn($sumStr, 'price')
+                ->withColumn($sumStr, 'price')->leftJoinUsers()
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)

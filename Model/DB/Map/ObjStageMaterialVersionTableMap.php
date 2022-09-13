@@ -106,6 +106,11 @@ class ObjStageMaterialVersionTableMap extends TableMap
     public const COL_STAGE_WORK_ID = 'obj_stage_material_version.stage_work_id';
 
     /**
+     * the column name for the version_created_by field
+     */
+    public const COL_VERSION_CREATED_BY = 'obj_stage_material_version.version_created_by';
+
+    /**
      * the column name for the version field
      */
     public const COL_VERSION = 'obj_stage_material_version.version';
@@ -114,11 +119,6 @@ class ObjStageMaterialVersionTableMap extends TableMap
      * the column name for the version_created_at field
      */
     public const COL_VERSION_CREATED_AT = 'obj_stage_material_version.version_created_at';
-
-    /**
-     * the column name for the version_created_by field
-     */
-    public const COL_VERSION_CREATED_BY = 'obj_stage_material_version.version_created_by';
 
     /**
      * the column name for the version_comment field
@@ -149,10 +149,10 @@ class ObjStageMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'IsAvailable', 'MaterialId', 'StageWorkId', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'VersionComment', 'MaterialIdVersion', 'StageWorkIdVersion', ],
-        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'isAvailable', 'materialId', 'stageWorkId', 'version', 'versionCreatedAt', 'versionCreatedBy', 'versionComment', 'materialIdVersion', 'stageWorkIdVersion', ],
-        self::TYPE_COLNAME       => [ObjStageMaterialVersionTableMap::COL_ID, ObjStageMaterialVersionTableMap::COL_PRICE, ObjStageMaterialVersionTableMap::COL_AMOUNT, ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID, ObjStageMaterialVersionTableMap::COL_VERSION, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY, ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION, ],
-        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'is_available', 'material_id', 'stage_work_id', 'version', 'version_created_at', 'version_created_by', 'version_comment', 'material_id_version', 'stage_work_id_version', ],
+        self::TYPE_PHPNAME       => ['Id', 'Price', 'Amount', 'IsAvailable', 'MaterialId', 'StageWorkId', 'VersionCreatedBy', 'Version', 'VersionCreatedAt', 'VersionComment', 'MaterialIdVersion', 'StageWorkIdVersion', ],
+        self::TYPE_CAMELNAME     => ['id', 'price', 'amount', 'isAvailable', 'materialId', 'stageWorkId', 'versionCreatedBy', 'version', 'versionCreatedAt', 'versionComment', 'materialIdVersion', 'stageWorkIdVersion', ],
+        self::TYPE_COLNAME       => [ObjStageMaterialVersionTableMap::COL_ID, ObjStageMaterialVersionTableMap::COL_PRICE, ObjStageMaterialVersionTableMap::COL_AMOUNT, ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY, ObjStageMaterialVersionTableMap::COL_VERSION, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT, ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION, ],
+        self::TYPE_FIELDNAME     => ['id', 'price', 'amount', 'is_available', 'material_id', 'stage_work_id', 'version_created_by', 'version', 'version_created_at', 'version_comment', 'material_id_version', 'stage_work_id_version', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -165,10 +165,10 @@ class ObjStageMaterialVersionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'IsAvailable' => 3, 'MaterialId' => 4, 'StageWorkId' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, 'VersionComment' => 9, 'MaterialIdVersion' => 10, 'StageWorkIdVersion' => 11, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'isAvailable' => 3, 'materialId' => 4, 'stageWorkId' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, 'versionComment' => 9, 'materialIdVersion' => 10, 'stageWorkIdVersion' => 11, ],
-        self::TYPE_COLNAME       => [ObjStageMaterialVersionTableMap::COL_ID => 0, ObjStageMaterialVersionTableMap::COL_PRICE => 1, ObjStageMaterialVersionTableMap::COL_AMOUNT => 2, ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE => 3, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID => 4, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID => 5, ObjStageMaterialVersionTableMap::COL_VERSION => 6, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT => 7, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY => 8, ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT => 9, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION => 11, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'is_available' => 3, 'material_id' => 4, 'stage_work_id' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, 'version_comment' => 9, 'material_id_version' => 10, 'stage_work_id_version' => 11, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Price' => 1, 'Amount' => 2, 'IsAvailable' => 3, 'MaterialId' => 4, 'StageWorkId' => 5, 'VersionCreatedBy' => 6, 'Version' => 7, 'VersionCreatedAt' => 8, 'VersionComment' => 9, 'MaterialIdVersion' => 10, 'StageWorkIdVersion' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'isAvailable' => 3, 'materialId' => 4, 'stageWorkId' => 5, 'versionCreatedBy' => 6, 'version' => 7, 'versionCreatedAt' => 8, 'versionComment' => 9, 'materialIdVersion' => 10, 'stageWorkIdVersion' => 11, ],
+        self::TYPE_COLNAME       => [ObjStageMaterialVersionTableMap::COL_ID => 0, ObjStageMaterialVersionTableMap::COL_PRICE => 1, ObjStageMaterialVersionTableMap::COL_AMOUNT => 2, ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE => 3, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID => 4, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID => 5, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY => 6, ObjStageMaterialVersionTableMap::COL_VERSION => 7, ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT => 8, ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT => 9, ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION => 10, ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION => 11, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'price' => 1, 'amount' => 2, 'is_available' => 3, 'material_id' => 4, 'stage_work_id' => 5, 'version_created_by' => 6, 'version' => 7, 'version_created_at' => 8, 'version_comment' => 9, 'material_id_version' => 10, 'stage_work_id_version' => 11, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -223,6 +223,14 @@ class ObjStageMaterialVersionTableMap extends TableMap
         'COL_STAGE_WORK_ID' => 'STAGE_WORK_ID',
         'stage_work_id' => 'STAGE_WORK_ID',
         'obj_stage_material_version.stage_work_id' => 'STAGE_WORK_ID',
+        'VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageMaterialVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
+        'versionCreatedBy' => 'VERSION_CREATED_BY',
+        'objStageMaterialVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
+        'ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
+        'version_created_by' => 'VERSION_CREATED_BY',
+        'obj_stage_material_version.version_created_by' => 'VERSION_CREATED_BY',
         'Version' => 'VERSION',
         'ObjStageMaterialVersion.Version' => 'VERSION',
         'version' => 'VERSION',
@@ -238,14 +246,6 @@ class ObjStageMaterialVersionTableMap extends TableMap
         'COL_VERSION_CREATED_AT' => 'VERSION_CREATED_AT',
         'version_created_at' => 'VERSION_CREATED_AT',
         'obj_stage_material_version.version_created_at' => 'VERSION_CREATED_AT',
-        'VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageMaterialVersion.VersionCreatedBy' => 'VERSION_CREATED_BY',
-        'versionCreatedBy' => 'VERSION_CREATED_BY',
-        'objStageMaterialVersion.versionCreatedBy' => 'VERSION_CREATED_BY',
-        'ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'COL_VERSION_CREATED_BY' => 'VERSION_CREATED_BY',
-        'version_created_by' => 'VERSION_CREATED_BY',
-        'obj_stage_material_version.version_created_by' => 'VERSION_CREATED_BY',
         'VersionComment' => 'VERSION_COMMENT',
         'ObjStageMaterialVersion.VersionComment' => 'VERSION_COMMENT',
         'versionComment' => 'VERSION_COMMENT',
@@ -295,9 +295,9 @@ class ObjStageMaterialVersionTableMap extends TableMap
         $this->addColumn('is_available', 'IsAvailable', 'BOOLEAN', true, 1, true);
         $this->addColumn('material_id', 'MaterialId', 'INTEGER', true, null, null);
         $this->addColumn('stage_work_id', 'StageWorkId', 'INTEGER', true, null, null);
+        $this->addColumn('version_created_by', 'VersionCreatedBy', 'INTEGER', true, null, null);
         $this->addPrimaryKey('version', 'Version', 'INTEGER', true, null, 0);
         $this->addColumn('version_created_at', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('version_created_by', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
         $this->addColumn('version_comment', 'VersionComment', 'VARCHAR', false, 255, null);
         $this->addColumn('material_id_version', 'MaterialIdVersion', 'INTEGER', false, null, 0);
         $this->addColumn('stage_work_id_version', 'StageWorkIdVersion', 'INTEGER', false, null, 0);
@@ -392,11 +392,11 @@ class ObjStageMaterialVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -422,7 +422,7 @@ class ObjStageMaterialVersionTableMap extends TableMap
         ];
         $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 6 + $offset
+                ? 7 + $offset
                 : self::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -533,9 +533,9 @@ class ObjStageMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID);
+            $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION);
             $criteria->addSelectColumn(ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION);
@@ -546,9 +546,9 @@ class ObjStageMaterialVersionTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.is_available');
             $criteria->addSelectColumn($alias . '.material_id');
             $criteria->addSelectColumn($alias . '.stage_work_id');
+            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.version_created_at');
-            $criteria->addSelectColumn($alias . '.version_created_by');
             $criteria->addSelectColumn($alias . '.version_comment');
             $criteria->addSelectColumn($alias . '.material_id_version');
             $criteria->addSelectColumn($alias . '.stage_work_id_version');
@@ -576,9 +576,9 @@ class ObjStageMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_IS_AVAILABLE);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_MATERIAL_ID);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID);
+            $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_AT);
-            $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_CREATED_BY);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_VERSION_COMMENT);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_MATERIAL_ID_VERSION);
             $criteria->removeSelectColumn(ObjStageMaterialVersionTableMap::COL_STAGE_WORK_ID_VERSION);
@@ -589,9 +589,9 @@ class ObjStageMaterialVersionTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.is_available');
             $criteria->removeSelectColumn($alias . '.material_id');
             $criteria->removeSelectColumn($alias . '.stage_work_id');
+            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version');
             $criteria->removeSelectColumn($alias . '.version_created_at');
-            $criteria->removeSelectColumn($alias . '.version_created_by');
             $criteria->removeSelectColumn($alias . '.version_comment');
             $criteria->removeSelectColumn($alias . '.material_id_version');
             $criteria->removeSelectColumn($alias . '.stage_work_id_version');

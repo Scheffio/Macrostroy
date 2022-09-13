@@ -4,14 +4,53 @@ namespace DB\Base;
 
 use \Exception;
 use \PDO;
+use DB\ObjGroup as ChildObjGroup;
+use DB\ObjGroupQuery as ChildObjGroupQuery;
+use DB\ObjHouse as ChildObjHouse;
+use DB\ObjHouseQuery as ChildObjHouseQuery;
+use DB\ObjProject as ChildObjProject;
+use DB\ObjProjectQuery as ChildObjProjectQuery;
+use DB\ObjStage as ChildObjStage;
+use DB\ObjStageMaterial as ChildObjStageMaterial;
+use DB\ObjStageMaterialQuery as ChildObjStageMaterialQuery;
+use DB\ObjStageQuery as ChildObjStageQuery;
+use DB\ObjStageTechnic as ChildObjStageTechnic;
+use DB\ObjStageTechnicQuery as ChildObjStageTechnicQuery;
+use DB\ObjStageWork as ChildObjStageWork;
+use DB\ObjStageWorkQuery as ChildObjStageWorkQuery;
+use DB\ObjSubproject as ChildObjSubproject;
+use DB\ObjSubprojectQuery as ChildObjSubprojectQuery;
 use DB\ProjectRole as ChildProjectRole;
 use DB\ProjectRoleQuery as ChildProjectRoleQuery;
 use DB\UserRole as ChildUserRole;
 use DB\UserRoleQuery as ChildUserRoleQuery;
 use DB\Users as ChildUsers;
 use DB\UsersQuery as ChildUsersQuery;
+use DB\VolMaterial as ChildVolMaterial;
+use DB\VolMaterialQuery as ChildVolMaterialQuery;
+use DB\VolTechnic as ChildVolTechnic;
+use DB\VolTechnicQuery as ChildVolTechnicQuery;
+use DB\VolWork as ChildVolWork;
+use DB\VolWorkMaterial as ChildVolWorkMaterial;
+use DB\VolWorkMaterialQuery as ChildVolWorkMaterialQuery;
+use DB\VolWorkQuery as ChildVolWorkQuery;
+use DB\VolWorkTechnic as ChildVolWorkTechnic;
+use DB\VolWorkTechnicQuery as ChildVolWorkTechnicQuery;
+use DB\Map\ObjGroupTableMap;
+use DB\Map\ObjHouseTableMap;
+use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageMaterialTableMap;
+use DB\Map\ObjStageTableMap;
+use DB\Map\ObjStageTechnicTableMap;
+use DB\Map\ObjStageWorkTableMap;
+use DB\Map\ObjSubprojectTableMap;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UsersTableMap;
+use DB\Map\VolMaterialTableMap;
+use DB\Map\VolTechnicTableMap;
+use DB\Map\VolWorkMaterialTableMap;
+use DB\Map\VolWorkTableMap;
+use DB\Map\VolWorkTechnicTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -185,6 +224,97 @@ abstract class Users implements ActiveRecordInterface
     protected $collProjectRolesPartial;
 
     /**
+     * @var        ObjectCollection|ChildObjProject[] Collection to store aggregation of ChildObjProject objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjProject> Collection to store aggregation of ChildObjProject objects.
+     */
+    protected $collObjProjects;
+    protected $collObjProjectsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjSubproject[] Collection to store aggregation of ChildObjSubproject objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjSubproject> Collection to store aggregation of ChildObjSubproject objects.
+     */
+    protected $collObjSubprojects;
+    protected $collObjSubprojectsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjGroup[] Collection to store aggregation of ChildObjGroup objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjGroup> Collection to store aggregation of ChildObjGroup objects.
+     */
+    protected $collObjGroups;
+    protected $collObjGroupsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjHouse[] Collection to store aggregation of ChildObjHouse objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjHouse> Collection to store aggregation of ChildObjHouse objects.
+     */
+    protected $collObjHouses;
+    protected $collObjHousesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjStage[] Collection to store aggregation of ChildObjStage objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStage> Collection to store aggregation of ChildObjStage objects.
+     */
+    protected $collObjStages;
+    protected $collObjStagesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjStageWork[] Collection to store aggregation of ChildObjStageWork objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageWork> Collection to store aggregation of ChildObjStageWork objects.
+     */
+    protected $collObjStageWorks;
+    protected $collObjStageWorksPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjStageMaterial[] Collection to store aggregation of ChildObjStageMaterial objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageMaterial> Collection to store aggregation of ChildObjStageMaterial objects.
+     */
+    protected $collObjStageMaterials;
+    protected $collObjStageMaterialsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildObjStageTechnic[] Collection to store aggregation of ChildObjStageTechnic objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageTechnic> Collection to store aggregation of ChildObjStageTechnic objects.
+     */
+    protected $collObjStageTechnics;
+    protected $collObjStageTechnicsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildVolMaterial[] Collection to store aggregation of ChildVolMaterial objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolMaterial> Collection to store aggregation of ChildVolMaterial objects.
+     */
+    protected $collVolMaterials;
+    protected $collVolMaterialsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildVolTechnic[] Collection to store aggregation of ChildVolTechnic objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolTechnic> Collection to store aggregation of ChildVolTechnic objects.
+     */
+    protected $collVolTechnics;
+    protected $collVolTechnicsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildVolWork[] Collection to store aggregation of ChildVolWork objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWork> Collection to store aggregation of ChildVolWork objects.
+     */
+    protected $collVolWorks;
+    protected $collVolWorksPartial;
+
+    /**
+     * @var        ObjectCollection|ChildVolWorkMaterial[] Collection to store aggregation of ChildVolWorkMaterial objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkMaterial> Collection to store aggregation of ChildVolWorkMaterial objects.
+     */
+    protected $collVolWorkMaterials;
+    protected $collVolWorkMaterialsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildVolWorkTechnic[] Collection to store aggregation of ChildVolWorkTechnic objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkTechnic> Collection to store aggregation of ChildVolWorkTechnic objects.
+     */
+    protected $collVolWorkTechnics;
+    protected $collVolWorkTechnicsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -198,6 +328,97 @@ abstract class Users implements ActiveRecordInterface
      * @phpstan-var ObjectCollection&\Traversable<ChildProjectRole>
      */
     protected $projectRolesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjProject[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjProject>
+     */
+    protected $objProjectsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjSubproject[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjSubproject>
+     */
+    protected $objSubprojectsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjGroup[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjGroup>
+     */
+    protected $objGroupsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjHouse[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjHouse>
+     */
+    protected $objHousesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjStage[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStage>
+     */
+    protected $objStagesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjStageWork[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageWork>
+     */
+    protected $objStageWorksScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjStageMaterial[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageMaterial>
+     */
+    protected $objStageMaterialsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildObjStageTechnic[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildObjStageTechnic>
+     */
+    protected $objStageTechnicsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolMaterial[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolMaterial>
+     */
+    protected $volMaterialsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolTechnic[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolTechnic>
+     */
+    protected $volTechnicsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolWork[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWork>
+     */
+    protected $volWorksScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolWorkMaterial[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkMaterial>
+     */
+    protected $volWorkMaterialsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildVolWorkTechnic[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildVolWorkTechnic>
+     */
+    protected $volWorkTechnicsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -1062,6 +1283,32 @@ abstract class Users implements ActiveRecordInterface
             $this->aUserRole = null;
             $this->collProjectRoles = null;
 
+            $this->collObjProjects = null;
+
+            $this->collObjSubprojects = null;
+
+            $this->collObjGroups = null;
+
+            $this->collObjHouses = null;
+
+            $this->collObjStages = null;
+
+            $this->collObjStageWorks = null;
+
+            $this->collObjStageMaterials = null;
+
+            $this->collObjStageTechnics = null;
+
+            $this->collVolMaterials = null;
+
+            $this->collVolTechnics = null;
+
+            $this->collVolWorks = null;
+
+            $this->collVolWorkMaterials = null;
+
+            $this->collVolWorkTechnics = null;
+
         } // if (deep)
     }
 
@@ -1199,6 +1446,227 @@ abstract class Users implements ActiveRecordInterface
 
             if ($this->collProjectRoles !== null) {
                 foreach ($this->collProjectRoles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objProjectsScheduledForDeletion !== null) {
+                if (!$this->objProjectsScheduledForDeletion->isEmpty()) {
+                    \DB\ObjProjectQuery::create()
+                        ->filterByPrimaryKeys($this->objProjectsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objProjectsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjProjects !== null) {
+                foreach ($this->collObjProjects as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objSubprojectsScheduledForDeletion !== null) {
+                if (!$this->objSubprojectsScheduledForDeletion->isEmpty()) {
+                    \DB\ObjSubprojectQuery::create()
+                        ->filterByPrimaryKeys($this->objSubprojectsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objSubprojectsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjSubprojects !== null) {
+                foreach ($this->collObjSubprojects as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objGroupsScheduledForDeletion !== null) {
+                if (!$this->objGroupsScheduledForDeletion->isEmpty()) {
+                    \DB\ObjGroupQuery::create()
+                        ->filterByPrimaryKeys($this->objGroupsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objGroupsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjGroups !== null) {
+                foreach ($this->collObjGroups as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objHousesScheduledForDeletion !== null) {
+                if (!$this->objHousesScheduledForDeletion->isEmpty()) {
+                    \DB\ObjHouseQuery::create()
+                        ->filterByPrimaryKeys($this->objHousesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objHousesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjHouses !== null) {
+                foreach ($this->collObjHouses as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objStagesScheduledForDeletion !== null) {
+                if (!$this->objStagesScheduledForDeletion->isEmpty()) {
+                    \DB\ObjStageQuery::create()
+                        ->filterByPrimaryKeys($this->objStagesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objStagesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjStages !== null) {
+                foreach ($this->collObjStages as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objStageWorksScheduledForDeletion !== null) {
+                if (!$this->objStageWorksScheduledForDeletion->isEmpty()) {
+                    \DB\ObjStageWorkQuery::create()
+                        ->filterByPrimaryKeys($this->objStageWorksScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objStageWorksScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjStageWorks !== null) {
+                foreach ($this->collObjStageWorks as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objStageMaterialsScheduledForDeletion !== null) {
+                if (!$this->objStageMaterialsScheduledForDeletion->isEmpty()) {
+                    \DB\ObjStageMaterialQuery::create()
+                        ->filterByPrimaryKeys($this->objStageMaterialsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objStageMaterialsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjStageMaterials !== null) {
+                foreach ($this->collObjStageMaterials as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->objStageTechnicsScheduledForDeletion !== null) {
+                if (!$this->objStageTechnicsScheduledForDeletion->isEmpty()) {
+                    \DB\ObjStageTechnicQuery::create()
+                        ->filterByPrimaryKeys($this->objStageTechnicsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->objStageTechnicsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collObjStageTechnics !== null) {
+                foreach ($this->collObjStageTechnics as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->volMaterialsScheduledForDeletion !== null) {
+                if (!$this->volMaterialsScheduledForDeletion->isEmpty()) {
+                    \DB\VolMaterialQuery::create()
+                        ->filterByPrimaryKeys($this->volMaterialsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volMaterialsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolMaterials !== null) {
+                foreach ($this->collVolMaterials as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->volTechnicsScheduledForDeletion !== null) {
+                if (!$this->volTechnicsScheduledForDeletion->isEmpty()) {
+                    \DB\VolTechnicQuery::create()
+                        ->filterByPrimaryKeys($this->volTechnicsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volTechnicsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolTechnics !== null) {
+                foreach ($this->collVolTechnics as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->volWorksScheduledForDeletion !== null) {
+                if (!$this->volWorksScheduledForDeletion->isEmpty()) {
+                    \DB\VolWorkQuery::create()
+                        ->filterByPrimaryKeys($this->volWorksScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volWorksScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolWorks !== null) {
+                foreach ($this->collVolWorks as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->volWorkMaterialsScheduledForDeletion !== null) {
+                if (!$this->volWorkMaterialsScheduledForDeletion->isEmpty()) {
+                    \DB\VolWorkMaterialQuery::create()
+                        ->filterByPrimaryKeys($this->volWorkMaterialsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volWorkMaterialsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolWorkMaterials !== null) {
+                foreach ($this->collVolWorkMaterials as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->volWorkTechnicsScheduledForDeletion !== null) {
+                if (!$this->volWorkTechnicsScheduledForDeletion->isEmpty()) {
+                    \DB\VolWorkTechnicQuery::create()
+                        ->filterByPrimaryKeys($this->volWorkTechnicsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->volWorkTechnicsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collVolWorkTechnics !== null) {
+                foreach ($this->collVolWorkTechnics as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1508,6 +1976,201 @@ abstract class Users implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collProjectRoles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjProjects) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objProjects';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_projects';
+                        break;
+                    default:
+                        $key = 'ObjProjects';
+                }
+
+                $result[$key] = $this->collObjProjects->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjSubprojects) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objSubprojects';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_subprojects';
+                        break;
+                    default:
+                        $key = 'ObjSubprojects';
+                }
+
+                $result[$key] = $this->collObjSubprojects->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjGroups) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_groups';
+                        break;
+                    default:
+                        $key = 'ObjGroups';
+                }
+
+                $result[$key] = $this->collObjGroups->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjHouses) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objHouses';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_houses';
+                        break;
+                    default:
+                        $key = 'ObjHouses';
+                }
+
+                $result[$key] = $this->collObjHouses->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjStages) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objStages';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_stages';
+                        break;
+                    default:
+                        $key = 'ObjStages';
+                }
+
+                $result[$key] = $this->collObjStages->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjStageWorks) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objStageWorks';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_stage_works';
+                        break;
+                    default:
+                        $key = 'ObjStageWorks';
+                }
+
+                $result[$key] = $this->collObjStageWorks->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjStageMaterials) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objStageMaterials';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_stage_materials';
+                        break;
+                    default:
+                        $key = 'ObjStageMaterials';
+                }
+
+                $result[$key] = $this->collObjStageMaterials->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collObjStageTechnics) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'objStageTechnics';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'obj_stage_technics';
+                        break;
+                    default:
+                        $key = 'ObjStageTechnics';
+                }
+
+                $result[$key] = $this->collObjStageTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVolMaterials) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volMaterials';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_materials';
+                        break;
+                    default:
+                        $key = 'VolMaterials';
+                }
+
+                $result[$key] = $this->collVolMaterials->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVolTechnics) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volTechnics';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_technics';
+                        break;
+                    default:
+                        $key = 'VolTechnics';
+                }
+
+                $result[$key] = $this->collVolTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVolWorks) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volWorks';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_works';
+                        break;
+                    default:
+                        $key = 'VolWorks';
+                }
+
+                $result[$key] = $this->collVolWorks->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVolWorkMaterials) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volWorkMaterials';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_work_materials';
+                        break;
+                    default:
+                        $key = 'VolWorkMaterials';
+                }
+
+                $result[$key] = $this->collVolWorkMaterials->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collVolWorkTechnics) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'volWorkTechnics';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'vol_work_technics';
+                        break;
+                    default:
+                        $key = 'VolWorkTechnics';
+                }
+
+                $result[$key] = $this->collVolWorkTechnics->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1853,6 +2516,84 @@ abstract class Users implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getObjProjects() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjProject($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjSubprojects() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjSubproject($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjGroups() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjGroup($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjHouses() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjHouse($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjStages() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjStage($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjStageWorks() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjStageWork($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjStageMaterials() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjStageMaterial($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getObjStageTechnics() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addObjStageTechnic($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVolMaterials() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolMaterial($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVolTechnics() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolTechnic($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVolWorks() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolWork($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVolWorkMaterials() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolWorkMaterial($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getVolWorkTechnics() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addVolWorkTechnic($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -1947,6 +2688,58 @@ abstract class Users implements ActiveRecordInterface
     {
         if ('ProjectRole' === $relationName) {
             $this->initProjectRoles();
+            return;
+        }
+        if ('ObjProject' === $relationName) {
+            $this->initObjProjects();
+            return;
+        }
+        if ('ObjSubproject' === $relationName) {
+            $this->initObjSubprojects();
+            return;
+        }
+        if ('ObjGroup' === $relationName) {
+            $this->initObjGroups();
+            return;
+        }
+        if ('ObjHouse' === $relationName) {
+            $this->initObjHouses();
+            return;
+        }
+        if ('ObjStage' === $relationName) {
+            $this->initObjStages();
+            return;
+        }
+        if ('ObjStageWork' === $relationName) {
+            $this->initObjStageWorks();
+            return;
+        }
+        if ('ObjStageMaterial' === $relationName) {
+            $this->initObjStageMaterials();
+            return;
+        }
+        if ('ObjStageTechnic' === $relationName) {
+            $this->initObjStageTechnics();
+            return;
+        }
+        if ('VolMaterial' === $relationName) {
+            $this->initVolMaterials();
+            return;
+        }
+        if ('VolTechnic' === $relationName) {
+            $this->initVolTechnics();
+            return;
+        }
+        if ('VolWork' === $relationName) {
+            $this->initVolWorks();
+            return;
+        }
+        if ('VolWorkMaterial' === $relationName) {
+            $this->initVolWorkMaterials();
+            return;
+        }
+        if ('VolWorkTechnic' === $relationName) {
+            $this->initVolWorkTechnics();
             return;
         }
     }
@@ -2217,6 +3010,3555 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collObjProjects collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjProjects()
+     */
+    public function clearObjProjects()
+    {
+        $this->collObjProjects = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjProjects collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjProjects($v = true): void
+    {
+        $this->collObjProjectsPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjProjects collection.
+     *
+     * By default this just sets the collObjProjects collection to an empty array (like clearcollObjProjects());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjProjects(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjProjects && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjProjectTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjProjects = new $collectionClassName;
+        $this->collObjProjects->setModel('\DB\ObjProject');
+    }
+
+    /**
+     * Gets an array of ChildObjProject objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjProject[] List of ChildObjProject objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjProject> List of ChildObjProject objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjProjects(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjProjectsPartial && !$this->isNew();
+        if (null === $this->collObjProjects || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjProjects) {
+                    $this->initObjProjects();
+                } else {
+                    $collectionClassName = ObjProjectTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjProjects = new $collectionClassName;
+                    $collObjProjects->setModel('\DB\ObjProject');
+
+                    return $collObjProjects;
+                }
+            } else {
+                $collObjProjects = ChildObjProjectQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjProjectsPartial && count($collObjProjects)) {
+                        $this->initObjProjects(false);
+
+                        foreach ($collObjProjects as $obj) {
+                            if (false == $this->collObjProjects->contains($obj)) {
+                                $this->collObjProjects->append($obj);
+                            }
+                        }
+
+                        $this->collObjProjectsPartial = true;
+                    }
+
+                    return $collObjProjects;
+                }
+
+                if ($partial && $this->collObjProjects) {
+                    foreach ($this->collObjProjects as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjProjects[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjProjects = $collObjProjects;
+                $this->collObjProjectsPartial = false;
+            }
+        }
+
+        return $this->collObjProjects;
+    }
+
+    /**
+     * Sets a collection of ChildObjProject objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objProjects A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjProjects(Collection $objProjects, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjProject[] $objProjectsToDelete */
+        $objProjectsToDelete = $this->getObjProjects(new Criteria(), $con)->diff($objProjects);
+
+
+        $this->objProjectsScheduledForDeletion = $objProjectsToDelete;
+
+        foreach ($objProjectsToDelete as $objProjectRemoved) {
+            $objProjectRemoved->setUsers(null);
+        }
+
+        $this->collObjProjects = null;
+        foreach ($objProjects as $objProject) {
+            $this->addObjProject($objProject);
+        }
+
+        $this->collObjProjects = $objProjects;
+        $this->collObjProjectsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjProject objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjProject objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjProjects(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjProjectsPartial && !$this->isNew();
+        if (null === $this->collObjProjects || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjProjects) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjProjects());
+            }
+
+            $query = ChildObjProjectQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjProjects);
+    }
+
+    /**
+     * Method called to associate a ChildObjProject object to this object
+     * through the ChildObjProject foreign key attribute.
+     *
+     * @param ChildObjProject $l ChildObjProject
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjProject(ChildObjProject $l)
+    {
+        if ($this->collObjProjects === null) {
+            $this->initObjProjects();
+            $this->collObjProjectsPartial = true;
+        }
+
+        if (!$this->collObjProjects->contains($l)) {
+            $this->doAddObjProject($l);
+
+            if ($this->objProjectsScheduledForDeletion and $this->objProjectsScheduledForDeletion->contains($l)) {
+                $this->objProjectsScheduledForDeletion->remove($this->objProjectsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjProject $objProject The ChildObjProject object to add.
+     */
+    protected function doAddObjProject(ChildObjProject $objProject): void
+    {
+        $this->collObjProjects[]= $objProject;
+        $objProject->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjProject $objProject The ChildObjProject object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjProject(ChildObjProject $objProject)
+    {
+        if ($this->getObjProjects()->contains($objProject)) {
+            $pos = $this->collObjProjects->search($objProject);
+            $this->collObjProjects->remove($pos);
+            if (null === $this->objProjectsScheduledForDeletion) {
+                $this->objProjectsScheduledForDeletion = clone $this->collObjProjects;
+                $this->objProjectsScheduledForDeletion->clear();
+            }
+            $this->objProjectsScheduledForDeletion[]= clone $objProject;
+            $objProject->setUsers(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collObjSubprojects collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjSubprojects()
+     */
+    public function clearObjSubprojects()
+    {
+        $this->collObjSubprojects = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjSubprojects collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjSubprojects($v = true): void
+    {
+        $this->collObjSubprojectsPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjSubprojects collection.
+     *
+     * By default this just sets the collObjSubprojects collection to an empty array (like clearcollObjSubprojects());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjSubprojects(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjSubprojects && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjSubprojectTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjSubprojects = new $collectionClassName;
+        $this->collObjSubprojects->setModel('\DB\ObjSubproject');
+    }
+
+    /**
+     * Gets an array of ChildObjSubproject objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjSubproject[] List of ChildObjSubproject objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjSubproject> List of ChildObjSubproject objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjSubprojects(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjSubprojectsPartial && !$this->isNew();
+        if (null === $this->collObjSubprojects || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjSubprojects) {
+                    $this->initObjSubprojects();
+                } else {
+                    $collectionClassName = ObjSubprojectTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjSubprojects = new $collectionClassName;
+                    $collObjSubprojects->setModel('\DB\ObjSubproject');
+
+                    return $collObjSubprojects;
+                }
+            } else {
+                $collObjSubprojects = ChildObjSubprojectQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjSubprojectsPartial && count($collObjSubprojects)) {
+                        $this->initObjSubprojects(false);
+
+                        foreach ($collObjSubprojects as $obj) {
+                            if (false == $this->collObjSubprojects->contains($obj)) {
+                                $this->collObjSubprojects->append($obj);
+                            }
+                        }
+
+                        $this->collObjSubprojectsPartial = true;
+                    }
+
+                    return $collObjSubprojects;
+                }
+
+                if ($partial && $this->collObjSubprojects) {
+                    foreach ($this->collObjSubprojects as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjSubprojects[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjSubprojects = $collObjSubprojects;
+                $this->collObjSubprojectsPartial = false;
+            }
+        }
+
+        return $this->collObjSubprojects;
+    }
+
+    /**
+     * Sets a collection of ChildObjSubproject objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objSubprojects A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjSubprojects(Collection $objSubprojects, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjSubproject[] $objSubprojectsToDelete */
+        $objSubprojectsToDelete = $this->getObjSubprojects(new Criteria(), $con)->diff($objSubprojects);
+
+
+        $this->objSubprojectsScheduledForDeletion = $objSubprojectsToDelete;
+
+        foreach ($objSubprojectsToDelete as $objSubprojectRemoved) {
+            $objSubprojectRemoved->setUsers(null);
+        }
+
+        $this->collObjSubprojects = null;
+        foreach ($objSubprojects as $objSubproject) {
+            $this->addObjSubproject($objSubproject);
+        }
+
+        $this->collObjSubprojects = $objSubprojects;
+        $this->collObjSubprojectsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjSubproject objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjSubproject objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjSubprojects(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjSubprojectsPartial && !$this->isNew();
+        if (null === $this->collObjSubprojects || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjSubprojects) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjSubprojects());
+            }
+
+            $query = ChildObjSubprojectQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjSubprojects);
+    }
+
+    /**
+     * Method called to associate a ChildObjSubproject object to this object
+     * through the ChildObjSubproject foreign key attribute.
+     *
+     * @param ChildObjSubproject $l ChildObjSubproject
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjSubproject(ChildObjSubproject $l)
+    {
+        if ($this->collObjSubprojects === null) {
+            $this->initObjSubprojects();
+            $this->collObjSubprojectsPartial = true;
+        }
+
+        if (!$this->collObjSubprojects->contains($l)) {
+            $this->doAddObjSubproject($l);
+
+            if ($this->objSubprojectsScheduledForDeletion and $this->objSubprojectsScheduledForDeletion->contains($l)) {
+                $this->objSubprojectsScheduledForDeletion->remove($this->objSubprojectsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjSubproject $objSubproject The ChildObjSubproject object to add.
+     */
+    protected function doAddObjSubproject(ChildObjSubproject $objSubproject): void
+    {
+        $this->collObjSubprojects[]= $objSubproject;
+        $objSubproject->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjSubproject $objSubproject The ChildObjSubproject object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjSubproject(ChildObjSubproject $objSubproject)
+    {
+        if ($this->getObjSubprojects()->contains($objSubproject)) {
+            $pos = $this->collObjSubprojects->search($objSubproject);
+            $this->collObjSubprojects->remove($pos);
+            if (null === $this->objSubprojectsScheduledForDeletion) {
+                $this->objSubprojectsScheduledForDeletion = clone $this->collObjSubprojects;
+                $this->objSubprojectsScheduledForDeletion->clear();
+            }
+            $this->objSubprojectsScheduledForDeletion[]= clone $objSubproject;
+            $objSubproject->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjSubprojects from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjSubproject[] List of ChildObjSubproject objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjSubproject}> List of ChildObjSubproject objects
+     */
+    public function getObjSubprojectsJoinObjProject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjSubprojectQuery::create(null, $criteria);
+        $query->joinWith('ObjProject', $joinBehavior);
+
+        return $this->getObjSubprojects($query, $con);
+    }
+
+    /**
+     * Clears out the collObjGroups collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjGroups()
+     */
+    public function clearObjGroups()
+    {
+        $this->collObjGroups = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjGroups collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjGroups($v = true): void
+    {
+        $this->collObjGroupsPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjGroups collection.
+     *
+     * By default this just sets the collObjGroups collection to an empty array (like clearcollObjGroups());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjGroups(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjGroups && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjGroupTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjGroups = new $collectionClassName;
+        $this->collObjGroups->setModel('\DB\ObjGroup');
+    }
+
+    /**
+     * Gets an array of ChildObjGroup objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjGroup[] List of ChildObjGroup objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjGroup> List of ChildObjGroup objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjGroups(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjGroupsPartial && !$this->isNew();
+        if (null === $this->collObjGroups || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjGroups) {
+                    $this->initObjGroups();
+                } else {
+                    $collectionClassName = ObjGroupTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjGroups = new $collectionClassName;
+                    $collObjGroups->setModel('\DB\ObjGroup');
+
+                    return $collObjGroups;
+                }
+            } else {
+                $collObjGroups = ChildObjGroupQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjGroupsPartial && count($collObjGroups)) {
+                        $this->initObjGroups(false);
+
+                        foreach ($collObjGroups as $obj) {
+                            if (false == $this->collObjGroups->contains($obj)) {
+                                $this->collObjGroups->append($obj);
+                            }
+                        }
+
+                        $this->collObjGroupsPartial = true;
+                    }
+
+                    return $collObjGroups;
+                }
+
+                if ($partial && $this->collObjGroups) {
+                    foreach ($this->collObjGroups as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjGroups[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjGroups = $collObjGroups;
+                $this->collObjGroupsPartial = false;
+            }
+        }
+
+        return $this->collObjGroups;
+    }
+
+    /**
+     * Sets a collection of ChildObjGroup objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objGroups A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjGroups(Collection $objGroups, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjGroup[] $objGroupsToDelete */
+        $objGroupsToDelete = $this->getObjGroups(new Criteria(), $con)->diff($objGroups);
+
+
+        $this->objGroupsScheduledForDeletion = $objGroupsToDelete;
+
+        foreach ($objGroupsToDelete as $objGroupRemoved) {
+            $objGroupRemoved->setUsers(null);
+        }
+
+        $this->collObjGroups = null;
+        foreach ($objGroups as $objGroup) {
+            $this->addObjGroup($objGroup);
+        }
+
+        $this->collObjGroups = $objGroups;
+        $this->collObjGroupsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjGroup objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjGroup objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjGroups(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjGroupsPartial && !$this->isNew();
+        if (null === $this->collObjGroups || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjGroups) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjGroups());
+            }
+
+            $query = ChildObjGroupQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjGroups);
+    }
+
+    /**
+     * Method called to associate a ChildObjGroup object to this object
+     * through the ChildObjGroup foreign key attribute.
+     *
+     * @param ChildObjGroup $l ChildObjGroup
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjGroup(ChildObjGroup $l)
+    {
+        if ($this->collObjGroups === null) {
+            $this->initObjGroups();
+            $this->collObjGroupsPartial = true;
+        }
+
+        if (!$this->collObjGroups->contains($l)) {
+            $this->doAddObjGroup($l);
+
+            if ($this->objGroupsScheduledForDeletion and $this->objGroupsScheduledForDeletion->contains($l)) {
+                $this->objGroupsScheduledForDeletion->remove($this->objGroupsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjGroup $objGroup The ChildObjGroup object to add.
+     */
+    protected function doAddObjGroup(ChildObjGroup $objGroup): void
+    {
+        $this->collObjGroups[]= $objGroup;
+        $objGroup->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjGroup $objGroup The ChildObjGroup object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjGroup(ChildObjGroup $objGroup)
+    {
+        if ($this->getObjGroups()->contains($objGroup)) {
+            $pos = $this->collObjGroups->search($objGroup);
+            $this->collObjGroups->remove($pos);
+            if (null === $this->objGroupsScheduledForDeletion) {
+                $this->objGroupsScheduledForDeletion = clone $this->collObjGroups;
+                $this->objGroupsScheduledForDeletion->clear();
+            }
+            $this->objGroupsScheduledForDeletion[]= clone $objGroup;
+            $objGroup->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjGroups from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjGroup[] List of ChildObjGroup objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjGroup}> List of ChildObjGroup objects
+     */
+    public function getObjGroupsJoinObjSubproject(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjGroupQuery::create(null, $criteria);
+        $query->joinWith('ObjSubproject', $joinBehavior);
+
+        return $this->getObjGroups($query, $con);
+    }
+
+    /**
+     * Clears out the collObjHouses collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjHouses()
+     */
+    public function clearObjHouses()
+    {
+        $this->collObjHouses = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjHouses collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjHouses($v = true): void
+    {
+        $this->collObjHousesPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjHouses collection.
+     *
+     * By default this just sets the collObjHouses collection to an empty array (like clearcollObjHouses());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjHouses(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjHouses && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjHouseTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjHouses = new $collectionClassName;
+        $this->collObjHouses->setModel('\DB\ObjHouse');
+    }
+
+    /**
+     * Gets an array of ChildObjHouse objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjHouse[] List of ChildObjHouse objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjHouse> List of ChildObjHouse objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjHouses(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjHousesPartial && !$this->isNew();
+        if (null === $this->collObjHouses || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjHouses) {
+                    $this->initObjHouses();
+                } else {
+                    $collectionClassName = ObjHouseTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjHouses = new $collectionClassName;
+                    $collObjHouses->setModel('\DB\ObjHouse');
+
+                    return $collObjHouses;
+                }
+            } else {
+                $collObjHouses = ChildObjHouseQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjHousesPartial && count($collObjHouses)) {
+                        $this->initObjHouses(false);
+
+                        foreach ($collObjHouses as $obj) {
+                            if (false == $this->collObjHouses->contains($obj)) {
+                                $this->collObjHouses->append($obj);
+                            }
+                        }
+
+                        $this->collObjHousesPartial = true;
+                    }
+
+                    return $collObjHouses;
+                }
+
+                if ($partial && $this->collObjHouses) {
+                    foreach ($this->collObjHouses as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjHouses[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjHouses = $collObjHouses;
+                $this->collObjHousesPartial = false;
+            }
+        }
+
+        return $this->collObjHouses;
+    }
+
+    /**
+     * Sets a collection of ChildObjHouse objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objHouses A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjHouses(Collection $objHouses, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjHouse[] $objHousesToDelete */
+        $objHousesToDelete = $this->getObjHouses(new Criteria(), $con)->diff($objHouses);
+
+
+        $this->objHousesScheduledForDeletion = $objHousesToDelete;
+
+        foreach ($objHousesToDelete as $objHouseRemoved) {
+            $objHouseRemoved->setUsers(null);
+        }
+
+        $this->collObjHouses = null;
+        foreach ($objHouses as $objHouse) {
+            $this->addObjHouse($objHouse);
+        }
+
+        $this->collObjHouses = $objHouses;
+        $this->collObjHousesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjHouse objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjHouse objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjHouses(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjHousesPartial && !$this->isNew();
+        if (null === $this->collObjHouses || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjHouses) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjHouses());
+            }
+
+            $query = ChildObjHouseQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjHouses);
+    }
+
+    /**
+     * Method called to associate a ChildObjHouse object to this object
+     * through the ChildObjHouse foreign key attribute.
+     *
+     * @param ChildObjHouse $l ChildObjHouse
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjHouse(ChildObjHouse $l)
+    {
+        if ($this->collObjHouses === null) {
+            $this->initObjHouses();
+            $this->collObjHousesPartial = true;
+        }
+
+        if (!$this->collObjHouses->contains($l)) {
+            $this->doAddObjHouse($l);
+
+            if ($this->objHousesScheduledForDeletion and $this->objHousesScheduledForDeletion->contains($l)) {
+                $this->objHousesScheduledForDeletion->remove($this->objHousesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjHouse $objHouse The ChildObjHouse object to add.
+     */
+    protected function doAddObjHouse(ChildObjHouse $objHouse): void
+    {
+        $this->collObjHouses[]= $objHouse;
+        $objHouse->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjHouse $objHouse The ChildObjHouse object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjHouse(ChildObjHouse $objHouse)
+    {
+        if ($this->getObjHouses()->contains($objHouse)) {
+            $pos = $this->collObjHouses->search($objHouse);
+            $this->collObjHouses->remove($pos);
+            if (null === $this->objHousesScheduledForDeletion) {
+                $this->objHousesScheduledForDeletion = clone $this->collObjHouses;
+                $this->objHousesScheduledForDeletion->clear();
+            }
+            $this->objHousesScheduledForDeletion[]= clone $objHouse;
+            $objHouse->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjHouses from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjHouse[] List of ChildObjHouse objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjHouse}> List of ChildObjHouse objects
+     */
+    public function getObjHousesJoinObjGroup(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjHouseQuery::create(null, $criteria);
+        $query->joinWith('ObjGroup', $joinBehavior);
+
+        return $this->getObjHouses($query, $con);
+    }
+
+    /**
+     * Clears out the collObjStages collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjStages()
+     */
+    public function clearObjStages()
+    {
+        $this->collObjStages = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjStages collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjStages($v = true): void
+    {
+        $this->collObjStagesPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjStages collection.
+     *
+     * By default this just sets the collObjStages collection to an empty array (like clearcollObjStages());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjStages(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjStages && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjStageTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjStages = new $collectionClassName;
+        $this->collObjStages->setModel('\DB\ObjStage');
+    }
+
+    /**
+     * Gets an array of ChildObjStage objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjStage[] List of ChildObjStage objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStage> List of ChildObjStage objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjStages(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjStagesPartial && !$this->isNew();
+        if (null === $this->collObjStages || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjStages) {
+                    $this->initObjStages();
+                } else {
+                    $collectionClassName = ObjStageTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjStages = new $collectionClassName;
+                    $collObjStages->setModel('\DB\ObjStage');
+
+                    return $collObjStages;
+                }
+            } else {
+                $collObjStages = ChildObjStageQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjStagesPartial && count($collObjStages)) {
+                        $this->initObjStages(false);
+
+                        foreach ($collObjStages as $obj) {
+                            if (false == $this->collObjStages->contains($obj)) {
+                                $this->collObjStages->append($obj);
+                            }
+                        }
+
+                        $this->collObjStagesPartial = true;
+                    }
+
+                    return $collObjStages;
+                }
+
+                if ($partial && $this->collObjStages) {
+                    foreach ($this->collObjStages as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjStages[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjStages = $collObjStages;
+                $this->collObjStagesPartial = false;
+            }
+        }
+
+        return $this->collObjStages;
+    }
+
+    /**
+     * Sets a collection of ChildObjStage objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objStages A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjStages(Collection $objStages, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjStage[] $objStagesToDelete */
+        $objStagesToDelete = $this->getObjStages(new Criteria(), $con)->diff($objStages);
+
+
+        $this->objStagesScheduledForDeletion = $objStagesToDelete;
+
+        foreach ($objStagesToDelete as $objStageRemoved) {
+            $objStageRemoved->setUsers(null);
+        }
+
+        $this->collObjStages = null;
+        foreach ($objStages as $objStage) {
+            $this->addObjStage($objStage);
+        }
+
+        $this->collObjStages = $objStages;
+        $this->collObjStagesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjStage objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjStage objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjStages(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjStagesPartial && !$this->isNew();
+        if (null === $this->collObjStages || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjStages) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjStages());
+            }
+
+            $query = ChildObjStageQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjStages);
+    }
+
+    /**
+     * Method called to associate a ChildObjStage object to this object
+     * through the ChildObjStage foreign key attribute.
+     *
+     * @param ChildObjStage $l ChildObjStage
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjStage(ChildObjStage $l)
+    {
+        if ($this->collObjStages === null) {
+            $this->initObjStages();
+            $this->collObjStagesPartial = true;
+        }
+
+        if (!$this->collObjStages->contains($l)) {
+            $this->doAddObjStage($l);
+
+            if ($this->objStagesScheduledForDeletion and $this->objStagesScheduledForDeletion->contains($l)) {
+                $this->objStagesScheduledForDeletion->remove($this->objStagesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjStage $objStage The ChildObjStage object to add.
+     */
+    protected function doAddObjStage(ChildObjStage $objStage): void
+    {
+        $this->collObjStages[]= $objStage;
+        $objStage->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjStage $objStage The ChildObjStage object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjStage(ChildObjStage $objStage)
+    {
+        if ($this->getObjStages()->contains($objStage)) {
+            $pos = $this->collObjStages->search($objStage);
+            $this->collObjStages->remove($pos);
+            if (null === $this->objStagesScheduledForDeletion) {
+                $this->objStagesScheduledForDeletion = clone $this->collObjStages;
+                $this->objStagesScheduledForDeletion->clear();
+            }
+            $this->objStagesScheduledForDeletion[]= clone $objStage;
+            $objStage->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStages from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStage[] List of ChildObjStage objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStage}> List of ChildObjStage objects
+     */
+    public function getObjStagesJoinObjHouse(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageQuery::create(null, $criteria);
+        $query->joinWith('ObjHouse', $joinBehavior);
+
+        return $this->getObjStages($query, $con);
+    }
+
+    /**
+     * Clears out the collObjStageWorks collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjStageWorks()
+     */
+    public function clearObjStageWorks()
+    {
+        $this->collObjStageWorks = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjStageWorks collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjStageWorks($v = true): void
+    {
+        $this->collObjStageWorksPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjStageWorks collection.
+     *
+     * By default this just sets the collObjStageWorks collection to an empty array (like clearcollObjStageWorks());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjStageWorks(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjStageWorks && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjStageWorkTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjStageWorks = new $collectionClassName;
+        $this->collObjStageWorks->setModel('\DB\ObjStageWork');
+    }
+
+    /**
+     * Gets an array of ChildObjStageWork objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjStageWork[] List of ChildObjStageWork objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageWork> List of ChildObjStageWork objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjStageWorks(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjStageWorksPartial && !$this->isNew();
+        if (null === $this->collObjStageWorks || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjStageWorks) {
+                    $this->initObjStageWorks();
+                } else {
+                    $collectionClassName = ObjStageWorkTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjStageWorks = new $collectionClassName;
+                    $collObjStageWorks->setModel('\DB\ObjStageWork');
+
+                    return $collObjStageWorks;
+                }
+            } else {
+                $collObjStageWorks = ChildObjStageWorkQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjStageWorksPartial && count($collObjStageWorks)) {
+                        $this->initObjStageWorks(false);
+
+                        foreach ($collObjStageWorks as $obj) {
+                            if (false == $this->collObjStageWorks->contains($obj)) {
+                                $this->collObjStageWorks->append($obj);
+                            }
+                        }
+
+                        $this->collObjStageWorksPartial = true;
+                    }
+
+                    return $collObjStageWorks;
+                }
+
+                if ($partial && $this->collObjStageWorks) {
+                    foreach ($this->collObjStageWorks as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjStageWorks[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjStageWorks = $collObjStageWorks;
+                $this->collObjStageWorksPartial = false;
+            }
+        }
+
+        return $this->collObjStageWorks;
+    }
+
+    /**
+     * Sets a collection of ChildObjStageWork objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objStageWorks A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjStageWorks(Collection $objStageWorks, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjStageWork[] $objStageWorksToDelete */
+        $objStageWorksToDelete = $this->getObjStageWorks(new Criteria(), $con)->diff($objStageWorks);
+
+
+        $this->objStageWorksScheduledForDeletion = $objStageWorksToDelete;
+
+        foreach ($objStageWorksToDelete as $objStageWorkRemoved) {
+            $objStageWorkRemoved->setUsers(null);
+        }
+
+        $this->collObjStageWorks = null;
+        foreach ($objStageWorks as $objStageWork) {
+            $this->addObjStageWork($objStageWork);
+        }
+
+        $this->collObjStageWorks = $objStageWorks;
+        $this->collObjStageWorksPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjStageWork objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjStageWork objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjStageWorks(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjStageWorksPartial && !$this->isNew();
+        if (null === $this->collObjStageWorks || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjStageWorks) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjStageWorks());
+            }
+
+            $query = ChildObjStageWorkQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjStageWorks);
+    }
+
+    /**
+     * Method called to associate a ChildObjStageWork object to this object
+     * through the ChildObjStageWork foreign key attribute.
+     *
+     * @param ChildObjStageWork $l ChildObjStageWork
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjStageWork(ChildObjStageWork $l)
+    {
+        if ($this->collObjStageWorks === null) {
+            $this->initObjStageWorks();
+            $this->collObjStageWorksPartial = true;
+        }
+
+        if (!$this->collObjStageWorks->contains($l)) {
+            $this->doAddObjStageWork($l);
+
+            if ($this->objStageWorksScheduledForDeletion and $this->objStageWorksScheduledForDeletion->contains($l)) {
+                $this->objStageWorksScheduledForDeletion->remove($this->objStageWorksScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjStageWork $objStageWork The ChildObjStageWork object to add.
+     */
+    protected function doAddObjStageWork(ChildObjStageWork $objStageWork): void
+    {
+        $this->collObjStageWorks[]= $objStageWork;
+        $objStageWork->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjStageWork $objStageWork The ChildObjStageWork object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjStageWork(ChildObjStageWork $objStageWork)
+    {
+        if ($this->getObjStageWorks()->contains($objStageWork)) {
+            $pos = $this->collObjStageWorks->search($objStageWork);
+            $this->collObjStageWorks->remove($pos);
+            if (null === $this->objStageWorksScheduledForDeletion) {
+                $this->objStageWorksScheduledForDeletion = clone $this->collObjStageWorks;
+                $this->objStageWorksScheduledForDeletion->clear();
+            }
+            $this->objStageWorksScheduledForDeletion[]= clone $objStageWork;
+            $objStageWork->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageWorks from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageWork[] List of ChildObjStageWork objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageWork}> List of ChildObjStageWork objects
+     */
+    public function getObjStageWorksJoinVolWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageWorkQuery::create(null, $criteria);
+        $query->joinWith('VolWork', $joinBehavior);
+
+        return $this->getObjStageWorks($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageWorks from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageWork[] List of ChildObjStageWork objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageWork}> List of ChildObjStageWork objects
+     */
+    public function getObjStageWorksJoinObjStage(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageWorkQuery::create(null, $criteria);
+        $query->joinWith('ObjStage', $joinBehavior);
+
+        return $this->getObjStageWorks($query, $con);
+    }
+
+    /**
+     * Clears out the collObjStageMaterials collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjStageMaterials()
+     */
+    public function clearObjStageMaterials()
+    {
+        $this->collObjStageMaterials = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjStageMaterials collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjStageMaterials($v = true): void
+    {
+        $this->collObjStageMaterialsPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjStageMaterials collection.
+     *
+     * By default this just sets the collObjStageMaterials collection to an empty array (like clearcollObjStageMaterials());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjStageMaterials(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjStageMaterials && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjStageMaterialTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjStageMaterials = new $collectionClassName;
+        $this->collObjStageMaterials->setModel('\DB\ObjStageMaterial');
+    }
+
+    /**
+     * Gets an array of ChildObjStageMaterial objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjStageMaterial[] List of ChildObjStageMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageMaterial> List of ChildObjStageMaterial objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjStageMaterials(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjStageMaterialsPartial && !$this->isNew();
+        if (null === $this->collObjStageMaterials || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjStageMaterials) {
+                    $this->initObjStageMaterials();
+                } else {
+                    $collectionClassName = ObjStageMaterialTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjStageMaterials = new $collectionClassName;
+                    $collObjStageMaterials->setModel('\DB\ObjStageMaterial');
+
+                    return $collObjStageMaterials;
+                }
+            } else {
+                $collObjStageMaterials = ChildObjStageMaterialQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjStageMaterialsPartial && count($collObjStageMaterials)) {
+                        $this->initObjStageMaterials(false);
+
+                        foreach ($collObjStageMaterials as $obj) {
+                            if (false == $this->collObjStageMaterials->contains($obj)) {
+                                $this->collObjStageMaterials->append($obj);
+                            }
+                        }
+
+                        $this->collObjStageMaterialsPartial = true;
+                    }
+
+                    return $collObjStageMaterials;
+                }
+
+                if ($partial && $this->collObjStageMaterials) {
+                    foreach ($this->collObjStageMaterials as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjStageMaterials[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjStageMaterials = $collObjStageMaterials;
+                $this->collObjStageMaterialsPartial = false;
+            }
+        }
+
+        return $this->collObjStageMaterials;
+    }
+
+    /**
+     * Sets a collection of ChildObjStageMaterial objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objStageMaterials A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjStageMaterials(Collection $objStageMaterials, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjStageMaterial[] $objStageMaterialsToDelete */
+        $objStageMaterialsToDelete = $this->getObjStageMaterials(new Criteria(), $con)->diff($objStageMaterials);
+
+
+        $this->objStageMaterialsScheduledForDeletion = $objStageMaterialsToDelete;
+
+        foreach ($objStageMaterialsToDelete as $objStageMaterialRemoved) {
+            $objStageMaterialRemoved->setUsers(null);
+        }
+
+        $this->collObjStageMaterials = null;
+        foreach ($objStageMaterials as $objStageMaterial) {
+            $this->addObjStageMaterial($objStageMaterial);
+        }
+
+        $this->collObjStageMaterials = $objStageMaterials;
+        $this->collObjStageMaterialsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjStageMaterial objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjStageMaterial objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjStageMaterials(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjStageMaterialsPartial && !$this->isNew();
+        if (null === $this->collObjStageMaterials || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjStageMaterials) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjStageMaterials());
+            }
+
+            $query = ChildObjStageMaterialQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjStageMaterials);
+    }
+
+    /**
+     * Method called to associate a ChildObjStageMaterial object to this object
+     * through the ChildObjStageMaterial foreign key attribute.
+     *
+     * @param ChildObjStageMaterial $l ChildObjStageMaterial
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjStageMaterial(ChildObjStageMaterial $l)
+    {
+        if ($this->collObjStageMaterials === null) {
+            $this->initObjStageMaterials();
+            $this->collObjStageMaterialsPartial = true;
+        }
+
+        if (!$this->collObjStageMaterials->contains($l)) {
+            $this->doAddObjStageMaterial($l);
+
+            if ($this->objStageMaterialsScheduledForDeletion and $this->objStageMaterialsScheduledForDeletion->contains($l)) {
+                $this->objStageMaterialsScheduledForDeletion->remove($this->objStageMaterialsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjStageMaterial $objStageMaterial The ChildObjStageMaterial object to add.
+     */
+    protected function doAddObjStageMaterial(ChildObjStageMaterial $objStageMaterial): void
+    {
+        $this->collObjStageMaterials[]= $objStageMaterial;
+        $objStageMaterial->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjStageMaterial $objStageMaterial The ChildObjStageMaterial object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjStageMaterial(ChildObjStageMaterial $objStageMaterial)
+    {
+        if ($this->getObjStageMaterials()->contains($objStageMaterial)) {
+            $pos = $this->collObjStageMaterials->search($objStageMaterial);
+            $this->collObjStageMaterials->remove($pos);
+            if (null === $this->objStageMaterialsScheduledForDeletion) {
+                $this->objStageMaterialsScheduledForDeletion = clone $this->collObjStageMaterials;
+                $this->objStageMaterialsScheduledForDeletion->clear();
+            }
+            $this->objStageMaterialsScheduledForDeletion[]= clone $objStageMaterial;
+            $objStageMaterial->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageMaterials from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageMaterial[] List of ChildObjStageMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageMaterial}> List of ChildObjStageMaterial objects
+     */
+    public function getObjStageMaterialsJoinVolMaterial(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageMaterialQuery::create(null, $criteria);
+        $query->joinWith('VolMaterial', $joinBehavior);
+
+        return $this->getObjStageMaterials($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageMaterials from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageMaterial[] List of ChildObjStageMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageMaterial}> List of ChildObjStageMaterial objects
+     */
+    public function getObjStageMaterialsJoinObjStageWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageMaterialQuery::create(null, $criteria);
+        $query->joinWith('ObjStageWork', $joinBehavior);
+
+        return $this->getObjStageMaterials($query, $con);
+    }
+
+    /**
+     * Clears out the collObjStageTechnics collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addObjStageTechnics()
+     */
+    public function clearObjStageTechnics()
+    {
+        $this->collObjStageTechnics = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collObjStageTechnics collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialObjStageTechnics($v = true): void
+    {
+        $this->collObjStageTechnicsPartial = $v;
+    }
+
+    /**
+     * Initializes the collObjStageTechnics collection.
+     *
+     * By default this just sets the collObjStageTechnics collection to an empty array (like clearcollObjStageTechnics());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initObjStageTechnics(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collObjStageTechnics && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ObjStageTechnicTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collObjStageTechnics = new $collectionClassName;
+        $this->collObjStageTechnics->setModel('\DB\ObjStageTechnic');
+    }
+
+    /**
+     * Gets an array of ChildObjStageTechnic objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildObjStageTechnic[] List of ChildObjStageTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageTechnic> List of ChildObjStageTechnic objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getObjStageTechnics(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collObjStageTechnicsPartial && !$this->isNew();
+        if (null === $this->collObjStageTechnics || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collObjStageTechnics) {
+                    $this->initObjStageTechnics();
+                } else {
+                    $collectionClassName = ObjStageTechnicTableMap::getTableMap()->getCollectionClassName();
+
+                    $collObjStageTechnics = new $collectionClassName;
+                    $collObjStageTechnics->setModel('\DB\ObjStageTechnic');
+
+                    return $collObjStageTechnics;
+                }
+            } else {
+                $collObjStageTechnics = ChildObjStageTechnicQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collObjStageTechnicsPartial && count($collObjStageTechnics)) {
+                        $this->initObjStageTechnics(false);
+
+                        foreach ($collObjStageTechnics as $obj) {
+                            if (false == $this->collObjStageTechnics->contains($obj)) {
+                                $this->collObjStageTechnics->append($obj);
+                            }
+                        }
+
+                        $this->collObjStageTechnicsPartial = true;
+                    }
+
+                    return $collObjStageTechnics;
+                }
+
+                if ($partial && $this->collObjStageTechnics) {
+                    foreach ($this->collObjStageTechnics as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjStageTechnics[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjStageTechnics = $collObjStageTechnics;
+                $this->collObjStageTechnicsPartial = false;
+            }
+        }
+
+        return $this->collObjStageTechnics;
+    }
+
+    /**
+     * Sets a collection of ChildObjStageTechnic objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $objStageTechnics A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setObjStageTechnics(Collection $objStageTechnics, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildObjStageTechnic[] $objStageTechnicsToDelete */
+        $objStageTechnicsToDelete = $this->getObjStageTechnics(new Criteria(), $con)->diff($objStageTechnics);
+
+
+        $this->objStageTechnicsScheduledForDeletion = $objStageTechnicsToDelete;
+
+        foreach ($objStageTechnicsToDelete as $objStageTechnicRemoved) {
+            $objStageTechnicRemoved->setUsers(null);
+        }
+
+        $this->collObjStageTechnics = null;
+        foreach ($objStageTechnics as $objStageTechnic) {
+            $this->addObjStageTechnic($objStageTechnic);
+        }
+
+        $this->collObjStageTechnics = $objStageTechnics;
+        $this->collObjStageTechnicsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ObjStageTechnic objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related ObjStageTechnic objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countObjStageTechnics(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collObjStageTechnicsPartial && !$this->isNew();
+        if (null === $this->collObjStageTechnics || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collObjStageTechnics) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getObjStageTechnics());
+            }
+
+            $query = ChildObjStageTechnicQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collObjStageTechnics);
+    }
+
+    /**
+     * Method called to associate a ChildObjStageTechnic object to this object
+     * through the ChildObjStageTechnic foreign key attribute.
+     *
+     * @param ChildObjStageTechnic $l ChildObjStageTechnic
+     * @return $this The current object (for fluent API support)
+     */
+    public function addObjStageTechnic(ChildObjStageTechnic $l)
+    {
+        if ($this->collObjStageTechnics === null) {
+            $this->initObjStageTechnics();
+            $this->collObjStageTechnicsPartial = true;
+        }
+
+        if (!$this->collObjStageTechnics->contains($l)) {
+            $this->doAddObjStageTechnic($l);
+
+            if ($this->objStageTechnicsScheduledForDeletion and $this->objStageTechnicsScheduledForDeletion->contains($l)) {
+                $this->objStageTechnicsScheduledForDeletion->remove($this->objStageTechnicsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildObjStageTechnic $objStageTechnic The ChildObjStageTechnic object to add.
+     */
+    protected function doAddObjStageTechnic(ChildObjStageTechnic $objStageTechnic): void
+    {
+        $this->collObjStageTechnics[]= $objStageTechnic;
+        $objStageTechnic->setUsers($this);
+    }
+
+    /**
+     * @param ChildObjStageTechnic $objStageTechnic The ChildObjStageTechnic object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeObjStageTechnic(ChildObjStageTechnic $objStageTechnic)
+    {
+        if ($this->getObjStageTechnics()->contains($objStageTechnic)) {
+            $pos = $this->collObjStageTechnics->search($objStageTechnic);
+            $this->collObjStageTechnics->remove($pos);
+            if (null === $this->objStageTechnicsScheduledForDeletion) {
+                $this->objStageTechnicsScheduledForDeletion = clone $this->collObjStageTechnics;
+                $this->objStageTechnicsScheduledForDeletion->clear();
+            }
+            $this->objStageTechnicsScheduledForDeletion[]= clone $objStageTechnic;
+            $objStageTechnic->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageTechnics from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageTechnic[] List of ChildObjStageTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageTechnic}> List of ChildObjStageTechnic objects
+     */
+    public function getObjStageTechnicsJoinObjStageWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageTechnicQuery::create(null, $criteria);
+        $query->joinWith('ObjStageWork', $joinBehavior);
+
+        return $this->getObjStageTechnics($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related ObjStageTechnics from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildObjStageTechnic[] List of ChildObjStageTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildObjStageTechnic}> List of ChildObjStageTechnic objects
+     */
+    public function getObjStageTechnicsJoinVolTechnic(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildObjStageTechnicQuery::create(null, $criteria);
+        $query->joinWith('VolTechnic', $joinBehavior);
+
+        return $this->getObjStageTechnics($query, $con);
+    }
+
+    /**
+     * Clears out the collVolMaterials collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolMaterials()
+     */
+    public function clearVolMaterials()
+    {
+        $this->collVolMaterials = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolMaterials collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolMaterials($v = true): void
+    {
+        $this->collVolMaterialsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolMaterials collection.
+     *
+     * By default this just sets the collVolMaterials collection to an empty array (like clearcollVolMaterials());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolMaterials(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolMaterials && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolMaterialTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolMaterials = new $collectionClassName;
+        $this->collVolMaterials->setModel('\DB\VolMaterial');
+    }
+
+    /**
+     * Gets an array of ChildVolMaterial objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolMaterial[] List of ChildVolMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolMaterial> List of ChildVolMaterial objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolMaterials(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolMaterialsPartial && !$this->isNew();
+        if (null === $this->collVolMaterials || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolMaterials) {
+                    $this->initVolMaterials();
+                } else {
+                    $collectionClassName = VolMaterialTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolMaterials = new $collectionClassName;
+                    $collVolMaterials->setModel('\DB\VolMaterial');
+
+                    return $collVolMaterials;
+                }
+            } else {
+                $collVolMaterials = ChildVolMaterialQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolMaterialsPartial && count($collVolMaterials)) {
+                        $this->initVolMaterials(false);
+
+                        foreach ($collVolMaterials as $obj) {
+                            if (false == $this->collVolMaterials->contains($obj)) {
+                                $this->collVolMaterials->append($obj);
+                            }
+                        }
+
+                        $this->collVolMaterialsPartial = true;
+                    }
+
+                    return $collVolMaterials;
+                }
+
+                if ($partial && $this->collVolMaterials) {
+                    foreach ($this->collVolMaterials as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolMaterials[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolMaterials = $collVolMaterials;
+                $this->collVolMaterialsPartial = false;
+            }
+        }
+
+        return $this->collVolMaterials;
+    }
+
+    /**
+     * Sets a collection of ChildVolMaterial objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volMaterials A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolMaterials(Collection $volMaterials, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolMaterial[] $volMaterialsToDelete */
+        $volMaterialsToDelete = $this->getVolMaterials(new Criteria(), $con)->diff($volMaterials);
+
+
+        $this->volMaterialsScheduledForDeletion = $volMaterialsToDelete;
+
+        foreach ($volMaterialsToDelete as $volMaterialRemoved) {
+            $volMaterialRemoved->setUsers(null);
+        }
+
+        $this->collVolMaterials = null;
+        foreach ($volMaterials as $volMaterial) {
+            $this->addVolMaterial($volMaterial);
+        }
+
+        $this->collVolMaterials = $volMaterials;
+        $this->collVolMaterialsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolMaterial objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolMaterial objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolMaterials(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolMaterialsPartial && !$this->isNew();
+        if (null === $this->collVolMaterials || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolMaterials) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolMaterials());
+            }
+
+            $query = ChildVolMaterialQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collVolMaterials);
+    }
+
+    /**
+     * Method called to associate a ChildVolMaterial object to this object
+     * through the ChildVolMaterial foreign key attribute.
+     *
+     * @param ChildVolMaterial $l ChildVolMaterial
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolMaterial(ChildVolMaterial $l)
+    {
+        if ($this->collVolMaterials === null) {
+            $this->initVolMaterials();
+            $this->collVolMaterialsPartial = true;
+        }
+
+        if (!$this->collVolMaterials->contains($l)) {
+            $this->doAddVolMaterial($l);
+
+            if ($this->volMaterialsScheduledForDeletion and $this->volMaterialsScheduledForDeletion->contains($l)) {
+                $this->volMaterialsScheduledForDeletion->remove($this->volMaterialsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolMaterial $volMaterial The ChildVolMaterial object to add.
+     */
+    protected function doAddVolMaterial(ChildVolMaterial $volMaterial): void
+    {
+        $this->collVolMaterials[]= $volMaterial;
+        $volMaterial->setUsers($this);
+    }
+
+    /**
+     * @param ChildVolMaterial $volMaterial The ChildVolMaterial object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolMaterial(ChildVolMaterial $volMaterial)
+    {
+        if ($this->getVolMaterials()->contains($volMaterial)) {
+            $pos = $this->collVolMaterials->search($volMaterial);
+            $this->collVolMaterials->remove($pos);
+            if (null === $this->volMaterialsScheduledForDeletion) {
+                $this->volMaterialsScheduledForDeletion = clone $this->collVolMaterials;
+                $this->volMaterialsScheduledForDeletion->clear();
+            }
+            $this->volMaterialsScheduledForDeletion[]= clone $volMaterial;
+            $volMaterial->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolMaterials from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolMaterial[] List of ChildVolMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolMaterial}> List of ChildVolMaterial objects
+     */
+    public function getVolMaterialsJoinVolUnit(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolMaterialQuery::create(null, $criteria);
+        $query->joinWith('VolUnit', $joinBehavior);
+
+        return $this->getVolMaterials($query, $con);
+    }
+
+    /**
+     * Clears out the collVolTechnics collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolTechnics()
+     */
+    public function clearVolTechnics()
+    {
+        $this->collVolTechnics = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolTechnics collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolTechnics($v = true): void
+    {
+        $this->collVolTechnicsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolTechnics collection.
+     *
+     * By default this just sets the collVolTechnics collection to an empty array (like clearcollVolTechnics());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolTechnics(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolTechnics && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolTechnicTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolTechnics = new $collectionClassName;
+        $this->collVolTechnics->setModel('\DB\VolTechnic');
+    }
+
+    /**
+     * Gets an array of ChildVolTechnic objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolTechnic[] List of ChildVolTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolTechnic> List of ChildVolTechnic objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolTechnics(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolTechnicsPartial && !$this->isNew();
+        if (null === $this->collVolTechnics || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolTechnics) {
+                    $this->initVolTechnics();
+                } else {
+                    $collectionClassName = VolTechnicTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolTechnics = new $collectionClassName;
+                    $collVolTechnics->setModel('\DB\VolTechnic');
+
+                    return $collVolTechnics;
+                }
+            } else {
+                $collVolTechnics = ChildVolTechnicQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolTechnicsPartial && count($collVolTechnics)) {
+                        $this->initVolTechnics(false);
+
+                        foreach ($collVolTechnics as $obj) {
+                            if (false == $this->collVolTechnics->contains($obj)) {
+                                $this->collVolTechnics->append($obj);
+                            }
+                        }
+
+                        $this->collVolTechnicsPartial = true;
+                    }
+
+                    return $collVolTechnics;
+                }
+
+                if ($partial && $this->collVolTechnics) {
+                    foreach ($this->collVolTechnics as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolTechnics[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolTechnics = $collVolTechnics;
+                $this->collVolTechnicsPartial = false;
+            }
+        }
+
+        return $this->collVolTechnics;
+    }
+
+    /**
+     * Sets a collection of ChildVolTechnic objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volTechnics A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolTechnics(Collection $volTechnics, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolTechnic[] $volTechnicsToDelete */
+        $volTechnicsToDelete = $this->getVolTechnics(new Criteria(), $con)->diff($volTechnics);
+
+
+        $this->volTechnicsScheduledForDeletion = $volTechnicsToDelete;
+
+        foreach ($volTechnicsToDelete as $volTechnicRemoved) {
+            $volTechnicRemoved->setUsers(null);
+        }
+
+        $this->collVolTechnics = null;
+        foreach ($volTechnics as $volTechnic) {
+            $this->addVolTechnic($volTechnic);
+        }
+
+        $this->collVolTechnics = $volTechnics;
+        $this->collVolTechnicsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolTechnic objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolTechnic objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolTechnics(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolTechnicsPartial && !$this->isNew();
+        if (null === $this->collVolTechnics || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolTechnics) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolTechnics());
+            }
+
+            $query = ChildVolTechnicQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collVolTechnics);
+    }
+
+    /**
+     * Method called to associate a ChildVolTechnic object to this object
+     * through the ChildVolTechnic foreign key attribute.
+     *
+     * @param ChildVolTechnic $l ChildVolTechnic
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolTechnic(ChildVolTechnic $l)
+    {
+        if ($this->collVolTechnics === null) {
+            $this->initVolTechnics();
+            $this->collVolTechnicsPartial = true;
+        }
+
+        if (!$this->collVolTechnics->contains($l)) {
+            $this->doAddVolTechnic($l);
+
+            if ($this->volTechnicsScheduledForDeletion and $this->volTechnicsScheduledForDeletion->contains($l)) {
+                $this->volTechnicsScheduledForDeletion->remove($this->volTechnicsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolTechnic $volTechnic The ChildVolTechnic object to add.
+     */
+    protected function doAddVolTechnic(ChildVolTechnic $volTechnic): void
+    {
+        $this->collVolTechnics[]= $volTechnic;
+        $volTechnic->setUsers($this);
+    }
+
+    /**
+     * @param ChildVolTechnic $volTechnic The ChildVolTechnic object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolTechnic(ChildVolTechnic $volTechnic)
+    {
+        if ($this->getVolTechnics()->contains($volTechnic)) {
+            $pos = $this->collVolTechnics->search($volTechnic);
+            $this->collVolTechnics->remove($pos);
+            if (null === $this->volTechnicsScheduledForDeletion) {
+                $this->volTechnicsScheduledForDeletion = clone $this->collVolTechnics;
+                $this->volTechnicsScheduledForDeletion->clear();
+            }
+            $this->volTechnicsScheduledForDeletion[]= clone $volTechnic;
+            $volTechnic->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolTechnics from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolTechnic[] List of ChildVolTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolTechnic}> List of ChildVolTechnic objects
+     */
+    public function getVolTechnicsJoinVolUnit(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolTechnicQuery::create(null, $criteria);
+        $query->joinWith('VolUnit', $joinBehavior);
+
+        return $this->getVolTechnics($query, $con);
+    }
+
+    /**
+     * Clears out the collVolWorks collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolWorks()
+     */
+    public function clearVolWorks()
+    {
+        $this->collVolWorks = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolWorks collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolWorks($v = true): void
+    {
+        $this->collVolWorksPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolWorks collection.
+     *
+     * By default this just sets the collVolWorks collection to an empty array (like clearcollVolWorks());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolWorks(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolWorks && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolWorkTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolWorks = new $collectionClassName;
+        $this->collVolWorks->setModel('\DB\VolWork');
+    }
+
+    /**
+     * Gets an array of ChildVolWork objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolWork[] List of ChildVolWork objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWork> List of ChildVolWork objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolWorks(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolWorksPartial && !$this->isNew();
+        if (null === $this->collVolWorks || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolWorks) {
+                    $this->initVolWorks();
+                } else {
+                    $collectionClassName = VolWorkTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolWorks = new $collectionClassName;
+                    $collVolWorks->setModel('\DB\VolWork');
+
+                    return $collVolWorks;
+                }
+            } else {
+                $collVolWorks = ChildVolWorkQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolWorksPartial && count($collVolWorks)) {
+                        $this->initVolWorks(false);
+
+                        foreach ($collVolWorks as $obj) {
+                            if (false == $this->collVolWorks->contains($obj)) {
+                                $this->collVolWorks->append($obj);
+                            }
+                        }
+
+                        $this->collVolWorksPartial = true;
+                    }
+
+                    return $collVolWorks;
+                }
+
+                if ($partial && $this->collVolWorks) {
+                    foreach ($this->collVolWorks as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolWorks[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolWorks = $collVolWorks;
+                $this->collVolWorksPartial = false;
+            }
+        }
+
+        return $this->collVolWorks;
+    }
+
+    /**
+     * Sets a collection of ChildVolWork objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volWorks A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorks(Collection $volWorks, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolWork[] $volWorksToDelete */
+        $volWorksToDelete = $this->getVolWorks(new Criteria(), $con)->diff($volWorks);
+
+
+        $this->volWorksScheduledForDeletion = $volWorksToDelete;
+
+        foreach ($volWorksToDelete as $volWorkRemoved) {
+            $volWorkRemoved->setUsers(null);
+        }
+
+        $this->collVolWorks = null;
+        foreach ($volWorks as $volWork) {
+            $this->addVolWork($volWork);
+        }
+
+        $this->collVolWorks = $volWorks;
+        $this->collVolWorksPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolWork objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolWork objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolWorks(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolWorksPartial && !$this->isNew();
+        if (null === $this->collVolWorks || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolWorks) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolWorks());
+            }
+
+            $query = ChildVolWorkQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collVolWorks);
+    }
+
+    /**
+     * Method called to associate a ChildVolWork object to this object
+     * through the ChildVolWork foreign key attribute.
+     *
+     * @param ChildVolWork $l ChildVolWork
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWork(ChildVolWork $l)
+    {
+        if ($this->collVolWorks === null) {
+            $this->initVolWorks();
+            $this->collVolWorksPartial = true;
+        }
+
+        if (!$this->collVolWorks->contains($l)) {
+            $this->doAddVolWork($l);
+
+            if ($this->volWorksScheduledForDeletion and $this->volWorksScheduledForDeletion->contains($l)) {
+                $this->volWorksScheduledForDeletion->remove($this->volWorksScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolWork $volWork The ChildVolWork object to add.
+     */
+    protected function doAddVolWork(ChildVolWork $volWork): void
+    {
+        $this->collVolWorks[]= $volWork;
+        $volWork->setUsers($this);
+    }
+
+    /**
+     * @param ChildVolWork $volWork The ChildVolWork object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWork(ChildVolWork $volWork)
+    {
+        if ($this->getVolWorks()->contains($volWork)) {
+            $pos = $this->collVolWorks->search($volWork);
+            $this->collVolWorks->remove($pos);
+            if (null === $this->volWorksScheduledForDeletion) {
+                $this->volWorksScheduledForDeletion = clone $this->collVolWorks;
+                $this->volWorksScheduledForDeletion->clear();
+            }
+            $this->volWorksScheduledForDeletion[]= clone $volWork;
+            $volWork->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolWorks from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolWork[] List of ChildVolWork objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWork}> List of ChildVolWork objects
+     */
+    public function getVolWorksJoinVolUnit(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolWorkQuery::create(null, $criteria);
+        $query->joinWith('VolUnit', $joinBehavior);
+
+        return $this->getVolWorks($query, $con);
+    }
+
+    /**
+     * Clears out the collVolWorkMaterials collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolWorkMaterials()
+     */
+    public function clearVolWorkMaterials()
+    {
+        $this->collVolWorkMaterials = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolWorkMaterials collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolWorkMaterials($v = true): void
+    {
+        $this->collVolWorkMaterialsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolWorkMaterials collection.
+     *
+     * By default this just sets the collVolWorkMaterials collection to an empty array (like clearcollVolWorkMaterials());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolWorkMaterials(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolWorkMaterials && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolWorkMaterialTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolWorkMaterials = new $collectionClassName;
+        $this->collVolWorkMaterials->setModel('\DB\VolWorkMaterial');
+    }
+
+    /**
+     * Gets an array of ChildVolWorkMaterial objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolWorkMaterial[] List of ChildVolWorkMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkMaterial> List of ChildVolWorkMaterial objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolWorkMaterials(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolWorkMaterialsPartial && !$this->isNew();
+        if (null === $this->collVolWorkMaterials || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolWorkMaterials) {
+                    $this->initVolWorkMaterials();
+                } else {
+                    $collectionClassName = VolWorkMaterialTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolWorkMaterials = new $collectionClassName;
+                    $collVolWorkMaterials->setModel('\DB\VolWorkMaterial');
+
+                    return $collVolWorkMaterials;
+                }
+            } else {
+                $collVolWorkMaterials = ChildVolWorkMaterialQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolWorkMaterialsPartial && count($collVolWorkMaterials)) {
+                        $this->initVolWorkMaterials(false);
+
+                        foreach ($collVolWorkMaterials as $obj) {
+                            if (false == $this->collVolWorkMaterials->contains($obj)) {
+                                $this->collVolWorkMaterials->append($obj);
+                            }
+                        }
+
+                        $this->collVolWorkMaterialsPartial = true;
+                    }
+
+                    return $collVolWorkMaterials;
+                }
+
+                if ($partial && $this->collVolWorkMaterials) {
+                    foreach ($this->collVolWorkMaterials as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolWorkMaterials[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolWorkMaterials = $collVolWorkMaterials;
+                $this->collVolWorkMaterialsPartial = false;
+            }
+        }
+
+        return $this->collVolWorkMaterials;
+    }
+
+    /**
+     * Sets a collection of ChildVolWorkMaterial objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volWorkMaterials A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkMaterials(Collection $volWorkMaterials, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolWorkMaterial[] $volWorkMaterialsToDelete */
+        $volWorkMaterialsToDelete = $this->getVolWorkMaterials(new Criteria(), $con)->diff($volWorkMaterials);
+
+
+        $this->volWorkMaterialsScheduledForDeletion = $volWorkMaterialsToDelete;
+
+        foreach ($volWorkMaterialsToDelete as $volWorkMaterialRemoved) {
+            $volWorkMaterialRemoved->setUsers(null);
+        }
+
+        $this->collVolWorkMaterials = null;
+        foreach ($volWorkMaterials as $volWorkMaterial) {
+            $this->addVolWorkMaterial($volWorkMaterial);
+        }
+
+        $this->collVolWorkMaterials = $volWorkMaterials;
+        $this->collVolWorkMaterialsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolWorkMaterial objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolWorkMaterial objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolWorkMaterials(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolWorkMaterialsPartial && !$this->isNew();
+        if (null === $this->collVolWorkMaterials || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolWorkMaterials) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolWorkMaterials());
+            }
+
+            $query = ChildVolWorkMaterialQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collVolWorkMaterials);
+    }
+
+    /**
+     * Method called to associate a ChildVolWorkMaterial object to this object
+     * through the ChildVolWorkMaterial foreign key attribute.
+     *
+     * @param ChildVolWorkMaterial $l ChildVolWorkMaterial
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkMaterial(ChildVolWorkMaterial $l)
+    {
+        if ($this->collVolWorkMaterials === null) {
+            $this->initVolWorkMaterials();
+            $this->collVolWorkMaterialsPartial = true;
+        }
+
+        if (!$this->collVolWorkMaterials->contains($l)) {
+            $this->doAddVolWorkMaterial($l);
+
+            if ($this->volWorkMaterialsScheduledForDeletion and $this->volWorkMaterialsScheduledForDeletion->contains($l)) {
+                $this->volWorkMaterialsScheduledForDeletion->remove($this->volWorkMaterialsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolWorkMaterial $volWorkMaterial The ChildVolWorkMaterial object to add.
+     */
+    protected function doAddVolWorkMaterial(ChildVolWorkMaterial $volWorkMaterial): void
+    {
+        $this->collVolWorkMaterials[]= $volWorkMaterial;
+        $volWorkMaterial->setUsers($this);
+    }
+
+    /**
+     * @param ChildVolWorkMaterial $volWorkMaterial The ChildVolWorkMaterial object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkMaterial(ChildVolWorkMaterial $volWorkMaterial)
+    {
+        if ($this->getVolWorkMaterials()->contains($volWorkMaterial)) {
+            $pos = $this->collVolWorkMaterials->search($volWorkMaterial);
+            $this->collVolWorkMaterials->remove($pos);
+            if (null === $this->volWorkMaterialsScheduledForDeletion) {
+                $this->volWorkMaterialsScheduledForDeletion = clone $this->collVolWorkMaterials;
+                $this->volWorkMaterialsScheduledForDeletion->clear();
+            }
+            $this->volWorkMaterialsScheduledForDeletion[]= clone $volWorkMaterial;
+            $volWorkMaterial->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolWorkMaterials from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolWorkMaterial[] List of ChildVolWorkMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkMaterial}> List of ChildVolWorkMaterial objects
+     */
+    public function getVolWorkMaterialsJoinVolWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolWorkMaterialQuery::create(null, $criteria);
+        $query->joinWith('VolWork', $joinBehavior);
+
+        return $this->getVolWorkMaterials($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolWorkMaterials from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolWorkMaterial[] List of ChildVolWorkMaterial objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkMaterial}> List of ChildVolWorkMaterial objects
+     */
+    public function getVolWorkMaterialsJoinVolMaterial(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolWorkMaterialQuery::create(null, $criteria);
+        $query->joinWith('VolMaterial', $joinBehavior);
+
+        return $this->getVolWorkMaterials($query, $con);
+    }
+
+    /**
+     * Clears out the collVolWorkTechnics collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addVolWorkTechnics()
+     */
+    public function clearVolWorkTechnics()
+    {
+        $this->collVolWorkTechnics = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collVolWorkTechnics collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialVolWorkTechnics($v = true): void
+    {
+        $this->collVolWorkTechnicsPartial = $v;
+    }
+
+    /**
+     * Initializes the collVolWorkTechnics collection.
+     *
+     * By default this just sets the collVolWorkTechnics collection to an empty array (like clearcollVolWorkTechnics());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initVolWorkTechnics(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collVolWorkTechnics && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = VolWorkTechnicTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collVolWorkTechnics = new $collectionClassName;
+        $this->collVolWorkTechnics->setModel('\DB\VolWorkTechnic');
+    }
+
+    /**
+     * Gets an array of ChildVolWorkTechnic objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUsers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildVolWorkTechnic[] List of ChildVolWorkTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkTechnic> List of ChildVolWorkTechnic objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getVolWorkTechnics(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collVolWorkTechnicsPartial && !$this->isNew();
+        if (null === $this->collVolWorkTechnics || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collVolWorkTechnics) {
+                    $this->initVolWorkTechnics();
+                } else {
+                    $collectionClassName = VolWorkTechnicTableMap::getTableMap()->getCollectionClassName();
+
+                    $collVolWorkTechnics = new $collectionClassName;
+                    $collVolWorkTechnics->setModel('\DB\VolWorkTechnic');
+
+                    return $collVolWorkTechnics;
+                }
+            } else {
+                $collVolWorkTechnics = ChildVolWorkTechnicQuery::create(null, $criteria)
+                    ->filterByUsers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collVolWorkTechnicsPartial && count($collVolWorkTechnics)) {
+                        $this->initVolWorkTechnics(false);
+
+                        foreach ($collVolWorkTechnics as $obj) {
+                            if (false == $this->collVolWorkTechnics->contains($obj)) {
+                                $this->collVolWorkTechnics->append($obj);
+                            }
+                        }
+
+                        $this->collVolWorkTechnicsPartial = true;
+                    }
+
+                    return $collVolWorkTechnics;
+                }
+
+                if ($partial && $this->collVolWorkTechnics) {
+                    foreach ($this->collVolWorkTechnics as $obj) {
+                        if ($obj->isNew()) {
+                            $collVolWorkTechnics[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collVolWorkTechnics = $collVolWorkTechnics;
+                $this->collVolWorkTechnicsPartial = false;
+            }
+        }
+
+        return $this->collVolWorkTechnics;
+    }
+
+    /**
+     * Sets a collection of ChildVolWorkTechnic objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $volWorkTechnics A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVolWorkTechnics(Collection $volWorkTechnics, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildVolWorkTechnic[] $volWorkTechnicsToDelete */
+        $volWorkTechnicsToDelete = $this->getVolWorkTechnics(new Criteria(), $con)->diff($volWorkTechnics);
+
+
+        $this->volWorkTechnicsScheduledForDeletion = $volWorkTechnicsToDelete;
+
+        foreach ($volWorkTechnicsToDelete as $volWorkTechnicRemoved) {
+            $volWorkTechnicRemoved->setUsers(null);
+        }
+
+        $this->collVolWorkTechnics = null;
+        foreach ($volWorkTechnics as $volWorkTechnic) {
+            $this->addVolWorkTechnic($volWorkTechnic);
+        }
+
+        $this->collVolWorkTechnics = $volWorkTechnics;
+        $this->collVolWorkTechnicsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related VolWorkTechnic objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related VolWorkTechnic objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countVolWorkTechnics(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collVolWorkTechnicsPartial && !$this->isNew();
+        if (null === $this->collVolWorkTechnics || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collVolWorkTechnics) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getVolWorkTechnics());
+            }
+
+            $query = ChildVolWorkTechnicQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUsers($this)
+                ->count($con);
+        }
+
+        return count($this->collVolWorkTechnics);
+    }
+
+    /**
+     * Method called to associate a ChildVolWorkTechnic object to this object
+     * through the ChildVolWorkTechnic foreign key attribute.
+     *
+     * @param ChildVolWorkTechnic $l ChildVolWorkTechnic
+     * @return $this The current object (for fluent API support)
+     */
+    public function addVolWorkTechnic(ChildVolWorkTechnic $l)
+    {
+        if ($this->collVolWorkTechnics === null) {
+            $this->initVolWorkTechnics();
+            $this->collVolWorkTechnicsPartial = true;
+        }
+
+        if (!$this->collVolWorkTechnics->contains($l)) {
+            $this->doAddVolWorkTechnic($l);
+
+            if ($this->volWorkTechnicsScheduledForDeletion and $this->volWorkTechnicsScheduledForDeletion->contains($l)) {
+                $this->volWorkTechnicsScheduledForDeletion->remove($this->volWorkTechnicsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildVolWorkTechnic $volWorkTechnic The ChildVolWorkTechnic object to add.
+     */
+    protected function doAddVolWorkTechnic(ChildVolWorkTechnic $volWorkTechnic): void
+    {
+        $this->collVolWorkTechnics[]= $volWorkTechnic;
+        $volWorkTechnic->setUsers($this);
+    }
+
+    /**
+     * @param ChildVolWorkTechnic $volWorkTechnic The ChildVolWorkTechnic object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeVolWorkTechnic(ChildVolWorkTechnic $volWorkTechnic)
+    {
+        if ($this->getVolWorkTechnics()->contains($volWorkTechnic)) {
+            $pos = $this->collVolWorkTechnics->search($volWorkTechnic);
+            $this->collVolWorkTechnics->remove($pos);
+            if (null === $this->volWorkTechnicsScheduledForDeletion) {
+                $this->volWorkTechnicsScheduledForDeletion = clone $this->collVolWorkTechnics;
+                $this->volWorkTechnicsScheduledForDeletion->clear();
+            }
+            $this->volWorkTechnicsScheduledForDeletion[]= clone $volWorkTechnic;
+            $volWorkTechnic->setUsers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolWorkTechnics from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolWorkTechnic[] List of ChildVolWorkTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkTechnic}> List of ChildVolWorkTechnic objects
+     */
+    public function getVolWorkTechnicsJoinVolWork(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolWorkTechnicQuery::create(null, $criteria);
+        $query->joinWith('VolWork', $joinBehavior);
+
+        return $this->getVolWorkTechnics($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Users is new, it will return
+     * an empty collection; or if this Users has previously
+     * been saved, it will retrieve related VolWorkTechnics from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Users.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildVolWorkTechnic[] List of ChildVolWorkTechnic objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildVolWorkTechnic}> List of ChildVolWorkTechnic objects
+     */
+    public function getVolWorkTechnicsJoinVolTechnic(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildVolWorkTechnicQuery::create(null, $criteria);
+        $query->joinWith('VolTechnic', $joinBehavior);
+
+        return $this->getVolWorkTechnics($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2269,9 +6611,87 @@ abstract class Users implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collObjProjects) {
+                foreach ($this->collObjProjects as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjSubprojects) {
+                foreach ($this->collObjSubprojects as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjGroups) {
+                foreach ($this->collObjGroups as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjHouses) {
+                foreach ($this->collObjHouses as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjStages) {
+                foreach ($this->collObjStages as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjStageWorks) {
+                foreach ($this->collObjStageWorks as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjStageMaterials) {
+                foreach ($this->collObjStageMaterials as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collObjStageTechnics) {
+                foreach ($this->collObjStageTechnics as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVolMaterials) {
+                foreach ($this->collVolMaterials as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVolTechnics) {
+                foreach ($this->collVolTechnics as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVolWorks) {
+                foreach ($this->collVolWorks as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVolWorkMaterials) {
+                foreach ($this->collVolWorkMaterials as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collVolWorkTechnics) {
+                foreach ($this->collVolWorkTechnics as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collProjectRoles = null;
+        $this->collObjProjects = null;
+        $this->collObjSubprojects = null;
+        $this->collObjGroups = null;
+        $this->collObjHouses = null;
+        $this->collObjStages = null;
+        $this->collObjStageWorks = null;
+        $this->collObjStageMaterials = null;
+        $this->collObjStageTechnics = null;
+        $this->collVolMaterials = null;
+        $this->collVolTechnics = null;
+        $this->collVolWorks = null;
+        $this->collVolWorkMaterials = null;
+        $this->collVolWorkTechnics = null;
         $this->aUserRole = null;
         return $this;
     }

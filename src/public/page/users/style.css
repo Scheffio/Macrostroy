@@ -65,6 +65,9 @@ body.fixated {
   width: 100%;
   padding-bottom: 20px;
 }
+.wrap.no-access {
+  display: none;
+}
 .wrap .tabs-controller {
   display: flex;
   width: clamp(768px, 90vw, 1555px);
@@ -694,17 +697,21 @@ body.fixated {
   left: 5px;
   transition: 0.3s;
 }
-.wrap .no-access-window {
+
+.no-access-window {
   margin-top: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.wrap .no-access-window p {
+.no-access-window.show {
+  display: none;
+}
+.no-access-window p {
   font-family: "Jost", sans-serif;
 }
-.wrap .no-access-window a {
+.no-access-window a {
   text-decoration: none;
   font-family: "Jost", sans-serif;
   font-size: 20px;

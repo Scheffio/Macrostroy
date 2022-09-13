@@ -12,6 +12,8 @@ use DB\ObjStageTechnicVersionQuery as ChildObjStageTechnicVersionQuery;
 use DB\ObjStageWork as ChildObjStageWork;
 use DB\ObjStageWorkQuery as ChildObjStageWorkQuery;
 use DB\ObjStageWorkVersionQuery as ChildObjStageWorkVersionQuery;
+use DB\Users as ChildUsers;
+use DB\UsersQuery as ChildUsersQuery;
 use DB\VolTechnic as ChildVolTechnic;
 use DB\VolTechnicQuery as ChildVolTechnicQuery;
 use DB\VolTechnicVersionQuery as ChildVolTechnicVersionQuery;
@@ -118,6 +120,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
     protected $stage_work_id;
 
     /**
+     * The value for the version_created_by field.
+     *
+     * @var        int
+     */
+    protected $version_created_by;
+
+    /**
      * The value for the version field.
      *
      * Note: this column has a database default value of: 0
@@ -133,18 +142,16 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
     protected $version_created_at;
 
     /**
-     * The value for the version_created_by field.
-     *
-     * @var        string|null
-     */
-    protected $version_created_by;
-
-    /**
      * The value for the version_comment field.
      *
      * @var        string|null
      */
     protected $version_comment;
+
+    /**
+     * @var        ChildUsers
+     */
+    protected $aUsers;
 
     /**
      * @var        ChildObjStageWork
@@ -497,6 +504,16 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Get the [version_created_by] column value.
+     *
+     * @return int
+     */
+    public function getVersionCreatedBy()
+    {
+        return $this->version_created_by;
+    }
+
+    /**
      * Get the [version] column value.
      *
      * @return int|null
@@ -526,16 +543,6 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         } else {
             return $this->version_created_at instanceof \DateTimeInterface ? $this->version_created_at->format($format) : null;
         }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return string|null
-     */
-    public function getVersionCreatedBy()
-    {
-        return $this->version_created_by;
     }
 
     /**
@@ -685,6 +692,30 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [version_created_by] column.
+     *
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setVersionCreatedBy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[ObjStageTechnicTableMap::COL_VERSION_CREATED_BY] = true;
+        }
+
+        if ($this->aUsers !== null && $this->aUsers->getId() !== $v) {
+            $this->aUsers = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [version] column.
      *
      * @param int|null $v New value
@@ -720,26 +751,6 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
                 $this->modifiedColumns[ObjStageTechnicTableMap::COL_VERSION_CREATED_AT] = true;
             }
         } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[ObjStageTechnicTableMap::COL_VERSION_CREATED_BY] = true;
-        }
 
         return $this;
     }
@@ -826,17 +837,17 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ObjStageTechnicTableMap::translateFieldName('StageWorkId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->stage_work_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjStageTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ObjStageTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjStageTechnicTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ObjStageTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjStageTechnicTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ObjStageTechnicTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ObjStageTechnicTableMap::translateFieldName('VersionComment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_comment = (null !== $col) ? (string) $col : null;
@@ -877,6 +888,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         if ($this->aObjStageWork !== null && $this->stage_work_id !== $this->aObjStageWork->getId()) {
             $this->aObjStageWork = null;
         }
+        if ($this->aUsers !== null && $this->version_created_by !== $this->aUsers->getId()) {
+            $this->aUsers = null;
+        }
     }
 
     /**
@@ -916,6 +930,7 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aUsers = null;
             $this->aObjStageWork = null;
             $this->aVolTechnic = null;
             $this->collObjStageTechnicVersions = null;
@@ -1040,6 +1055,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aUsers !== null) {
+                if ($this->aUsers->isModified() || $this->aUsers->isNew()) {
+                    $affectedRows += $this->aUsers->save($con);
+                }
+                $this->setUsers($this->aUsers);
+            }
+
             if ($this->aObjStageWork !== null) {
                 if ($this->aObjStageWork->isModified() || $this->aObjStageWork->isNew()) {
                     $affectedRows += $this->aObjStageWork->save($con);
@@ -1126,14 +1148,14 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_STAGE_WORK_ID)) {
             $modifiedColumns[':p' . $index++]  = 'stage_work_id';
         }
+        if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'version_created_by';
+        }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION)) {
             $modifiedColumns[':p' . $index++]  = 'version';
         }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'version_created_at';
-        }
-        if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'version_created_by';
         }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'version_comment';
@@ -1167,14 +1189,14 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
                     case 'stage_work_id':
                         $stmt->bindValue($identifier, $this->stage_work_id, PDO::PARAM_INT);
                         break;
+                    case 'version_created_by':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_INT);
+                        break;
                     case 'version':
                         $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
                         break;
                     case 'version_created_at':
                         $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'version_created_by':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                     case 'version_comment':
                         $stmt->bindValue($identifier, $this->version_comment, PDO::PARAM_STR);
@@ -1260,13 +1282,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
                 return $this->getStageWorkId();
 
             case 6:
-                return $this->getVersion();
+                return $this->getVersionCreatedBy();
 
             case 7:
-                return $this->getVersionCreatedAt();
+                return $this->getVersion();
 
             case 8:
-                return $this->getVersionCreatedBy();
+                return $this->getVersionCreatedAt();
 
             case 9:
                 return $this->getVersionComment();
@@ -1305,13 +1327,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
             $keys[3] => $this->getIsAvailable(),
             $keys[4] => $this->getTechnicId(),
             $keys[5] => $this->getStageWorkId(),
-            $keys[6] => $this->getVersion(),
-            $keys[7] => $this->getVersionCreatedAt(),
-            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[6] => $this->getVersionCreatedBy(),
+            $keys[7] => $this->getVersion(),
+            $keys[8] => $this->getVersionCreatedAt(),
             $keys[9] => $this->getVersionComment(),
         ];
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[8]] instanceof \DateTimeInterface) {
+            $result[$keys[8]] = $result[$keys[8]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1320,6 +1342,21 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aUsers) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'users';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'users';
+                        break;
+                    default:
+                        $key = 'Users';
+                }
+
+                $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aObjStageWork) {
 
                 switch ($keyType) {
@@ -1420,13 +1457,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
                 $this->setStageWorkId($value);
                 break;
             case 6:
-                $this->setVersion($value);
+                $this->setVersionCreatedBy($value);
                 break;
             case 7:
-                $this->setVersionCreatedAt($value);
+                $this->setVersion($value);
                 break;
             case 8:
-                $this->setVersionCreatedBy($value);
+                $this->setVersionCreatedAt($value);
                 break;
             case 9:
                 $this->setVersionComment($value);
@@ -1476,13 +1513,13 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
             $this->setStageWorkId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setVersion($arr[$keys[6]]);
+            $this->setVersionCreatedBy($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setVersionCreatedAt($arr[$keys[7]]);
+            $this->setVersion($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setVersionCreatedBy($arr[$keys[8]]);
+            $this->setVersionCreatedAt($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
             $this->setVersionComment($arr[$keys[9]]);
@@ -1548,14 +1585,14 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_STAGE_WORK_ID)) {
             $criteria->add(ObjStageTechnicTableMap::COL_STAGE_WORK_ID, $this->stage_work_id);
         }
+        if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY)) {
+            $criteria->add(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
+        }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION)) {
             $criteria->add(ObjStageTechnicTableMap::COL_VERSION, $this->version);
         }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_AT)) {
             $criteria->add(ObjStageTechnicTableMap::COL_VERSION_CREATED_AT, $this->version_created_at);
-        }
-        if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY)) {
-            $criteria->add(ObjStageTechnicTableMap::COL_VERSION_CREATED_BY, $this->version_created_by);
         }
         if ($this->isColumnModified(ObjStageTechnicTableMap::COL_VERSION_COMMENT)) {
             $criteria->add(ObjStageTechnicTableMap::COL_VERSION_COMMENT, $this->version_comment);
@@ -1653,9 +1690,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         $copyObj->setIsAvailable($this->getIsAvailable());
         $copyObj->setTechnicId($this->getTechnicId());
         $copyObj->setStageWorkId($this->getStageWorkId());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersion($this->getVersion());
         $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
         $copyObj->setVersionComment($this->getVersionComment());
 
         if ($deepCopy) {
@@ -1697,6 +1734,57 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+    /**
+     * Declares an association between this object and a ChildUsers object.
+     *
+     * @param ChildUsers $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setUsers(ChildUsers $v = null)
+    {
+        if ($v === null) {
+            $this->setVersionCreatedBy(NULL);
+        } else {
+            $this->setVersionCreatedBy($v->getId());
+        }
+
+        $this->aUsers = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUsers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addObjStageTechnic($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildUsers object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildUsers The associated ChildUsers object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getUsers(?ConnectionInterface $con = null)
+    {
+        if ($this->aUsers === null && ($this->version_created_by != 0)) {
+            $this->aUsers = ChildUsersQuery::create()->findPk($this->version_created_by, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUsers->addObjStageTechnics($this);
+             */
+        }
+
+        return $this->aUsers;
     }
 
     /**
@@ -2069,6 +2157,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aUsers) {
+            $this->aUsers->removeObjStageTechnic($this);
+        }
         if (null !== $this->aObjStageWork) {
             $this->aObjStageWork->removeObjStageTechnic($this);
         }
@@ -2081,9 +2172,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         $this->is_available = null;
         $this->technic_id = null;
         $this->stage_work_id = null;
+        $this->version_created_by = null;
         $this->version = null;
         $this->version_created_at = null;
-        $this->version_created_by = null;
         $this->version_comment = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -2115,6 +2206,7 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collObjStageTechnicVersions = null;
+        $this->aUsers = null;
         $this->aObjStageWork = null;
         $this->aVolTechnic = null;
         return $this;
@@ -2193,9 +2285,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         $version->setIsAvailable($this->getIsAvailable());
         $version->setTechnicId($this->getTechnicId());
         $version->setStageWorkId($this->getStageWorkId());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersion($this->getVersion());
         $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
         $version->setVersionComment($this->getVersionComment());
         $version->setObjStageTechnic($this);
         if (($related = $this->getObjStageWork(null, $con)) && $related->getVersion()) {
@@ -2246,9 +2338,9 @@ abstract class ObjStageTechnic implements ActiveRecordInterface
         $this->setIsAvailable($version->getIsAvailable());
         $this->setTechnicId($version->getTechnicId());
         $this->setStageWorkId($version->getStageWorkId());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersion($version->getVersion());
         $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
         $this->setVersionComment($version->getVersionComment());
         if ($fkValue = $version->getStageWorkId()) {
             if (isset($loadedObjects['ChildObjStageWork']) && isset($loadedObjects['ChildObjStageWork'][$fkValue]) && isset($loadedObjects['ChildObjStageWork'][$fkValue][$version->getStageWorkIdVersion()])) {

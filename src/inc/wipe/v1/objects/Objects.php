@@ -347,7 +347,13 @@ class Objects
             'crud' => $crud,
             'access' => $access,
             'objects' => $objects,
-            'isCrud' => 1
+            'isCrud' => self::getUserAccess(
+            lvl: $lvl,
+            userId: $userId,
+            access: $access,
+            parentId: $parentId,
+            projectId: $projectId,
+            )
         ]);
 
 //        IsCrud: true
@@ -472,6 +478,15 @@ class Objects
         return $query;
     }
 
+    /**
+     * Формирование массива объекта с его основной информацией и доступом пользователя.
+     * @param int $lvl Уровень доступа.
+     * @param array $access Массив разрешений пользователя.
+     * @param array $crud Массив разрешений пользователя по объектам.
+     * @param array $objs Массив объектов.
+     * @return void
+     * @throws IncorrectLvlException
+     */
     private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): void
     {
         $colId = self::getColIdByLvl($lvl);
@@ -504,9 +519,10 @@ class Objects
     }
 
     /**
-     * @param array $access
-     * @param array $crud
-     * @param array $obj
+     * Разрешен ли пользователю CRUD в объекте.
+     * @param array $access Массв разрешений пользователя.
+     * @param array $crud Массив разрешений пользователя по объектам.
+     * @param array $obj Объект.
      * @return bool|null
      * @throws IncorrectLvlException
      */
@@ -530,6 +546,17 @@ class Objects
         return null;
     }
 
+    /**
+     * Возращает основные разрешения пользователя по объекту.
+     * @param int $lvl Уровень доступа.
+     * @param int $userId ID пользователя.
+     * @param array $access Массив разрешений пользователя.
+     * @param int|null $parentId ID родительского объекта.
+     * @param int|null $projectId ID проекта.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
     private static function getUserAccess(
         int &$lvl,
         int &$userId,
@@ -539,6 +566,7 @@ class Objects
     ): array
     {
         $isAdmin = false;
+        $isHistory = false;
 
         if ($access['manageUsers'] === false) {
             if ($projectId) {
@@ -550,15 +578,18 @@ class Objects
                 );
             } else {
                 $isCrud = $access['manageObjects'];
+                $isCrud = $access['manageObjects'];
             }
         } else {
             $isCrud = true;
             $isAdmin = true;
+            $isHistory = true;
         }
 
         return [
             'isCrud' => $isCrud,
             'isAdmin' => $isAdmin,
+            'manageHistory' => $isHistory,
         ];
     }
     #endregion

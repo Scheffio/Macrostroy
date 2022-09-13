@@ -496,10 +496,7 @@ class Objects
             if ($isCrud === null) continue;
 
             if (array_key_exists($id, $result)) {
-                JsonOutput::success([
-                    $result[$id]['price'], (float)$obj['price']
-                ]);
-                $result[$id]['price'] += (float)$obj['price'];
+                $result[$id]['price'] = number_format((float)$result[$id]['price']+$obj['price'], 2, '.', '');
             } else {
                 $result[$id] = [
                     'id' => $obj[$colId],
@@ -510,7 +507,7 @@ class Objects
                         'id' => $obj[UsersTableMap::COL_ID],
                         'name' => $obj[UsersTableMap::COL_USERNAME],
                     ],
-                    'price' => (float)$obj['price'],
+                    'price' => number_format((float)$obj['price'], 2, '.', ''),
                     'isCrud' => $isCrud,
                     'isHistory' => $isCrud ? $access['manageHistory'] : false,
                 ];

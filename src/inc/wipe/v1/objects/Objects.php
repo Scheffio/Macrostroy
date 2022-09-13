@@ -321,11 +321,12 @@ class Objects
         int $limitFrom = 0,
     )
     {
-        $projectId = null;
+        $projectId = Objects::getProjectIdByChildOrThrow($parentId, $lvl);
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
+
         $crud =& $user['crud'];
-        $access =& $user['user'];
         self::sortAccess($crud);
+        $access =& $user['user'];
 
         $objects = self::getObjectsQuery(
                         objId: $parentId,
@@ -354,6 +355,11 @@ class Objects
         return true;
     }
 
+    /**
+     * Сортировака разрешений пользователя к объектам.
+     * @param array $access Разрешения пользователя к объектам.
+     * @return void
+     */
     private static function sortAccess(array &$access): void
     {
         if (!ProjectRole::isAssociateArray($access)) {
@@ -364,17 +370,13 @@ class Objects
                 $i[$item['lvl']][] = $item;
             }
 
-            asort($i);
+            rsort($i);
 
             foreach ($i as &$item) {
-                array_merge($a, $item);
+                $a = array_merge($a, $item);
             }
 
-            JsonOutput::success(
-                $a
-            );
-
-            $access = asort($result);
+            $access = $a;
         }
     }
 
@@ -497,13 +499,28 @@ class Objects
         }
     }
 
-    private static function isAccesssCrud(array &$access, array &$objects)
+    private static function isAccesssCrud(array &$access, array &$crud, array &$obj): bool
     {
-        if (ProjectRole::isAssociateArray($access)) {
+        if ($access['manageUsers']) return true;
 
+        if (ProjectRole::isAssociateArray($crud)) {
+            if ($crud['lvl'] === null) {
+                if ($access['objectViewer']) return false;
+                if ($access['manageUsers']) return true;
+            }
+
+            return $crud['lvl'];
         } else {
+            foreach ($crud as &$item) {
+                $colId = self::getColIdByLvl($item['lvl']);
 
+                if ($obj[$colId] === $item['object_id']) {
+                    return $item[]
+                }
+            }
         }
+
+        return false;
     }
     #endregion
 

@@ -395,31 +395,26 @@ body.fixated {
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes input::before {
   content: "";
   width: 26px;
-  height: 26px;
+  height: 24px;
   display: block;
   border: 2px solid black;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:nth-child(1)::after,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes input:nth-child(1)::after {
-  content: "Все";
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes input::after {
+  content: "";
+  width: 18px;
+  height: 18px;
   display: block;
+  background-color: white;
   position: absolute;
-  top: 21px;
-  left: 2px;
-  font-family: "Jost", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+  top: -3px;
+  left: 5px;
+  transition: 0.3s;
 }
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:nth-child(2)::after,
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes input:nth-child(2)::after {
-  content: "Отдельно";
-  display: block;
-  position: absolute;
-  top: 21px;
-  left: -15px;
-  font-family: "Jost", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:checked::after,
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes input:checked::after {
+  transition: 0.3s;
+  background-color: black;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes {
   display: flex;

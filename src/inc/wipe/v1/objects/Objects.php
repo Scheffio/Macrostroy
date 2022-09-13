@@ -16,9 +16,14 @@ use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
 use DB\ObjStageMaterialVersionQuery;
 use DB\ObjStageTechnicVersionQuery;
+use DB\ObjStageVersionQuery;
+use DB\ObjStageWorkQuery;
 use DB\VolMaterialQuery;
+use DB\VolTechnicQuery;
 use DB\VolUnitQuery;
 use DB\VolWorkMaterialQuery;
+use DB\VolWorkTechnicQuery;
+use DB\VolWorkVersionQuery;
 use ext\ObjGroup;
 use ext\ObjHouse;
 use ext\ObjProject;
@@ -28,6 +33,7 @@ use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveQuery\PropelQuery;
+use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
@@ -349,19 +355,20 @@ class Objects
         return true;
     }
 
-    public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers)
+    /**
+     * Возвращает запрос на вывод данных об объекте с стоимость и дополнительной фильтрацией.
+     * @param int $objId ID объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $limit Лимит вывода.
+     * @param int $limitFrom Лимит, с которого необходимо начать вывод.
+     * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
+     * @return mixed
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
     {
-        $colId = self::getColIdByLvl($lvl);
-        $colName = self::getColNameByLvl($lvl);
-        $colStatus = self::getColStatusByLvl($lvl);
-        $colIsPublic = self::getColIsPublicByLvl($lvl);
-        $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
-
         $query = self::getObjectsPriceQuery($lvl, $objId);
-//            ->withColumn($colName)
-//            ->withColumn($colStatus)
-//            ->withColumn($colIsPublic)
-//            ->withColumn($colCreatedBy);
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
@@ -384,7 +391,15 @@ class Objects
         return $query;
     }
 
-    public static function getObjectsPriceQuery(int $lvl, int $objId)
+    /**
+     * Возвращает запрос на вывод данных об объекте с стоимостью.
+     * @param int $lvl Уроыень доступа.
+     * @param int $objId ID объекта.
+     * @return mixed
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    public static function getObjectsPriceQuery(int $lvl, int $objId): mixed
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;

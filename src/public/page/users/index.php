@@ -64,6 +64,7 @@
                                 <div class="object-crud">
                                     <div class="object-crud-checkboxes">
                                         <input type="radio" name="object-crud-radio" id="object-crud">
+                                        <span>Все</span>    
                                         <input type="radio" name="object-crud-radio" id="object-crud">
                                         <label for="object-crud">CRUD объектов</label>
                                     </div>

@@ -315,28 +315,23 @@
                                     &::before {
                                         content: '';
                                         width: 26px;
-                                        height: 26px;
+                                        height: 24px;
                                         display: block;
                                         border: 2px solid black;
                                     }
-                                    &:nth-child(1) {
-                                        &::after {
-                                            content: 'Все';
-                                            display: block;
-                                            position: absolute;
-                                            top: 21px;
-                                            left: 2px;
-                                            @include CheckboxTitle;
-                                        }
+                                    &::after {
+                                        content: '';
+                                        width: 18px;
+                                        height: 18px;
+                                        display: block;
+                                        background-color: white;
+                                        position: absolute;
+                                        top: -3px;
+                                        left: 5px;
                                     }
-                                    &:nth-child(2) {
+                                    &:checked {
                                         &::after {
-                                            content: 'Отдельно';
-                                            display: block;
-                                            position: absolute;
-                                            top: 21px;
-                                            left: -15px;
-                                            @include CheckboxTitle;
+                                            background-color: black;
                                         }
                                     }
                                 }

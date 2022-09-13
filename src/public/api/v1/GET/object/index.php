@@ -11,11 +11,11 @@ try {
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 2,
-            parentId: 0,
+            parentId: 2,
             projectId: 2,
             userId: 17,
             limit: 10,
-            limitFrom: 0,
+            limitFrom: 2,
 //            userId: AuthUserRole::getUserId(),
 //            isAccessManageUsers: AuthUserRole::isAccessManageUsers(),
 //            isAccessManageObjects: AuthUserRole::isAccessManageObjects(),

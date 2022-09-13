@@ -201,7 +201,12 @@ function parsePermissions(id) {
     }).then((json) => {
         for(let i = 0; i < json.data.length; i++) {
             if(elem.children[0].dataset.id == json.data[i].id) {
-                if(json)
+                let parameter = json.data[i]
+                if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
+                    adminCheckbox.checked = true
+                }else if (parameter.object_viewer == true) {
+                    
+                }
             }
         }
     })

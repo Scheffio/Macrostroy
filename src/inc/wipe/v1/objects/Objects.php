@@ -325,8 +325,7 @@ class Objects
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
         $crud =& $user['crud'];
         $access =& $user['user'];
-
-
+        self::sortAccess($crud);
 
         $objects = self::getObjectsQuery(
                         objId: $parentId,
@@ -357,7 +356,26 @@ class Objects
 
     private static function sortAccess(array &$access): void
     {
-        
+        if (!ProjectRole::isAssociateArray($access)) {
+            $i = [];
+            $a = [];
+
+            foreach ($access as &$item) {
+                $i[$item['lvl']][] = $item;
+            }
+
+            asort($i);
+
+            foreach ($i as &$item) {
+                array_merge($a, $item);
+            }
+
+            JsonOutput::success(
+                $a
+            );
+
+            $access = asort($result);
+        }
     }
 
     /**

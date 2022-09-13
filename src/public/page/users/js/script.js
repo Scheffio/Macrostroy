@@ -164,6 +164,7 @@ function parseRoles() {
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
+                adminCheckbox, objectCrudAllCheckbox, objectCrudExactCheckbox, volumeCrudAllCheckbox, volumeCrudExactCheckbox, versionControlCheckbox, watchobjectsCheckbox
             },
             getid() {
 
@@ -181,28 +182,29 @@ function parseRoles() {
     })
 }
 
+const adminCheckbox = document.querySelector('.admin > input')
+const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
+const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
+const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(1)')
+const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
+const versionControlCheckbox = document.querySelector('.version-control > input')
+const watchobjectsCheckbox = document.querySelector('.watch > input')
+
 function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
     let obj = {
         role_id: id 
     }
 
-    const adminCheckbox = document.querySelector('.admin > input')
-    const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
-    const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
-    const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(1)')
-    const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
-    const versionControlCheckbox = document.querySelector('.version-control > input')
-    const watchobjectsCheckbox = document.querySelector('.watch > input')
-
     url.search = new URLSearchParams(obj).toString()
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
         if(json.status === "success") {
-            for(let i = 0; i < json.data.length; i++) {
-                if(elem.children[0].dataset.id == json.data[i].id) {
-                    let parameter = json.data[i]
+            document.querySelector('.no-access-window').classList.remove('show')
+            document.querySelector('.wrap').classList.remove('no-access')
+                if(elem.children[0].dataset.id == json.data.id) {
+                    let parameter = json.data
                     if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
                         adminCheckbox.checked = true
                     }else if (parameter.object_viewer == true) {
@@ -219,15 +221,14 @@ function parsePermissions(id, elem) {
                         volumeCrudExactCheckbox.checked = true
                     }
                 }
+            }else {
+                if(json.error_message == 'Недостаточно прав') {
+                    document.querySelector('.no-access-window').classList.add('show')
+                    document.querySelector('.wrap').classList.add('no-access')
+                }
             }
-        }else {
-            if(json.error_message == 'Недостаточно прав') {
-                document.querySelector('.no-access-window').classList.add('show')
-                document.querySelector('.wrap').classList.add('show')
-            }
-        }
-    })
-}
+        })
+    }
 
 function addUser() {
     const username = document.querySelector(".modal-body__name > input")

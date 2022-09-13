@@ -31,11 +31,13 @@ CREATE TABLE `obj_group` (
   `subproject_id` int unsigned NOT NULL COMMENT 'ID подпроекта',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `subproject_id` (`subproject_id`),
-  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `obj_subproject` (`id`)
+  KEY `version_created_by` (`version_created_by`),
+  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `obj_subproject` (`id`),
+  CONSTRAINT `obj_group_ibfk_12` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,7 +47,7 @@ CREATE TABLE `obj_group` (
 
 LOCK TABLES `obj_group` WRITE;
 /*!40000 ALTER TABLE `obj_group` DISABLE KEYS */;
-INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10','12','insert');
+INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert');
 /*!40000 ALTER TABLE `obj_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +67,7 @@ CREATE TABLE `obj_group_version` (
   `subproject_id` int unsigned NOT NULL COMMENT 'ID подпроекта',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `subproject_id_version` int DEFAULT '0',
   `obj_house_ids` text,
@@ -81,7 +83,7 @@ CREATE TABLE `obj_group_version` (
 
 LOCK TABLES `obj_group_version` WRITE;
 /*!40000 ALTER TABLE `obj_group_version` DISABLE KEYS */;
-INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42','12','update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 4 |'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10','12','insert',1,NULL,NULL);
+INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12',12,'insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42',12,'update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete',2,'| 1 |','| 4 |'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_group_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,11 +103,13 @@ CREATE TABLE `obj_house` (
   `group_id` int unsigned NOT NULL COMMENT 'Id группы',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
-  CONSTRAINT `house_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `obj_group` (`id`)
+  KEY `version_created_by` (`version_created_by`),
+  CONSTRAINT `house_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `obj_group` (`id`),
+  CONSTRAINT `obj_house_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,7 +119,7 @@ CREATE TABLE `obj_house` (
 
 LOCK TABLES `obj_house` WRITE;
 /*!40000 ALTER TABLE `obj_house` DISABLE KEYS */;
-INSERT INTO `obj_house` VALUES (1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12','12','insert');
+INSERT INTO `obj_house` VALUES (1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26',12,'delete'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12',12,'insert');
 /*!40000 ALTER TABLE `obj_house` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +139,7 @@ CREATE TABLE `obj_house_version` (
   `group_id` int unsigned NOT NULL COMMENT 'Id группы',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `group_id_version` int DEFAULT '0',
   `obj_stage_ids` text,
@@ -151,7 +155,7 @@ CREATE TABLE `obj_house_version` (
 
 LOCK TABLES `obj_house_version` WRITE;
 /*!40000 ALTER TABLE `obj_house_version` DISABLE KEYS */;
-INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44','12','insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16','12','update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59','12','update',2,'| 1 |','| 1 |'),(1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26','12','delete',2,'| 1 | 2 |','| 3 | 2 |'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12','12','insert',1,NULL,NULL);
+INSERT INTO `obj_house_version` VALUES (1,'HouseTest1','in_process',1,1,1,1,'2022-09-05 09:27:44',12,'insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,1,2,'2022-09-05 09:38:16',12,'update',1,'| 1 |','| 1 |'),(1,'PutTestHouse','in_process',1,1,1,3,'2022-09-05 09:38:59',12,'update',2,'| 1 |','| 1 |'),(1,'PutTestHouse','deleted',0,0,1,4,'2022-09-05 10:14:26',12,'delete',2,'| 1 | 2 |','| 3 | 2 |'),(2,'HouseTest','in_process',1,1,2,1,'2022-09-12 10:04:12',12,'insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_house_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,9 +174,11 @@ CREATE TABLE `obj_project` (
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `version_created_by` (`version_created_by`),
+  CONSTRAINT `obj_project_ibfk_12` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -182,7 +188,7 @@ CREATE TABLE `obj_project` (
 
 LOCK TABLES `obj_project` WRITE;
 /*!40000 ALTER TABLE `obj_project` DISABLE KEYS */;
-INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert'),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete'),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert'),(7,'PutTestProject17','deleted',0,0,3,'2022-09-12 08:33:58','12','delete');
+INSERT INTO `obj_project` VALUES (1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32',12,'delete'),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15',12,'insert'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01',12,'delete'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35',12,'insert'),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31',12,'delete'),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29',12,'insert'),(7,'PutTestProject17','deleted',0,0,3,'2022-09-12 08:33:58',12,'delete');
 /*!40000 ALTER TABLE `obj_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +207,7 @@ CREATE TABLE `obj_project_version` (
   `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Доступ (доступный, удаленный)',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_subproject_ids` text,
   `obj_subproject_versions` text,
@@ -216,7 +222,7 @@ CREATE TABLE `obj_project_version` (
 
 LOCK TABLES `obj_project_version` WRITE;
 /*!40000 ALTER TABLE `obj_project_version` DISABLE KEYS */;
-INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23','12','insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17','12','update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32','12','delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15','12','insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12','12','insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06','12','update','| 3 |','| 1 |'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01','12','delete','| 3 |','| 3 |'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35','12','insert',NULL,NULL),(5,'Project4','in_process',1,1,1,'2022-09-06 12:39:45','12','insert',NULL,NULL),(5,'PutTestProject1','in_process',1,1,2,'2022-09-06 12:43:17','12','update',NULL,NULL),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31','12','delete',NULL,NULL),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29','12','insert',NULL,NULL),(7,'ProjectTest1','in_process',1,1,1,'2022-09-12 07:44:34','12','insert',NULL,NULL),(7,'PutTestProject17','in_process',1,1,2,'2022-09-12 08:19:43','12','update','| 5 |','| 1 |'),(7,'PutTestProject17','deleted',0,0,3,'2022-09-12 08:33:58','12','delete','| 5 |','| 2 |');
+INSERT INTO `obj_project_version` VALUES (1,'ProjectName','in_process',1,1,1,'2022-08-31 12:40:23',12,'insert',NULL,NULL),(1,'NewNameProject','in_process',1,1,2,'2022-08-31 12:52:17',12,'update',NULL,NULL),(1,'NewNameProject','deleted',0,0,3,'2022-08-31 12:53:32',12,'delete',NULL,NULL),(2,'ProjectName2','in_process',1,1,1,'2022-09-01 12:41:15',12,'insert',NULL,NULL),(3,'ProjectName3','in_process',1,1,1,'2022-09-05 09:26:12',12,'insert',NULL,NULL),(3,'PutTestProject','in_process',1,1,2,'2022-09-05 09:37:06',12,'update','| 3 |','| 1 |'),(3,'PutTestProject','deleted',0,0,3,'2022-09-05 10:15:01',12,'delete','| 3 |','| 3 |'),(4,'Project3','in_process',1,1,1,'2022-09-05 10:21:35',12,'insert',NULL,NULL),(5,'Project4','in_process',1,1,1,'2022-09-06 12:39:45',12,'insert',NULL,NULL),(5,'PutTestProject1','in_process',1,1,2,'2022-09-06 12:43:17',12,'update',NULL,NULL),(5,'PutTestProject1','deleted',0,0,3,'2022-09-06 12:43:31',12,'delete',NULL,NULL),(6,'ProjectTest','in_process',1,1,1,'2022-09-08 15:13:29',12,'insert',NULL,NULL),(7,'ProjectTest1','in_process',1,1,1,'2022-09-12 07:44:34',12,'insert',NULL,NULL),(7,'PutTestProject17','in_process',1,1,2,'2022-09-12 08:19:43',12,'update','| 5 |','| 1 |'),(7,'PutTestProject17','deleted',0,0,3,'2022-09-12 08:33:58',12,'delete','| 5 |','| 2 |');
 /*!40000 ALTER TABLE `obj_project_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,10 +242,12 @@ CREATE TABLE `obj_stage` (
   `house_id` int unsigned NOT NULL COMMENT 'ID дома',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `house_id` (`house_id`),
+  KEY `version_created_by` (`version_created_by`),
+  CONSTRAINT `obj_stage_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `stage_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `obj_house` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -250,7 +258,7 @@ CREATE TABLE `obj_stage` (
 
 LOCK TABLES `obj_stage` WRITE;
 /*!40000 ALTER TABLE `obj_stage` DISABLE KEYS */;
-INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete'),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert'),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42','12','insert');
+INSERT INTO `obj_stage` VALUES (1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26',12,'delete'),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50',12,'delete'),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06',12,'insert'),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42',12,'insert');
 /*!40000 ALTER TABLE `obj_stage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,11 +278,13 @@ CREATE TABLE `obj_stage_material` (
   `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `material_id` (`material_id`),
   KEY `stage_work_id` (`stage_work_id`),
+  KEY `obj_stage_material_ibfi_3` (`version_created_by`),
+  CONSTRAINT `obj_stage_material_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `stage_material_ibfk_1` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`),
   CONSTRAINT `stage_material_ibfk_2` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -286,7 +296,7 @@ CREATE TABLE `obj_stage_material` (
 
 LOCK TABLES `obj_stage_material` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material` DISABLE KEYS */;
-INSERT INTO `obj_stage_material` VALUES (1,100.55,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert');
+INSERT INTO `obj_stage_material` VALUES (1,100.55,2.00,1,1,1,1,'2022-09-12 11:17:09',12,'insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49',12,'insert');
 /*!40000 ALTER TABLE `obj_stage_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -306,7 +316,7 @@ CREATE TABLE `obj_stage_material_version` (
   `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `material_id_version` int DEFAULT '0',
   `stage_work_id_version` int DEFAULT '0',
@@ -321,7 +331,7 @@ CREATE TABLE `obj_stage_material_version` (
 
 LOCK TABLES `obj_stage_material_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_material_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_material_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert',1,1);
+INSERT INTO `obj_stage_material_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09',12,'insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49',12,'insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,11 +351,13 @@ CREATE TABLE `obj_stage_technic` (
   `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `stage_work_id` (`stage_work_id`),
   KEY `technic_id` (`technic_id`),
+  KEY `obj_stage_technic_ibfi_3` (`version_created_by`),
+  CONSTRAINT `obj_stage_technic_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `stage_technic_ibfk_1` FOREIGN KEY (`stage_work_id`) REFERENCES `obj_stage_work` (`id`),
   CONSTRAINT `stage_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -357,7 +369,7 @@ CREATE TABLE `obj_stage_technic` (
 
 LOCK TABLES `obj_stage_technic` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic` DISABLE KEYS */;
-INSERT INTO `obj_stage_technic` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert');
+INSERT INTO `obj_stage_technic` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09',12,'insert'),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49',12,'insert');
 /*!40000 ALTER TABLE `obj_stage_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,7 +389,7 @@ CREATE TABLE `obj_stage_technic_version` (
   `stage_work_id` int unsigned NOT NULL COMMENT 'ID работы этапа',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `stage_work_id_version` int DEFAULT '0',
   `technic_id_version` int DEFAULT '0',
@@ -392,7 +404,7 @@ CREATE TABLE `obj_stage_technic_version` (
 
 LOCK TABLES `obj_stage_technic_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_technic_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_technic_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09','12','insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49','12','insert',1,1);
+INSERT INTO `obj_stage_technic_version` VALUES (1,100.00,2.00,1,1,1,1,'2022-09-12 11:17:09',12,'insert',1,1),(2,100.00,5.00,1,1,2,1,'2022-09-12 13:49:49',12,'insert',1,1);
 /*!40000 ALTER TABLE `obj_stage_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +424,7 @@ CREATE TABLE `obj_stage_version` (
   `house_id` int unsigned NOT NULL COMMENT 'ID дома',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `house_id_version` int DEFAULT '0',
   `obj_stage_work_ids` text,
@@ -428,7 +440,7 @@ CREATE TABLE `obj_stage_version` (
 
 LOCK TABLES `obj_stage_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15','12','insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13','12','update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26','12','delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31','12','insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50','12','delete',3,NULL,NULL),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06','12','insert',1,NULL,NULL),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42','12','insert',1,NULL,NULL);
+INSERT INTO `obj_stage_version` VALUES (1,'StageTest1','in_process',1,1,1,1,'2022-09-05 09:28:15',12,'insert',1,NULL,NULL),(1,'PutTestStage','in_process',1,1,1,2,'2022-09-05 09:39:13',12,'update',3,NULL,NULL),(1,'PutTestStage','deleted',0,0,1,3,'2022-09-05 10:14:26',12,'delete',3,NULL,NULL),(2,'StageTest2','in_process',1,1,1,1,'2022-09-05 09:53:31',12,'insert',3,NULL,NULL),(2,'StageTest2','deleted',0,0,1,2,'2022-09-05 10:04:50',12,'delete',3,NULL,NULL),(3,'StageTest','in_process',1,1,2,1,'2022-09-12 10:05:06',12,'insert',1,NULL,NULL),(4,'StageTest','in_process',1,1,2,1,'2022-09-12 11:10:42',12,'insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -448,11 +460,13 @@ CREATE TABLE `obj_stage_work` (
   `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `stage_work_ibfi_5` (`work_id`),
   KEY `stage_work_ibfi_6` (`stage_id`),
+  KEY `obj_stage_work_ibfi_3` (`version_created_by`),
+  CONSTRAINT `obj_stage_work_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `stage_work_ibfk_5` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `stage_work_ibfk_6` FOREIGN KEY (`stage_id`) REFERENCES `obj_stage` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -464,7 +478,7 @@ CREATE TABLE `obj_stage_work` (
 
 LOCK TABLES `obj_stage_work` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work` DISABLE KEYS */;
-INSERT INTO `obj_stage_work` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert'),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49','12','insert');
+INSERT INTO `obj_stage_work` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09',12,'insert'),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49',12,'insert');
 /*!40000 ALTER TABLE `obj_stage_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -484,7 +498,7 @@ CREATE TABLE `obj_stage_work_version` (
   `stage_id` int unsigned NOT NULL COMMENT 'ID этапа',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `work_id_version` int DEFAULT '0',
   `stage_id_version` int DEFAULT '0',
@@ -503,7 +517,7 @@ CREATE TABLE `obj_stage_work_version` (
 
 LOCK TABLES `obj_stage_work_version` WRITE;
 /*!40000 ALTER TABLE `obj_stage_work_version` DISABLE KEYS */;
-INSERT INTO `obj_stage_work_version` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09','12','insert',1,1,NULL,NULL,NULL,NULL),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49','12','insert',1,1,NULL,NULL,NULL,NULL);
+INSERT INTO `obj_stage_work_version` VALUES (1,100.00,2.00,1,1,3,1,'2022-09-12 11:17:09',12,'insert',1,1,NULL,NULL,NULL,NULL),(2,400.00,5.00,1,1,3,1,'2022-09-12 13:49:49',12,'insert',1,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `obj_stage_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -523,10 +537,12 @@ CREATE TABLE `obj_subproject` (
   `project_id` int unsigned NOT NULL COMMENT 'ID проекта',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
+  KEY `version_created_by` (`version_created_by`),
+  CONSTRAINT `obj_subproject_ibfk_12` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `subproject_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -537,7 +553,7 @@ CREATE TABLE `obj_subproject` (
 
 LOCK TABLES `obj_subproject` WRITE;
 /*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
-INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',0,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert'),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58','12','delete');
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',0,1,1,1,'2022-09-01 10:53:04',12,'insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03',12,'insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08',12,'insert'),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58',12,'delete');
 /*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +573,7 @@ CREATE TABLE `obj_subproject_version` (
   `project_id` int unsigned NOT NULL COMMENT 'ID проекта',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `project_id_version` int DEFAULT '0',
   `obj_group_ids` text,
@@ -573,7 +589,7 @@ CREATE TABLE `obj_subproject_version` (
 
 LOCK TABLES `obj_subproject_version` WRITE;
 /*!40000 ALTER TABLE `obj_subproject_version` DISABLE KEYS */;
-INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',NULL,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46','12','insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48','12','update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete',2,'| 1 |','| 3 |'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert',3,NULL,NULL),(5,'SubProjectTest1','in_process',1,1,7,1,'2022-09-12 07:46:43','12','insert',1,NULL,NULL),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58','12','delete',2,NULL,NULL);
+INSERT INTO `obj_subproject_version` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04',12,'insert',3,NULL,NULL),(2,'NewSubproject2','in_process',1,1,1,1,'2022-09-01 12:56:03',12,'insert',3,NULL,NULL),(3,'SubprojectTest1','in_process',1,1,3,1,'2022-09-05 09:26:46',12,'insert',1,NULL,NULL),(3,'PutTestSubproject','in_process',1,1,3,2,'2022-09-05 09:37:48',12,'update',2,'| 1 |','| 1 |'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete',2,'| 1 |','| 3 |'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08',12,'insert',3,NULL,NULL),(5,'SubProjectTest1','in_process',1,1,7,1,'2022-09-12 07:46:43',12,'insert',1,NULL,NULL),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58',12,'delete',2,NULL,NULL);
 /*!40000 ALTER TABLE `obj_subproject_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -627,7 +643,7 @@ CREATE TABLE `propel_migration` (
 
 LOCK TABLES `propel_migration` WRITE;
 /*!40000 ALTER TABLE `propel_migration` DISABLE KEYS */;
-INSERT INTO `propel_migration` VALUES (1661943879),(1661953065),(1661953852),(1662977956),(1662979233);
+INSERT INTO `propel_migration` VALUES (1661943879),(1661953065),(1661953852),(1662977956),(1662979233),(1663062544);
 /*!40000 ALTER TABLE `propel_migration` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -859,11 +875,13 @@ CREATE TABLE `vol_material` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
-  CONSTRAINT `material_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
+  KEY `vol_material_ibfi_3` (`version_created_by`),
+  CONSTRAINT `material_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`),
+  CONSTRAINT `vol_material_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -873,7 +891,7 @@ CREATE TABLE `vol_material` (
 
 LOCK TABLES `vol_material` WRITE;
 /*!40000 ALTER TABLE `vol_material` DISABLE KEYS */;
-INSERT INTO `vol_material` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13','12','insert');
+INSERT INTO `vol_material` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13',12,'insert');
 /*!40000 ALTER TABLE `vol_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -892,7 +910,7 @@ CREATE TABLE `vol_material_version` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_material_ids` text,
   `obj_stage_material_versions` text,
@@ -909,7 +927,7 @@ CREATE TABLE `vol_material_version` (
 
 LOCK TABLES `vol_material_version` WRITE;
 /*!40000 ALTER TABLE `vol_material_version` DISABLE KEYS */;
-INSERT INTO `vol_material_version` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13','12','insert',NULL,NULL,NULL,NULL);
+INSERT INTO `vol_material_version` VALUES (1,'TestMaterial',100.00,1,1,1,'2022-09-12 11:11:13',12,'insert',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -928,11 +946,13 @@ CREATE TABLE `vol_technic` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
-  CONSTRAINT `technic_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
+  KEY `vol_technic_ibfi_3` (`version_created_by`),
+  CONSTRAINT `technic_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`),
+  CONSTRAINT `vol_technic_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -942,7 +962,7 @@ CREATE TABLE `vol_technic` (
 
 LOCK TABLES `vol_technic` WRITE;
 /*!40000 ALTER TABLE `vol_technic` DISABLE KEYS */;
-INSERT INTO `vol_technic` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13','12','insert'),(2,'TestWork',100.00,1,1,1,'2022-09-12 11:11:13','12','insert');
+INSERT INTO `vol_technic` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13',12,'insert'),(2,'TestWork',100.00,1,1,1,'2022-09-12 11:11:13',12,'insert');
 /*!40000 ALTER TABLE `vol_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -961,7 +981,7 @@ CREATE TABLE `vol_technic_version` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_technic_ids` text,
   `obj_stage_technic_versions` text,
@@ -978,7 +998,7 @@ CREATE TABLE `vol_technic_version` (
 
 LOCK TABLES `vol_technic_version` WRITE;
 /*!40000 ALTER TABLE `vol_technic_version` DISABLE KEYS */;
-INSERT INTO `vol_technic_version` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13','12','insert',NULL,NULL,NULL,NULL);
+INSERT INTO `vol_technic_version` VALUES (1,'TestTechnic',100.00,1,1,1,'2022-09-12 11:11:13',12,'insert',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1022,10 +1042,12 @@ CREATE TABLE `vol_work` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
+  KEY `vol_work_ibfi_3` (`version_created_by`),
+  CONSTRAINT `vol_work_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `work_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `vol_unit` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1036,7 +1058,7 @@ CREATE TABLE `vol_work` (
 
 LOCK TABLES `vol_work` WRITE;
 /*!40000 ALTER TABLE `vol_work` DISABLE KEYS */;
-INSERT INTO `vol_work` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23','12','insert');
+INSERT INTO `vol_work` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23',12,'insert');
 /*!40000 ALTER TABLE `vol_work` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1055,11 +1077,13 @@ CREATE TABLE `vol_work_material` (
   `material_id` int unsigned NOT NULL COMMENT 'ID материала',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `work_id` (`work_id`),
   KEY `material_id` (`material_id`),
+  KEY `vol_work_material_ibfi_3` (`version_created_by`),
+  CONSTRAINT `vol_work_material_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `work_material_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `work_material_ibfk_2` FOREIGN KEY (`material_id`) REFERENCES `vol_material` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -1071,7 +1095,7 @@ CREATE TABLE `vol_work_material` (
 
 LOCK TABLES `vol_work_material` WRITE;
 /*!40000 ALTER TABLE `vol_work_material` DISABLE KEYS */;
-INSERT INTO `vol_work_material` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert');
+INSERT INTO `vol_work_material` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23',12,'insert');
 /*!40000 ALTER TABLE `vol_work_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1090,7 +1114,7 @@ CREATE TABLE `vol_work_material_version` (
   `material_id` int unsigned NOT NULL COMMENT 'ID материала',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `work_id_version` int DEFAULT '0',
   `material_id_version` int DEFAULT '0',
@@ -1105,7 +1129,7 @@ CREATE TABLE `vol_work_material_version` (
 
 LOCK TABLES `vol_work_material_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_material_version` DISABLE KEYS */;
-INSERT INTO `vol_work_material_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert',1,1);
+INSERT INTO `vol_work_material_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23',12,'insert',1,1);
 /*!40000 ALTER TABLE `vol_work_material_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1124,11 +1148,13 @@ CREATE TABLE `vol_work_technic` (
   `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
   `version` int DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `work_id` (`work_id`),
   KEY `technic_id` (`technic_id`),
+  KEY `vol_work_technic_ibfi_3` (`version_created_by`),
+  CONSTRAINT `vol_work_technic_ibfk_3` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`),
   CONSTRAINT `work_technic_ibfk_1` FOREIGN KEY (`work_id`) REFERENCES `vol_work` (`id`),
   CONSTRAINT `work_technic_ibfk_2` FOREIGN KEY (`technic_id`) REFERENCES `vol_technic` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -1140,7 +1166,7 @@ CREATE TABLE `vol_work_technic` (
 
 LOCK TABLES `vol_work_technic` WRITE;
 /*!40000 ALTER TABLE `vol_work_technic` DISABLE KEYS */;
-INSERT INTO `vol_work_technic` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert');
+INSERT INTO `vol_work_technic` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23',12,'insert');
 /*!40000 ALTER TABLE `vol_work_technic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1159,7 +1185,7 @@ CREATE TABLE `vol_work_technic_version` (
   `technic_id` int unsigned NOT NULL COMMENT 'ID техники',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `work_id_version` int DEFAULT '0',
   `technic_id_version` int DEFAULT '0',
@@ -1174,7 +1200,7 @@ CREATE TABLE `vol_work_technic_version` (
 
 LOCK TABLES `vol_work_technic_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_technic_version` DISABLE KEYS */;
-INSERT INTO `vol_work_technic_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23','12','insert',1,1);
+INSERT INTO `vol_work_technic_version` VALUES (1,2.00,1,1,1,1,'2022-09-12 11:14:23',12,'insert',1,1);
 /*!40000 ALTER TABLE `vol_work_technic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1193,7 +1219,7 @@ CREATE TABLE `vol_work_version` (
   `unit_id` int unsigned NOT NULL COMMENT 'ID ед. измерения',
   `version` int NOT NULL DEFAULT '0',
   `version_created_at` timestamp NULL DEFAULT NULL,
-  `version_created_by` varchar(100) DEFAULT NULL,
+  `version_created_by` int unsigned NOT NULL,
   `version_comment` varchar(255) DEFAULT NULL,
   `obj_stage_work_ids` text,
   `obj_stage_work_versions` text,
@@ -1212,7 +1238,7 @@ CREATE TABLE `vol_work_version` (
 
 LOCK TABLES `vol_work_version` WRITE;
 /*!40000 ALTER TABLE `vol_work_version` DISABLE KEYS */;
-INSERT INTO `vol_work_version` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23','12','insert',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `vol_work_version` VALUES (1,'TestWork',100.00,1,1,1,'2022-09-12 11:14:23',12,'insert',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vol_work_version` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

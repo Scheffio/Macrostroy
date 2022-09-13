@@ -532,10 +532,19 @@
         }
     }
     .no-access-window {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: white;
+        margin-top: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        p {
+            font-family: 'Jost', sans-serif;
+        }
+        a {
+            text-decoration: none;
+            @include MenuItemText;
+            
+        }
     }
 }
 

@@ -694,6 +694,24 @@ body.fixated {
   left: 5px;
   transition: 0.3s;
 }
+.wrap .no-access-window {
+  margin-top: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.wrap .no-access-window p {
+  font-family: "Jost", sans-serif;
+}
+.wrap .no-access-window a {
+  text-decoration: none;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #7E99AD;
+}
 
 @-webkit-keyframes showModal {
   0% {

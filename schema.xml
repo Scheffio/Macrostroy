@@ -64,11 +64,15 @@
     <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)" required="true" defaultValue="in_process"/>
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
-    <column name="user_id" phpName="UserId" type="INTEGER" sqlType="int unsigned" description="ID пользователя" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
-    <foreign-key foreignTable="users" name="project_role_ibfk_3">
-      <reference local="user_id" foreign="id"/>
+    <foreign-key foreignTable="users" name="obj_project_ibfk_12">
+      <reference local="version_created_by" foreign="id"/>
     </foreign-key>
+
+    <index name="version_created_by">
+      <index-column name="version_created_by"/>
+    </index>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
@@ -87,11 +91,18 @@
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="project_id" phpName="ProjectId" type="INTEGER" sqlType="int unsigned" description="ID проекта" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_subproject_ibfk_12">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="obj_project" name="subproject_ibfk_1">
       <reference local="project_id" foreign="id"/>
     </foreign-key>
 
+    <index name="version_created_by">
+      <index-column name="version_created_by"/>
+    </index>
     <index name="project_id">
       <index-column name="project_id"/>
     </index>
@@ -114,11 +125,18 @@
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="subproject_id" phpName="SubprojectId" type="INTEGER" sqlType="int unsigned" description="ID подпроекта" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_group_ibfk_12">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="obj_subproject" name="groups_ibfk_1">
       <reference local="subproject_id" foreign="id"/>
     </foreign-key>
 
+    <index name="version_created_by">
+      <index-column name="version_created_by"/>
+    </index>
     <index name="subproject_id">
       <index-column name="subproject_id"/>
     </index>
@@ -141,11 +159,18 @@
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="group_id" phpName="GroupId" type="INTEGER" sqlType="int unsigned" description="Id группы" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_house_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="obj_group" name="house_ibfk_1">
       <reference local="group_id" foreign="id"/>
     </foreign-key>
 
+    <index name="version_created_by">
+      <index-column name="version_created_by"/>
+    </index>
     <index name="group_id">
       <index-column name="group_id"/>
     </index>
@@ -168,11 +193,18 @@
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="house_id" phpName="HouseId" type="INTEGER" sqlType="int unsigned" description="ID дома" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_stage_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="obj_house" name="stage_ibfk_1">
       <reference local="house_id" foreign="id"/>
     </foreign-key>
 
+    <index name="version_created_by">
+      <index-column name="version_created_by"/>
+    </index>
     <index name="house_id">
       <index-column name="house_id"/>
     </index>
@@ -195,7 +227,11 @@
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
     <column name="stage_id" phpName="StageId" type="INTEGER" sqlType="int unsigned" description="ID этапа" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_stage_work_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_work" name="stage_work_ibfk_5">
       <reference local="work_id" foreign="id"/>
     </foreign-key>
@@ -221,7 +257,11 @@
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="material_id" phpName="MaterialId" type="INTEGER" sqlType="int unsigned" description="ID материала" required="true"/>
     <column name="stage_work_id" phpName="StageWorkId" type="INTEGER" sqlType="int unsigned" description="ID работы этапа" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_stage_material_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_material" name="stage_material_ibfk_1">
       <reference local="material_id" foreign="id"/>
     </foreign-key>
@@ -254,7 +294,11 @@
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="technic_id" phpName="TechnicId" type="INTEGER" sqlType="int unsigned" description="ID техники" required="true"/>
     <column name="stage_work_id" phpName="StageWorkId" type="INTEGER" sqlType="int unsigned" description="ID работы этапа" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="obj_stage_technic_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="obj_stage_work" name="stage_technic_ibfk_1">
       <reference local="stage_work_id" foreign="id"/>
     </foreign-key>
@@ -286,7 +330,11 @@
     <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Стоимость" required="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед. измерения" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="vol_material_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_unit" name="material_ibfk_1">
       <reference local="unit_id" foreign="id"/>
     </foreign-key>
@@ -312,7 +360,11 @@
     <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Стоимость" required="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед. измерения" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="vol_technic_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_unit" name="technic_ibfk_1">
       <reference local="unit_id" foreign="id"/>
     </foreign-key>
@@ -338,7 +390,11 @@
     <column name="price" phpName="Price" type="DECIMAL" size="19" scale="2" sqlType="decimal(19,2) unsigned" description="Стоимость" required="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="unit_id" phpName="UnitId" type="INTEGER" sqlType="int unsigned" description="ID ед. измерения" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="vol_work_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_unit" name="work_ibfk_1">
       <reference local="unit_id" foreign="id"/>
     </foreign-key>
@@ -364,7 +420,11 @@
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
     <column name="material_id" phpName="MaterialId" type="INTEGER" sqlType="int unsigned" description="ID материала" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="vol_work_material_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_work" name="work_material_ibfk_1">
       <reference local="work_id" foreign="id"/>
     </foreign-key>
@@ -396,7 +456,11 @@
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
     <column name="work_id" phpName="WorkId" type="INTEGER" sqlType="int unsigned" description="ID работы" required="true"/>
     <column name="technic_id" phpName="TechnicId" type="INTEGER" sqlType="int unsigned" description="ID техники" required="true"/>
+    <column name="version_created_by" phpName="VersionCreatedBy" type="INTEGER" sqlType="int unsigned" required="true"/>
 
+    <foreign-key foreignTable="users" name="vol_work_technic_ibfk_3">
+      <reference local="version_created_by" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="vol_work" name="work_technic_ibfk_1">
       <reference local="work_id" foreign="id"/>
     </foreign-key>

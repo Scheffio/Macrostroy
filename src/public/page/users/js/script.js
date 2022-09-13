@@ -153,12 +153,12 @@ function parseRoles() {
             document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
         })
 
-        
         const selectableUsers = {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
                 this.reset()
                 elem.classList.toggle('selected')
+                console.log(elem.dataset.id);
             },
             reset() {
                 this.roles.forEach((elem) => {
@@ -186,6 +186,7 @@ function parsePermissions(id) {
     let obj = {
         role_id: id 
     }
+    url.search = new URLSearchParams(obj).toString()
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
@@ -231,4 +232,3 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#roles"
 parseRoles()
-parsePermissions()

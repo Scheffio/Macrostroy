@@ -334,7 +334,7 @@ class Objects
                         isAccessManageUsers: $access['manageObjects']
                     )->find()->getData();
 
-        $objects = self::formingObjects($lvl, $objects);
+//        self::formingObjects($lvl, $objects);
 
         JsonOutput::success([
             'crud' => $crud,
@@ -441,96 +441,35 @@ class Objects
         return $query;
     }
 
-    private static function formingObjects(int &$lvl, array &$objs)
+    private static function formingObjects(int &$lvl, array &$objs): void
     {
-        $result = [];
         $colId = self::getColIdByLvl($lvl);
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
 
-        foreach ($objs as $obj) {
-            $id =& $obj[$colId];
-
-            if (array_key_exists($id, $result)) {
-                JsonOutput::success($result);
-                self::pushObjParentsById(
-                id: $id,
-                result: $result,
-                obj: $obj,
-                );
-            } else {
-                self::pushObjById(
-                id: $id,
-                colName: $colName,
-                colStatus: $colStatus,
-                colIsPublic: $colIsPublic,
-                obj: $obj,
-                result: $result,
-                );
-            }
-        }
-
-        return $result;
-    }
-
-    private static function pushObjById(
-        int &$id,
-        string &$colName,
-        string &$colStatus,
-        string &$colIsPublic,
-        array &$obj,
-        array &$result
-    ): void
-    {
-        $result[$id] = [
-            'obj' => [
-                'name' => $obj[$colName],
-                'status' => $obj[$colStatus],
-                'isPublic' => $obj[$colIsPublic],
-                'user' => [
-                    'id' => $obj[UsersTableMap::COL_ID],
-                    'name' => $obj[UsersTableMap::COL_USERNAME],
+        foreach ($objs as &$obj) {
+            $obj = [
+                'obj' => [
+                    'id' => $obj[$colId],
+                    'name' => $obj[$colName],
+                    'status' => $obj[$colStatus],
+                    'isPublic' => $obj[$colIsPublic],
+                    'user' => [
+                        'id' => $obj[UsersTableMap::COL_ID],
+                        'name' => $obj[UsersTableMap::COL_USERNAME],
+                    ],
+                    'price' => $obj['price'] ?? 0,
                 ],
-                'price' => $obj['price'] ?? 0,
-            ],
-            'parents' => []
-        ];
-
-        self::pushObjParentsById($id, $result, $obj);
-    }
-
-    private static function pushObjParentsById(int &$id, array &$result, array &$obj): void
-    {
-        $resParents =& $result[$id]['parents'];
-        $objParents = self::getObjParents($obj);
-        $resParents = array_push($resParents, $objParents);
-    }
-
-    private static function getObjParents(array &$obj): array
-    {
-        return [
-            [
-                'id' => $obj[ObjProjectTableMap::COL_ID],
-                'lvl' => eLvlObjInt::PROJECT->value,
-            ],
-            [
-                'id' => $obj[ObjSubprojectTableMap::COL_ID],
-                'lvl' => eLvlObjInt::PROJECT->value,
-            ],
-            [
-                'id' => $obj[ObjGroupTableMap::COL_ID],
-                'lvl' => eLvlObjInt::PROJECT->value,
-            ],
-            [
-                'id' => $obj[ObjHouseTableMap::COL_ID],
-                'lvl' => eLvlObjInt::PROJECT->value,
-            ],
-            [
-                'id' => $obj[ObjStageTableMap::COL_ID],
-                'lvl' => eLvlObjInt::PROJECT->value,
-            ]
-        ];
+                'parents' => [
+                    ObjProjectTableMap::COL_ID => $obj[ObjProjectTableMap::COL_ID],
+                    ObjSubprojectTableMap::COL_ID => $obj[ObjSubprojectTableMap::COL_ID],
+                    ObjGroupTableMap::COL_ID => $obj[ObjGroupTableMap::COL_ID],
+                    ObjHouseTableMap::COL_ID => $obj[ObjHouseTableMap::COL_ID],
+                    ObjStageTableMap::COL_ID => $obj[ObjStageTableMap::COL_ID],
+                ]
+            ];
+        }
     }
     #endregion
 

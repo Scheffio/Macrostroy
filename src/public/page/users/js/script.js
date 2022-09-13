@@ -164,6 +164,9 @@ function parseRoles() {
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
+            },
+            getid() {
+
             }
         }
         
@@ -178,10 +181,10 @@ function parseRoles() {
     })
 }
 
-function parsePermissions() {
+function parsePermissions(id) {
     let url = new URL('https://artemy.net/api/v1/role')
     let obj = {
-        role_id: 
+        role_id: id 
     }
     fetch(url).then((elem) => {
         return elem.json()

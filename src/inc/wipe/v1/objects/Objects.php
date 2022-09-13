@@ -443,6 +443,7 @@ class Objects
     {
         $result = [];
         $colId = self::getColIdByLvl($lvl);
+//        $colPreId = self::getColIdByLvl()
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
@@ -487,27 +488,50 @@ class Objects
                 ],
                 'price' => $obj['price'] ?? 0,
             ],
-            'parents' => [
-                [
-                    'id' => $obj[ObjProjectTableMap::COL_ID],
-                    'lvl' => eLvlObjInt::PROJECT->value,
-                ],
-                [
-                    'id' => $obj[ObjSubprojectTableMap::COL_ID],
-                    'lvl' => eLvlObjInt::PROJECT->value,
-                ],
-                [
-                    'id' => $obj[ObjGroupTableMap::COL_ID],
-                    'lvl' => eLvlObjInt::PROJECT->value,
-                ],
-                [
-                    'id' => $obj[ObjHouseTableMap::COL_ID],
-                    'lvl' => eLvlObjInt::PROJECT->value,
-                ],
-                [
-                    'id' => $obj[ObjStageTableMap::COL_ID],
-                    'lvl' => eLvlObjInt::PROJECT->value,
-                ]
+            'parents' => self::getObjParents($obj)
+        ];
+    }
+
+    private static function pushObjParentsById(int &$id, array &$result, array &$obj): void
+    {
+        $resParents =& $result[$id]['parents'];
+        $objParents = self::getObjParents($obj);
+
+        
+//        if ($parents) {
+//            foreach ($parents as &$parent) {
+//                $lvl =& $parent['lvl'];
+//                $colId = self::getColIdByLvl($lvl);
+//                
+//                if ($obj[$colId] === )
+//            }
+//        }
+        
+        $result[$id]['parents'] = [];
+    }
+    
+    private static function getObjParents(array &$obj): array
+    {
+        return [
+            [
+                'id' => $obj[ObjProjectTableMap::COL_ID],
+                'lvl' => eLvlObjInt::PROJECT->value,
+            ],
+            [
+                'id' => $obj[ObjSubprojectTableMap::COL_ID],
+                'lvl' => eLvlObjInt::PROJECT->value,
+            ],
+            [
+                'id' => $obj[ObjGroupTableMap::COL_ID],
+                'lvl' => eLvlObjInt::PROJECT->value,
+            ],
+            [
+                'id' => $obj[ObjHouseTableMap::COL_ID],
+                'lvl' => eLvlObjInt::PROJECT->value,
+            ],
+            [
+                'id' => $obj[ObjStageTableMap::COL_ID],
+                'lvl' => eLvlObjInt::PROJECT->value,
             ]
         ];
     }

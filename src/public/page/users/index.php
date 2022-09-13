@@ -86,7 +86,7 @@
                                             <span>Все</span>
                                             <span>Отдельно</span>
                                         </div>
-                                        <label for="volume-crud">CRUD объектов</label>
+                                        <label for="volume-crud">CRUD объёмов</label>
                                     </div>
                                 </div>
                             </div>

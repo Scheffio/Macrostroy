@@ -158,7 +158,7 @@ function parseRoles() {
             click(elem) {
                 this.reset()
                 elem.classList.toggle('selected')
-                console.log(elem.dataset.id);
+                parsePermissions(elem.children[0].dataset.id)
             },
             reset() {
                 this.roles.forEach((elem) => {

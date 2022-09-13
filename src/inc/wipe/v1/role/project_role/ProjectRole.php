@@ -35,6 +35,7 @@ use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class ProjectRole
 {
@@ -275,13 +276,23 @@ class ProjectRole
         return new ProjectRole();
     }
 
-    public static function getUserCrudById(int $lvl, int $userId, ?int $projectId)
+    /**
+     * Возвращает разрешения пользователя по уровню.
+     * @param int $lvl Уровень доступа.
+     * @param int $userId ID пользователя.
+     * @param int|null $projectId ID проекта.
+     * @return array
+     * @throws PropelException
+     * @throws NoUserFoundException
+     */
+    public static function getUserCrudById(int &$lvl, int &$userId, ?int &$projectId): array
     {
         $user = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
 
         if ($user) {
             self::formingUsersDataById($user);
-        }
+            self::filterUsersCrudByLvl($lvl, $user);
+        } else throw new NoUserFoundException();
 
         return $user;
     }

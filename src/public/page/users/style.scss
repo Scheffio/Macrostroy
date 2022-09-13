@@ -306,12 +306,32 @@
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
+                                    width: 28px;
+                                    position: relative;
                                     &::before {
                                         content: '';
                                         width: 26px;
                                         height: 26px;
                                         display: block;
                                         border: 2px solid black;
+                                    }
+                                    &:nth-child(1) {
+                                        &::after {
+                                            content: 'Все';
+                                            display: block;
+                                            position: absolute;
+                                            top: 32px;
+                                            left: 0;
+                                        }
+                                    }
+                                    &:nth-child(2) {
+                                        &::after {
+                                            content: 'Отдельно';
+                                            display: block;
+                                            position: absolute;
+                                            top: 32px;
+                                            left: 0;
+                                        }
                                     }
                                 }
                             }

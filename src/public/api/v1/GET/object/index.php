@@ -12,7 +12,7 @@ try {
         Objects::getObjectsByLvl(
             lvl: 2,
             parentId: 0,
-            projectId: 0,
+            projectId: 2,
             userId: 17,
             limit: 10,
             limitFrom: 0,

@@ -383,13 +383,29 @@ body.fixated {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 28px;
+  position: relative;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input::before {
   content: "";
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   display: block;
   border: 2px solid black;
+}
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:nth-child(1)::after {
+  content: "Все";
+  display: block;
+  position: absolute;
+  top: 32px;
+  left: 0;
+}
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:nth-child(2)::after {
+  content: "Отдельно";
+  display: block;
+  position: absolute;
+  top: 32px;
+  left: 0;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes {
   display: flex;

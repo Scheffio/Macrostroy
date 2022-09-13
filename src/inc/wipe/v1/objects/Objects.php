@@ -315,18 +315,20 @@ class Objects
         int $limitFrom = 0,
     )
     {
+        $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
+        $crud =& $user['crud'];
+        $access =& $user['user'];
+
         JsonOutput::success(
-            ProjectRole::getUserCrudById($lvl, $userId, $projectId)
-//            ProjectRole::getCrudUsersByObject($lvl, $projectId, $parentId, $userId)
-//            ProjectRole::getUsersQuery($lvl, $projectId, $userId)->find()->getData()
+            self::getObjectsQuery(
+                objId: $parentId,
+                lvl: $lvl,
+                limit: $limit,
+                limitFrom: $limitFrom,
+                isAccessManageUsers: $access['manageObjects']
+            )->find()->getData()
         );
 
-//        $isCrud = ProjectRole::isAccessCrudObj(
-//            lvl: $lvl,
-//            projectId: $projectId,
-//            userId: $userId,
-//            objId: $parentId
-//        );
 //
 //        self::getObjectsQuery(
 //            objId: $parentId,
@@ -370,17 +372,17 @@ class Objects
             );
         }
 
-//        if ($limitFrom) {
-//            $query->filterBy(
-//                column: 'Id',
-//                value: $limitFrom,
-//                comparison: Criteria::GREATER_THAN
-//            );
-//        }
-//
-//        $query->limit($limit);
-//
-//        return $query;
+        if ($limitFrom) {
+            $query->filterBy(
+                column: 'Id',
+                value: $limitFrom,
+                comparison: Criteria::GREATER_THAN
+            );
+        }
+
+        $query->limit($limit);
+
+        return $query;
     }
 
     public static function getObjectsPriceQuery(int $lvl, int $objId)

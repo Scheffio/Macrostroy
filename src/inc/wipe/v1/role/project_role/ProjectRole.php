@@ -350,6 +350,7 @@ class ProjectRole
                     UserRoleTableMap::COL_MANAGE_USERS,
                     UserRoleTableMap::COL_OBJECT_VIEWER,
                     UserRoleTableMap::COL_MANAGE_OBJECTS,
+                    UserRoleTableMap::COL_MANAGE_HISTORY,
                 ])
                 ->withColumn('GROUP_CONCAT(project_role.is_crud)', 'is_crud')
                 ->withColumn('GROUP_CONCAT(project_role.lvl)', 'lvl')
@@ -440,11 +441,12 @@ class ProjectRole
     {
         $user = [
             'user' => [
-                'id' => $user['users.id'],
-                'name' => $user['users.username'],
-                'manageUsers' => (bool) $user['user_role.manage_users'],
-                'objectViewer' => (bool) $user['user_role.object_viewer'],
-                'manageObjects' => (bool) $user['user_role.manage_objects'],
+                'id' => $user[UsersTableMap::COL_ID],
+                'name' => $user[UsersTableMap::COL_USERNAME],
+                'manageUsers' => (bool) $user[UserRoleTableMap::COL_MANAGE_USERS],
+                'objectViewer' => (bool) $user[UserRoleTableMap::COL_OBJECT_VIEWER],
+                'manageObjects' => (bool) $user[UserRoleTableMap::COL_MANAGE_OBJECTS],
+                'manageHistory' => (bool) $user[UserRoleTableMap::COL_MANAGE_HISTORY],
             ],
             'crud' => $crud
         ];

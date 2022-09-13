@@ -328,6 +328,13 @@ class Objects
         self::sortAccess($crud);
         $access =& $user['user'];
 
+        $basicCrud = self::getUserAccess(
+            lvl: $lvl,
+            userId: $userId,
+            access: $access,
+            parentId: $parentId,
+            projectId: $projectId,
+        );
         $objects = self::getObjectsQuery(
                         objId: $parentId,
                         lvl: $lvl,
@@ -347,13 +354,7 @@ class Objects
             'crud' => $crud,
             'access' => $access,
             'objects' => $objects,
-            'isCrud' => self::getUserAccess(
-            lvl: $lvl,
-            userId: $userId,
-            access: $access,
-            parentId: $parentId,
-            projectId: $projectId,
-            )
+            'isCrud' => $basicCrud
         ]);
 
 //        IsCrud: true
@@ -571,15 +572,16 @@ class Objects
         if ($access['manageUsers'] === false) {
             if ($projectId) {
                 $isCrud = ProjectRole::isAccessCrudObj(
-                    lvl: $lvl,
+                    lvl: AccessLvl::getPreLvlIntObj($lvl),
                     projectId: $projectId,
                     userId: $userId,
                     objId: $parentId
                 );
             } else {
                 $isCrud = $access['manageObjects'];
-                $isCrud = $access['manageObjects'];
             }
+
+            $isHistory = $access['manageHistory'];
         } else {
             $isCrud = true;
             $isAdmin = true;

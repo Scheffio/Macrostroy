@@ -419,6 +419,9 @@ body.fixated {
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes .checkbox-titles {
   display: flex;
   gap: 20px;
+  position: absolute;
+  left: 8px;
+  top: 40px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes .checkbox-titles span,
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes .checkbox-titles span {

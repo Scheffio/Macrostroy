@@ -82,6 +82,10 @@
                                     <div class="volume-crud-checkboxes">
                                         <input type="radio" name="volume-crud-radio" id="volume-crud">
                                         <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                        <div class="checkbox-titles">
+                                            <span>Все</span>
+                                            <span>Отдельно</span>
+                                        </div>
                                         <label for="volume-crud">CRUD объектов</label>
                                     </div>
                                 </div>
@@ -110,8 +114,7 @@
                             <p class="permission__description">Возможность просматривать объекты, и формировать сметы по
                                 ним.</p>
                         </div>
-                        <p class="admin-alert">Этот пользователь является администратором, Вы не можете редактировать
-                            его разрешения.</p>
+                        <p class="explanation">*Отдельно - для каждого объекта можно дать доступ отдельному пользователю. Это редактируется внутри настроект объекта.</p>
                     </div>
                 </div>
             </div>

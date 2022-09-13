@@ -11,15 +11,10 @@ try {
     JsonOutput::success(
         Objects::getObjectsByLvl(
             lvl: 2,
-            parentId: 2,
-            projectId: 2,
+            parentId: 1,
             userId: 17,
             limit: 10,
-            limitFrom: 2,
-//            userId: AuthUserRole::getUserId(),
-//            isAccessManageUsers: AuthUserRole::isAccessManageUsers(),
-//            isAccessManageObjects: AuthUserRole::isAccessManageObjects(),
-//            isAccessObjectViewer: AuthUserRole::isAccessObjectViewer(),
+            limitFrom: 0,
         )
     );
 } catch (NoRoleFoundException $e) {

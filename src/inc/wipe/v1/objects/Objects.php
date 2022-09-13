@@ -315,12 +315,12 @@ class Objects
     public static function getObjectsByLvl(
         int $lvl,
         int $parentId,
-        int $projectId,
         int $userId,
         int $limit = 10,
         int $limitFrom = 0,
     )
     {
+        $projectId = null;
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
         $crud =& $user['crud'];
         $access =& $user['user'];
@@ -399,7 +399,7 @@ class Objects
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getObjectsPriceQuery(int $lvl, int $objId): mixed
+    public static function getObjectsPriceQuery(int &$lvl, int &$objId): mixed
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;

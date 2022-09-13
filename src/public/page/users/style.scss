@@ -306,6 +306,7 @@
                                 gap: 20px;
                                 width: 310px;
                                 height: 51px;
+                                position: relative;
                                 input {
                                     display: flex;
                                     justify-content: center;
@@ -333,6 +334,13 @@
                                         &::after {
                                             background-color: black;
                                         }
+                                    }
+                                }
+                                .checkbox-titles {
+                                    display: flex;
+                                    gap: 20px;
+                                    span{
+                                        @include CheckboxTitle;
                                     }
                                 }
                             }

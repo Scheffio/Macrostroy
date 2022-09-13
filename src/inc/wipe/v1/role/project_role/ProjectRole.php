@@ -294,7 +294,7 @@ class ProjectRole
             self::filterUsersCrudByLvl($lvl, $user);
         } else throw new NoUserFoundException();
 
-        return $user;
+        return $user[0];
     }
     #endregion
 

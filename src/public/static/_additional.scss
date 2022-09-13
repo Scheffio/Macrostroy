@@ -287,5 +287,12 @@ $EstiminColor8: #E5EBEF;
     }
 }
 
+@mixin CheckboxTitle {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 12px;
+        weight: 700;
+    }
+}
 // ---------------------
 

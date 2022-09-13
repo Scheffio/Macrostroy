@@ -357,12 +357,11 @@ class Objects
         $colIsPublic = self::getColIsPublicByLvl($lvl);
         $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
 
-        $query = self::getObjectsPriceQuery($lvl, $objId)
-            ->withColumn($colId)
-            ->withColumn($colName)
-            ->withColumn($colStatus)
-            ->withColumn($colIsPublic)
-            ->withColumn($colCreatedBy);
+        $query = self::getObjectsPriceQuery($lvl, $objId);
+//            ->withColumn($colName)
+//            ->withColumn($colStatus)
+//            ->withColumn($colIsPublic)
+//            ->withColumn($colCreatedBy);
 
         if (!$isAccessManageUsers) {
             $query->filterBy(
@@ -387,15 +386,17 @@ class Objects
 
     public static function getObjectsPriceQuery(int $lvl, int $objId)
     {
-        $colSwPrice = ObjStageWorkTableMap::COL_PRICE;
-        $colSwAmount = ObjStageWorkTableMap::COL_AMOUNT;
-        $colSmPrice = ObjStageTechnicTableMap::COL_PRICE;
-        $colSmAmount = ObjStageTechnicTableMap::COL_AMOUNT;
-        $colStPrice = ObjStageMaterialTableMap::COL_PRICE;
-        $colStAmount = ObjStageMaterialTableMap::COL_AMOUNT;
+        $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
+        $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
+        $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
+        $sumStr = "($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr)";
 
         $query = ObjProjectQuery::create()
                 ->select([
+                    self::getColNameByLvl($lvl),
+                    self::getColStatusByLvl($lvl),
+                    self::getColIsPublicByLvl($lvl),
+                    self::getColCreatedUserIdByLvl($lvl),
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
                     ObjGroupTableMap::COL_ID,
@@ -403,10 +404,7 @@ class Objects
                     ObjStageTableMap::COL_ID,
                     ObjStageWorkTableMap::COL_ID
                 ])
-                ->withColumn(
-                    "($colSwPrice*$colSwAmount) + ($colSmPrice*$colSmAmount) + ($colStPrice*$colStAmount)",
-                    'price'
-                )
+                ->withColumn($sumStr, 'price')
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)

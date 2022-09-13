@@ -281,6 +281,9 @@
                     }
                     padding-left: 19px;
                     .permission {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
                         padding-bottom: 15px;
                         &.disabled {
                             opacity: .5;
@@ -296,7 +299,8 @@
                                 @include PermissionTitle;
                                 user-select: none;
                             }
-                            .object-crud-checkboxes {
+                            .object-crud-checkboxes,
+                            .volume-crud-checkboxes {
                                 display: flex;
                                 align-items: center;
                                 gap: 20px;
@@ -320,8 +324,9 @@
                                             content: 'Все';
                                             display: block;
                                             position: absolute;
-                                            top: 32px;
-                                            left: 0;
+                                            top: 21px;
+                                            left: 2px;
+                                            @include CheckboxTitle;
                                         }
                                     }
                                     &:nth-child(2) {
@@ -329,8 +334,9 @@
                                             content: 'Отдельно';
                                             display: block;
                                             position: absolute;
-                                            top: 32px;
-                                            left: 0;
+                                            top: 21px;
+                                            left: -15px;
+                                            @include CheckboxTitle;
                                         }
                                     }
                                 }

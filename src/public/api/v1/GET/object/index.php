@@ -11,9 +11,9 @@ try {
 
     JsonOutput::success(
         Objects::getObjectsByLvl(
-            lvl: 2,
-            parentId: 1,
-            userId: 17,
+            lvl: 1,
+            parentId: 0,
+            userId: 12,
             limit: 10,
             limitFrom: 0,
         )

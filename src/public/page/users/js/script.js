@@ -205,6 +205,10 @@ function parsePermissions(id) {
                 if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
                     adminCheckbox.checked = true
                 }else if (parameter.object_viewer == true) {
+                    watchobjectsCheckbox = true
+                }else if (parameter.manage_history == true) {
+                    versionControlCheckbox = true
+                }else if (parameter.manage_objects == true) {
                     
                 }
             }

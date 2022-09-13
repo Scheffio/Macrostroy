@@ -321,7 +321,7 @@ class Objects
         int $limitFrom = 0,
     )
     {
-        $projectId = Objects::getProjectIdByChildOrThrow($parentId, $lvl);
+        $projectId = $parentId ? Objects::getProjectIdByChildOrThrow($parentId, $lvl) : null;
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
 
         $crud =& $user['crud'];
@@ -336,7 +336,12 @@ class Objects
                         isAccessManageUsers: $access['manageObjects']
                     )->find()->getData();
 
-//        self::formingObjects($lvl, $objects);
+        self::formingObjects(
+        lvl: $lvl,
+        access: $access,
+        crud: $crud,
+        objs: $objects,
+        );
 
         JsonOutput::success([
             'crud' => $crud,
@@ -468,7 +473,7 @@ class Objects
         return $query;
     }
 
-    private static function formingObjects(int &$lvl, array &$objs): void
+    private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): void
     {
         $colId = self::getColIdByLvl($lvl);
         $colName = self::getColNameByLvl($lvl);
@@ -488,39 +493,36 @@ class Objects
                     ],
                     'price' => $obj['price'] ?? 0,
                 ],
-                'parents' => [
-                    ObjProjectTableMap::COL_ID => $obj[ObjProjectTableMap::COL_ID],
-                    ObjSubprojectTableMap::COL_ID => $obj[ObjSubprojectTableMap::COL_ID],
-                    ObjGroupTableMap::COL_ID => $obj[ObjGroupTableMap::COL_ID],
-                    ObjHouseTableMap::COL_ID => $obj[ObjHouseTableMap::COL_ID],
-                    ObjStageTableMap::COL_ID => $obj[ObjStageTableMap::COL_ID],
-                ]
+                'isCrud' => self::isAccessCrud($access, $crud, $obj)
+//                'parents' => [
+//                    ObjProjectTableMap::COL_ID => $obj[ObjProjectTableMap::COL_ID],
+//                    ObjSubprojectTableMap::COL_ID => $obj[ObjSubprojectTableMap::COL_ID],
+//                    ObjGroupTableMap::COL_ID => $obj[ObjGroupTableMap::COL_ID],
+//                    ObjHouseTableMap::COL_ID => $obj[ObjHouseTableMap::COL_ID],
+//                    ObjStageTableMap::COL_ID => $obj[ObjStageTableMap::COL_ID],
+//                ]
             ];
         }
     }
 
-    private static function isAccesssCrud(array &$access, array &$crud, array &$obj): bool
+    private static function isAccessCrud(array &$access, array &$crud, array &$obj): ?bool
     {
         if ($access['manageUsers']) return true;
 
-        if (ProjectRole::isAssociateArray($crud)) {
-            if ($crud['lvl'] === null) {
-                if ($access['objectViewer']) return false;
-                if ($access['manageUsers']) return true;
-            }
-
-            return $crud['lvl'];
-        } else {
+        if (!ProjectRole::isAssociateArray($crud)) {
             foreach ($crud as &$item) {
                 $colId = self::getColIdByLvl($item['lvl']);
 
                 if ($obj[$colId] === $item['object_id']) {
-                    return $item[]
+                    return $item['isCrud'];
                 }
             }
-        }
+        } elseif ($crud['lvl'] !== null) return $crud['isCrud'];
 
-        return false;
+        if ($access['objectViewer']) return false;
+        if ($access['manageObjects']) return true;
+
+        return null;
     }
     #endregion
 

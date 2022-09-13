@@ -114,7 +114,8 @@
                             <p class="permission__description">Возможность просматривать объекты, и формировать сметы по
                                 ним.</p>
                         </div>
-                        <p class="explanation">*Отдельно - для каждого объекта можно дать доступ отдельному пользователю. Это редактируется внутри настроект объекта.</p>
+                        <p class="explanation">*Отдельно - для каждого объекта можно дать доступ отдельному
+                            пользователю. Это редактируется внутри настроект объекта.</p>
                     </div>
                 </div>
             </div>
@@ -123,6 +124,7 @@
             <button class="add-project__button" onclick="modalSystem.show('add')"><span
                     class="add"></span>Добавить</button>
         </div>
+        <div class="no-access-window"></div>
     </div>
     <div class="modal">
         <div class="modal-wrap">

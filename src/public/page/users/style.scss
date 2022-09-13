@@ -379,6 +379,9 @@
                             transition: .3s;
                         }
                     }
+                    .explanation {
+                        @include explanation;
+                    }
                 }
             }
         }
@@ -528,7 +531,14 @@
             }
         }
     }
+    .no-access-window {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: white;
+    }
 }
+
 
 @keyframes showModal {
     0% {

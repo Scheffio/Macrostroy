@@ -454,6 +454,9 @@ class Objects
                 $result[$id] = [
                     'basic' => [
                         'name' => $obj[$colName],
+                        'status' => $obj[$colStatus],
+                        'isPublic' => $obj[$colIsPublic],
+                        'userId' => $obj[$colCreatedBy],
                         'price' => $obj['price'] ?? 0,
                     ],
                     'parents' => [

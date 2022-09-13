@@ -64,7 +64,11 @@
     <column name="status" phpName="Status" type="CHAR" sqlType="set('in_process','completed','deleted')" description="Статус (в процессе, завершен, удален)" required="true" defaultValue="in_process"/>
     <column name="is_public" phpName="IsPublic" type="BOOLEAN" size="1" description="Доступ (публичный, приватный)" required="true" defaultValue="true"/>
     <column name="is_available" phpName="IsAvailable" type="BOOLEAN" size="1" description="Доступ (доступный, удаленный)" required="true" defaultValue="true"/>
+    <column name="user_id" phpName="UserId" type="INTEGER" sqlType="int unsigned" description="ID пользователя" required="true"/>
 
+    <foreign-key foreignTable="users" name="project_role_ibfk_3">
+      <reference local="user_id" foreign="id"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>

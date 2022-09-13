@@ -294,5 +294,14 @@ $EstiminColor8: #E5EBEF;
         weight: 700;
     }
 }
+
+@mixin explanation {
+    font: {
+        family: 'Jost', sans-serif;
+        size: 16px;
+        weight: 400;
+    }
+    opacity: .6;
+}
 // ---------------------
 

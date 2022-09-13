@@ -537,7 +537,7 @@ CREATE TABLE `obj_subproject` (
 
 LOCK TABLES `obj_subproject` WRITE;
 /*!40000 ALTER TABLE `obj_subproject` DISABLE KEYS */;
-INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',1,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert'),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58','12','delete');
+INSERT INTO `obj_subproject` VALUES (1,'NewSubproject','in_process',0,1,1,1,'2022-09-01 10:53:04','12','insert'),(2,'NewSubproject2','in_process',1,1,2,1,'2022-09-01 12:56:03','12','insert'),(3,'PutTestSubproject','deleted',0,0,3,3,'2022-09-05 10:15:01','12','delete'),(4,'Subproject','in_process',1,1,1,1,'2022-09-08 12:06:08','12','insert'),(5,'SubProjectTest1','deleted',0,0,7,2,'2022-09-12 08:33:58','12','delete');
 /*!40000 ALTER TABLE `obj_subproject` ENABLE KEYS */;
 UNLOCK TABLES;
 

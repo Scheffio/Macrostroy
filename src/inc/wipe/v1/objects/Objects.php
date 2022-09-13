@@ -325,24 +325,19 @@ class Objects
         $crud =& $user['crud'];
         $access =& $user['user'];
 
-        JsonOutput::success(
-            self::getObjectsQuery(
-                objId: $parentId,
-                lvl: $lvl,
-                limit: $limit,
-                limitFrom: $limitFrom,
-                isAccessManageUsers: $access['manageObjects']
-            )->find()->getData()
-        );
+        $objects = self::getObjectsQuery(
+                        objId: $parentId,
+                        lvl: $lvl,
+                        limit: $limit,
+                        limitFrom: $limitFrom,
+                        isAccessManageUsers: $access['manageObjects']
+                    )->find()->getData();
 
-//
-//        self::getObjectsQuery(
-//            objId: $parentId,
-//            lvl: $lvl,
-//            limit: $limit,
-//            limitFrom: $limitFrom,
-//            isAccessManageUsers: $isAccessManageUsers
-//        );
+        JsonOutput::success([
+            'crud' => $crud,
+            'access' => $access,
+            'objects' => $objects,
+        ]);
 
 //        IsCrud: true
 //        Objects: {
@@ -366,7 +361,7 @@ class Objects
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
+    private static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
     {
         $query = self::getObjectsPriceQuery($lvl, $objId);
 
@@ -399,7 +394,7 @@ class Objects
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getObjectsPriceQuery(int &$lvl, int &$objId): mixed
+    private static function getObjectsPriceQuery(int &$lvl, int &$objId): mixed
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
@@ -439,6 +434,36 @@ class Objects
         }
 
         return $query;
+    }
+
+    private static function formingObjects(int $lvl, array $objs)
+    {
+        $result = [];
+        $colId = self::getColIdByLvl($lvl);
+        $colName = self::getColNameByLvl($lvl);
+        $colStatus = self::getColStatusByLvl($lvl);
+        $colIsPublic = self::getColIsPublicByLvl($lvl);
+        $colCreatedBy = self::getColCreatedUserIdByLvl($lvl);
+
+        foreach ($objs as $obj) {
+            $id =& $obj[$colId];
+
+            if (array_key_exists($id, $result)) {
+
+            } else {
+                $result[$id] = [
+                    'basic' => [
+                        'name' => $obj[$colName],
+                        'price' => $obj['price'] ?? 0,
+                    ],
+                    'parents' => [
+
+                    ]
+                ];
+            }
+        }
+
+        return $result;
     }
     #endregion
 

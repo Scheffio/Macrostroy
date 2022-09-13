@@ -380,7 +380,7 @@ body.fixated {
   display: flex;
   align-items: center;
   gap: 20px;
-  width: 310px;
+  width: 100%;
   height: 51px;
   position: relative;
 }
@@ -428,13 +428,6 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 12px;
   font-weight: 700;
-}
-.wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .volume-crud-checkboxes {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  width: 310px;
-  height: 51px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control,
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .watch,
@@ -524,6 +517,12 @@ body.fixated {
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .admin-alert.enabled {
   opacity: 1;
   transition: 0.3s;
+}
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .explanation {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.6;
 }
 .wrap .tabs-container .tab-header {
   display: flex;

@@ -161,10 +161,11 @@ function parseRoles() {
                 parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
+                adminCheckbox.checked, objectCrudAllCheckbox.checked, objectCrudExactCheckbox.checked, volumeCrudAllCheckbox.checked, 
+                volumeCrudExactCheckbox.checked, versionControlCheckbox.checked, watchobjectsCheckbox.checked = false
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
-                adminCheckbox, objectCrudAllCheckbox, objectCrudExactCheckbox, volumeCrudAllCheckbox, volumeCrudExactCheckbox, versionControlCheckbox, watchobjectsCheckbox
             },
             getid() {
 
@@ -205,20 +206,8 @@ function parsePermissions(id, elem) {
             document.querySelector('.wrap').classList.remove('no-access')
                 if(elem.children[0].dataset.id == json.data.id) {
                     let parameter = json.data
-                    if(parameter.object_viewer == true && parameter.manage_objects == true && parameter.manage_volumes == true && parameter.manage_history == true && parameter.manage_users == true) {
-                        adminCheckbox.checked = true
-                    }else if (parameter.object_viewer == true) {
+                    if(parameter.object_viewer) {
                         watchobjectsCheckbox.checked = true
-                    }else if (parameter.manage_history == true) {
-                        versionControlCheckbox.checked = true
-                    }else if (parameter.manage_objects == true) {
-                        objectCrudAllCheckbox.checked = true
-                    }else if (parameter.manage_objects == false) {
-                        objectCrudExactCheckbox.checked = true
-                    }else if (parameter.manage_volumes == true) {
-                        volumeCrudAllCheckbox.checked = true
-                    }else if (parameter.manage_volumes == false) {
-                        volumeCrudExactCheckbox.checked = true
                     }
                 }
             }else {

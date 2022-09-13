@@ -517,7 +517,7 @@ class ProjectRole
         foreach ($users as &$user) {
             $crud =& $user['crud'];
 
-            if (!self::isAssociateCrud($crud)) {
+            if (!self::isAssociateArray($crud)) {
                 $count = count($crud);
 
                 for ($i = 0; $i < $count; $i++) {
@@ -544,7 +544,7 @@ class ProjectRole
         foreach ($users as &$user) {
             $crud =& $user['crud'];
 
-            if (!self::isAssociateCrud($crud)) {
+            if (!self::isAssociateArray($crud)) {
                 $count = count($crud);
 
                 for ($i = 0; $i < $count; $i++) {
@@ -565,13 +565,13 @@ class ProjectRole
     }
 
     /**
-     * Проверка, что массив CRUD разрешений пользователя - ассоциативный.
-     * @param array $crud Массив CRUD разрешений пользователя.
+     * Проверка, является ли массив ассоциативным.
+     * @param array $arr Массив CRUD разрешений пользователя.
      * @return bool
      */
-    private static function isAssociateCrud(array &$crud): bool
+    public static function isAssociateArray(array &$arr): bool
     {
-        return array_keys($crud) !== range(0, count($crud) - 1);
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     /**
@@ -591,7 +591,7 @@ class ProjectRole
     {
         if ($isAccessManageUsers) return true;
 
-        if (!self::isAssociateCrud($userCrud)) {
+        if (!self::isAssociateArray($userCrud)) {
             $userCrud = array_replace($userCrud);
 
             foreach ($userCrud as $crud) {

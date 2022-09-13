@@ -326,6 +326,8 @@ class Objects
         $crud =& $user['crud'];
         $access =& $user['user'];
 
+
+
         $objects = self::getObjectsQuery(
                         objId: $parentId,
                         lvl: $lvl,
@@ -351,6 +353,11 @@ class Objects
 //        }
 
         return true;
+    }
+
+    private static function sortAccess(array &$access): void
+    {
+        
     }
 
     /**
@@ -469,6 +476,15 @@ class Objects
                     ObjStageTableMap::COL_ID => $obj[ObjStageTableMap::COL_ID],
                 ]
             ];
+        }
+    }
+
+    private static function isAccesssCrud(array &$access, array &$objects)
+    {
+        if (ProjectRole::isAssociateArray($access)) {
+
+        } else {
+
         }
     }
     #endregion

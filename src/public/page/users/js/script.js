@@ -186,11 +186,24 @@ function parsePermissions(id) {
     let obj = {
         role_id: id 
     }
+
+    const adminCheckbox = document.querySelector('.admin > input')
+    const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
+    const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
+    const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(1)')
+    const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
+    const versionControlCheckbox = document.querySelector('.version-control > input')
+    const watchobjectsCheckbox = document.querySelector('.watch > input')
+
     url.search = new URLSearchParams(obj).toString()
     fetch(url).then((elem) => {
         return elem.json()
     }).then((json) => {
-        console.log(json);
+        for(let i = 0; i < json.data.length; i++) {
+            if(elem.children[0].dataset.id == json.data[i].id) {
+                if(json)
+            }
+        }
     })
 }
 

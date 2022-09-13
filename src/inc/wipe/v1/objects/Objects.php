@@ -356,14 +356,6 @@ class Objects
             'objects' => $objects,
             'isCrud' => $basicCrud
         ]);
-
-//        IsCrud: true
-//        Objects: {
-//                Id:
-//                Name:
-//                IsCrud:
-//                IsAdmin:
-//        }
     }
 
     /**
@@ -513,7 +505,8 @@ class Objects
                         ],
                         'price' => $objs[$i]['price'] ?? 0,
                     ],
-                    'isCrud' => $isCrud
+                    'isCrud' => $isCrud,
+                    'isHistory' => $isCrud ? $access['manageHistory'] : false,
                 ];
             }
         }
@@ -556,6 +549,7 @@ class Objects
      * @param int|null $projectId ID проекта.
      * @return array
      * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
     private static function getUserAccess(
@@ -567,7 +561,6 @@ class Objects
     ): array
     {
         $isAdmin = false;
-        $isHistory = false;
 
         if ($access['manageUsers'] === false) {
             if ($projectId) {
@@ -581,7 +574,7 @@ class Objects
                 $isCrud = $access['manageObjects'];
             }
 
-            $isHistory = $access['manageHistory'];
+            $isHistory = $isCrud ? $access['manageHistory'] : false;
         } else {
             $isCrud = true;
             $isAdmin = true;

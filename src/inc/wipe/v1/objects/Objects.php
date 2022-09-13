@@ -343,7 +343,7 @@ class Objects
                         isAccessManageUsers: $access['manageObjects']
                     )->find()->getData();
 
-        self::formingObjects(
+        $objects = self::formingObjects(
         lvl: $lvl,
         access: $access,
         crud: $crud,
@@ -480,36 +480,41 @@ class Objects
      * @return void
      * @throws IncorrectLvlException
      */
-    private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): void
+    private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): array
     {
         $colId = self::getColIdByLvl($lvl);
         $colName = self::getColNameByLvl($lvl);
         $colStatus = self::getColStatusByLvl($lvl);
         $colIsPublic = self::getColIsPublicByLvl($lvl);
-        $count = count($objs);
 
-        for ($i = 0; $i < $count; $i++) {
-            $isCrud = self::isAccessCrud($access, $crud, $objs[$i]);
+        $result = [];
 
-            if ($isCrud === null) unset($objs[$i]);
-            else {
-                $objs[$i] = [
-                    'obj' => [
-                        'id' => $objs[$i][$colId],
-                        'name' => $objs[$i][$colName],
-                        'status' => $objs[$i][$colStatus],
-                        'isPublic' => $objs[$i][$colIsPublic],
-                        'user' => [
-                            'id' => $objs[$i][UsersTableMap::COL_ID],
-                            'name' => $objs[$i][UsersTableMap::COL_USERNAME],
-                        ],
-                        'price' => $objs[$i]['price'] ?? 0,
+        foreach ($objs as $obj) {
+            $id =& $obj[$colId];
+            $isCrud = self::isAccessCrud($access, $crud, $obj);
+
+            if ($isCrud === null) continue;
+
+            if (array_key_exists($id, $result)) {
+                $result[$id]['price'] += $obj['price'] ?? 0;
+            } else {
+                $result[$id] = [
+                    'id' => $obj[$colId],
+                    'name' => $obj[$colName],
+                    'status' => $obj[$colStatus],
+                    'isPublic' => $obj[$colIsPublic],
+                    'user' => [
+                        'id' => $obj[UsersTableMap::COL_ID],
+                        'name' => $obj[UsersTableMap::COL_USERNAME],
                     ],
+                    'price' => $obj['price'] ?? 0,
                     'isCrud' => $isCrud,
                     'isHistory' => $isCrud ? $access['manageHistory'] : false,
                 ];
             }
         }
+
+        return $result;
     }
 
     /**
@@ -534,8 +539,8 @@ class Objects
             }
         } elseif ($crud['lvl'] !== null) return $crud['isCrud'];
 
-        if ($access['objectViewer']) return false;
         if ($access['manageObjects']) return true;
+        if ($access['objectViewer']) return false;
 
         return null;
     }

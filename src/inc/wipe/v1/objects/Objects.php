@@ -313,6 +313,7 @@ class Objects
     #endregion
 
     #region Static Select Objects
+
     public static function getObjectsByLvl(
         int $lvl,
         int $parentId,
@@ -335,6 +336,7 @@ class Objects
             parentId: $parentId,
             projectId: $projectId,
         );
+
         $objects = self::getObjectsQuery(
                         objId: $parentId,
                         lvl: $lvl,
@@ -350,12 +352,7 @@ class Objects
         objs: $objects,
         );
 
-        JsonOutput::success([
-//            'crud' => $crud,
-//            'access' => $access,
-            'objects' => $objects,
-//            'isCrud' => $basicCrud
-        ]);
+        return array_merge($basicCrud, ['objects' => $objects], $access, $crud);
     }
 
     /**
@@ -392,6 +389,7 @@ class Objects
      * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
      * @return mixed
      * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
     private static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
@@ -401,38 +399,20 @@ class Objects
         if ($objId) {
             $preLvl = AccessLvl::getPreLvlIntObj($lvl);
             $colId = self::getColIdByLvl($preLvl);
-            $query->where('1' . '=?', 1);
-//            $query->where($colId . '=?', $objId);
-//            $query->filterBy(
-//                column: 'Id',
-//                value: $objId,
-//                comparison: Criteria::EQUAL
-//            );
+            $query->where($colId . '=?', $objId);
         }
 
         if (!$isAccessManageUsers) {
-//            $query->filterBy(
-//                column: 'Status',
-//                value: self::ATTRIBUTE_STATUS_DELETED,
-//                comparison: Criteria::ALT_NOT_EQUAL
-//            );
+            $colStatus = self::getColStatusByLvl($lvl);
+            $query->where($colStatus . '!=?', self::ATTRIBUTE_STATUS_DELETED);
         }
 
         if ($limitFrom) {
-//            $colId = self::getColIdByLvl($lvl);
-//            $query->where($colId . '>', $limitFrom);
-//            $query->filterBy(
-//                column: 'Id',
-//                value: $limitFrom,
-//                comparison: Criteria::GREATER_THAN
-//            );
+            $colId = self::getColIdByLvl($lvl);
+            $query->where($colId . '>?', $limitFrom);
         }
 
         $query->limit($limit);
-
-        JsonOutput::success(
-            $query->toString()
-        );
 
         return $query;
     }
@@ -524,7 +504,7 @@ class Objects
             }
         }
 
-        return $result;
+        return array_values($result);
     }
 
     /**

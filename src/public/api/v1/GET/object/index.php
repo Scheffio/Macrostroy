@@ -23,4 +23,4 @@ try {
     JsonOutput::error('Неизвестный пользователь');
 } catch (\Propel\Runtime\Exception\PropelException $e) {
     JsonOutput::error($e->getMessage());
-}``
+}

@@ -396,11 +396,16 @@ class Objects
      */
     private static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
     {
-        $query = self::getObjectsPriceQuery($lvl, $objId);
+        $query = self::getObjectsPriceQuery($lvl);
 
         if ($objId) {
-            $colId = self::getColIdByLvl($lvl);
-            $query->where($colId . '=?', $objId);
+            $query->filterBy(
+                column: 'Id',
+                value: $objId,
+                comparison: Criteria::EQUAL
+            );
+//            $colId = self::getColIdByLvl($lvl);
+//            $query->where($colId . '=?', $objId);
         }
 
         if (!$isAccessManageUsers) {

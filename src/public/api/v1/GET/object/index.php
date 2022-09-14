@@ -10,8 +10,8 @@ use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 try {
     JsonOutput::success(
         Objects::getObjectsByLvl(
-            lvl: 1,
-            parentId: 0,
+            lvl: 2,
+            parentId: 1,
             userId: 17,
             limit: 10,
             limitFrom: 0,
@@ -23,4 +23,4 @@ try {
     JsonOutput::error('Неизвестный пользователь');
 } catch (\Propel\Runtime\Exception\PropelException $e) {
     JsonOutput::error($e->getMessage());
-}
+}``

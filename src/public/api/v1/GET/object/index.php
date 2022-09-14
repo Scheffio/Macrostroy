@@ -2,19 +2,27 @@
 // Вывод объекта(-ов).
 
 use inc\artemy\v1\json_output\JsonOutput;
+use inc\artemy\v1\request\Request;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
+$request = new Request();
+
 try {
+    $lvl = $request->getQueryOrThrow('lvl');
+    $parentId = $request->getQuery('parent_id') ?? 0;
+    $limit = $request->getQuery('limit') ?? 10;
+    $limitFrom = $request->getQuery('limit_from') ?? 0;
+
     JsonOutput::success(
         Objects::getObjectsByLvl(
-            lvl: 2,
-            parentId: 1,
-            userId: 17,
-            limit: 10,
-            limitFrom: 0,
+            lvl: $lvl,
+            parentId: $parentId,
+            userId: AuthUserRole::getUserId(),
+            limit: $limit,
+            limitFrom: $limitFrom,
         )
     );
 } catch (NoRoleFoundException $e) {

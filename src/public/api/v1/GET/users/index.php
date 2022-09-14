@@ -46,7 +46,8 @@ try {
     $projectId = Objects::getProjectIdByChildOrThrow($objectId, $lvl);
 
     JsonOutput::success(
-        ProjectRole::getCrudUsersByObject($lvl, $projectId, $objectId)
+        ProjectRole::getCrud($lvl, $objectId)
+//        ProjectRole::getCrudUsersByObject($lvl, $projectId, $objectId)
     );
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');

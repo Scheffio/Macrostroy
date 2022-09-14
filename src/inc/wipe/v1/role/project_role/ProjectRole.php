@@ -1,8 +1,6 @@
 <?php
 namespace wipe\inc\v1\role\project_role;
 
-use DB\Base\ObjProjectQuery;
-use DB\Base\ObjStageQuery;
 use DB\Base\ProjectRoleQuery;
 use DB\Base\UsersQuery;
 use DB\Map\ObjGroupTableMap;
@@ -18,12 +16,6 @@ use DB\ObjProjectQuery as DbObjProjectQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
-use DB\ObjGroup as DbObjGroup;
-use DB\ObjHouse as DbObjHouse;
-use DB\ObjStage as DbObjStage;
-use DB\ObjStageWork as DbObjStageWork;
-use DB\ObjSubproject as DbObjSubproject;
-use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
@@ -296,6 +288,19 @@ class ProjectRole
 
         return $user[0];
     }
+    #endregion
+
+    #region Static Select CRUD Users Object
+    public static function getCrud(int $lvl, int $objId, ?int $userId = null): array
+    {
+        return [];
+    }
+
+    public static function getQuery(int $lvl, int $objId)
+    {
+
+    }
+
     #endregion
 
     #region Static Select CRUD Users Object

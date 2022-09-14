@@ -322,7 +322,8 @@ class Objects
         int $limitFrom = 0,
     )
     {
-        $projectId = $parentId ? Objects::getProjectIdByChildOrThrow($parentId, $lvl) : null;
+        $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
+        $projectId = $parentId ? Objects::getProjectIdByChildOrThrow($parentId, $parentLvl) : null;
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
 
         $crud =& $user['crud'];
@@ -352,7 +353,7 @@ class Objects
         objs: $objects,
         );
 
-        return array_merge($basicCrud, ['objects' => $objects], $access, $crud);
+        return array_merge($basicCrud, ['objects' => $objects]);
     }
 
     /**

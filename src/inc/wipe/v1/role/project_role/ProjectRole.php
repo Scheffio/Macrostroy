@@ -299,8 +299,14 @@ class ProjectRole
         return self::getQuery($projectId, $userId)->find()->getData();
     }
 
-    
-    public static function getQuery(int $projectId, ?int $userId)
+    /**
+     * Получить запрос на вывод пользователей.
+     * @param int $projectId ID проекта, к которому принадлежит объект.
+     * @param int|null $userId ID пользователя.
+     * @return DbUsersQuery
+     * @throws PropelException
+     */
+    private static function getQuery(int $projectId, ?int $userId): DbUsersQuery
     {
         $query = UsersQuery::create()
             ->select([

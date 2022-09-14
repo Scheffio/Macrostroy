@@ -398,6 +398,11 @@ class Objects
     {
         $query = self::getObjectsPriceQuery($lvl, $objId);
 
+        if ($objId) {
+            $colId = self::getColIdByLvl($lvl);
+            $query->where($colId . '=?', $objId);
+        }
+
         if (!$isAccessManageUsers) {
             $query->filterBy(
                 column: 'Status',
@@ -422,19 +427,18 @@ class Objects
     /**
      * Возвращает запрос на вывод данных об объекте с стоимостью.
      * @param int $lvl Уроыень доступа.
-     * @param int $objId ID объекта.
      * @return mixed
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getObjectsPriceQuery(int &$lvl, int &$objId): mixed
+    private static function getObjectsPriceQuery(int &$lvl): mixed
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
         $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
         $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
 
-        $query = ObjProjectQuery::create()
+        return ObjProjectQuery::create()
                 ->select([
                     self::getColNameByLvl($lvl),
                     self::getColStatusByLvl($lvl),
@@ -462,13 +466,6 @@ class Objects
                         ->endUse()
                     ->endUse()
                 ->endUse();
-
-        if ($objId) {
-            $colId = self::getColIdByLvl($lvl);
-            $query->where($colId . '=?', $objId);
-        }
-
-        return $query;
     }
 
     /**

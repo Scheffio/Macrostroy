@@ -53,6 +53,7 @@ use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\AuthUserRole;
+use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class Objects
 {
@@ -313,47 +314,87 @@ class Objects
     #endregion
 
     #region Static Select Objects
-
-    public static function getObjectsByLvl(
-        int $lvl,
-        int $parentId,
-        int $userId,
-        int $limit = 10,
-        int $limitFrom = 0,
-    )
+    /**
+     * Вывод объекта(-ов).
+     * @param int $lvl Уровень доступа.
+     * @param int $parentId ID родительского объекта.
+     * @param int $userId ID пользователя.
+     * @param int $limit Макс. кол-во выводимых записей.
+     * @param int $limitFrom После кокого ID начинается вывод.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws NoFindObjectException
+     * @throws PropelException
+     * @throws NoUserFoundException
+     */
+    public static function getObjectsByLvl(int $lvl, int $parentId, int $userId, int $limit = 10, int $limitFrom = 0): array
     {
-        $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
-        $projectId = $parentId ? Objects::getProjectIdByChildOrThrow($parentId, $parentLvl) : null;
+        $projectId = null;
+
+        if ($parentId) {
+            $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
+            $projectId = Objects::getProjectIdByChildOrThrow($parentId, $parentLvl);
+        }
+
         $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
 
         $crud =& $user['crud'];
         self::sortAccess($crud);
         $access =& $user['user'];
 
-        $basicCrud = self::getUserAccess(
-            lvl: $lvl,
-            userId: $userId,
-            access: $access,
-            parentId: $parentId,
-            projectId: $projectId,
+        return array_merge(
+            self::getUserAccess(
+                lvl: $lvl,
+                userId: $userId,
+                access: $access,
+                parentId: $parentId,
+                projectId: $projectId
+            ),
+            [
+                'objects' => self::getObjects(
+                lvl: $lvl,
+                parentId: $parentId,
+                limit: $limit,
+                limitFrom: $limitFrom,
+                access: $access,
+                crud: $crud,
+                )
+            ]
         );
+    }
 
+    /**
+     * Получить объект(-ы).
+     * @param int $lvl Уровень доступа.
+     * @param int $parentId ID родительского объекта.
+     * @param int $limit Макс. кол-во выводимых записей.
+     * @param int $limitFrom После кокого ID начинается вывод.
+     * @param array $access Массив разрешений пользователя.
+     * @param array $crud Массив разрешений пользователя по объектам.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws PropelException
+     */
+    private static function getObjects(int &$lvl, int &$parentId, int &$limit, int &$limitFrom, array &$access, array &$crud): array
+    {
         $objects = self::getObjectsQuery(
-                        objId: $parentId,
-                        lvl: $lvl,
-                        limit: $limit,
-                        limitFrom: $limitFrom,
-                        isAccessManageUsers: $access['manageObjects']
-                    )->find()->getData();
+            objId: $parentId,
+            lvl: $lvl,
+            limit: $limit,
+            limitFrom: $limitFrom,
+            isAccessManageUsers: $access['manageObjects']
+            )
+            ->find()
+            ->getData();
 
-        $objects = self::formingObjects(
-        lvl: $lvl,
-        access: $access,
-        crud: $crud,
-        objs: $objects,
+        return self::formingObjects(
+            lvl: $lvl,
+            access: $access,
+            crud: $crud,
+            objs: $objects,
         );
-
-        return array_merge($basicCrud, ['objects' => $objects]);
     }
 
     /**
@@ -468,7 +509,7 @@ class Objects
      * @param array $access Массив разрешений пользователя.
      * @param array $crud Массив разрешений пользователя по объектам.
      * @param array $objs Массив объектов.
-     * @return void
+     * @return array
      * @throws IncorrectLvlException
      */
     private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): array
@@ -548,13 +589,7 @@ class Objects
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getUserAccess(
-        int &$lvl,
-        int &$userId,
-        array &$access,
-        ?int &$parentId = null,
-        ?int &$projectId = null
-    ): array
+    private static function getUserAccess(int &$lvl, int &$userId, array &$access, ?int &$parentId = null, ?int &$projectId = null): array
     {
         $isAdmin = false;
 

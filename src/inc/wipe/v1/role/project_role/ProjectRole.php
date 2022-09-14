@@ -16,6 +16,7 @@ use DB\ObjProjectQuery as DbObjProjectQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
@@ -293,12 +294,41 @@ class ProjectRole
     #region Static Select CRUD Users Object
     public static function getCrud(int $lvl, int $objId, ?int $userId = null): array
     {
-        return [];
+        $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objId);
+
+        return self::getQuery($projectId, $userId)->find()->getData();
     }
 
-    public static function getQuery(int $lvl, int $objId)
+    
+    public static function getQuery(int $projectId, ?int $userId)
     {
+        $query = UsersQuery::create()
+            ->select([
+                UsersTableMap::COL_ID,
+                UsersTableMap::COL_USERNAME,
+                UserRoleTableMap::COL_MANAGE_USERS,
+                UserRoleTableMap::COL_OBJECT_VIEWER,
+                UserRoleTableMap::COL_MANAGE_OBJECTS,
+                UserRoleTableMap::COL_MANAGE_HISTORY,
+                ProjectRoleTableMap::COL_IS_CRUD,
+                ProjectRoleTableMap::COL_LVL,
+                ProjectRoleTableMap::COL_OBJECT_ID,
+                ProjectRoleTableMap::COL_PROJECT_ID,
+            ])
+            ->leftJoinUserRole()
+            ->leftJoinProjectRole()
+                ->addJoinCondition(
+                    name: 'ProjectRole',
+                    clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
+                    value: $projectId
+                )
+            ->filterByIsAvailable(1);
 
+        if ($userId) {
+            $query->filterById($userId);
+        }
+
+        return $query;
     }
 
     #endregion

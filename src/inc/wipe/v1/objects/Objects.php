@@ -399,30 +399,40 @@ class Objects
         $query = self::getObjectsPriceQuery($lvl);
 
         if ($objId) {
-            $query->filterBy(
-                column: 'Id',
-                value: $objId,
-                comparison: Criteria::EQUAL
-            );
+            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+            $colId = self::getColIdByLvl($preLvl);
+            $query->where('1' . '=?', 1);
+//            $query->where($colId . '=?', $objId);
+//            $query->filterBy(
+//                column: 'Id',
+//                value: $objId,
+//                comparison: Criteria::EQUAL
+//            );
         }
 
         if (!$isAccessManageUsers) {
-            $query->filterBy(
-                column: 'Status',
-                value: self::ATTRIBUTE_STATUS_DELETED,
-                comparison: Criteria::ALT_NOT_EQUAL
-            );
+//            $query->filterBy(
+//                column: 'Status',
+//                value: self::ATTRIBUTE_STATUS_DELETED,
+//                comparison: Criteria::ALT_NOT_EQUAL
+//            );
         }
 
         if ($limitFrom) {
-            $query->filterBy(
-                column: 'Id',
-                value: $limitFrom,
-                comparison: Criteria::GREATER_THAN
-            );
+//            $colId = self::getColIdByLvl($lvl);
+//            $query->where($colId . '>', $limitFrom);
+//            $query->filterBy(
+//                column: 'Id',
+//                value: $limitFrom,
+//                comparison: Criteria::GREATER_THAN
+//            );
         }
 
         $query->limit($limit);
+
+        JsonOutput::success(
+            $query->toString()
+        );
 
         return $query;
     }

@@ -14,7 +14,7 @@ try {
             parentId: 1,
             userId: 17,
             limit: 10,
-            limitFrom: 0,
+            limitFrom: 1,
         )
     );
 } catch (NoRoleFoundException $e) {

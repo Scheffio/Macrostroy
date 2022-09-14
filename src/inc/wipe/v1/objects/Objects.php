@@ -404,8 +404,6 @@ class Objects
                 value: $objId,
                 comparison: Criteria::EQUAL
             );
-//            $colId = self::getColIdByLvl($lvl);
-//            $query->where($colId . '=?', $objId);
         }
 
         if (!$isAccessManageUsers) {

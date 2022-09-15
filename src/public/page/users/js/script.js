@@ -166,10 +166,15 @@ function parseRoles() {
                 selectableUsers.click(elem)
             })
         })
-        
     })
 }
 
+document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+    console.log(elem);
+    if(elem.tagName === "INPUT") {
+        elem.addEventListener('click', () => {console.log(1)})
+    }
+})
 
 const adminCheckbox = document.querySelector('.admin > input')
 const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
@@ -178,8 +183,6 @@ const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > 
 const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
 const versionControlCheckbox = document.querySelector('.version-control > input')
 const watchobjectsCheckbox = document.querySelector('.watch > input')
-
-let adminCond, objectAllCond, objectExactCond, volumeAllCond, volumeExactCond, versionCond, watchCond;
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
@@ -226,9 +229,6 @@ function parsePermissions(id, elem) {
                     }
                     if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
                         adminCheckbox.checked = true
-                        adminCond = true
-                    }else {
-                        adminCond = false
                     }
                 }
             }else {

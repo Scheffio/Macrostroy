@@ -163,7 +163,8 @@ class ProjectRole
      */
     public static function isAccessCrudObj(int $lvl, int $projectId, int $userId, ?int $objId = null): bool
     {
-        return self::getCrudUsersByObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
+        return true;
+//        return self::getCrudUsersByObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -282,26 +283,11 @@ class ProjectRole
      */
     public static function getUserCrudById(int &$lvl, int &$ObjId, int $userId): array
     {
-        $users = self::getUsers($userId);
-
+        return [];
     }
 
     public static function getAuthUserCrudByLvl(int &$lvl, int &$objId): array
     {
-        JsonOutput::success(
-            [
-                $lvl,
-                $objId,
-                self::getObjParents($lvl, $objId)
-            ]
-        );
-
-        $where = self::formingWhere(self::getObjParents($lvl, $objId));
-        $crud = self::getSortCrud(self::getProjectCrud($where, AuthUserRole::getUserId()));
-        JsonOutput::success([
-            $crud
-        ]);
-
         return [];
     }
 
@@ -338,6 +324,13 @@ class ProjectRole
         return self::formingUsers($users);
     }
 
+    /**
+     * @param int $lvl
+     * @param int $objId
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
     public static function getParentsForObj(int &$lvl, int &$objId): array
     {
         $query = ObjProjectQuery::create()
@@ -384,6 +377,7 @@ class ProjectRole
             ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
             ->leftJoinUserRole()
             ->leftJoinProjectRole()
+            ->orderByUsername(Criteria::ASC)
             ->find()
             ->getData();
     }
@@ -427,7 +421,9 @@ class ProjectRole
             $id =& $user[UsersTableMap::COL_ID];
             $flag = array_key_exists($id, $result);
 
-            if ($flag && $result[$id]['lvl'] !== null) continue;
+            if ($flag &&
+                $result[$id]['lvl'] !== null &&
+                $result[$id]['lvl'] > (int)$user['lvl']) continue;
             elseif (!$flag) $result[$id] =& $user;
             else {
                 $result[$id]['lvl'] =& $user['lvl'];

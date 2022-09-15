@@ -11,7 +11,7 @@ $(file_input).on("change", function () {
 })
 
 $("#get_body_button").on("click", function () {
-    for (var value of request.body.values()) {
+    for (var value of request.body.values() ) {
         console.log(value + ": " + request.body.get());
     }
 })

@@ -103,12 +103,12 @@ class Selector
             $parent = "($parent[0] AND $parent[1])";
         }
 
-        $parents = 'IF(' . join(' OR ', $parents) . ', select, null)';
+        $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
     }
 
-    public static function replaceValueInIf(string &$if, string $col): string
+    public static function replaceValueInIf(string $if, string $true): string
     {
-        return str_replace('select', $col, $if);
+        return str_replace('true', $true, $if);
     }
 
     public static function getUsersCrud(string $if)

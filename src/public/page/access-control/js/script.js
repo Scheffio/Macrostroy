@@ -2,14 +2,7 @@ const usersList = document.querySelector('.users__list')
 const crudCheckbox = document.querySelector('#all')
 const watchCheckbox = document.querySelector('#watch')
 
-let url = new URL('https://artemy.net/api/v1/users')
-let obj = {
-    lvl: 1,
-    object_id: 1
-}
-url.search = new URLSearchParams(obj).toString()
-
-fetch(url).then((elem) => {
+fetch(`/api/v1/users?lvl=1&object_id=1`).then((elem) => {
     return elem.json()
 }).then((json) => {
     json.data.forEach((elem) => {

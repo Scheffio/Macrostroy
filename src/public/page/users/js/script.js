@@ -1,8 +1,5 @@
 const usersList = document.querySelector('.users__list')
-
-let url = new URL('https://artemy.net/api/v1/users')
-
-fetch(url).then((elem) => {
+fetch(`/api/v1/users`).then((elem) => {
     return elem.json()
 }).then((json) => {
     json.data.forEach((elem) => {
@@ -138,10 +135,8 @@ const rolesControl = {
     versionControlCheckbox: document.querySelector('.version-control > input'),
     watchobjectsCheckbox: document.querySelector('.watch > input'),
     parseRoles() {
-        const select = document.querySelector('.modal-body__role > select')
-        let url = new URL('https://artemy.net/api/v1/roles')
-        
-        fetch(url).then((elem) => {
+        const select = document.querySelector('.modal-body__role > select')        
+        fetch(`/api/v1/roles`).then((elem) => {
             return elem.json()
         }).then((json) => {
             json.data.forEach((roles) => {
@@ -181,8 +176,12 @@ const rolesControl = {
             })
         })
     },
-    saveRolePermissions() {
-        let url = new URL('https://artemy.net/api/v1/role')
+    saveRolePermissions(id) {
+        fetch(`/api/v1/role?role_id=${id}`).then((elem) => {
+            return elem.json()
+        }).then((json) => {
+            
+        })
     },
 }
 

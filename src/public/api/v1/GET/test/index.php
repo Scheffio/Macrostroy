@@ -50,7 +50,6 @@ class SelectUsersCrud
     {
         $users = self::getUsers();
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
-        JsonOutput::success(self::getSortCrud(self::getProjectCrud($where)));
         $crud = self::getSortCrud(self::getProjectCrud($where));
         self::formingUsersCrud($users, $crud);
 
@@ -175,7 +174,6 @@ class SelectUsersCrud
         $a = [];
 
         foreach ($crud as $item) {
-            JsonOutput::success($item);
             $i[$item[ProjectRoleTableMap::COL_LVL]][] = $item;
         }
 
@@ -251,6 +249,7 @@ class SelectUsersCrud
                 'id' => $user[UsersTableMap::COL_ID],
                 'name' => $user[UsersTableMap::COL_USERNAME],
                 'isCrud' => self::isCrud($crud, $user),
+                'isAdmin' => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
             ];
         }
     }

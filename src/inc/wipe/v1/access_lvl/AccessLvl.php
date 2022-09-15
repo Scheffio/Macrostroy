@@ -2,6 +2,11 @@
 
 namespace wipe\inc\v1\access_lvl;
 
+use DB\Map\ObjGroupTableMap;
+use DB\Map\ObjHouseTableMap;
+use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageTableMap;
+use DB\Map\ObjSubprojectTableMap;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\enum\eLvlObjStr;
 use wipe\inc\v1\access_lvl\enum\eLvlVolInt;
@@ -125,6 +130,24 @@ class AccessLvl
             eLvlObjInt::GROUP->value => eLvlObjInt::SUBPROJECT->value,
             eLvlObjInt::HOUSE->value => eLvlObjInt::GROUP->value,
             eLvlObjInt::STAGE->value => eLvlObjInt::HOUSE->value,
+            default => throw new InvalidAccessLvlIntException()
+        };
+    }
+
+    /**
+     * Возвращает номер уровня доступа объекта, используя наименование ID атрибута таблицы.
+     * @param string $colId Наименование ID атрибута таблицы (MapTable).
+     * @return int
+     * @throws InvalidAccessLvlIntException
+     */
+    public static function getLvlIntObjByColId(string $colId): int
+    {
+        return match ($colId) {
+            ObjProjectTableMap::COL_ID => eLvlObjInt::PROJECT->value,
+            ObjSubprojectTableMap::COL_ID => eLvlObjInt::SUBPROJECT->value,
+            ObjGroupTableMap::COL_ID => eLvlObjInt::GROUP->value,
+            ObjHouseTableMap::COL_ID => eLvlObjInt::HOUSE->value,
+            ObjStageTableMap::COL_ID => eLvlObjInt::STAGE->value,
             default => throw new InvalidAccessLvlIntException()
         };
     }

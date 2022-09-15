@@ -480,60 +480,64 @@
             display: block;
         }
     }
-    .add-project {
-        width: clamp(768px, 90vw, 1555px);
-        display: flex;
-        justify-content: flex-end;
-
-        .add-project__button {
+    .actions {
+        .add-role,
+        .delete-role {
+            width: clamp(768px, 90vw, 1555px);
             display: flex;
-            justify-content: center;
-            align-items: center;
-            @include Button($EstiminColor4, $EstiminColor8, 120px, 40px);
-
-            &:hover {
+            justify-content: flex-end;
+    
+            .add-project__button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                @include Button($EstiminColor4, $EstiminColor8, 120px, 40px);
+    
+                &:hover {
+                    .add {
+    
+                        &::before,
+                        &::after {
+                            background-color: $EstiminColor4;
+                            transition: .3s;
+                        }
+                    }
+                }
+    
                 .add {
-
-                    &::before,
+                    width: 20px;
+                    height: 20px;
+                    position: relative;
+    
+                    &::before {
+                        content: '';
+                        display: block;
+                        width: 2px;
+                        height: 15px;
+                        position: absolute;
+                        background-color: $EstiminColor8;
+                        top: 3px;
+                        left: 5px;
+                        transition: .3s;
+                    }
+    
                     &::after {
-                        background-color: $EstiminColor4;
+                        content: '';
+                        display: block;
+                        width: 2px;
+                        height: 15px;
+                        background-color: $EstiminColor8;
+                        transform: rotate(90deg);
+                        position: absolute;
+                        top: 3px;
+                        left: 5px;
                         transition: .3s;
                     }
                 }
             }
-
-            .add {
-                width: 20px;
-                height: 20px;
-                position: relative;
-
-                &::before {
-                    content: '';
-                    display: block;
-                    width: 2px;
-                    height: 15px;
-                    position: absolute;
-                    background-color: $EstiminColor8;
-                    top: 3px;
-                    left: 5px;
-                    transition: .3s;
-                }
-
-                &::after {
-                    content: '';
-                    display: block;
-                    width: 2px;
-                    height: 15px;
-                    background-color: $EstiminColor8;
-                    transform: rotate(90deg);
-                    position: absolute;
-                    top: 3px;
-                    left: 5px;
-                    transition: .3s;
-                }
-            }
         }
     }
+    
 }
 
 .no-access-window {

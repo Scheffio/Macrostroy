@@ -292,50 +292,6 @@ class ProjectRole
     #endregion
 
     #region Static Select CRUD Users Object
-    public static function getCrud(int $lvl, int $objId, ?int $userId = null): array
-    {
-        $projectId = Objects::getProjectIdByChildOrThrow($lvl, $objId);
-
-        return self::getQuery($projectId, $userId)->find()->getData();
-    }
-
-    /**
-     * Получить запрос на вывод пользователей.
-     * @param int $projectId ID проекта, к которому принадлежит объект.
-     * @param int|null $userId ID пользователя.
-     * @return DbUsersQuery
-     * @throws PropelException
-     */
-    private static function getQuery(int $projectId, ?int $userId): DbUsersQuery
-    {
-        $query = UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                UserRoleTableMap::COL_MANAGE_HISTORY,
-                ProjectRoleTableMap::COL_IS_CRUD,
-                ProjectRoleTableMap::COL_LVL,
-                ProjectRoleTableMap::COL_OBJECT_ID,
-                ProjectRoleTableMap::COL_PROJECT_ID,
-            ])
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-                ->addJoinCondition(
-                    name: 'ProjectRole',
-                    clause: ProjectRoleTableMap::COL_PROJECT_ID.'=?',
-                    value: $projectId
-                )
-            ->filterByIsAvailable(1);
-
-        if ($userId) {
-            $query->filterById($userId);
-        }
-
-        return $query;
-    }
 
     #endregion
 

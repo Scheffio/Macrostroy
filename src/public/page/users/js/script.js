@@ -175,7 +175,7 @@ function parseRoles() {
             }
         }
         
-        selectableUsers.click(document.querySelector('.roles').children[2])
+        selectableUsers.click(document.querySelector('.roles').children[0])
         
         document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
             elem.addEventListener('click', () => {
@@ -232,7 +232,7 @@ function parsePermissions(id, elem) {
                         volumeCrudExactCheckbox.checked = true
                     }
                     if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
-
+                        adminCheckbox.checked = true
                     }
                 }
             }else {

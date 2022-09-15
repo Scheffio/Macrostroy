@@ -271,14 +271,17 @@ class ProjectRole
         return new ProjectRole();
     }
 
-    public static function getAuthUserCrudByLvl(int &$lvl, int &$objId): array
+    public static function getAuthUserCrudByLvl(int &$lvl, int &$parentId): array
     {
         $userId = 17;
-        $parents = self::getParentsForObj($lvl, $objId);
-        $if = self::formingParentsAsIf($parents);
-        $users = self::getUsersCrud($if, $userId);
 
-        JsonOutput::success($users);
+
+
+//        $parents = self::getParentsForObj($lvl, $objId);
+//        $if = self::formingParentsAsIf($parents);
+//        $users = self::getUsersCrud($if, $userId);
+
+//        JsonOutput::success($users);
 
         return [];
     }
@@ -294,6 +297,21 @@ class ProjectRole
 //
 //        return $user[0];
 //    }
+
+    private static function getCrudByLvl(int $lvl, int $userId, array $parents)
+    {
+//        $query = ProjectRoleQuery::create()
+//                ->select([
+//                    ProjectRoleTableMap::COL_LVL,
+//                    ProjectRoleTableMap::COL_IS_CRUD,
+//                    ProjectRoleTableMap::COL_OBJECT_ID,
+//                ])
+//                ->where(ProjectRoleTableMap::COL_LVL . '>=?', $lvl);
+//
+//        if ($parentId) {
+//
+//        }
+    }
     #endregion
 
     #region Static Select CRUD Users Object
@@ -310,10 +328,16 @@ class ProjectRole
     public static function getCrudUsersByObj(int &$lvl, ?int $objId = null, ?int $userId = null): array
     {
         $parents = self::getParentsForObj($lvl, $objId);
+        self::formingParentsAsCondition($parents);
+
         $if = self::formingParentsAsIf($parents);
         $users = self::getUsersCrud($if, $userId);
+        JsonOutput::success($users);
 
-        return self::formingUsers($users);
+        return self::formingUsers([
+            $users,
+            $userId
+        ]);
     }
 
     /**
@@ -414,12 +438,12 @@ class ProjectRole
     }
 
     /**
-     * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
+     * Формирование массива IDs родителей объекта, в качестве условий.
      * @param array $parents Массив IDs родителей объекта.
-     * @return string
+     * @return void
      * @throws InvalidAccessLvlIntException
      */
-    public static function formingParentsAsIf(array $parents): string
+    public static function formingParentsAsCondition(array &$parents): void
     {
         foreach ($parents as $key=>&$value) {
             $lvl = AccessLvl::getLvlIntObjByColId($key);
@@ -427,7 +451,15 @@ class ProjectRole
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
             $value = [$wLvl, $wObjId];
         }
+    }
 
+    /**
+     * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
+     * @param array $parents Массив IDs родителей объекта.
+     * @return string
+     */
+    public static function formingParentsAsIf(array $parents): string
+    {
         foreach ($parents as &$parent) {
             $parent = "($parent[0] AND $parent[1])";
         }

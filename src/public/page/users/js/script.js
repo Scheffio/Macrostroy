@@ -161,8 +161,7 @@ function parseRoles() {
                 parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
-                adminCheckbox.checked, objectCrudAllCheckbox.checked, objectCrudExactCheckbox.checked, volumeCrudAllCheckbox.checked, 
-                volumeCrudExactCheckbox.checked, versionControlCheckbox.checked, watchobjectsCheckbox.checked = false
+                
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
@@ -172,7 +171,7 @@ function parseRoles() {
             }
         }
         
-        selectableUsers.click(document.querySelector('.roles').children[0])
+        selectableUsers.click(document.querySelector('.roles').children[2])
         
         document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
             elem.addEventListener('click', () => {
@@ -206,7 +205,7 @@ function parsePermissions(id, elem) {
             document.querySelector('.wrap').classList.remove('no-access')
                 if(elem.children[0].dataset.id == json.data.id) {
                     let parameter = json.data
-                    console.log(parameter);
+                    // console.log(parameter);
                     if(parameter.object_viewer) {
                         watchobjectsCheckbox.checked = true
                     } 

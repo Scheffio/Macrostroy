@@ -50,6 +50,7 @@ class SelectUsersCrud
     {
         $users = self::getUsers($userId);
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
+        JsonOutput::success(self::getProjectCrud($where, $userId));
         $crud = self::getSortCrud(self::getProjectCrud($where, $userId));
         self::formingUsersCrud($users, $crud);
 
@@ -61,11 +62,11 @@ class SelectUsersCrud
      * Возвращает IDs родителей объекта.
      * @param int $lvl
      * @param int $objId
-     * @return array
+     * @return mixed
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getObjParents(int &$lvl, int &$objId): array
+    private static function getObjParents(int &$lvl, int &$objId): mixed
     {
         $colId = Objects::getColIdByLvl($lvl);
 
@@ -79,9 +80,7 @@ class SelectUsersCrud
                 ->endUse()
             ->endUse()
             ->where($colId.'=?', $objId)
-            ->limit(1)
-            ->find()
-            ->getData();
+            ->findOne();
     }
 
     /**
@@ -143,21 +142,36 @@ class SelectUsersCrud
                 ProjectRoleTableMap::COL_IS_CRUD,
                 ProjectRoleTableMap::COL_OBJECT_ID,
                 ProjectRoleTableMap::COL_PROJECT_ID,
-            ])
-            ->filterByUserId($userId);
-
+            ]);
 
         if ($where) {
-            foreach ($where as $item) {
-                $query->_or()->where($item);
+//            JsonOutput::success($where);
+
+            foreach ($where as $key=>$value) {
+                $query->_or()
+                    ->condition("{$key}1" ,$value[0])
+                    ->condition("{$key}2" ,$value[1])
+                    ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
             }
 
-            $query->_or()
-                ->where(ProjectRoleTableMap::COL_LVL . '?', ' IS NULL')
-                ->where(ProjectRoleTableMap::COL_OBJECT_ID . '?', ' IS NULL');
+            JsonOutput::success($query->toString());
+
+//            foreach ($where as $item) {
+//
+//
+//                $query->_or()->where($item);
+//            }
+//
+//            $query->_or()
+//                ->where(ProjectRoleTableMap::COL_LVL . '?', ' IS NULL ')
+//                ->_and()
+//                ->where(ProjectRoleTableMap::COL_OBJECT_ID . '?', ' IS NULL ');
         }
 
-        return $query->find()->getData();
+        return $query
+                ->filterByUserId($userId)
+                ->find()
+                ->getData();
     }
 
     /**
@@ -207,14 +221,13 @@ class SelectUsersCrud
      */
     private static function formingWhere(array $parents): array
     {
-        JsonOutput::success('YES');
         $parents = array_filter($parents, fn($e) => $e !== null);
 
         foreach ($parents as $key=>&$value) {
             $lvl = self::getLvlIntObjByColId($key);
             $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
-            $value = "$wLvl AND $wObjId";
+            $value = [$wLvl, $wObjId];
         }
 
         return $parents;

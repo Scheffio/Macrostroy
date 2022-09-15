@@ -11,8 +11,7 @@ use wipe\inc\v1\role\user_role\exception\NoAccessObjectViewException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
-class AuthUserRole
-{
+class AuthUserRole {
     /** @var int|null ID пользователя. */
     private static ?int $userId = null;
 

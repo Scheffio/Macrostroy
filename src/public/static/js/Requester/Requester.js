@@ -1,10 +1,10 @@
 export default class Requester {
     method;
-    body = [];
+    body = {};
     constructor() {
     }
     addData(key, value) {
-        this.body[key] += value;
+        this.body[key] = value;
     }
     logBody() {
         console.log(this.body);

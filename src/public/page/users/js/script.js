@@ -191,7 +191,7 @@ const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes 
 const versionControlCheckbox = document.querySelector('.version-control > input')
 const watchobjectsCheckbox = document.querySelector('.watch > input')
 
-document.querySelectorAll('uncheckable').forEach((elem) => {
+document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
         elem.checked = false
     })

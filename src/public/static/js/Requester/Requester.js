@@ -4,10 +4,10 @@ export default class Requester {
     constructor() {
     }
     addData(key, value) {
-        // this.body.push({key: value})
+        this.body[key] += value;
     }
     logBody() {
-        console.log(typeof this.body);
+        console.log(this.body);
     }
 }
 //# sourceMappingURL=Requester.js.map

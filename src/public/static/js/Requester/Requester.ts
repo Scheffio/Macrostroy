@@ -13,10 +13,10 @@ export default class Requester {
     public addData(key: string, value: File);
     public addData(key: string, value: string);
     public addData(key: string, value) {
-        // this.body.push({key: value})
+        this.body[key] += value;
     }
 
     public logBody() {
-        console.log(typeof this.body)
+        console.log(this.body)
     }
 }

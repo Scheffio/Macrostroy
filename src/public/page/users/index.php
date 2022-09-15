@@ -50,7 +50,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="admin">
-                                    <input type="radio" name="access-radio" id="all">
+                                    <input type="radio" class="uncheckable" name="access-radio" id="all">
                                     <label for="all">Администратор</label>
                                 </div>
                             </div>
@@ -97,7 +97,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="version-control">
-                                    <input type="radio" name="version-control-radio" id="version-control">
+                                    <input type="radio" class="uncheckable" name="version-control-radio" id="version-control">
                                     <label for="version-control">Управление версиями</label>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="watch">
-                                    <input type="radio" name="watch-radio" id="watch">
+                                    <input type="radio" class="uncheckable" name="watch-radio" id="watch">
                                     <label for="watch">Просмотр объектов</label>
                                 </div>
                             </div>

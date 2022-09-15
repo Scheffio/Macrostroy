@@ -143,10 +143,9 @@ function parseRoles() {
         const selectableUsers = {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
-                    this.reset()
-                    elem.classList.toggle('selected')
-                    parsePermissions(elem.children[0].dataset.id, elem)
-                    this.checkPermissions()
+                this.reset()
+                elem.classList.toggle('selected')
+                parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
                 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -157,9 +156,6 @@ function parseRoles() {
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
-            },
-            checkPermissions() {
-                console.log(adminCheckbox.checked, adminCond);
             }
         }
         
@@ -191,7 +187,9 @@ document.querySelectorAll('.uncheckable').forEach((elem) => {
     })
 })
 
+function checkPermissons() {
 
+}
 
 function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
@@ -236,6 +234,9 @@ function parsePermissions(id, elem) {
                     }else {
                         adminCond = false
                     }
+                }
+                checkPermissons() {
+                    
                 }
             }else {
                 if(json.error_message == 'Недостаточно прав') {

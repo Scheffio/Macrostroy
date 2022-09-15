@@ -18,6 +18,7 @@ use inc\artemy\v1\request\Request;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\user_role\AuthUserRole;
@@ -47,11 +48,6 @@ class SelectUsersCrud
      */
     public static function getUsersCrud(int &$lvl, int &$objId, int &$userId): array
     {
-        JsonOutput::success([
-            $lvl,
-            $objId,
-            self::getObjParents($lvl, $objId)
-        ]);
         $users = self::getUsers($userId);
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
         $crud = self::getSortCrud(self::getProjectCrud($where, $userId));
@@ -65,22 +61,16 @@ class SelectUsersCrud
      * Возвращает IDs родителей объекта.
      * @param int $lvl
      * @param int $objId
-     * @return mixed
+     * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getObjParents(int &$lvl, int &$objId): mixed
+    private static function getObjParents(int &$lvl, int &$objId): array
     {
         $colId = Objects::getColIdByLvl($lvl);
 
         return ObjProjectQuery::create()
-            ->select([
-                ObjProjectTableMap::COL_ID,
-                ObjSubprojectTableMap::COL_ID,
-                ObjGroupTableMap::COL_ID,
-                ObjHouseTableMap::COL_ID,
-                ObjStageTableMap::COL_ID,
-            ])
+            ->select(self::getSelectParentsByLvl($lvl))
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -89,25 +79,27 @@ class SelectUsersCrud
                 ->endUse()
             ->endUse()
             ->where($colId.'=?', $objId)
-            ->toString();
+            ->limit(1)
+            ->find()
+            ->getData();
+    }
 
-        return DbObjProjectQuery::create()
-            ->select([
-                ObjProjectTableMap::COL_ID,
-                ObjSubprojectTableMap::COL_ID,
-                ObjGroupTableMap::COL_ID,
-                ObjHouseTableMap::COL_ID,
-                ObjStageTableMap::COL_ID,
-            ])
-            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-            ->leftJoinObjStage()
-            ->endUse()
-            ->endUse()
-            ->endUse()
-            ->where($colName.'=?', $objId)
-            ->findOne();
+    /**
+     * Массив значений для вывода в запросе на получение IDs родителей объекта.
+     * @param int $lvl Уровень доступа.
+     * @return array
+     */
+    private static function getSelectParentsByLvl(int &$lvl): array
+    {
+        $select = [];
+
+        if ($lvl >= eLvlObjInt::PROJECT->value) $select[] = ObjProjectTableMap::COL_ID;
+        if ($lvl >= eLvlObjInt::SUBPROJECT->value) $select[] = ObjSubprojectTableMap::COL_ID;
+        if ($lvl >= eLvlObjInt::GROUP->value) $select[] = ObjGroupTableMap::COL_ID;
+        if ($lvl >= eLvlObjInt::HOUSE->value) $select[] = ObjHouseTableMap::COL_ID;
+        if ($lvl >= eLvlObjInt::STAGE->value) $select[] = ObjStageTableMap::COL_ID;
+
+        return $select;
     }
 
     /**
@@ -215,6 +207,7 @@ class SelectUsersCrud
      */
     private static function formingWhere(array $parents): array
     {
+        JsonOutput::success('YES');
         $parents = array_filter($parents, fn($e) => $e !== null);
 
         foreach ($parents as $key=>&$value) {

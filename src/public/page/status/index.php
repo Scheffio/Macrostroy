@@ -123,8 +123,8 @@ $services = [];
         $performance = Performance::MAJOR_OUTAGE;
     }
 
-    $info = "Last Database backup was " . time_ago($db_unix_backup) . " ago.";
-    $services[] = ["Database backup", $performance, $info];
+    $info = "Last Database copy was " . time_ago($db_unix_backup) . " ago.";
+    $services[] = ["Database copy", $performance, $info];
 }
 
 {
@@ -137,9 +137,10 @@ $services = [];
     if ((time() - $db_unix_backup) / 60 > 11) {
         $performance = Performance::MAJOR_OUTAGE;
     }
-
-    $info = "Last Database backup was " . time_ago($db_unix_backup) . " ago.";
-    $services[] = ["Full backup", $performance, $info];
+    $time = shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
+    time_ago($time);
+//    $info = "Last backup was " . time_ago($time) . " ago.";
+    $services[] = ["Backup", $performance, $info];
 }
 ?>
     <html lang="en">

@@ -161,13 +161,8 @@ function parseRoles() {
                 parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
-                adminCheckbox.checked = false
-                objectCrudAllCheckbox.checked = false
-                objectCrudExactCheckbox.checked = false
-                volumeCrudAllCheckbox.checked = false
-                volumeCrudExactCheckbox.checked = false
-                versionControlCheckbox.checked = false
-                watchobjectsCheckbox.checked = false
+                adminCheckbox.checked, objectCrudAllCheckbox.checked, objectCrudExactCheckbox.checked, volumeCrudAllCheckbox.checked, 
+                volumeCrudExactCheckbox.checked, versionControlCheckbox.checked, watchobjectsCheckbox.checked = false
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })
@@ -190,7 +185,7 @@ function parseRoles() {
 
 const adminCheckbox = document.querySelector('.admin > input')
 const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
-const objectCrudExactCheckbox = document.querySelector('.objкect-crud-checkboxes > input:nth-child(2)')
+const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
 const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(1)')
 const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
 const versionControlCheckbox = document.querySelector('.version-control > input')
@@ -211,20 +206,26 @@ function parsePermissions(id, elem) {
             document.querySelector('.wrap').classList.remove('no-access')
                 if(elem.children[0].dataset.id == json.data.id) {
                     let parameter = json.data
+                    console.log(parameter);
                     if(parameter.object_viewer) {
                         watchobjectsCheckbox.checked = true
-                    }else if(parameter.manage_history) {
+                    } 
+                    if(parameter.manage_history) {
                         versionControlCheckbox.checked = true
-                    }else if(parameter.manage_objects) {
+                    } 
+                    if(parameter.manage_objects) {
                         objectCrudAllCheckbox.checked = true
                         objectCrudExactCheckbox.checked = false
-                    }else if(!parameter.manage_objects) {
+                    } 
+                    if(!parameter.manage_objects) {
                         objectCrudAllCheckbox.checked = false
                         objectCrudExactCheckbox.checked = true
-                    }else if(parameter.manage_volumes) {
+                    } 
+                    if(parameter.manage_volumes) {
                         volumeCrudAllCheckbox.checked = true
                         volumeCrudExactCheckbox.checked = false
-                    }else if(!parameter.manage_volumes) {
+                    } 
+                    if(!parameter.manage_volumes) {
                         volumeCrudAllCheckbox.checked = false
                         volumeCrudExactCheckbox.checked = true
                         document.querySelector('.volume-crud-checkboxes > input:nth-child(2)').checked = true

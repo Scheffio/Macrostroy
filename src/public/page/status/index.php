@@ -126,6 +126,21 @@ $services = [];
     $info = "Last Database backup was " . time_ago($db_unix_backup) . " ago.";
     $services[] = ["Database backup", $performance, $info];
 }
+
+{
+    $performance = Performance::OPERATIONAL;
+    $db_unix_backup = filemtime("mysql_backup.sql");
+    if ((time() - $db_unix_backup) / 60 > 10) {
+        $performance = Performance::DEGRADED_PERFORMANCE;
+    }
+
+    if ((time() - $db_unix_backup) / 60 > 11) {
+        $performance = Performance::MAJOR_OUTAGE;
+    }
+
+    $info = "Last Database backup was " . time_ago($db_unix_backup) . " ago.";
+    $services[] = ["Full backup", $performance, $info];
+}
 ?>
     <html lang="en">
     <head>

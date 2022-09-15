@@ -8,8 +8,6 @@ fetch(url).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
     })
-
-    
 })
 
 const userGenerator = {
@@ -152,11 +150,12 @@ function parseRoles() {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
                 if(!localStorage.getItem('changes')) {
-
+                    this.reset()
+                    elem.classList.toggle('selected')
+                    parsePermissions(elem.children[0].dataset.id, elem)
+                }else {
+                    modalSystem.show('save')
                 }
-                this.reset()
-                elem.classList.toggle('selected')
-                parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
                 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -173,7 +172,7 @@ function parseRoles() {
             }
         }
         
-        selectableUsers.click(document.querySelector('.roles').children[0])
+        selectableUsers.click(document.querySelector('.roles').children[1])
         
         document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
             elem.addEventListener('click', () => {
@@ -191,6 +190,13 @@ const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > 
 const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
 const versionControlCheckbox = document.querySelector('.version-control > input')
 const watchobjectsCheckbox = document.querySelector('.watch > input')
+
+document.querySelectorAll('uncheckable').forEach((elem) => {
+    elem.addEventListener('dblclick', () => {
+        elem.checked = false
+    })
+})
+
 
 function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
@@ -272,9 +278,6 @@ function addUser() {
         }
     })
 }
-
-
-
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)

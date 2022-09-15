@@ -1,11 +1,11 @@
 // @ts-ignore
-import KeyValue from "/static/Requester/KeyValue.js";
+import KeyValue from "/static/js/Requester/KeyValue.js";
 // @ts-ignore
-import {HttpMethod} from "/static/Requester/HttpMethod.js";
+import {HttpMethod} from "/static/js/Requester/HttpMethod.js";
 
 export default class Requester {
     private method: HttpMethod;
-    private body = {};
+    public body = [];
 
     constructor() {
     }
@@ -13,5 +13,10 @@ export default class Requester {
     public addData(key: string, value: File);
     public addData(key: string, value: string);
     public addData(key: string, value) {
+        // this.body.push({key: value})
+    }
+
+    public logBody() {
+        console.log(typeof this.body)
     }
 }

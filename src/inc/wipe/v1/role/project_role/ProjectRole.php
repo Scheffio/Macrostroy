@@ -330,74 +330,46 @@ class ProjectRole
      */
     public static function getCrudUsersByObject(int &$lvl, int &$objId): array
     {
-        $users = self::getUsers();
-        $where = self::formingWhere(self::getObjParents($lvl, $objId, 1));
-        $crud = self::getSortCrud(self::getProjectCrud($where));
-        self::formingUsersCrud($users, $crud);
+        $parents = self::getParentsForObj($lvl, $objId);
+        self::formingParentsAsIf($parents);
 
-        return $users;
+        $users = self::getUsersCrud($parents);
+
+        return self::formingUsers($users);
     }
 
-    /**
-     * Возвращает IDs родителей объекта.
-     * @param int $lvl
-     * @param int $objId
-     * @param int|null $limit
-     * @return mixed
-     * @throws IncorrectLvlException
-     * @throws PropelException
-     */
-    private static function getObjParents(int &$lvl, int &$objId, ?int $limit = null): mixed
+    public static function getParentsForObj(int &$lvl, int &$objId): array
     {
-        $parents = ObjProjectQuery::create()
-                    ->select(self::getSelectParentsByLvl($lvl))
-                    ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                        ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                                ->leftJoinObjStage()
-                            ->endUse()
-                        ->endUse()
-                    ->endUse();
+        $query = ObjProjectQuery::create()
+            ->select([
+                ObjProjectTableMap::COL_ID,
+                ObjSubprojectTableMap::COL_ID,
+                ObjGroupTableMap::COL_ID,
+                ObjHouseTableMap::COL_ID,
+                ObjStageTableMap::COL_ID,
+            ])
+            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+            ->leftJoinObjStage()
+            ->endUse()
+            ->endUse()
+            ->endUse();
 
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
-            $parents->where($colId.'=?', $objId);
+            $query->where($colId . '=?', $objId);
         }
 
-        if ($limit) {
-            $parents->limit($limit);
-        }
+        $query = $query->findOne();
 
-        return $parents->find()->getData();
+        return is_array($query) ? array_slice($query, 0, $lvl) : [];
     }
 
-    /**
-     * Массив значений для вывода в запросе на получение IDs родителей объекта.
-     * @param int $lvl Уровень доступа.
-     * @return array
-     */
-    private static function getSelectParentsByLvl(int &$lvl): array
+    public static function getUsersCrud(string &$if): array
     {
-        $select = [];
-
-        if ($lvl >= eLvlObjInt::PROJECT->value) $select[] = ObjProjectTableMap::COL_ID;
-        if ($lvl >= eLvlObjInt::SUBPROJECT->value) $select[] = ObjSubprojectTableMap::COL_ID;
-        if ($lvl >= eLvlObjInt::GROUP->value) $select[] = ObjGroupTableMap::COL_ID;
-        if ($lvl >= eLvlObjInt::HOUSE->value) $select[] = ObjHouseTableMap::COL_ID;
-        if ($lvl >= eLvlObjInt::STAGE->value) $select[] = ObjStageTableMap::COL_ID;
-
-        return $select;
-    }
-
-    /**
-     * Возвращает пользователя(-ей) и его(их) разрешения.
-     * @param int|null $userId ID пользователя.
-     * @return array
-     * @throws PropelException
-     */
-    private static function getUsers(?int $userId = null): array
-    {
-        $query = UsersQuery::create()
+        return  UsersQuery::create()
+            ->distinct()
             ->select([
                 UsersTableMap::COL_ID,
                 UsersTableMap::COL_USERNAME,
@@ -407,80 +379,15 @@ class ProjectRole
                 UserRoleTableMap::COL_MANAGE_VOLUMES,
                 UserRoleTableMap::COL_MANAGE_HISTORY,
             ])
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
             ->leftJoinUserRole()
-            ->filterByIsAvailable(1);
-
-        if ($userId) {
-            $query->filterById($userId);
-        }
-
-        return $query->find()->getData();
+            ->leftJoinProjectRole()
+            ->find()
+            ->getData();
     }
 
-    /**
-     * Возвращает пользователей с их рахрешениями по объектам.
-     * @param array $where Массив условий по IDs родителей объекта.
-     * @param int|null $userId ID пользователя.
-     * @return array
-     * @throws PropelException
-     */
-    private static function getProjectCrud(array &$where, ?int $userId = null): array
-    {
-        $query = ProjectRoleQuery::create()
-            ->select([
-                ProjectRoleTableMap::COL_USER_ID,
-                ProjectRoleTableMap::COL_LVL,
-                ProjectRoleTableMap::COL_IS_CRUD,
-                ProjectRoleTableMap::COL_OBJECT_ID,
-                ProjectRoleTableMap::COL_PROJECT_ID,
-            ]);
-
-        if ($where) {
-            foreach ($where as $key=>$value) {
-                $query
-                    ->_or()
-                    ->condition("{$key}1" ,$value[0])
-                    ->condition("{$key}2" ,$value[1])
-                    ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
-            }
-        }
-
-        if ($userId) {
-            $query->filterByUserId($userId);
-        }
-
-        return $query->find()->getData();
-    }
-
-    /**
-     * Возвращает отсортированный массив разрешений по убыванию уровня доступа.
-     * @param array $crud Массив разрешений по IDs родителей объекта.
-     * @return array
-     */
-    private static function getSortCrud(array $crud): array
-    {
-        $i = [];
-        $a = [];
-
-        foreach ($crud as $item) {
-            $i[$item[ProjectRoleTableMap::COL_LVL]][] = $item;
-        }
-
-        rsort($i);
-
-        foreach ($i as $item) {
-            $a = array_merge($a, $item);
-        }
-
-        return $a;
-    }
-
-    /**
-     * Разрешен ли CRUD пользователю по роли проекта.
-     * @param int|bool|null $crud Разрешения по роли проекта.
-     * @param array $user Массив данных пользователя.
-     * @return bool|null
-     */
     private static function isCrud(null|int|bool &$crud, array &$user): ?bool
     {
         if ($user[UserRoleTableMap::COL_MANAGE_USERS]) return true;
@@ -491,58 +398,54 @@ class ProjectRole
         return null;
     }
 
-    /**
-     * Формирование массива условий по IDs родителей объекта.
-     * @param array $parents IDs родителей объекта.
-     * @return array
-     * @throws InvalidAccessLvlIntException
-     */
-    private static function formingWhere(array $parents): array
+    public static function replaceValueInIf(string $if, string $true): string
     {
-        $parents = array_filter($parents, fn($e) => $e !== null);
+        return str_replace('true', $true, $if);
+    }
 
+    public static function formingParentsAsIf(array &$parents): void
+    {
         foreach ($parents as $key=>&$value) {
-            if (is_numeric($key)) $key = ObjProjectTableMap::COL_ID;
-
             $lvl = AccessLvl::getLvlIntObjByColId($key);
             $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
             $value = [$wLvl, $wObjId];
         }
 
-        $parents['null'] = [
-            ProjectRoleTableMap::COL_LVL . ' IS NULL',
-            ProjectRoleTableMap::COL_OBJECT_ID . ' IS NULL',
-        ];
+        foreach ($parents as &$parent) {
+            $parent = "($parent[0] AND $parent[1])";
+        }
 
-        return $parents;
+        $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
     }
 
-    /**
-     * Формирование массива пользователей и их разрешением на CRUD объекта.
-     * @param array $users Массив пользователей.
-     * @param array $crud Массив разрешений по объекту.
-     * @return void
-     */
-    private static function formingUsersCrud(array &$users, array &$crud): void
+    public static function formingUsers(array &$users): array
     {
-        foreach ($crud as $access) {
-            foreach ($users as &$user) {
-                if ($user[UsersTableMap::COL_ID] !== $access[ProjectRoleTableMap::COL_USER_ID]) continue;
-                else $user['crud'][] = $access;
+        $result = [];
+
+        foreach ($users as &$user) {
+            $id =& $user[UsersTableMap::COL_ID];
+            $flag = array_key_exists($id, $result);
+
+            if ($flag && $result[$id]['lvl'] !== null) continue;
+            elseif (!$flag) $result[$id] =& $user;
+            else {
+                $result[$id]['lvl'] =& $user['lvl'];
+                $result[$id]['isCrud'] =& $user['isCrud'];
+                $result[$id]['objId'] =& $user['objId'];
             }
         }
 
-        foreach ($users as &$user) {
-            $crud = $user['crud'][0][ProjectRoleTableMap::COL_IS_CRUD] ?? null;
-
-            $user = [
-                'id' => $user[UsersTableMap::COL_ID],
-                'name' => $user[UsersTableMap::COL_USERNAME],
-                'isCrud' => self::isCrud($crud, $user),
-                'isAdmin' => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
+        foreach ($result as &$item) {
+            $item = [
+                'id' => $item[UsersTableMap::COL_ID],
+                'name' => $item[UsersTableMap::COL_USERNAME],
+                'isCrud' => self::isCrud($item['isCrud'], $item),
+                'isAdmin' => (bool)$item[UserRoleTableMap::COL_MANAGE_USERS]
             ];
         }
+
+        return array_values($result);
     }
     #endregion
 

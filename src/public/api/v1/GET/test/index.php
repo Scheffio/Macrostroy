@@ -34,10 +34,9 @@ try {
                 Selector::formingParentsAsIf($parents);
     $users = Selector::getUsersCrud($parents);
 
-    JsonOutput::success([
-//        $users,
+    JsonOutput::success(
         Selector::formingUsers($users)
-    ]);
+    );
 
 } catch (Exception $e) {
     JsonOutput::error($e->getMessage());
@@ -73,27 +72,6 @@ class Selector
         return is_array($query) ? array_slice($query, 0, $lvl) : [];
     }
 
-    public static function formingParentsAsIf(array &$parents): void
-    {
-        foreach ($parents as $key=>&$value) {
-            $lvl = AccessLvl::getLvlIntObjByColId($key);
-            $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
-            $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
-            $value = [$wLvl, $wObjId];
-        }
-
-        foreach ($parents as &$parent) {
-            $parent = "($parent[0] AND $parent[1])";
-        }
-
-        $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
-    }
-
-    public static function replaceValueInIf(string $if, string $true): string
-    {
-        return str_replace('true', $true, $if);
-    }
-
     public static function getUsersCrud(string &$if): array
     {
         return  UsersQuery::create()
@@ -116,6 +94,37 @@ class Selector
                 ->getData();
     }
 
+    private static function isCrud(null|int|bool &$crud, array &$user): ?bool
+    {
+        if ($user[UserRoleTableMap::COL_MANAGE_USERS]) return true;
+        if ($crud !== null) return (bool)$crud;
+        if ($user[UserRoleTableMap::COL_MANAGE_OBJECTS]) return true;
+        if ($user[UserRoleTableMap::COL_OBJECT_VIEWER]) return false;
+
+        return null;
+    }
+
+    public static function replaceValueInIf(string $if, string $true): string
+    {
+        return str_replace('true', $true, $if);
+    }
+
+    public static function formingParentsAsIf(array &$parents): void
+    {
+        foreach ($parents as $key=>&$value) {
+            $lvl = AccessLvl::getLvlIntObjByColId($key);
+            $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
+            $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
+            $value = [$wLvl, $wObjId];
+        }
+
+        foreach ($parents as &$parent) {
+            $parent = "($parent[0] AND $parent[1])";
+        }
+
+        $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
+    }
+
     public static function formingUsers(array &$users): array
     {
         $result = [];
@@ -128,13 +137,20 @@ class Selector
             elseif (!$flag) $result[$id] =& $user;
             else {
                 $result[$id]['lvl'] =& $user['lvl'];
-                $result[$id]['isCrud'] =& $user['lvl'];
-                $result[$id]['objId'] =& $user['lvl'];
+                $result[$id]['isCrud'] =& $user['isCrud'];
+                $result[$id]['objId'] =& $user['objId'];
             }
         }
 
-        
+        foreach ($result as &$item) {
+            $item = [
+                'id' => $item[UsersTableMap::COL_ID],
+                'name' => $item[UsersTableMap::COL_USERNAME],
+                'isCrud' => self::isCrud($item['isCrud'], $item),
+                'isAdmin' => (bool)$item[UserRoleTableMap::COL_MANAGE_USERS]
+            ];
+        }
 
-        return $result;
+        return array_values($result);
     }
 }

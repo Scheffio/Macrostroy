@@ -13,7 +13,7 @@ export default class Requester {
     public addData(key: string, value: File);
     public addData(key: string, value: string);
     public addData(key: string, value) {
-        this.body.append(key, value)
+        this.body.set(key, value)
     }
 
     public logBody() {

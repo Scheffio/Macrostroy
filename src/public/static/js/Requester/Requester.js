@@ -4,7 +4,7 @@ export default class Requester {
     constructor() {
     }
     addData(key, value) {
-        this.body.append(key, value);
+        this.body.set(key, value);
     }
     logBody() {
         console.log(this.body);

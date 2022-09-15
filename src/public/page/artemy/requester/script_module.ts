@@ -11,8 +11,11 @@ $(file_input).on("change", function () {
 })
 
 $("#get_body_button").on("click", function () {
-    console.log(file_input.files[0])
     request.logBody()
+    // Display the values
+    for (var value of request.body.values()) {
+        console.log(value);
+    }
 })
 
 $("#fetch_button").on("click", function () {

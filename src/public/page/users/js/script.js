@@ -123,13 +123,6 @@ emailInput.addEventListener('blur', () => {
     }
 })
 
-document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-    console.log(elem);
-    if(elem.tagName === "INPUT") {
-        elem.addEventListener('click', () => {console.log(1)})
-    }
-})
-
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
         elem.checked = false
@@ -189,18 +182,23 @@ const rolesControl = {
         })
     },
     saveRolePermissions() {
-
+        let url = new URL('https://artemy.net/api/v1/role')
     },
 }
 
 function parsePermissions(id, elem) {
-    let url = new URL('https://artemy.net/api/v1/role')
-    let obj = {
-        role_id: id 
-    }
+    // let url = new URL('api/v1/role')
+    // let obj = {
+    //     role_id: id 
+    // }
     
-    url.search = new URLSearchParams(obj).toString()
-    fetch(url).then((elem) => {
+    // url.search = new URLSearchParams(obj).toString()
+    fetch("/api/v1/role", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((elem) => {
         return elem.json()
     }).then((json) => {
         if(json.status === "success") {
@@ -209,29 +207,29 @@ function parsePermissions(id, elem) {
                 if(elem.children[0].dataset.id == json.data.id) {
                     let parameter = json.data
                     if(parameter.object_viewer) {
-                        watchobjectsCheckbox.checked = true
+                        rolesControl.watchobjectsCheckbox.checked = true
                     } 
                     if(parameter.manage_history) {
-                        versionControlCheckbox.checked = true
+                        rolesControl.versionControlCheckbox.checked = true
                     } 
                     if(parameter.manage_objects) {
-                        objectCrudAllCheckbox.checked = true
-                        objectCrudExactCheckbox.checked = false
+                        rolesControl.objectCrudAllCheckbox.checked = true
+                        rolesControl.objectCrudExactCheckbox.checked = false
                     } 
                     if(!parameter.manage_objects) {
-                        objectCrudAllCheckbox.checked = false
-                        objectCrudExactCheckbox.checked = true
+                        rolesControl.objectCrudAllCheckbox.checked = false
+                        rolesControl.objectCrudExactCheckbox.checked = true
                     } 
                     if(parameter.manage_volumes) {
-                        volumeCrudAllCheckbox.checked = true
-                        volumeCrudExactCheckbox.checked = false
+                        rolesControl.volumeCrudAllCheckbox.checked = true
+                        rolesControl.volumeCrudExactCheckbox.checked = false
                     } 
                     if(!parameter.manage_volumes) {
-                        volumeCrudAllCheckbox.checked = false
-                        volumeCrudExactCheckbox.checked = true
+                        rolesControl.volumeCrudAllCheckbox.checked = false
+                        rolesControl.volumeCrudExactCheckbox.checked = true
                     }
                     if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
-                        adminCheckbox.checked = true
+                        rolesControl.adminCheckbox.checked = true
                     }
                 }
             }else {

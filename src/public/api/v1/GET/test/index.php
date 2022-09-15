@@ -31,7 +31,6 @@ try {
     $objId = $request->getQueryOrThrow('object_id');
 
     $parents =  Selector::getParentsForObj($lvl, $objId);
-                Selector::formingParentsAsCondition($parents);
                 Selector::formingParentsAsIf($parents);
     $users = null;
 
@@ -90,7 +89,7 @@ class Selector
         return is_array($query) ? array_slice($query, 0, $lvl) : [];
     }
 
-    public static function formingParentsAsCondition(array &$parents): void
+    public static function formingParentsAsIf(array &$parents): void
     {
         foreach ($parents as $key=>&$value) {
             $lvl = AccessLvl::getLvlIntObjByColId($key);
@@ -98,19 +97,27 @@ class Selector
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
             $value = [$wLvl, $wObjId];
         }
-    }
-    
-    public static function formingParentsAsIf(array &$parents): void
-    {
+
         foreach ($parents as &$parent) {
             $parent = "($parent[0] AND $parent[1])";
         }
 
-        $parents = 'IF(' . join(' OR ', $parents) . ')';
+        $parents = 'IF(' . join(' OR ', $parents) . ', select, null)';
     }
 
-    public static function getUsersCrud()
+    public static function replaceValueInIf(string &$if, string $col): string
     {
+        return str_replace('select', $col, $if);
+    }
 
+    public static function getUsersCrud(string $if)
+    {
+        return UsersQuery::create()
+            ->distinct()
+            ->select([])
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), '')
+            ->leftJoinUserRole()
+            ->leftJoinProjectRole()
+            ;
     }
 }

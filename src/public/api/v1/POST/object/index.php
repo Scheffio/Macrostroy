@@ -30,6 +30,12 @@ try {
     $parentLvl = null;
     $projectId = null;
 
+    $flag = ProjectRole::isAccessCrudObj(
+        lvl: $lvl,
+        userId: AuthUserRole::getUserId(),
+        objId: $parentId
+    );
+
     if ($lvl !== eLvlObjInt::PROJECT->value) {
         $parentId = $request->getRequestOrThrow('parent_id');
         $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
@@ -41,7 +47,6 @@ try {
 
         $flag = ProjectRole::isAccessCrudObj(
             lvl: $parentLvl,
-            projectId: $projectId,
             userId: AuthUserRole::getUserId(),
             objId: $parentId
         );

@@ -7,6 +7,7 @@ $(file_input).on("change", function () {
     request.addData('file', file_input.files[0]);
 });
 $("#get_body_button").on("click", function () {
+    console.log(request.body.values());
     for (var value of request.body.values()) {
         console.log(value + ": " + request.body.get());
     }

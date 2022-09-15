@@ -33,6 +33,7 @@ try {
         JsonOutput::success(
             UsersQuery::create()
                 ->select(['id', 'username'])
+                ->orderByUsername()
                 ->find()
                 ->getData()
         );

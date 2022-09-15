@@ -154,15 +154,21 @@ class ProjectRole
     /**
      * Разрешен ли пользователю CRUD.
      * @param int $lvl Номер уровня доступа.
-     * @param int $projectId ID проекта.
      * @param int $objId ID объекта.
      * @param int $userId ID пользователя.
      * @return bool
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function isAccessCrudObj(int $lvl, int $projectId, int $userId, ?int $objId = null): bool
+    public static function isAccessCrudObj(int $lvl, int $userId, ?int $objId = null): bool
     {
+        $parents = self::getParentsForObj($lvl, $objId);
+        self::formingParentsAsIf($parents);
+
+        $users = self::getUsersCrud($parents);
+
+        JsonOutput::success($users);
+
         return true;
 //        return self::getCrudUsersByObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
     }
@@ -325,13 +331,15 @@ class ProjectRole
     }
 
     /**
-     * @param int $lvl
-     * @param int $objId
+     * Взвращает массив IDs родитеей объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $objId ID объекта.
+     * @param int|null $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getParentsForObj(int &$lvl, int &$objId): array
+    public static function getParentsForObj(int &$lvl, int &$objId, int $userId  = null): array
     {
         $query = ObjProjectQuery::create()
             ->select([
@@ -354,11 +362,21 @@ class ProjectRole
             $query->where($colId . '=?', $objId);
         }
 
+        if ($userId) {
+            $query->filterById($userId);
+        }
+
         $query = $query->findOne();
 
         return is_array($query) ? array_slice($query, 0, $lvl) : [];
     }
 
+    /**
+     * Возвращает массив пользователей, с их разрешениями на объект, соблюдая переданное условие.
+     * @param string $if Строка условия.
+     * @return array
+     * @throws PropelException
+     */
     public static function getUsersCrud(string &$if): array
     {
         return  UsersQuery::create()
@@ -382,6 +400,12 @@ class ProjectRole
             ->getData();
     }
 
+    /**
+     * Разрешен ли CRUD объекта для пользователя.
+     * @param int|bool|null $crud Разрешение пользователя на объект.
+     * @param array $user Данные о пользователе.
+     * @return bool|null
+     */
     private static function isCrud(null|int|bool &$crud, array &$user): ?bool
     {
         if ($user[UserRoleTableMap::COL_MANAGE_USERS]) return true;
@@ -392,11 +416,23 @@ class ProjectRole
         return null;
     }
 
+    /**
+     * Возвращает строку, с замененным значением при true условия.
+     * @param string $if Строка с условием для вывода.
+     * @param string $true Значение, которое выводится при true условия.
+     * @return string
+     */
     public static function replaceValueInIf(string $if, string $true): string
     {
         return str_replace('true', $true, $if);
     }
 
+    /**
+     * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
+     * @param array $parents Массив IDs родителей объекта.
+     * @return void
+     * @throws InvalidAccessLvlIntException
+     */
     public static function formingParentsAsIf(array &$parents): void
     {
         foreach ($parents as $key=>&$value) {
@@ -413,6 +449,11 @@ class ProjectRole
         $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
     }
 
+    /**
+     * Форирование массива пользователей.
+     * @param array $users Массив пользователей.
+     * @return array
+     */
     public static function formingUsers(array &$users): array
     {
         $result = [];

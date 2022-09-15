@@ -152,7 +152,7 @@ class ProjectRole
 
     #region Static Access Control Functions
     /**
-     * Разрешен ли пользователю CRUD.
+     * Разрешен ли пользователю CRUD по объекту.
      * @param int $lvl Номер уровня доступа.
      * @param int $userId ID пользователя.
      * @param int|null $objId ID объекта.
@@ -271,20 +271,6 @@ class ProjectRole
         return new ProjectRole();
     }
 
-    /**
-     * Возвращает разрешения пользователя по уровню.
-     * @param int $lvl Уровень доступа.
-     * @param int $userId ID пользователя.
-     * @param int|null $projectId ID проекта.
-     * @return array
-     * @throws PropelException
-     * @throws NoUserFoundException
-     */
-    public static function getUserCrudById(int &$lvl, int &$ObjId, int $userId): array
-    {
-        return [];
-    }
-
     public static function getAuthUserCrudByLvl(int &$lvl, int &$objId): array
     {
         return [];
@@ -317,9 +303,8 @@ class ProjectRole
     public static function getCrudUsersByObj(int &$lvl, ?int $objId = null, ?int $userId = null): array
     {
         $parents = self::getParentsForObj($lvl, $objId);
-        self::formingParentsAsIf($parents);
-
-        $users = self::getUsersCrud($parents, $userId);
+        $if = self::formingParentsAsIf($parents);
+        $users = self::getUsersCrud($if, $userId);
 
         return self::formingUsers($users);
     }
@@ -424,10 +409,10 @@ class ProjectRole
     /**
      * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
      * @param array $parents Массив IDs родителей объекта.
-     * @return void
+     * @return string
      * @throws InvalidAccessLvlIntException
      */
-    public static function formingParentsAsIf(array &$parents): void
+    public static function formingParentsAsIf(array $parents): string
     {
         foreach ($parents as $key=>&$value) {
             $lvl = AccessLvl::getLvlIntObjByColId($key);
@@ -440,7 +425,7 @@ class ProjectRole
             $parent = "($parent[0] AND $parent[1])";
         }
 
-        $parents = 'IF(' . join(' OR ', $parents) . ', true, NULL)';
+        return 'IF(' . join(' OR ', $parents) . ', true, NULL)';
     }
 
     /**

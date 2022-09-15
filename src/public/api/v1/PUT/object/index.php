@@ -26,18 +26,16 @@ try {
     $lvl = $request->getRequestOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
-    $projectId = Objects::getObject(id: $id, lvl: $lvl)
-        ->isEditableOrThrow()
-        ->getProjectIdObjOrThrow();
+    // Проверка, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+    Objects::getObject(id: $id, lvl: $lvl)->isEditableOrThrow();
 
     if (!AuthUserRole::isAccessManageUsers() &&
         !AuthUserRole::isAccessManageObjects() &&
         !ProjectRole::isAccessCrudObj(
             lvl: $lvl,
-            projectId: $projectId,
             userId: AuthUserRole::getUserId(),
-            objId: $id)
+            objId: $id
+        )
     ) {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }

@@ -28,18 +28,16 @@ try {
     $lvl = $request->getQueryOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    // ID проекта, с проверкой доступа на удаление, т.е. статус не равен "Удален".
-    $projectId = Objects::getObject(id: $id, lvl: $lvl)
-        ->isNotDeletedTableOrThrow()
-        ->getProjectIdObjOrThrow();
+    //Проверка доступа на удаление, т.е. статус не равен "Удален".
+    Objects::getObject(id: $id, lvl: $lvl)->isNotDeletedTableOrThrow();
 
     if (!AuthUserRole::isAccessManageUsers() &&
         !AuthUserRole::isAccessManageObjects() &&
         !ProjectRole::isAccessCrudObj(
             lvl: $lvl,
-            projectId: $projectId,
             userId: AuthUserRole::getUserId(),
-            objId: $id)
+            objId: $id
+        )
     ) {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }

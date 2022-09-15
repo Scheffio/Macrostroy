@@ -28,16 +28,13 @@ try {
     $flag = false;
     $parentId = null;
     $parentLvl = null;
-    $projectId = null;
 
     if ($lvl !== eLvlObjInt::PROJECT->value) {
         $parentId = $request->getRequestOrThrow('parent_id');
         $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
 
-        // ID проекта, с проверкой, что таблица доступна для редактирования, т.е. статус равен "В процессе".
-        $projectId = Objects::getObject(id: $parentId, lvl: $parentLvl)
-                    ->isEditableOrThrow()
-                    ->getProjectIdObjOrThrow();
+        // Проверка, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+        Objects::getObject(id: $parentId, lvl: $parentLvl)->isEditableOrThrow();
 
         $flag = ProjectRole::isAccessCrudObj(
             lvl: $parentLvl,

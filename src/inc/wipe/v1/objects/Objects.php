@@ -314,25 +314,10 @@ class Objects
     #endregion
 
     #region Static Select Objects
-    /**
-     * Вывод объекта(-ов).
-     * @param int $lvl Уровень доступа.
-     * @param int $parentId ID родительского объекта.
-     * @param int $userId ID пользователя.
-     * @param int $limit Макс. кол-во выводимых записей.
-     * @param int $limitFrom После кокого ID начинается вывод.
-     * @return array
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws NoFindObjectException
-     * @throws PropelException
-     * @throws NoUserFoundException
-     */
+
     public static function getObjectsByLvl(int $lvl, int $parentId, int $userId, int $limit = 10, int $limitFrom = 0): array
     {
-        ProjectRole::getAuthUserCrudByLvl($lvl, $parentId);
-
-        return [];
+//        ProjectRole::getAuthUserCrudByLvl($lvl, $parentId);
 
 //        $projectId = null;
 //
@@ -366,262 +351,264 @@ class Objects
 //                )
 //            ]
 //        );
+
+        return [];
     }
 
-    /**
-     * Получить объект(-ы).
-     * @param int $lvl Уровень доступа.
-     * @param int $parentId ID родительского объекта.
-     * @param int $limit Макс. кол-во выводимых записей.
-     * @param int $limitFrom После кокого ID начинается вывод.
-     * @param array $access Массив разрешений пользователя.
-     * @param array $crud Массив разрешений пользователя по объектам.
-     * @return array
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws PropelException
-     */
-    private static function getObjects(int &$lvl, int &$parentId, int &$limit, int &$limitFrom, array &$access, array &$crud): array
-    {
-        $objects = self::getObjectsQuery(
-            objId: $parentId,
-            lvl: $lvl,
-            limit: $limit,
-            limitFrom: $limitFrom,
-            isAccessManageUsers: $access['manageObjects']
-            )
-            ->find()
-            ->getData();
-
-        return self::formingObjects(
-            lvl: $lvl,
-            access: $access,
-            crud: $crud,
-            objs: $objects,
-        );
-    }
-
-    /**
-     * Сортировака разрешений пользователя к объектам.
-     * @param array $access Разрешения пользователя к объектам.
-     * @return void
-     */
-    private static function sortAccess(array &$access): void
-    {
-        if (!ProjectRole::isAssociateArray($access)) {
-            $i = [];
-            $a = [];
-
-            foreach ($access as &$item) {
-                $i[$item['lvl']][] = $item;
-            }
-
-            rsort($i);
-
-            foreach ($i as &$item) {
-                $a = array_merge($a, $item);
-            }
-
-            $access = $a;
-        }
-    }
-
-    /**
-     * Возвращает запрос на вывод данных об объекте с стоимость и дополнительной фильтрацией.
-     * @param int $objId ID объекта.
-     * @param int $lvl Уровень доступа.
-     * @param int $limit Лимит вывода.
-     * @param int $limitFrom Лимит, с которого необходимо начать вывод.
-     * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
-     * @return mixed
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws PropelException
-     */
-    private static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
-    {
-        $query = self::getObjectsPriceQuery($lvl);
-
-        if ($objId) {
-            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
-            $colId = self::getColIdByLvl($preLvl);
-            $query->where($colId . '=?', $objId);
-        }
-
-        if (!$isAccessManageUsers) {
-            $colStatus = self::getColStatusByLvl($lvl);
-            $query->where($colStatus . '!=?', self::ATTRIBUTE_STATUS_DELETED);
-        }
-
-        if ($limitFrom) {
-            $colId = self::getColIdByLvl($lvl);
-            $query->where($colId . '>?', $limitFrom);
-        }
-
-        $query->limit($limit);
-
-        return $query;
-    }
-
-    /**
-     * Возвращает запрос на вывод данных об объекте с стоимостью.
-     * @param int $lvl Уроыень доступа.
-     * @return mixed
-     * @throws IncorrectLvlException
-     * @throws PropelException
-     */
-    private static function getObjectsPriceQuery(int &$lvl): mixed
-    {
-        $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
-        $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
-        $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
-        $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
-
-        return ObjProjectQuery::create()
-                ->select([
-                    self::getColNameByLvl($lvl),
-                    self::getColStatusByLvl($lvl),
-                    self::getColIsPublicByLvl($lvl),
-                    ObjProjectTableMap::COL_ID,
-                    ObjSubprojectTableMap::COL_ID,
-                    ObjGroupTableMap::COL_ID,
-                    ObjHouseTableMap::COL_ID,
-                    ObjStageTableMap::COL_ID,
-                    ObjStageWorkTableMap::COL_ID,
-                    UsersTableMap::COL_ID,
-                    UsersTableMap::COL_USERNAME,
-                ])
-                ->withColumn($sumStr, 'price')
-                ->leftJoinUsers()
-                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                            ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
-                                ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
-                                    ->leftJoinObjStageMaterial()
-                                    ->leftJoinObjStageTechnic()
-                                ->endUse()
-                            ->endUse()
-                        ->endUse()
-                    ->endUse()
-                ->endUse();
-    }
-
-    /**
-     * Формирование массива объекта с его основной информацией и доступом пользователя.
-     * @param int $lvl Уровень доступа.
-     * @param array $access Массив разрешений пользователя.
-     * @param array $crud Массив разрешений пользователя по объектам.
-     * @param array $objs Массив объектов.
-     * @return array
-     * @throws IncorrectLvlException
-     */
-    private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): array
-    {
-        $colId = self::getColIdByLvl($lvl);
-        $colName = self::getColNameByLvl($lvl);
-        $colStatus = self::getColStatusByLvl($lvl);
-        $colIsPublic = self::getColIsPublicByLvl($lvl);
-
-        $result = [];
-
-        foreach ($objs as $obj) {
-            $id =& $obj[$colId];
-            $isCrud = self::isAccessCrud($access, $crud, $obj);
-
-            if ($isCrud === null) continue;
-
-            if (array_key_exists($id, $result)) {
-                $result[$id]['price'] = number_format((float)$result[$id]['price']+$obj['price'], 2, '.', '');
-            } else {
-                $result[$id] = [
-                    'id' => $obj[$colId],
-                    'name' => $obj[$colName],
-                    'status' => $obj[$colStatus],
-                    'isPublic' => $obj[$colIsPublic],
-                    'user' => [
-                        'id' => $obj[UsersTableMap::COL_ID],
-                        'name' => $obj[UsersTableMap::COL_USERNAME],
-                    ],
-                    'price' => number_format((float)$obj['price'], 2, '.', ''),
-                    'isCrud' => $isCrud,
-                    'isHistory' => $isCrud ? $access['manageHistory'] : false,
-                ];
-            }
-        }
-
-        return array_values($result);
-    }
-
-    /**
-     * Разрешен ли пользователю CRUD в объекте.
-     * @param array $access Массв разрешений пользователя.
-     * @param array $crud Массив разрешений пользователя по объектам.
-     * @param array $obj Объект.
-     * @return bool|null
-     * @throws IncorrectLvlException
-     */
-    private static function isAccessCrud(array &$access, array &$crud, array &$obj): ?bool
-    {
-        if ($access['manageUsers']) return true;
-
-        if (!ProjectRole::isAssociateArray($crud)) {
-            foreach ($crud as &$item) {
-                $colId = self::getColIdByLvl($item['lvl']);
-
-                if ($obj[$colId] === $item['object_id']) {
-                    return $item['isCrud'];
-                }
-            }
-        } elseif ($crud['lvl'] !== null) return $crud['isCrud'];
-
-        if ($access['manageObjects']) return true;
-        if ($access['objectViewer']) return false;
-
-        return null;
-    }
-
-    /**
-     * Возращает основные разрешения пользователя по объекту.
-     * @param int $lvl Уровень доступа.
-     * @param int $userId ID пользователя.
-     * @param array $access Массив разрешений пользователя.
-     * @param int|null $parentId ID родительского объекта.
-     * @param int|null $projectId ID проекта.
-     * @return array
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws PropelException
-     */
-    private static function getUserAccess(int &$lvl, int &$userId, array &$access, ?int &$parentId = null, ?int &$projectId = null): array
-    {
-        $isAdmin = false;
-
-        if ($access['manageUsers'] === false) {
-            if ($projectId) {
-                $isCrud = ProjectRole::isAccessCrudObj(
-                    lvl: AccessLvl::getPreLvlIntObj($lvl),
-//                    projectId: $projectId,
-                    userId: $userId,
-                    objId: $parentId
-                );
-            } else {
-                $isCrud = $access['manageObjects'];
-            }
-
-            $isHistory = $isCrud ? $access['manageHistory'] : false;
-        } else {
-            $isCrud = true;
-            $isAdmin = true;
-            $isHistory = true;
-        }
-
-        return [
-            'isCrud' => $isCrud,
-            'isAdmin' => $isAdmin,
-            'manageHistory' => $isHistory,
-        ];
-    }
+//    /**
+//     * Получить объект(-ы).
+//     * @param int $lvl Уровень доступа.
+//     * @param int $parentId ID родительского объекта.
+//     * @param int $limit Макс. кол-во выводимых записей.
+//     * @param int $limitFrom После кокого ID начинается вывод.
+//     * @param array $access Массив разрешений пользователя.
+//     * @param array $crud Массив разрешений пользователя по объектам.
+//     * @return array
+//     * @throws IncorrectLvlException
+//     * @throws InvalidAccessLvlIntException
+//     * @throws PropelException
+//     */
+//    private static function getObjects(int &$lvl, int &$parentId, int &$limit, int &$limitFrom, array &$access, array &$crud): array
+//    {
+//        $objects = self::getObjectsQuery(
+//            objId: $parentId,
+//            lvl: $lvl,
+//            limit: $limit,
+//            limitFrom: $limitFrom,
+//            isAccessManageUsers: $access['manageObjects']
+//            )
+//            ->find()
+//            ->getData();
+//
+//        return self::formingObjects(
+//            lvl: $lvl,
+//            access: $access,
+//            crud: $crud,
+//            objs: $objects,
+//        );
+//    }
+//
+//    /**
+//     * Сортировака разрешений пользователя к объектам.
+//     * @param array $access Разрешения пользователя к объектам.
+//     * @return void
+//     */
+//    private static function sortAccess(array &$access): void
+//    {
+//        if (!ProjectRole::isAssociateArray($access)) {
+//            $i = [];
+//            $a = [];
+//
+//            foreach ($access as &$item) {
+//                $i[$item['lvl']][] = $item;
+//            }
+//
+//            rsort($i);
+//
+//            foreach ($i as &$item) {
+//                $a = array_merge($a, $item);
+//            }
+//
+//            $access = $a;
+//        }
+//    }
+//
+//    /**
+//     * Возвращает запрос на вывод данных об объекте с стоимость и дополнительной фильтрацией.
+//     * @param int $objId ID объекта.
+//     * @param int $lvl Уровень доступа.
+//     * @param int $limit Лимит вывода.
+//     * @param int $limitFrom Лимит, с которого необходимо начать вывод.
+//     * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
+//     * @return mixed
+//     * @throws IncorrectLvlException
+//     * @throws InvalidAccessLvlIntException
+//     * @throws PropelException
+//     */
+//    private static function getObjectsQuery(int &$objId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): mixed
+//    {
+//        $query = self::getObjectsPriceQuery($lvl);
+//
+//        if ($objId) {
+//            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+//            $colId = self::getColIdByLvl($preLvl);
+//            $query->where($colId . '=?', $objId);
+//        }
+//
+//        if (!$isAccessManageUsers) {
+//            $colStatus = self::getColStatusByLvl($lvl);
+//            $query->where($colStatus . '!=?', self::ATTRIBUTE_STATUS_DELETED);
+//        }
+//
+//        if ($limitFrom) {
+//            $colId = self::getColIdByLvl($lvl);
+//            $query->where($colId . '>?', $limitFrom);
+//        }
+//
+//        $query->limit($limit);
+//
+//        return $query;
+//    }
+//
+//    /**
+//     * Возвращает запрос на вывод данных об объекте с стоимостью.
+//     * @param int $lvl Уроыень доступа.
+//     * @return mixed
+//     * @throws IncorrectLvlException
+//     * @throws PropelException
+//     */
+//    private static function getObjectsPriceQuery(int &$lvl): mixed
+//    {
+//        $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
+//        $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
+//        $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
+//        $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
+//
+//        return ObjProjectQuery::create()
+//                ->select([
+//                    self::getColNameByLvl($lvl),
+//                    self::getColStatusByLvl($lvl),
+//                    self::getColIsPublicByLvl($lvl),
+//                    ObjProjectTableMap::COL_ID,
+//                    ObjSubprojectTableMap::COL_ID,
+//                    ObjGroupTableMap::COL_ID,
+//                    ObjHouseTableMap::COL_ID,
+//                    ObjStageTableMap::COL_ID,
+//                    ObjStageWorkTableMap::COL_ID,
+//                    UsersTableMap::COL_ID,
+//                    UsersTableMap::COL_USERNAME,
+//                ])
+//                ->withColumn($sumStr, 'price')
+//                ->leftJoinUsers()
+//                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+//                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+//                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+//                            ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
+//                                ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
+//                                    ->leftJoinObjStageMaterial()
+//                                    ->leftJoinObjStageTechnic()
+//                                ->endUse()
+//                            ->endUse()
+//                        ->endUse()
+//                    ->endUse()
+//                ->endUse();
+//    }
+//
+//    /**
+//     * Формирование массива объекта с его основной информацией и доступом пользователя.
+//     * @param int $lvl Уровень доступа.
+//     * @param array $access Массив разрешений пользователя.
+//     * @param array $crud Массив разрешений пользователя по объектам.
+//     * @param array $objs Массив объектов.
+//     * @return array
+//     * @throws IncorrectLvlException
+//     */
+//    private static function formingObjects(int &$lvl, array &$access, array &$crud, array &$objs): array
+//    {
+//        $colId = self::getColIdByLvl($lvl);
+//        $colName = self::getColNameByLvl($lvl);
+//        $colStatus = self::getColStatusByLvl($lvl);
+//        $colIsPublic = self::getColIsPublicByLvl($lvl);
+//
+//        $result = [];
+//
+//        foreach ($objs as $obj) {
+//            $id =& $obj[$colId];
+//            $isCrud = self::isAccessCrud($access, $crud, $obj);
+//
+//            if ($isCrud === null) continue;
+//
+//            if (array_key_exists($id, $result)) {
+//                $result[$id]['price'] = number_format((float)$result[$id]['price']+$obj['price'], 2, '.', '');
+//            } else {
+//                $result[$id] = [
+//                    'id' => $obj[$colId],
+//                    'name' => $obj[$colName],
+//                    'status' => $obj[$colStatus],
+//                    'isPublic' => $obj[$colIsPublic],
+//                    'user' => [
+//                        'id' => $obj[UsersTableMap::COL_ID],
+//                        'name' => $obj[UsersTableMap::COL_USERNAME],
+//                    ],
+//                    'price' => number_format((float)$obj['price'], 2, '.', ''),
+//                    'isCrud' => $isCrud,
+//                    'isHistory' => $isCrud ? $access['manageHistory'] : false,
+//                ];
+//            }
+//        }
+//
+//        return array_values($result);
+//    }
+//
+//    /**
+//     * Разрешен ли пользователю CRUD в объекте.
+//     * @param array $access Массв разрешений пользователя.
+//     * @param array $crud Массив разрешений пользователя по объектам.
+//     * @param array $obj Объект.
+//     * @return bool|null
+//     * @throws IncorrectLvlException
+//     */
+//    private static function isAccessCrud(array &$access, array &$crud, array &$obj): ?bool
+//    {
+//        if ($access['manageUsers']) return true;
+//
+//        if (!ProjectRole::isAssociateArray($crud)) {
+//            foreach ($crud as &$item) {
+//                $colId = self::getColIdByLvl($item['lvl']);
+//
+//                if ($obj[$colId] === $item['object_id']) {
+//                    return $item['isCrud'];
+//                }
+//            }
+//        } elseif ($crud['lvl'] !== null) return $crud['isCrud'];
+//
+//        if ($access['manageObjects']) return true;
+//        if ($access['objectViewer']) return false;
+//
+//        return null;
+//    }
+//
+//    /**
+//     * Возращает основные разрешения пользователя по объекту.
+//     * @param int $lvl Уровень доступа.
+//     * @param int $userId ID пользователя.
+//     * @param array $access Массив разрешений пользователя.
+//     * @param int|null $parentId ID родительского объекта.
+//     * @param int|null $projectId ID проекта.
+//     * @return array
+//     * @throws IncorrectLvlException
+//     * @throws InvalidAccessLvlIntException
+//     * @throws PropelException
+//     */
+//    private static function getUserAccess(int &$lvl, int &$userId, array &$access, ?int &$parentId = null, ?int &$projectId = null): array
+//    {
+//        $isAdmin = false;
+//
+//        if ($access['manageUsers'] === false) {
+//            if ($projectId) {
+//                $isCrud = ProjectRole::isAccessCrudObj(
+//                    lvl: AccessLvl::getPreLvlIntObj($lvl),
+////                    projectId: $projectId,
+//                    userId: $userId,
+//                    objId: $parentId
+//                );
+//            } else {
+//                $isCrud = $access['manageObjects'];
+//            }
+//
+//            $isHistory = $isCrud ? $access['manageHistory'] : false;
+//        } else {
+//            $isCrud = true;
+//            $isAdmin = true;
+//            $isHistory = true;
+//        }
+//
+//        return [
+//            'isCrud' => $isCrud,
+//            'isAdmin' => $isAdmin,
+//            'manageHistory' => $isHistory,
+//        ];
+//    }
     #endregion
 
     #region Static Getter Functions

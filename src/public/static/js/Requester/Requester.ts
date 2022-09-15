@@ -5,7 +5,7 @@ import {HttpMethod} from "/static/js/Requester/HttpMethod.js";
 
 export default class Requester {
     private method: HttpMethod;
-    public body = {};
+    public body = new FormData();
 
     constructor() {
     }
@@ -13,7 +13,7 @@ export default class Requester {
     public addData(key: string, value: File);
     public addData(key: string, value: string);
     public addData(key: string, value) {
-        this.body[key] = value;
+        this.body.append(key, value)
     }
 
     public logBody() {
@@ -21,8 +21,13 @@ export default class Requester {
     }
 
     public fetch() {
-        fetch(new URL("artemy.net"), {
-            body: 
+        fetch(new URL("https://artemy.net/api/v1/test"), {
+            method: "POST",
+            body: this.body
+        })
+            .then(r => r.text())
+            .then(function (r) {
+            console.log(r)
         })
     }
 }

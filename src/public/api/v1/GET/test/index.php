@@ -31,12 +31,11 @@ try {
     $objId = $request->getQueryOrThrow('object_id');
 
     $users = Selector::getUsers();
-    $parents = Selector::getParentsForObj($lvl, $objId);
-    Selector::formingParentsAsCondition($parents);
+    $parents =  Selector::getParentsForObj($lvl, $objId);
+                Selector::formingParentsAsCondition($parents);
     $access = Selector::getObjAccesses($parents);
 
     JsonOutput::success([
-        $parents,
         $access
     ]);
 
@@ -116,6 +115,9 @@ class Selector
             $query->filterByUserId($userId);
         }
 
+        return [
+            $query->toString()
+        ];
         return $query->find()->getData();
     }
 

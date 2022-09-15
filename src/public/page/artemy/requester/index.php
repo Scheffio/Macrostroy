@@ -11,5 +11,6 @@
 <h1>Requester test</h1>
 <input type="file" id="file_input">
 <button id="get_body_button">Get body</button>
+<button id="fetch_button">Fetch</button>
 </body>
 </html>

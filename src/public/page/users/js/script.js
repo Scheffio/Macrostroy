@@ -143,13 +143,10 @@ function parseRoles() {
         const selectableUsers = {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
-                if(!localStorage.getItem('changes')) {
                     this.reset()
+                    this.checkPermissions()
                     elem.classList.toggle('selected')
                     parsePermissions(elem.children[0].dataset.id, elem)
-                }else {
-                    modalSystem.show('save')
-                }
             },
             reset() {
                 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -161,7 +158,10 @@ function parseRoles() {
                     elem.classList.remove('selected')
                 })
             },
-            saveOldPermissions() {
+            checkPermissions() {
+                if(adminCheckbox.checked !== adminCond) {
+                    console.log(1);
+                }
             }
         }
         
@@ -176,13 +176,6 @@ function parseRoles() {
     })
 }
 
-let adminCond = adminCheckbox.checked ? true : false
-let objectAllCond = objectCrudAllCheckbox.checked ? true : false
-let objectExactCond = objectCrudExactCheckbox.checked ? true : false
-let volumeAllCond = volumeCrudAllCheckbox.checked ? true : false
-let volumeExactCond = volumeCrudExactCheckbox.checked ? true : false
-let versionCond = versionControlCheckbox.checked ? true : false
-let watchCond = watchobjectsCheckbox.checked ? true : false
 
 const adminCheckbox = document.querySelector('.admin > input')
 const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
@@ -191,6 +184,14 @@ const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > 
 const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
 const versionControlCheckbox = document.querySelector('.version-control > input')
 const watchobjectsCheckbox = document.querySelector('.watch > input')
+
+let adminCond = adminCheckbox.checked ? true : false
+let objectAllCond = objectCrudAllCheckbox.checked ? true : false
+let objectExactCond = objectCrudExactCheckbox.checked ? true : false
+let volumeAllCond = volumeCrudAllCheckbox.checked ? true : false
+let volumeExactCond = volumeCrudExactCheckbox.checked ? true : false
+let versionCond = versionControlCheckbox.checked ? true : false
+let watchCond = watchobjectsCheckbox.checked ? true : false
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {

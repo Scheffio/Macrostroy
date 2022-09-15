@@ -159,11 +159,7 @@ function parseRoles() {
                 })
             },
             checkPermissions() {
-
                 console.log(adminCheckbox.checked, adminCond);
-                if(adminCheckbox.checked !== adminCond) {
-                    console.log(1);
-                }
             }
         }
         

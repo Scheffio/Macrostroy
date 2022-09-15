@@ -32,11 +32,11 @@ try {
 
     $parents =  Selector::getParentsForObj($lvl, $objId);
                 Selector::formingParentsAsCondition($parents);
+                Selector::formingParentsAsIf($parents);
     $users = null;
 
     JsonOutput::success([
         $parents,
-        $users
     ]);
 
 } catch (Exception $e) {
@@ -93,8 +93,6 @@ class Selector
     public static function formingParentsAsCondition(array &$parents): void
     {
         foreach ($parents as $key=>&$value) {
-            if (is_numeric($key)) $key = ObjProjectTableMap::COL_ID;
-
             $lvl = AccessLvl::getLvlIntObjByColId($key);
             $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
@@ -104,9 +102,11 @@ class Selector
     
     public static function formingParentsAsIf(array &$parents): void
     {
-        foreach ($parents as $parent) {
-            
+        foreach ($parents as &$parent) {
+            $parent = "($parent[0] AND $parent[1])";
         }
+
+        $parents = 'IF(' . join(' OR ', $parents) . ')';
     }
 
     public static function getUsersCrud()

@@ -36,19 +36,17 @@ const modal = document.querySelector('.modal')
 
 const modalSystem = {
     modalWrap: document.querySelector('.modal-wrap'),
-    addUserWindow: document.querySelector('.add-user'),
-    deleteUserWindow: document.querySelector('.delete-user'),
-    infoUserWindow: document.querySelector('.info-user'),
-    editUserWindow: document.querySelector('.edit-user'),
+    addRoleWindow: document.querySelector('.add-role'),
+    deleteRoleWindow: document.querySelector('.delete-role'),
+    saveRoleWindow: document.querySelector('.save-role'),
     body: document.querySelector('body'),
     fixateBackground() {
         this.body.classList.toggle("fixated")
     },
     reset() {
-        this.addUserWindow.classList.remove('opened')
-        this.deleteUserWindow.classList.remove('opened')
-        this.infoUserWindow.classList.remove('opened')
-        this.editUserWindow.classList.remove('opened')
+        this.addRoleWindow.classList.remove('opened')
+        this.deleteRoleWindow.classList.remove('opened')
+        this.saveRoleWindow.classList.remove('opened')
     },
     show(type) {
         this.reset()

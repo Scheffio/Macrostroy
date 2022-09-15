@@ -29,6 +29,7 @@ use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\project_role\exception\NoProjectRoleFoundException;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class ProjectRole
@@ -279,6 +280,23 @@ class ProjectRole
      * @throws PropelException
      * @throws NoUserFoundException
      */
+    public static function getUserCrudById(int &$lvl, int &$ObjId, int $userId): array
+    {
+        $users = self::getUsers($userId);
+
+    }
+
+    public static function getAuthUserCrudByLvl(int &$lvl, int &$objId): array
+    {
+        $where = self::formingWhere(self::getObjParents($lvl, $objId));
+        $crud = self::getSortCrud(self::getProjectCrud($where, AuthUserRole::getUserId()));
+        JsonOutput::success([
+            $crud
+        ]);
+
+        return [];
+    }
+
 //    public static function getUserCrudById(int &$lvl, int &$userId, ?int &$projectId): array
 //    {
 //        $user = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();

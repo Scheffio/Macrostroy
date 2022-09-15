@@ -185,7 +185,28 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </div>
-            .save-user+.add-role+.delete-role+.
+            <div class="save-role">
+                <div class="modal-header">
+                    Сохранение
+                </div>
+                <div class="modal-body">
+                    У вас есть не сохранённые изменения. Желаете сохранить изменения и продолжить?
+                </div>
+                <div class="modal-footer">
+                    <button>Отмена</button>
+                    <button>Сохранить</button>
+                </div>
+            </div>
+            <div class="add-role">
+                <div class="modal-header"></div>
+                <div class="modal-body"></div>
+                <div class="modal-footer"></div>
+            </div>
+            <div class="delete-role">
+                <div class="modal-header"></div>
+                <div class="modal-body"></div>
+                <div class="modal-footer"></div>
+            </div>
         </div>
     </div>
     <script src="../../static/js/main.js"></script>

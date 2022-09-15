@@ -161,7 +161,15 @@ function parseRoles() {
                 parsePermissions(elem.children[0].dataset.id, elem)
             },
             reset() {
-                
+                document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+                    console.log(elem, elem.tagName);
+                    if(elem.tagName === 'INPUT') {
+                        elem.checked = false
+                        console.log("yes");
+                    }else {
+                        console.log("none");
+                    }
+                })
                 this.roles.forEach((elem) => {
                     elem.classList.remove('selected')
                 })

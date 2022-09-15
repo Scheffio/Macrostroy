@@ -1,5 +1,98 @@
 <?php
+$time_ago = (function ($datetime): string
+{
+    if (is_numeric($datetime)) {
+        $timestamp = $datetime;
+    } else {
+        if ($datetime === null) $datetime = "";
+        $timestamp = strtotime($datetime);
+    }
+    $diff = time() - $timestamp;
 
+    $min = 60;
+    $hour = 60 * 60;
+    $day = 60 * 60 * 24;
+    $month = $day * 30;
+
+    if ($diff < 60) //Under a min
+    {
+        $timeago = $diff . " second" . ($diff > 1 ? "s" : "");
+    } elseif ($diff < $hour) //Under an hour
+    {
+        $timeago = round($diff / $min) . " minute" . (round($diff / $min) > 1 ? "s" : "");
+    } elseif ($diff < $day) //Under a day
+    {
+        $timeago = round($diff / $hour) . " hour" . (round($diff / $hour) > 1 ? "s" : "");
+    } elseif ($diff < $month) //Under a day
+    {
+        $timeago = round($diff / $day) . " day" . (round($diff / $day) > 1 ? "s" : "");
+    } else {
+        $timeago = round($diff / $month) . " month" . (round($diff / $month) > 1 ? "s" : "");
+    }
+
+    return $timeago;
+});
+$insertServiceBlock = function ($name, Performance $performance, $info = ""): void
+{
+    ?>
+    <div class="component-container border-color">
+        <!--        status-green-->
+        <div data-component-id="t6j7mxgpmd8p" class="component-inner-container <?php
+        switch ($performance) {
+            case Performance::OPERATIONAL:
+                echo "status-green";
+                break;
+            case Performance::DEGRADED_PERFORMANCE:
+                echo "status-yellow";
+                break;
+
+            case Performance::PARTIAL_OUTAGE:
+                echo "status-orange";
+                break;
+
+            case Performance::MAJOR_OUTAGE:
+                echo "status-red";
+                break;
+
+            case Performance::MAINTENANCE:
+                echo "status-blue";
+                break;
+
+        }
+        ?>"
+             data-component-status="operational" data-js-hook="">
+            <span class="name"><?= $name ?></span>
+            <span style="opacity: <?= !empty($info) ? 1 : 0 ?>" title="<?= $info ?>" class="tooltip-base tool
+            tooltipstered">?</span>
+            <span class="component-status " title=""><?= $performance->value ?></span>
+            <!--            fa-check-->
+            <span class="tool icon-indicator fa <?php
+            switch ($performance) {
+                case Performance::OPERATIONAL:
+                    echo "fa-check";
+                    break;
+                case Performance::DEGRADED_PERFORMANCE:
+                    echo "fa-minus-square";
+                    break;
+
+                case Performance::PARTIAL_OUTAGE:
+                    echo "fa-exclamation-triangle";
+                    break;
+
+                case Performance::MAJOR_OUTAGE:
+                    echo "fa-times";
+                    break;
+
+                case Performance::MAINTENANCE:
+                    echo "fa-wrench";
+                    break;
+
+            }
+            ?> tooltipstered"></span>
+        </div>
+    </div>
+    <?php
+};
 require "src/public/page/status/Performance.php";
 $services = [];
 
@@ -89,54 +182,20 @@ $services = [];
     if ((time() - $db_unix_backup) / 60 > 11) {
         $performance = Performance::MAJOR_OUTAGE;
     }
-    $info = "Last Database copy was " . time_ago($db_unix_backup) . " ago.";
+    $info = "Last Database copy was " . $time_ago($db_unix_backup) . " ago.";
     $services[] = ["Database copy", $performance, $info];
 }
 
 
-    $backup_unix_time = shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
-    $performance = Performance::OPERATIONAL;
-//echo (time() - $backup_unix_time) / 60;
-    if ((time() - $backup_unix_time) / 60 > 10) {
-        $performance = Performance::DEGRADED_PERFORMANCE;
-    }
-time_ago($backup_unix_time);
-//    $info = "Last backup was " . time_ago($backup_time) . " ago.";
-    $services[] = ["Backup", $performance, $info];
-
-
-function time_ago($datetime): string
-{
-    if (is_numeric($datetime)) {
-        $timestamp = $datetime;
-    } else {
-        $timestamp = strtotime($datetime);
-    }
-    $diff = time() - $timestamp;
-
-    $min = 60;
-    $hour = 60 * 60;
-    $day = 60 * 60 * 24;
-    $month = $day * 30;
-
-    if ($diff < 60) //Under a min
-    {
-        $timeago = $diff . " second" . ($diff > 1 ? "s" : "");
-    } elseif ($diff < $hour) //Under an hour
-    {
-        $timeago = round($diff / $min) . " minute". (round($diff / $min) > 1 ? "s" : "");
-    } elseif ($diff < $day) //Under a day
-    {
-        $timeago = round($diff / $hour) . " hour". (round($diff / $hour) > 1 ? "s" : "");
-    } elseif ($diff < $month) //Under a day
-    {
-        $timeago = round($diff / $day) . " day". (round($diff / $day) > 1 ? "s" : "");
-    } else {
-        $timeago = round($diff / $month) . " month". (round($diff / $month) > 1 ? "s" : "");
-    }
-
-    return $timeago;
+$backup_unix_time = shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
+$performance = Performance::OPERATIONAL;
+if ((time() - $backup_unix_time) / 60 > 10) {
+    $performance = Performance::DEGRADED_PERFORMANCE;
 }
+$time_ago($backup_unix_time);
+//    $info = "Last backup was " . time_ago($backup_time) . " ago.";
+$services[] = ["Backup", $performance, $info];
+
 ?>
     <html lang="en">
     <head>
@@ -537,7 +596,7 @@ function time_ago($datetime): string
                     <?php
                     foreach ($services as $service) {
                         $info = !array_key_exists(2, $service) ? "" : $service[2];
-                        insertServiceBlock($service[0], $service[1], $info);
+                        $insertServiceBlock($service[0], $service[1], $info);
                     }
                     ?>
                 </div>
@@ -573,66 +632,3 @@ function time_ago($datetime): string
     </div>
     </body>
     </html>
-
-<?php
-function insertServiceBlock($name, Performance $performance, $info = ""): void
-{
-    ?>
-    <div class="component-container border-color">
-        <!--        status-green-->
-        <div data-component-id="t6j7mxgpmd8p" class="component-inner-container <?php
-        switch ($performance) {
-            case Performance::OPERATIONAL:
-                echo "status-green";
-                break;
-            case Performance::DEGRADED_PERFORMANCE:
-                echo "status-yellow";
-                break;
-
-            case Performance::PARTIAL_OUTAGE:
-                echo "status-orange";
-                break;
-
-            case Performance::MAJOR_OUTAGE:
-                echo "status-red";
-                break;
-
-            case Performance::MAINTENANCE:
-                echo "status-blue";
-                break;
-
-        }
-        ?>"
-             data-component-status="operational" data-js-hook="">
-            <span class="name"><?= $name ?></span>
-            <span style="opacity: <?= !empty($info) ? 1 : 0 ?>" title="<?= $info ?>" class="tooltip-base tool
-            tooltipstered">?</span>
-            <span class="component-status " title=""><?= $performance->value ?></span>
-            <!--            fa-check-->
-            <span class="tool icon-indicator fa <?php
-            switch ($performance) {
-                case Performance::OPERATIONAL:
-                    echo "fa-check";
-                    break;
-                case Performance::DEGRADED_PERFORMANCE:
-                    echo "fa-minus-square";
-                    break;
-
-                case Performance::PARTIAL_OUTAGE:
-                    echo "fa-exclamation-triangle";
-                    break;
-
-                case Performance::MAJOR_OUTAGE:
-                    echo "fa-times";
-                    break;
-
-                case Performance::MAINTENANCE:
-                    echo "fa-wrench";
-                    break;
-
-            }
-            ?> tooltipstered"></span>
-        </div>
-    </div>
-    <?php
-}

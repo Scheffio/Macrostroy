@@ -48,7 +48,7 @@ class SelectUsersCrud
      */
     public static function getUsersCrud(int &$lvl, int &$objId, int &$userId): array
     {
-        $users = self::getUsers($userId);
+        $users = self::getUsers();
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
         JsonOutput::success(self::getProjectCrud($where, $userId));
         $crud = self::getSortCrud(self::getProjectCrud($where, $userId));
@@ -107,23 +107,26 @@ class SelectUsersCrud
      * @return array
      * @throws PropelException
      */
-    private static function getUsers(?int &$userId): array
+    private static function getUsers(?int $userId = null): array
     {
-        return UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                UserRoleTableMap::COL_MANAGE_VOLUMES,
-                UserRoleTableMap::COL_MANAGE_HISTORY,
-            ])
-            ->leftJoinUserRole()
-            ->filterByIsAvailable(1)
-            ->filterById($userId)
-            ->find()
-            ->getData();
+        $query = UsersQuery::create()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    UserRoleTableMap::COL_MANAGE_USERS,
+                    UserRoleTableMap::COL_OBJECT_VIEWER,
+                    UserRoleTableMap::COL_MANAGE_OBJECTS,
+                    UserRoleTableMap::COL_MANAGE_VOLUMES,
+                    UserRoleTableMap::COL_MANAGE_HISTORY,
+                ])
+                ->leftJoinUserRole()
+                ->filterByIsAvailable(1);
+
+        if ($userId) {
+            $query->filterById($userId);
+        }
+
+        return $query->find()->getData();
     }
 
     /**
@@ -145,8 +148,6 @@ class SelectUsersCrud
             ]);
 
         if ($where) {
-//            JsonOutput::success($where);
-
             foreach ($where as $key=>$value) {
                 $query->_or()
                     ->condition("{$key}1" ,$value[0])
@@ -154,24 +155,17 @@ class SelectUsersCrud
                     ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
             }
 
-            JsonOutput::success($query->toString());
-
-//            foreach ($where as $item) {
-//
-//
-//                $query->_or()->where($item);
-//            }
-//
-//            $query->_or()
-//                ->where(ProjectRoleTableMap::COL_LVL . '?', ' IS NULL ')
-//                ->_and()
-//                ->where(ProjectRoleTableMap::COL_OBJECT_ID . '?', ' IS NULL ');
+            $query->_or()
+                ->condition('null1', ProjectRoleTableMap::COL_LVL.' IS ?', 'NULL')
+                ->condition('null2', ProjectRoleTableMap::COL_OBJECT_ID.' IS ?', 'NULL')
+                ->where(['null1', 'null2'], Criteria::LOGICAL_AND);
         }
 
-        return $query
-                ->filterByUserId($userId)
-                ->find()
-                ->getData();
+        if ($userId) {
+            $query->filterByUserId($userId);
+        }
+
+        return $query->find()->getData();
     }
 
     /**

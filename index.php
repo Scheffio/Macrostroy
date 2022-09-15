@@ -32,6 +32,11 @@ setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 //    die("403 Not Allowed.");
 //}
 
+if (RouterParser::getFirstUrlCatalog() === "/status") {
+    require __DIR__ . "/src/public/page/status/index.php";
+    die();
+}
+
 $_POST = RequestBodyParser::singleton()->getRequest();
 $_FILES = RequestBodyParser::singleton()->getFiles();
 $_REQUEST += $_POST;

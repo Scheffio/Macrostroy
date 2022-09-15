@@ -188,7 +188,7 @@ document.querySelectorAll('.uncheckable').forEach((elem) => {
 })
 
 function checkPermissons() {
-
+    
 }
 
 function parsePermissions(id, elem) {
@@ -235,9 +235,7 @@ function parsePermissions(id, elem) {
                         adminCond = false
                     }
                 }
-                checkPermissons() {
-                    
-                }
+                checkPermissons()
             }else {
                 if(json.error_message == 'Недостаточно прав') {
                     document.querySelector('.no-access-window').classList.add('show')

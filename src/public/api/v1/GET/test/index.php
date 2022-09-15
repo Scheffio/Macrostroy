@@ -60,16 +60,18 @@ class Selector
             ->getData();
     }
 
-    public static function getParentsByObj(int $lvl, int $objId, int $limit = 1)
+    public static function getParentsByObj(int $lvl, int $objId)
     {
         $query = ObjProjectQuery::create()
                 ->select([
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
-                    ObjGroupTableMap::COL_ID,
-                    ObjHouseTableMap::COL_ID,
-                    ObjStageTableMap::COL_ID,
+//                    ObjGroupTableMap::COL_ID,
+//                    ObjHouseTableMap::COL_ID,
+//                    ObjStageTableMap::COL_ID,
                 ])
+                ->withColumn('(IF ' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ', null)', 'project')
+                ->withColumn('(IF ' . $lvl . '>=' . eLvlObjInt::SUBPROJECT->value . ',' . ObjSubprojectTableMap::COL_ID . ', null)', 'subproject')
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -83,16 +85,12 @@ class Selector
             $query->where($colId . '=?', $objId);
         }
 
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query->find()->getData();
+        return $query->findOne();
     }
 
     public static function getParentsByLvl(int $lvl, int $parentId)
     {
-        return self::getParentsByObj($lvl, $parentId, 0);
+
     }
 
     public static function getWhereByParents(array $parents)

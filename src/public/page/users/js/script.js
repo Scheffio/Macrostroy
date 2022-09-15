@@ -192,8 +192,8 @@ const versionControlCheckbox = document.querySelector('.version-control > input'
 const watchobjectsCheckbox = document.querySelector('.watch > input')
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
-    elem.addEventListener('click', () => {
-        elem.checked = true
+    elem.addEventListener('dblclick', () => {
+       elem.checked = false
     })
 })
 

@@ -638,12 +638,21 @@ body.fixated {
 .wrap .tabs-container .tabs-container__tab-element:target {
   display: block;
 }
-.wrap .add-project {
+.wrap .actions {
+  display: flex;
   width: clamp(768px, 90vw, 1555px);
+  gap: 40px;
+  justify-content: flex-end;
+}
+.wrap .actions .add-role,
+.wrap .actions .delete-role {
   display: flex;
   justify-content: flex-end;
 }
-.wrap .add-project .add-project__button {
+.wrap .actions .add-role .add-role__button,
+.wrap .actions .add-role .delete-role__button,
+.wrap .actions .delete-role .add-role__button,
+.wrap .actions .delete-role .delete-role__button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -659,22 +668,45 @@ body.fixated {
   font-size: 20px;
   font-weight: 400;
 }
-.wrap .add-project .add-project__button:hover {
+.wrap .actions .add-role .add-role__button:hover,
+.wrap .actions .add-role .delete-role__button:hover,
+.wrap .actions .delete-role .add-role__button:hover,
+.wrap .actions .delete-role .delete-role__button:hover {
   transition: 0.3s;
   background-color: white;
   border: 2px solid #7E99AD;
   color: #7E99AD;
 }
-.wrap .add-project .add-project__button:hover .add::before, .wrap .add-project .add-project__button:hover .add::after {
+.wrap .actions .add-role .add-role__button:hover .add::before, .wrap .actions .add-role .add-role__button:hover .add::after,
+.wrap .actions .add-role .add-role__button:hover .delete::before,
+.wrap .actions .add-role .add-role__button:hover .delete::after,
+.wrap .actions .add-role .delete-role__button:hover .add::before,
+.wrap .actions .add-role .delete-role__button:hover .add::after,
+.wrap .actions .add-role .delete-role__button:hover .delete::before,
+.wrap .actions .add-role .delete-role__button:hover .delete::after,
+.wrap .actions .delete-role .add-role__button:hover .add::before,
+.wrap .actions .delete-role .add-role__button:hover .add::after,
+.wrap .actions .delete-role .add-role__button:hover .delete::before,
+.wrap .actions .delete-role .add-role__button:hover .delete::after,
+.wrap .actions .delete-role .delete-role__button:hover .add::before,
+.wrap .actions .delete-role .delete-role__button:hover .add::after,
+.wrap .actions .delete-role .delete-role__button:hover .delete::before,
+.wrap .actions .delete-role .delete-role__button:hover .delete::after {
   background-color: #7E99AD;
   transition: 0.3s;
 }
-.wrap .add-project .add-project__button .add {
+.wrap .actions .add-role .add-role__button .add,
+.wrap .actions .add-role .delete-role__button .add,
+.wrap .actions .delete-role .add-role__button .add,
+.wrap .actions .delete-role .delete-role__button .add {
   width: 20px;
   height: 20px;
   position: relative;
 }
-.wrap .add-project .add-project__button .add::before {
+.wrap .actions .add-role .add-role__button .add::before,
+.wrap .actions .add-role .delete-role__button .add::before,
+.wrap .actions .delete-role .add-role__button .add::before,
+.wrap .actions .delete-role .delete-role__button .add::before {
   content: "";
   display: block;
   width: 2px;
@@ -685,7 +717,47 @@ body.fixated {
   left: 5px;
   transition: 0.3s;
 }
-.wrap .add-project .add-project__button .add::after {
+.wrap .actions .add-role .add-role__button .add::after,
+.wrap .actions .add-role .delete-role__button .add::after,
+.wrap .actions .delete-role .add-role__button .add::after,
+.wrap .actions .delete-role .delete-role__button .add::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 15px;
+  background-color: #E5EBEF;
+  transform: rotate(90deg);
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  transition: 0.3s;
+}
+.wrap .actions .add-role .add-role__button .delete,
+.wrap .actions .add-role .delete-role__button .delete,
+.wrap .actions .delete-role .add-role__button .delete,
+.wrap .actions .delete-role .delete-role__button .delete {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+.wrap .actions .add-role .add-role__button .delete::before,
+.wrap .actions .add-role .delete-role__button .delete::before,
+.wrap .actions .delete-role .add-role__button .delete::before,
+.wrap .actions .delete-role .delete-role__button .delete::before {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 2px;
+  background-color: #E5EBEF;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: 0.3s;
+}
+.wrap .actions .add-role .add-role__button .delete::after,
+.wrap .actions .add-role .delete-role__button .delete::after,
+.wrap .actions .delete-role .add-role__button .delete::after,
+.wrap .actions .delete-role .delete-role__button .delete::after {
   content: "";
   display: block;
   width: 2px;

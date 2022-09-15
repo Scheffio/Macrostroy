@@ -481,20 +481,25 @@
         }
     }
     .actions {
+        display: flex;
+        width: clamp(768px, 90vw, 1555px);
+        gap: 40px;
+        justify-content: flex-end;
         .add-role,
         .delete-role {
-            width: clamp(768px, 90vw, 1555px);
             display: flex;
             justify-content: flex-end;
     
-            .add-project__button {
+            .add-role__button,
+            .delete-role__button {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 @include Button($EstiminColor4, $EstiminColor8, 120px, 40px);
     
                 &:hover {
-                    .add {
+                    .add,
+                    .delete {
     
                         &::before,
                         &::after {
@@ -534,6 +539,34 @@
                         transition: .3s;
                     }
                 }
+                .delete {
+                    width: 20px;
+                    height: 20px;
+                    position: relative;
+                    &::before {
+                        content: '';
+                        display: block;
+                        width: 2px;
+                        height: 15px;
+                        position: absolute;
+                        background-color: $EstiminColor8;
+                        top: 3px;
+                        left: 5px;
+                        transition: .3s;
+                    }
+                    &::after {
+                        content: '';
+                        display: block;
+                        width: 2px;
+                        height: 15px;
+                        background-color: $EstiminColor8;
+                        transform: rotate(90deg);
+                        position: absolute;
+                        top: 3px;
+                        left: 5px;
+                        transition: .3s;
+                    }
+                }
             }
         }
     }
@@ -542,12 +575,12 @@
 
 .no-access-window {
     margin-top: 300px;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     &.show {
-        display: none;
+        display: flex;
     }
     p {
         font-family: 'Jost', sans-serif;

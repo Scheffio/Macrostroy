@@ -186,17 +186,6 @@ $services = [];
     $info = "Last Database copy was " . $time_ago($db_unix_backup) . " ago.";
     $services[] = ["Database copy", $performance, $info];
 }
-
-
-//$backup_unix_time = shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
-//var_dump($backup_unix_time);
-//$performance = Performance::OPERATIONAL;
-//if ((time() - $backup_unix_time) / 60 > 10) {
-//    $performance = Performance::DEGRADED_PERFORMANCE;
-//}
-//$info = "Last backup was " . $time_ago($backup_unix_time) . " ago.";
-//$services[] = ["Backup", $performance, $info];
-
 ?>
 <html lang="en">
 <head>

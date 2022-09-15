@@ -292,10 +292,6 @@ class ProjectRole
     #endregion
 
     #region Static Select CRUD Users Object
-
-    #endregion
-
-    #region Static Select CRUD Users Object
     /**
      * Возвращает массив разрешений пользователей.
      * @param int $lvl Номер уровня доступа.

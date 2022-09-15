@@ -17,6 +17,7 @@ use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\objects\Objects;
@@ -39,11 +40,12 @@ try {
 class SelectUsersCrud
 {
     /**
-     * @param int $lvl
-     * @param int $objId
-     * @param int $userId
+     * @param int $lvl Уроыень доступа.
+     * @param int $objId ID объекта.
+     * @param int $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
     public static function getUsersCrud(int &$lvl, int &$objId, int &$userId): array
@@ -206,14 +208,14 @@ class SelectUsersCrud
      * Формирование массива условий по IDs родителей объекта.
      * @param array $parents IDs родителей объекта.
      * @return array
-     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      */
     private static function formingWhere(array $parents): array
     {
         $parents = array_filter($parents, fn($e) => $e !== null);
 
         foreach ($parents as $key=>&$value) {
-            $lvl = self::getLvlIntObjByColId($key);
+            $lvl = AccessLvl::getLvlIntObjByColId($key);
             $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
             $value = [$wLvl, $wObjId];
@@ -255,23 +257,4 @@ class SelectUsersCrud
     }
     #endregion
 
-    #region Add AccessLvlFunctions
-    /**
-     * Возвращает номер уровня доступа объекта, используя наименование ID атрибута таблицы.
-     * @param string $colId Наименование ID атрибута таблицы (MapTable).
-     * @return int
-     * @throws IncorrectLvlException
-     */
-    public static function getLvlIntObjByColId(string $colId): int
-    {
-        return match ($colId) {
-            ObjProjectTableMap::COL_ID => eLvlObjInt::PROJECT->value,
-            ObjSubprojectTableMap::COL_ID => eLvlObjInt::SUBPROJECT->value,
-            ObjGroupTableMap::COL_ID => eLvlObjInt::GROUP->value,
-            ObjHouseTableMap::COL_ID => eLvlObjInt::HOUSE->value,
-            ObjStageTableMap::COL_ID => eLvlObjInt::STAGE->value,
-            default => throw new IncorrectLvlException()
-        };
-    }
-    #endregion
 }

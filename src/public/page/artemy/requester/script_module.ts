@@ -11,10 +11,8 @@ $(file_input).on("change", function () {
 })
 
 $("#get_body_button").on("click", function () {
-    request.logBody()
-    // Display the values
     for (var value of request.body.values()) {
-        console.log(value);
+        console.log(value + ": " + typeof request.body.get(value));
     }
 })
 

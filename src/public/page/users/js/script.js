@@ -144,18 +144,9 @@ function parseRoles() {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
                     this.reset()
-                    
-                    adminCond = adminCheckbox.checked ? true : false
-                    objectAllCond = objectCrudAllCheckbox.checked ? true : false
-                    objectExactCond = objectCrudExactCheckbox.checked ? true : false
-                    volumeAllCond = volumeCrudAllCheckbox.checked ? true : false
-                    volumeExactCond = volumeCrudExactCheckbox.checked ? true : false
-                    versionCond = versionControlCheckbox.checked ? true : false
-                    watchCond = watchobjectsCheckbox.checked ? true : false
-
-                    this.checkPermissions()
                     elem.classList.toggle('selected')
                     parsePermissions(elem.children[0].dataset.id, elem)
+                    this.checkPermissions()
             },
             reset() {
                 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -168,7 +159,6 @@ function parseRoles() {
                 })
             },
             checkPermissions() {
-                console.log("abисми")
 
                 console.log(adminCheckbox.checked, adminCond);
                 if(adminCheckbox.checked !== adminCond) {
@@ -197,7 +187,7 @@ const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes 
 const versionControlCheckbox = document.querySelector('.version-control > input')
 const watchobjectsCheckbox = document.querySelector('.watch > input')
 
-let adminCond, objectAllCond, objectExactCond, volumeAllCond, volumeExactCond, versionCond, watchCond
+let adminCond, objectAllCond, objectExactCond, volumeAllCond, volumeExactCond, versionCond, watchCond;
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
@@ -246,6 +236,9 @@ function parsePermissions(id, elem) {
                     }
                     if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
                         adminCheckbox.checked = true
+                        adminCond = true
+                    }else {
+                        adminCond = false
                     }
                 }
             }else {

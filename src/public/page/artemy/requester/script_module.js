@@ -7,10 +7,8 @@ $(file_input).on("change", function () {
     request.addData('file', file_input.files[0]);
 });
 $("#get_body_button").on("click", function () {
-    request.logBody();
-    // Display the values
     for (var value of request.body.values()) {
-        console.log(value);
+        console.log(value + ": " + typeof request.body.get(value));
     }
 });
 $("#fetch_button").on("click", function () {

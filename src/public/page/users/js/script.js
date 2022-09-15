@@ -123,52 +123,6 @@ emailInput.addEventListener('blur', () => {
     }
 })
 
-
-function parseRoles() {
-    const select = document.querySelector('.modal-body__role > select')
-    let url = new URL('https://artemy.net/api/v1/roles')
-    
-    fetch(url).then((elem) => {
-        return elem.json()
-    }).then((json) => {
-        json.data.forEach((roles) => {
-            let option = document.createElement('option')
-            option.dataset.id = roles.id
-            option.value = roles.name
-            option.textContent = roles.name
-            select.appendChild(option)
-            document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
-        })
-        
-        const selectableUsers = {
-            roles: document.querySelectorAll('.roles > .users__user-field'),
-            click(elem) {
-                this.reset()
-                elem.classList.toggle('selected')
-                parsePermissions(elem.children[0].dataset.id, elem)
-            },
-            reset() {
-                document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-                    if(elem.tagName === 'INPUT') {
-                        elem.checked = false
-                    }
-                })
-                this.roles.forEach((elem) => {
-                    elem.classList.remove('selected')
-                })
-            }
-        }
-        
-        selectableUsers.click(document.querySelector('.roles').children[1])
-        
-        document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
-            elem.addEventListener('click', () => {
-                selectableUsers.click(elem)
-            })
-        })
-    })
-}
-
 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
     console.log(elem);
     if(elem.tagName === "INPUT") {
@@ -176,19 +130,68 @@ document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
     }
 })
 
-const adminCheckbox = document.querySelector('.admin > input')
-const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
-const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
-const volumeCrudAllCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(1)')
-const volumeCrudExactCheckbox = document.querySelector('.volume-crud-checkboxes > input:nth-child(2)')
-const versionControlCheckbox = document.querySelector('.version-control > input')
-const watchobjectsCheckbox = document.querySelector('.watch > input')
-
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
         elem.checked = false
     })
 })
+
+const rolesControl = {
+    adminCheckbox: document.querySelector('.admin > input'),
+    objectCrudAllCheckbox: document.querySelector('.object-crud-checkboxes > input:nth-child(1)'),
+    objectCrudExactCheckbox: document.querySelector('.object-crud-checkboxes > input:nth-child(2)'),
+    volumeCrudAllCheckbox: document.querySelector('.volume-crud-checkboxes > input:nth-child(1)'),
+    volumeCrudExactCheckbox: document.querySelector('.volume-crud-checkboxes > input:nth-child(2)'),
+    versionControlCheckbox: document.querySelector('.version-control > input'),
+    watchobjectsCheckbox: document.querySelector('.watch > input'),
+    parseRoles() {
+        const select = document.querySelector('.modal-body__role > select')
+        let url = new URL('https://artemy.net/api/v1/roles')
+        
+        fetch(url).then((elem) => {
+            return elem.json()
+        }).then((json) => {
+            json.data.forEach((roles) => {
+                let option = document.createElement('option')
+                option.dataset.id = roles.id
+                option.value = roles.name
+                option.textContent = roles.name
+                select.appendChild(option)
+                document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
+            })
+            
+            const selectableUsers = {
+                roles: document.querySelectorAll('.roles > .users__user-field'),
+                click(elem) {
+                    this.reset()
+                    elem.classList.toggle('selected')
+                    parsePermissions(elem.children[0].dataset.id, elem)
+                },
+                reset() {
+                    document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+                        if(elem.tagName === 'INPUT') {
+                            elem.checked = false
+                        }
+                    })
+                    this.roles.forEach((elem) => {
+                        elem.classList.remove('selected')
+                    })
+                }
+            }
+            
+            selectableUsers.click(document.querySelector('.roles').children[1])
+            
+            document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
+                elem.addEventListener('click', () => {
+                    selectableUsers.click(elem)
+                })
+            })
+        })
+    },
+    saveRolePermissions() {
+
+    },
+}
 
 function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
@@ -280,4 +283,4 @@ function parsePermissions(id, elem) {
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#roles"
-parseRoles()
+rolesControl.parseRoles()

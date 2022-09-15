@@ -45,7 +45,7 @@ try {
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
     JsonOutput::success(
-        ProjectRole::getCrudUsersByObject($lvl, $objId)
+        ProjectRole::getCrudUsersByObj($lvl, $objId)
     );
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');

@@ -332,6 +332,8 @@ class Objects
     {
         ProjectRole::getAuthUserCrudByLvl($lvl, $parentId);
 
+        return [];
+
 //        $projectId = null;
 //
 //        if ($parentId) {
@@ -599,7 +601,7 @@ class Objects
             if ($projectId) {
                 $isCrud = ProjectRole::isAccessCrudObj(
                     lvl: AccessLvl::getPreLvlIntObj($lvl),
-                    projectId: $projectId,
+//                    projectId: $projectId,
                     userId: $userId,
                     objId: $parentId
                 );

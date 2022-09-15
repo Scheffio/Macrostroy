@@ -154,23 +154,16 @@ class ProjectRole
     /**
      * Разрешен ли пользователю CRUD.
      * @param int $lvl Номер уровня доступа.
-     * @param int $objId ID объекта.
      * @param int $userId ID пользователя.
+     * @param int|null $objId ID объекта.
      * @return bool
      * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
     public static function isAccessCrudObj(int $lvl, int $userId, ?int $objId = null): bool
     {
-        $parents = self::getParentsForObj($lvl, $objId);
-        self::formingParentsAsIf($parents);
-
-        $users = self::getUsersCrud($parents);
-
-        JsonOutput::success($users);
-
-        return true;
-//        return self::getCrudUsersByObject($lvl, $projectId, $objId, $userId)[0]['isCrud'] ?? false;
+        return self::getCrudUsersByObj($lvl, $objId, $userId)[0]['isCrud'] ?? false;
     }
     #endregion
 
@@ -314,18 +307,19 @@ class ProjectRole
     /**
      * Возвращает массив разрешений пользователей.
      * @param int $lvl Уроыень доступа.
-     * @param int $objId ID объекта.
+     * @param int|null $objId ID объекта.
+     * @param int|null $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    public static function getCrudUsersByObject(int &$lvl, int &$objId): array
+    public static function getCrudUsersByObj(int &$lvl, ?int $objId = null, ?int $userId = null): array
     {
         $parents = self::getParentsForObj($lvl, $objId);
         self::formingParentsAsIf($parents);
 
-        $users = self::getUsersCrud($parents);
+        $users = self::getUsersCrud($parents, $userId);
 
         return self::formingUsers($users);
     }
@@ -334,12 +328,11 @@ class ProjectRole
      * Взвращает массив IDs родитеей объекта.
      * @param int $lvl Уровень доступа.
      * @param int $objId ID объекта.
-     * @param int|null $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getParentsForObj(int &$lvl, int &$objId, int $userId  = null): array
+    public static function getParentsForObj(int &$lvl, int &$objId): array
     {
         $query = ObjProjectQuery::create()
             ->select([
@@ -350,20 +343,16 @@ class ProjectRole
                 ObjStageTableMap::COL_ID,
             ])
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-            ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-            ->leftJoinObjStage()
-            ->endUse()
-            ->endUse()
+                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                        ->leftJoinObjStage()
+                    ->endUse()
+                ->endUse()
             ->endUse();
 
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
             $query->where($colId . '=?', $objId);
-        }
-
-        if ($userId) {
-            $query->filterById($userId);
         }
 
         $query = $query->findOne();
@@ -374,12 +363,13 @@ class ProjectRole
     /**
      * Возвращает массив пользователей, с их разрешениями на объект, соблюдая переданное условие.
      * @param string $if Строка условия.
+     * @param int|null $userId ID польозвателя.
      * @return array
      * @throws PropelException
      */
-    public static function getUsersCrud(string &$if): array
+    public static function getUsersCrud(string &$if, ?int $userId = null): array
     {
-        return  UsersQuery::create()
+        $query = UsersQuery::create()
             ->distinct()
             ->select([
                 UsersTableMap::COL_ID,
@@ -395,9 +385,13 @@ class ProjectRole
             ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
             ->leftJoinUserRole()
             ->leftJoinProjectRole()
-            ->orderByUsername(Criteria::ASC)
-            ->find()
-            ->getData();
+            ->orderByUsername(Criteria::ASC);
+
+        if ($userId) {
+            $query->filterById($userId);
+        }
+
+        return $query->find()->getData();
     }
 
     /**

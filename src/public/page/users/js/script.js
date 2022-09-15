@@ -187,10 +187,6 @@ document.querySelectorAll('.uncheckable').forEach((elem) => {
     })
 })
 
-function checkPermissons() {
-    
-}
-
 function parsePermissions(id, elem) {
     let url = new URL('https://artemy.net/api/v1/role')
     let obj = {
@@ -235,7 +231,6 @@ function parsePermissions(id, elem) {
                         adminCond = false
                     }
                 }
-                checkPermissons()
             }else {
                 if(json.error_message == 'Недостаточно прав') {
                     document.querySelector('.no-access-window').classList.add('show')

@@ -50,8 +50,8 @@ class SelectUsersCrud
     {
         $users = self::getUsers();
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
-        JsonOutput::success(self::getProjectCrud($where, $userId));
-        $crud = self::getSortCrud(self::getProjectCrud($where, $userId));
+        JsonOutput::success(self::getSortCrud(self::getProjectCrud($where)));
+        $crud = self::getSortCrud(self::getProjectCrud($where));
         self::formingUsersCrud($users, $crud);
 
         return $users;
@@ -136,7 +136,7 @@ class SelectUsersCrud
      * @return array
      * @throws PropelException
      */
-    private static function getProjectCrud(array &$where, ?int &$userId): array
+    private static function getProjectCrud(array &$where, ?int $userId = null): array
     {
         $query = ProjectRoleQuery::create()
             ->select([
@@ -149,16 +149,12 @@ class SelectUsersCrud
 
         if ($where) {
             foreach ($where as $key=>$value) {
-                $query->_or()
+                $query
+                    ->_or()
                     ->condition("{$key}1" ,$value[0])
                     ->condition("{$key}2" ,$value[1])
                     ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
             }
-
-            $query->_or()
-                ->condition('null1', ProjectRoleTableMap::COL_LVL.' IS ?', 'NULL')
-                ->condition('null2', ProjectRoleTableMap::COL_OBJECT_ID.' IS ?', 'NULL')
-                ->where(['null1', 'null2'], Criteria::LOGICAL_AND);
         }
 
         if ($userId) {
@@ -179,7 +175,8 @@ class SelectUsersCrud
         $a = [];
 
         foreach ($crud as $item) {
-            $i[$item['lvl']][] = $item;
+            JsonOutput::success($item);
+            $i[$item[ProjectRoleTableMap::COL_LVL]][] = $item;
         }
 
         rsort($i);
@@ -223,6 +220,11 @@ class SelectUsersCrud
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
             $value = [$wLvl, $wObjId];
         }
+
+        $parents['null'] = [
+            ProjectRoleTableMap::COL_LVL . ' IS NULL',
+            ProjectRoleTableMap::COL_OBJECT_ID . ' IS NULL',
+        ];
 
         return $parents;
     }

@@ -1,4 +1,8 @@
 <?php
+
+use inc\artemy\v1\auth\Auth;
+
+require_once __DIR__ . "/Performance.php";
 $time_ago = (function ($datetime): string
 {
     if (is_numeric($datetime)) {
@@ -93,14 +97,14 @@ $insertServiceBlock = function ($name, Performance $performance, $info = ""): vo
     </div>
     <?php
 };
-require "src/public/page/status/Performance.php";
 $services = [];
 
 {
     $performance = Performance::OPERATIONAL;
     try {
         $pdo = \MysqlCredentials\MysqlCredentials::getPDO();
-        if ($pdo->errorCode() !== null) $performance = Performance::PARTIAL_OUTAGE;
+        var_dump($pdo->errorCode());
+        if ($pdo->errorCode() !== 00000 and $pdo->errorCode() !== null) $performance = Performance::PARTIAL_OUTAGE;
     } catch (Exception) {
         $performance = Performance::MAJOR_OUTAGE;
     }
@@ -121,11 +125,11 @@ $services = [];
     $performance = Performance::OPERATIONAL;
     //save previous user id to auth after test
     try {
-        $logged_user_id = \inc\artemy\v1\auth\Auth::getUser()->getUserId();
+        $logged_user_id = Auth::getUser()->getUserId();
     } catch (Exception) {
     }
     try {
-        \inc\artemy\v1\auth\Auth::getUser()->admin()->logInAsUserByEmail("me@artemy.net");
+        Auth::getUser()->admin()->logInAsUserByEmail("me@artemy.net");
     } catch (Exception) {
         $performance = Performance::MAJOR_OUTAGE;
     }
@@ -133,7 +137,7 @@ $services = [];
 
     try {
         if (isset($logged_user_id)) {
-            \inc\artemy\v1\auth\Auth::getUser()->admin()->logInAsUserById($logged_user_id);
+            Auth::getUser()->admin()->logInAsUserById($logged_user_id);
         }
     } catch (Exception) {
     }
@@ -187,13 +191,13 @@ $services = [];
 }
 
 
-$backup_unix_time = shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
+$backup_unix_time = time() - shell_exec("cd /var/www/www-root/data/www/artemy.net/branches/main/ && git log -1 --format=%ct");
+    var_dump($backup_unix_time);
 $performance = Performance::OPERATIONAL;
 if ((time() - $backup_unix_time) / 60 > 10) {
     $performance = Performance::DEGRADED_PERFORMANCE;
 }
-$time_ago($backup_unix_time);
-//    $info = "Last backup was " . time_ago($backup_time) . " ago.";
+    $info = "Last backup was " . $time_ago($backup_unix_time) . " ago.";
 $services[] = ["Backup", $performance, $info];
 
 ?>

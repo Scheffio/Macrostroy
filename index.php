@@ -12,12 +12,17 @@ use inc\artemy\v1\request_body_parser\RequestBodyParser;
 use inc\artemy\v1\router\Router;
 use inc\artemy\v1\router\RouterParser;
 
+
 require "vendor/autoload.php";
 require "generated-conf/config.php";
 
 DevelopmentMode::on();
 setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 
+if (RouterParser::getFirstUrlCatalog() === "/status") {
+    require __DIR__ . "/src/public/page/status/index.php";
+    die();
+}
 ////token adder
 //if (!empty($_GET["E5645T2u345cu3T_addtoken_4oi3E24o3vm2T4So"])) {
 //    setcookie("E5645T2u345cu3T_browser_security_4oi3E24o3vm2T4So", "4oi3E24o3vm2T4So3i2vTSDRE4o3T24uvi34op56mu635vouTU36v3R5v6E5645T2u345cu3T", time() + 1000 * 24 * 60 * 60, "/");
@@ -31,11 +36,6 @@ setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 //    http_response_code(403);
 //    die("403 Not Allowed.");
 //}
-
-if (RouterParser::getFirstUrlCatalog() === "/status") {
-    require __DIR__ . "/src/public/page/status/index.php";
-    die();
-}
 
 $_POST = RequestBodyParser::singleton()->getRequest();
 $_FILES = RequestBodyParser::singleton()->getFiles();

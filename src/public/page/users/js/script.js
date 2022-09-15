@@ -162,12 +162,8 @@ function parseRoles() {
             },
             reset() {
                 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-                    console.log(elem, elem.tagName);
                     if(elem.tagName === 'INPUT') {
                         elem.checked = false
-                        console.log("yes");
-                    }else {
-                        console.log("none");
                     }
                 })
                 this.roles.forEach((elem) => {
@@ -213,7 +209,6 @@ function parsePermissions(id, elem) {
             document.querySelector('.wrap').classList.remove('no-access')
                 if(elem.children[0].dataset.id == json.data.id) {
                     let parameter = json.data
-                    // console.log(parameter);
                     if(parameter.object_viewer) {
                         watchobjectsCheckbox.checked = true
                     } 
@@ -235,7 +230,9 @@ function parsePermissions(id, elem) {
                     if(!parameter.manage_volumes) {
                         volumeCrudAllCheckbox.checked = false
                         volumeCrudExactCheckbox.checked = true
-                        document.querySelector('.volume-crud-checkboxes > input:nth-child(2)').checked = true
+                    }
+                    if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
+
                     }
                 }
             }else {

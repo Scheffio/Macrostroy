@@ -275,7 +275,14 @@ class ProjectRole
     {
         $userId = 17;
 
+        $parents = self::getParentsForObj($lvl, $parentId);
+        self::formingParentsAsCondition($parents);
 
+//        $parents = self::getParentsForObj($lvl, $objId);
+//        self::formingParentsAsCondition($parents);
+//
+//        $if = self::formingParentsAsIf($parents);
+//        $users = self::getUsersCrud($if, $userId);
 
 //        $parents = self::getParentsForObj($lvl, $objId);
 //        $if = self::formingParentsAsIf($parents);
@@ -332,12 +339,8 @@ class ProjectRole
 
         $if = self::formingParentsAsIf($parents);
         $users = self::getUsersCrud($if, $userId);
-        JsonOutput::success($users);
 
-        return self::formingUsers([
-            $users,
-            $userId
-        ]);
+        return self::formingUsers($users);
     }
 
     /**

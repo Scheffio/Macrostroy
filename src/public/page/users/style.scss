@@ -385,7 +385,9 @@
                     .explanation {
                         user-select: none;
                         @include explanation;
-                        
+                        &.off {
+                            display: none;
+                        }
                     }
                 }
             }
@@ -829,6 +831,58 @@
             }
         }
         .edit-user {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        .save-role {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                p {
+                    margin: 0;
+                }
+                margin: 35px 0px 40px 0px;
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        .add-role {
+            display: none;
+            &.opened {
+                display: flex;
+            }
+            .modal-header{
+
+            }
+            .modal-body {
+
+            }
+            .modal-footer {
+                
+            }
+        }
+        .delete-role {
             display: none;
             &.opened {
                 display: flex;

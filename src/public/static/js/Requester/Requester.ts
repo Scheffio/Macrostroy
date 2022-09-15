@@ -5,7 +5,7 @@ import {HttpMethod} from "/static/Requester/HttpMethod.js";
 
 export default class Requester {
     private method: HttpMethod;
-    private body: KeyValue[];
+    private body = {};
 
     constructor() {
     }
@@ -13,6 +13,5 @@ export default class Requester {
     public addData(key: string, value: File);
     public addData(key: string, value: string);
     public addData(key: string, value) {
-        console.log(value);
     }
 }

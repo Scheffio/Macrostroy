@@ -56,16 +56,13 @@ const modalSystem = {
         }, 300);
         this.fixateBackground()
         if(type == 'delete') {
-            this.deleteUserWindow.classList.add('opened')
-        }
-        if(type == 'info') {
-            this.infoUserWindow.classList.add('opened')
+            this.deleteRoleWindow.classList.add('opened')
         }
         if(type == 'add') {
-            this.addUserWindow.classList.add('opened')
+            this.addRoleWindow.classList.add('opened')
         }
-        if(type == 'edit') {
-            this.editUserWindow.classList.add('opened')
+        if(type == 'save') {
+            this.saveRoleWindow.classList.add('opened')
         }
     },
     hide() {
@@ -154,6 +151,9 @@ function parseRoles() {
         const selectableUsers = {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
+                if(!localStorage.getItem('changes')) {
+
+                }
                 this.reset()
                 elem.classList.toggle('selected')
                 parsePermissions(elem.children[0].dataset.id, elem)

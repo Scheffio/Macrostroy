@@ -1,10 +1,9 @@
 export default class Requester {
     method;
-    body;
+    body = {};
     constructor() {
     }
     addData(key, value) {
-        console.log(value);
     }
 }
 //# sourceMappingURL=Requester.js.map

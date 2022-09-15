@@ -288,6 +288,14 @@ class ProjectRole
 
     public static function getAuthUserCrudByLvl(int &$lvl, int &$objId): array
     {
+        JsonOutput::success(
+            [
+                $lvl,
+                $objId,
+                self::getObjParents($lvl, $objId)
+            ]
+        );
+
         $where = self::formingWhere(self::getObjParents($lvl, $objId));
         $crud = self::getSortCrud(self::getProjectCrud($where, AuthUserRole::getUserId()));
         JsonOutput::success([
@@ -323,7 +331,7 @@ class ProjectRole
     public static function getCrudUsersByObject(int &$lvl, int &$objId): array
     {
         $users = self::getUsers();
-        $where = self::formingWhere(self::getObjParents($lvl, $objId));
+        $where = self::formingWhere(self::getObjParents($lvl, $objId, 1));
         $crud = self::getSortCrud(self::getProjectCrud($where));
         self::formingUsersCrud($users, $crud);
 
@@ -334,13 +342,13 @@ class ProjectRole
      * Возвращает IDs родителей объекта.
      * @param int $lvl
      * @param int $objId
+     * @param int|null $limit
      * @return mixed
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getObjParents(int &$lvl, int &$objId): mixed
+    private static function getObjParents(int &$lvl, int &$objId, ?int $limit = null): mixed
     {
-        $colId = Objects::getColIdByLvl($lvl);
         $parents = ObjProjectQuery::create()
                     ->select(self::getSelectParentsByLvl($lvl))
                     ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
@@ -349,13 +357,18 @@ class ProjectRole
                                 ->leftJoinObjStage()
                             ->endUse()
                         ->endUse()
-                    ->endUse()
-                    ->where($colId.'=?', $objId)
-                    ->findOne();
+                    ->endUse();
 
-        return is_int($parents)
-            ? [ObjProjectTableMap::COL_ID => $parents]
-            : $parents;
+        if ($objId) {
+            $colId = Objects::getColIdByLvl($lvl);
+            $parents->where($colId.'=?', $objId);
+        }
+
+        if ($limit) {
+            $parents->limit($limit);
+        }
+
+        return $parents->find()->getData();
     }
 
     /**
@@ -489,6 +502,8 @@ class ProjectRole
         $parents = array_filter($parents, fn($e) => $e !== null);
 
         foreach ($parents as $key=>&$value) {
+            if (is_numeric($key)) $key = ObjProjectTableMap::COL_ID;
+
             $lvl = AccessLvl::getLvlIntObjByColId($key);
             $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
             $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;

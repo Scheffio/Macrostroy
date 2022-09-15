@@ -1089,4 +1089,31 @@ body.fixated {
 }
 .modal .modal-wrap .edit-user.opened {
   display: flex;
+}
+.modal .modal-wrap .save-role {
+  display: none;
+}
+.modal .modal-wrap .save-role.opened {
+  display: flex;
+}
+.modal .modal-wrap .save-role .modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 35px 0px 40px 0px;
+}
+.modal .modal-wrap .save-role .modal-header p {
+  margin: 0;
+}
+.modal .modal-wrap .add-role {
+  display: none;
+}
+.modal .modal-wrap .add-role.opened {
+  display: flex;
+}
+.modal .modal-wrap .delete-role {
+  display: none;
+}
+.modal .modal-wrap .delete-role.opened {
+  display: flex;
 }/*# sourceMappingURL=style.css.map */

@@ -330,38 +330,40 @@ class Objects
      */
     public static function getObjectsByLvl(int $lvl, int $parentId, int $userId, int $limit = 10, int $limitFrom = 0): array
     {
-        $projectId = null;
+        ProjectRole::getAuthUserCrudByLvl($lvl, $parentId);
 
-        if ($parentId) {
-            $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
-            $projectId = Objects::getProjectIdByChildOrThrow($parentId, $parentLvl);
-        }
-
-        $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
-
-        $crud =& $user['crud'];
-        self::sortAccess($crud);
-        $access =& $user['user'];
-
-        return array_merge(
-            self::getUserAccess(
-                lvl: $lvl,
-                userId: $userId,
-                access: $access,
-                parentId: $parentId,
-                projectId: $projectId
-            ),
-            [
-                'objects' => self::getObjects(
-                lvl: $lvl,
-                parentId: $parentId,
-                limit: $limit,
-                limitFrom: $limitFrom,
-                access: $access,
-                crud: $crud,
-                )
-            ]
-        );
+//        $projectId = null;
+//
+//        if ($parentId) {
+//            $parentLvl = AccessLvl::getPreLvlIntObj($lvl);
+//            $projectId = Objects::getProjectIdByChildOrThrow($parentId, $parentLvl);
+//        }
+//
+//        $user = ProjectRole::getUserCrudById($lvl, $userId, $projectId);
+//
+//        $crud =& $user['crud'];
+//        self::sortAccess($crud);
+//        $access =& $user['user'];
+//
+//        return array_merge(
+//            self::getUserAccess(
+//                lvl: $lvl,
+//                userId: $userId,
+//                access: $access,
+//                parentId: $parentId,
+//                projectId: $projectId
+//            ),
+//            [
+//                'objects' => self::getObjects(
+//                lvl: $lvl,
+//                parentId: $parentId,
+//                limit: $limit,
+//                limitFrom: $limitFrom,
+//                access: $access,
+//                crud: $crud,
+//                )
+//            ]
+//        );
     }
 
     /**

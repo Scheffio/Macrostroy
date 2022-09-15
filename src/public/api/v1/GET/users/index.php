@@ -39,15 +39,12 @@ try {
     }
 
     $request = new Request();
-    $objectId = $request->getQueryOrThrow('object_id');
+    $objId = $request->getQueryOrThrow('object_id');
     $lvl = $request->getQueryOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    $projectId = Objects::getProjectIdByChildOrThrow($objectId, $lvl);
-
     JsonOutput::success(
-//        ProjectRole::getCrud($lvl, $objectId)
-        ProjectRole::getCrudUsersByObject($lvl, $projectId, $objectId)
+        ProjectRole::getCrudUsersByObject($lvl, $objId)
     );
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');

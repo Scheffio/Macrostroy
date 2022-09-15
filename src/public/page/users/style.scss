@@ -383,7 +383,9 @@
                         }
                     }
                     .explanation {
+                        user-select: none;
                         @include explanation;
+                        
                     }
                 }
             }
@@ -484,7 +486,8 @@
         display: flex;
         width: clamp(768px, 90vw, 1555px);
         gap: 40px;
-        justify-content: flex-end;
+        justify-content: flex-start;
+        flex-direction: row-reverse;
         .add-role,
         .delete-role {
             display: flex;
@@ -549,6 +552,7 @@
                         width: 2px;
                         height: 15px;
                         position: absolute;
+                        transform: rotate(45deg);
                         background-color: $EstiminColor8;
                         top: 3px;
                         left: 5px;
@@ -560,7 +564,7 @@
                         width: 2px;
                         height: 15px;
                         background-color: $EstiminColor8;
-                        transform: rotate(90deg);
+                        transform: rotate(315deg);
                         position: absolute;
                         top: 3px;
                         left: 5px;

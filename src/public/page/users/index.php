@@ -185,6 +185,7 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>
             </div>
+            .save-user+.add-role+.delete-role+.
         </div>
     </div>
     <script src="../../static/js/main.js"></script>

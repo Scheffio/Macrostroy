@@ -522,10 +522,17 @@ body.fixated {
   transition: 0.3s;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .explanation {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
   opacity: 0.6;
+}
+.wrap .tabs-container .tabs-container__tab-element .content .permissions .explanation.off {
+  display: none;
 }
 .wrap .tabs-container .tab-header {
   display: flex;
@@ -642,7 +649,8 @@ body.fixated {
   display: flex;
   width: clamp(768px, 90vw, 1555px);
   gap: 40px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
 }
 .wrap .actions .add-role,
 .wrap .actions .delete-role {
@@ -746,12 +754,13 @@ body.fixated {
 .wrap .actions .delete-role .delete-role__button .delete::before {
   content: "";
   display: block;
-  width: 15px;
-  height: 2px;
-  background-color: #E5EBEF;
+  width: 2px;
+  height: 15px;
   position: absolute;
-  top: 0;
-  left: 0;
+  transform: rotate(45deg);
+  background-color: #E5EBEF;
+  top: 3px;
+  left: 5px;
   transition: 0.3s;
 }
 .wrap .actions .add-role .add-role__button .delete::after,
@@ -763,7 +772,7 @@ body.fixated {
   width: 2px;
   height: 15px;
   background-color: #E5EBEF;
-  transform: rotate(90deg);
+  transform: rotate(315deg);
   position: absolute;
   top: 3px;
   left: 5px;

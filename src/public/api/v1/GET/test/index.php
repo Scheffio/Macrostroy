@@ -35,8 +35,8 @@ try {
     $users = Selector::getUsersCrud($parents);
 
     JsonOutput::success([
-        $parents,
-        $users,
+//        $users,
+        Selector::formingUsers($users)
     ]);
 
 } catch (Exception $e) {
@@ -45,24 +45,7 @@ try {
 
 class Selector
 {
-    public static function getUsers(): array
-    {
-        return UsersQuery::create()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                UserRoleTableMap::COL_MANAGE_VOLUMES,
-                UserRoleTableMap::COL_MANAGE_HISTORY,
-            ])
-            ->leftJoinUserRole()
-            ->find()
-            ->getData();
-    }
-
-    public static function getParentsForObj(int $lvl, int $objId): array
+    public static function getParentsForObj(int &$lvl, int &$objId): array
     {
         $query = ObjProjectQuery::create()
                 ->select([
@@ -111,25 +94,47 @@ class Selector
         return str_replace('true', $true, $if);
     }
 
-    public static function getUsersCrud(string $if)
+    public static function getUsersCrud(string &$if): array
     {
-        return UsersQuery::create()
-            ->distinct()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                UserRoleTableMap::COL_MANAGE_VOLUMES,
-                UserRoleTableMap::COL_MANAGE_HISTORY,
-            ])
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-            ->find()
-            ->getData();
+        return  UsersQuery::create()
+                ->distinct()
+                ->select([
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                    UserRoleTableMap::COL_MANAGE_USERS,
+                    UserRoleTableMap::COL_OBJECT_VIEWER,
+                    UserRoleTableMap::COL_MANAGE_OBJECTS,
+                    UserRoleTableMap::COL_MANAGE_VOLUMES,
+                    UserRoleTableMap::COL_MANAGE_HISTORY,
+                ])
+                ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
+                ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
+                ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
+                ->leftJoinUserRole()
+                ->leftJoinProjectRole()
+                ->find()
+                ->getData();
+    }
+
+    public static function formingUsers(array &$users): array
+    {
+        $result = [];
+
+        foreach ($users as &$user) {
+            $id =& $user[UsersTableMap::COL_ID];
+            $flag = array_key_exists($id, $result);
+
+            if ($flag && $result[$id]['lvl'] !== null) continue;
+            elseif (!$flag) $result[$id] =& $user;
+            else {
+                $result[$id]['lvl'] =& $user['lvl'];
+                $result[$id]['isCrud'] =& $user['lvl'];
+                $result[$id]['objId'] =& $user['lvl'];
+            }
+        }
+
+        
+
+        return $result;
     }
 }

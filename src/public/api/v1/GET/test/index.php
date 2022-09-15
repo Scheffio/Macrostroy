@@ -66,12 +66,10 @@ class Selector
                 ->select([
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
-//                    ObjGroupTableMap::COL_ID,
-//                    ObjHouseTableMap::COL_ID,
-//                    ObjStageTableMap::COL_ID,
+                    ObjGroupTableMap::COL_ID,
+                    ObjHouseTableMap::COL_ID,
+                    ObjStageTableMap::COL_ID,
                 ])
-                ->withColumn('(IF ' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ', null)', 'project')
-                ->withColumn('(IF ' . $lvl . '>=' . eLvlObjInt::SUBPROJECT->value . ',' . ObjSubprojectTableMap::COL_ID . ', null)', 'subproject')
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -86,11 +84,6 @@ class Selector
         }
 
         return $query->findOne();
-    }
-
-    public static function getParentsByLvl(int $lvl, int $parentId)
-    {
-
     }
 
     public static function getWhereByParents(array $parents)

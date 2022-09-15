@@ -2,9 +2,11 @@
 import Requester from "/static/js/Requester/Requester.js";
 const file_input = document.getElementById("file_input");
 let request = new Requester();
-const fileField = document.getElementById("file_input");
-request.addData('avatar', fileField.files[0]);
+$(file_input).on("change", function () {
+    request.addData('file', file_input.files[0].name);
+});
 $("#get_body_button").on("click", function () {
+    console.log(file_input.files[0]);
     request.logBody();
 });
 //# sourceMappingURL=script_module.js.map

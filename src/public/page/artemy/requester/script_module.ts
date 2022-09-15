@@ -1,11 +1,13 @@
 // @ts-ignore
 import Requester from "/static/js/Requester/Requester.js";
 
-const file_input = document.getElementById("file_input");
+const file_input = <HTMLInputElement>document.getElementById("file_input");
 let request = new Requester()
-const fileField = <HTMLInputElement>document.getElementById("file_input");
+$(file_input).on("change", function () {
+    request.addData('file', file_input.files[0].name);
+})
 
-request.addData('avatar', fileField.files[0]);
 $("#get_body_button").on("click", function () {
+    console.log(file_input.files[0])
     request.logBody()
 })

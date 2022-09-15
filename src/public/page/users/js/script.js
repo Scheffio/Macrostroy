@@ -123,12 +123,8 @@ emailInput.addEventListener('blur', () => {
     }
 })
 
-function resetInputs() {
-    document.querySelector('.modal-body > input').forEach((elem) => {
-        elem.value = ''
-    })
-}
 
+let oldpermissions = {}
 
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
@@ -145,7 +141,7 @@ function parseRoles() {
             select.appendChild(option)
             document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
         })
-
+        
         const selectableUsers = {
             roles: document.querySelectorAll('.roles > .users__user-field'),
             click(elem) {
@@ -167,8 +163,8 @@ function parseRoles() {
                     elem.classList.remove('selected')
                 })
             },
-            getid() {
-
+            saveOldPermissions() {
+                oldpermissions += {json}
             }
         }
         
@@ -183,6 +179,7 @@ function parseRoles() {
     })
 }
 
+
 const adminCheckbox = document.querySelector('.admin > input')
 const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')
 const objectCrudExactCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(2)')
@@ -193,9 +190,10 @@ const watchobjectsCheckbox = document.querySelector('.watch > input')
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
-       elem.checked = false
+        elem.checked = false
     })
 })
+
 
 
 function parsePermissions(id, elem) {
@@ -203,7 +201,7 @@ function parsePermissions(id, elem) {
     let obj = {
         role_id: id 
     }
-
+    
     url.search = new URLSearchParams(obj).toString()
     fetch(url).then((elem) => {
         return elem.json()
@@ -247,37 +245,43 @@ function parsePermissions(id, elem) {
             }
         })
     }
-
-function addUser() {
-    const username = document.querySelector(".modal-body__name > input")
-    const email = document.querySelector('.modal-body__email > input')
-    const select = document.querySelector('.modal-body__role > select')
     
-    fetch("/api/v1/admin/create_account", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
-    })
-    .then(function(res) {
-        return res.json();
-    })
-    .then(function(json) {
-        if(json.status === 'error') {
-            if(json.error_message === 'Недостаточно прав') {
-                alert(json.error_message)
-            }else if (json.error_message === 'Роль не была найдена') {
-                alert(json.error_message)
-            }else if (json.error_message === 'Пользователь не найден') {
-                alert(json.error_message)
+    function resetInputs() {
+        document.querySelector('.modal-body > input').forEach((elem) => {
+            elem.value = ''
+        })
+    }
+
+    function addUser() {
+        const username = document.querySelector(".modal-body__name > input")
+        const email = document.querySelector('.modal-body__email > input')
+        const select = document.querySelector('.modal-body__role > select')
+        
+        fetch("/api/v1/admin/create_account", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
+        })
+        .then(function(res) {
+            return res.json();
+        })
+        .then(function(json) {
+            if(json.status === 'error') {
+                if(json.error_message === 'Недостаточно прав') {
+                    alert(json.error_message)
+                }else if (json.error_message === 'Роль не была найдена') {
+                    alert(json.error_message)
+                }else if (json.error_message === 'Пользователь не найден') {
+                    alert(json.error_message)
+                }
+            }else {
+                resetInputs()
+                modalSystem.hide()
             }
-        }else {
-            resetInputs()
-            modalSystem.hide()
-        }
-    })
-}
+        })
+    }
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)

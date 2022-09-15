@@ -124,8 +124,6 @@ emailInput.addEventListener('blur', () => {
 })
 
 
-let oldpermissions = {}
-
 function parseRoles() {
     const select = document.querySelector('.modal-body__role > select')
     let url = new URL('https://artemy.net/api/v1/roles')
@@ -164,7 +162,6 @@ function parseRoles() {
                 })
             },
             saveOldPermissions() {
-                oldpermissions += {json}
             }
         }
         
@@ -179,6 +176,13 @@ function parseRoles() {
     })
 }
 
+let adminCond = adminCheckbox.checked ? true : false
+let objectAllCond = objectCrudAllCheckbox.checked ? true : false
+let objectExactCond = objectCrudExactCheckbox.checked ? true : false
+let volumeAllCond = volumeCrudAllCheckbox.checked ? true : false
+let volumeExactCond = volumeCrudExactCheckbox.checked ? true : false
+let versionCond = versionControlCheckbox.checked ? true : false
+let watchCond = watchobjectsCheckbox.checked ? true : false
 
 const adminCheckbox = document.querySelector('.admin > input')
 const objectCrudAllCheckbox = document.querySelector('.object-crud-checkboxes > input:nth-child(1)')

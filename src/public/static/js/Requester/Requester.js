@@ -9,5 +9,10 @@ export default class Requester {
     logBody() {
         console.log(this.body);
     }
+    fetch() {
+        fetch(new URL("artemy.net"), {
+            body: 
+        });
+    }
 }
 //# sourceMappingURL=Requester.js.map

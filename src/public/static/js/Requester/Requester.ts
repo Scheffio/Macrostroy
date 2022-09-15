@@ -19,4 +19,10 @@ export default class Requester {
     public logBody() {
         console.log(this.body)
     }
+
+    public fetch() {
+        fetch(new URL("artemy.net"), {
+            body: 
+        })
+    }
 }

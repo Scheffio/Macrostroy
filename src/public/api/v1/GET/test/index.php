@@ -31,10 +31,13 @@ try {
     $objId = $request->getQueryOrThrow('object_id');
 
     $users = Selector::getUsers();
-    $parent = Selector::getParentsByObj($lvl, $objId);
+    $parents = Selector::getParentsForObj($lvl, $objId);
+    Selector::formingParentsAsCondition($parents);
+    $access = Selector::getObjAccesses($parents);
 
     JsonOutput::success([
-        $parent,
+        $parents,
+        $access
     ]);
 
 } catch (Exception $e) {
@@ -60,7 +63,7 @@ class Selector
             ->getData();
     }
 
-    public static function getParentsByObj(int $lvl, int $objId)
+    public static function getParentsForObj(int $lvl, int $objId): array
     {
         $query = ObjProjectQuery::create()
                 ->select([
@@ -83,17 +86,52 @@ class Selector
             $query->where($colId . '=?', $objId);
         }
 
-        return $query->findOne();
+        $query = $query->findOne();
+
+        return is_array($query) ? array_slice($query, 0, $lvl) : [];
     }
 
-    public static function getWhereByParents(array $parents)
+    public static function getObjAccesses(array $where, ?int $userId = null)
     {
+        $query = ProjectRoleQuery::create()
+                ->select([
+                    ProjectRoleTableMap::COL_USER_ID,
+                    ProjectRoleTableMap::COL_LVL,
+                    ProjectRoleTableMap::COL_IS_CRUD,
+                    ProjectRoleTableMap::COL_OBJECT_ID,
+                    ProjectRoleTableMap::COL_PROJECT_ID,
+                ]);
 
+        if ($where) {
+            foreach ($where as $key=>$value) {
+                $query
+                    ->_or()
+                    ->condition("{$key}1" ,$value[0])
+                    ->condition("{$key}2" ,$value[1])
+                    ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
+            }
+        }
+
+        if ($userId) {
+            $query->filterByUserId($userId);
+        }
+
+        return $query->find()->getData();
     }
 
-    public static function getObjAccesses(int $lvl, int $obj, array $where, ?int $userId = null)
+    public static function formingParentsAsCondition(array &$parents): void
     {
+        foreach ($parents as $key=>&$value) {
+            $lvl = AccessLvl::getLvlIntObjByColId($key);
+            $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
+            $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
+            $value = [$wLvl, $wObjId];
+        }
 
+        $parents['null'] = [
+            ProjectRoleTableMap::COL_LVL . ' IS NULL',
+            ProjectRoleTableMap::COL_OBJECT_ID . ' IS NULL',
+        ];
     }
 
     public static function formingUsersCrud(array $users, array $crud)

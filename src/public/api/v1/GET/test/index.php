@@ -32,10 +32,11 @@ try {
 
     $parents =  Selector::getParentsForObj($lvl, $objId);
                 Selector::formingParentsAsIf($parents);
-    $users = null;
+    $users = Selector::getUsersCrud($parents);
 
     JsonOutput::success([
         $parents,
+        $users,
     ]);
 
 } catch (Exception $e) {
@@ -114,10 +115,21 @@ class Selector
     {
         return UsersQuery::create()
             ->distinct()
-            ->select([])
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), '')
+            ->select([
+                UsersTableMap::COL_ID,
+                UsersTableMap::COL_USERNAME,
+                UserRoleTableMap::COL_MANAGE_USERS,
+                UserRoleTableMap::COL_OBJECT_VIEWER,
+                UserRoleTableMap::COL_MANAGE_OBJECTS,
+                UserRoleTableMap::COL_MANAGE_VOLUMES,
+                UserRoleTableMap::COL_MANAGE_HISTORY,
+            ])
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
+            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
             ->leftJoinUserRole()
             ->leftJoinProjectRole()
-            ;
+            ->find()
+            ->getData();
     }
 }

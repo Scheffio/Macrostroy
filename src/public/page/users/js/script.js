@@ -187,18 +187,7 @@ const rolesControl = {
 }
 
 function parsePermissions(id, elem) {
-    // let url = new URL('api/v1/role')
-    // let obj = {
-    //     role_id: id 
-    // }
-    
-    // url.search = new URLSearchParams(obj).toString()
-    fetch("/api/v1/role", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then((elem) => {
+    fetch(`/api/v1/role?role_id=${id}`).then((elem) => {
         return elem.json()
     }).then((json) => {
         if(json.status === "success") {

@@ -276,7 +276,9 @@ class ProjectRole
         $userId = 17;
 
         $parents = self::getParentsForObj($lvl, $parentId);
-        self::formingParentsAsCondition($parents);
+//        self::formingParentsAsCondition($parents);
+
+        JsonOutput::success($parents);
 
 //        $parents = self::getParentsForObj($lvl, $objId);
 //        self::formingParentsAsCondition($parents);
@@ -372,11 +374,12 @@ class ProjectRole
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
             $query->where($colId . '=?', $objId);
+            $query = $query->findOne();
+
+            return is_array($query) ? array_slice($query, 0, $lvl) : [];
         }
 
-        $query = $query->findOne();
-
-        return is_array($query) ? array_slice($query, 0, $lvl) : [];
+        return $query->find()->getData();
     }
 
     /**

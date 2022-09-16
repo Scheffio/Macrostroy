@@ -355,264 +355,265 @@ class ProjectRole
      */
     public static function getCrudUsersByObj(int &$lvl, ?int $objId = null, ?int $userId = null): array
     {
-        $parents = self::getParentsForObj($lvl, $objId);
-        $parents = self::formingParentsAsCondition($parents);
-
-        $if = self::formingParentsAsIf($parents);
-        $users = self::getUsersCrud($if, $userId);
-
-        return self::formingUsers($users);
+        return [];
+//        $parents = self::getParentsForObj($lvl, $objId);
+//        $parents = self::formingParentsAsCondition($parents);
+//
+//        $if = self::formingParentsAsIf($parents);
+//        $users = self::getUsersCrud($if, $userId);
+//
+//        return self::formingUsers($users);
     }
-
-    /**
-     * Взвращает массив IDs родителей объекта.
-     * @param int $lvl Уровень доступа.
-     * @param int $objId ID объекта.
-     * @return array
-     * @throws IncorrectLvlException
-     * @throws PropelException
-     */
-    private static function getParentsForObj(int &$lvl, int &$objId): array
-    {
-        $query = self::getParentsQuery($lvl);
-
-        if ($objId) {
-            $colId = Objects::getColIdByLvl($lvl);
-            $query->where($colId . '=?', $objId);
-        }
-
-        $query = $query->findOne();
-
-        return self::formingParentsResult($lvl, $query);
-    }
-
-    /**
-     * Возвращает массив IDs родителей уровня.
-     * @param int $lvl Уровень доступа.
-     * @param int $parentId ID родителя.
-     * @return array
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws PropelException
-     */
-    private static function getParentsForLvl(int &$lvl, int &$parentId): array
-    {
-        $query = self::getParentsQuery($lvl);
-
-        if ($parentId) {
-            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
-            $colId = Objects::getColIdByLvl($preLvl);
-            $query->where($colId . '=?', $parentId);
-        }
-
-        $query = $query->find()->getData();
-
-        return self::formingParentsResult($lvl, $query);
-    }
-
-    /**
-     * Возвращает запрос на вывод IDs родителей объекта(уровня), без условия.
-     * @param int $lvl Уроыень достпуа.
-     * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
-     * @throws PropelException
-     */
-    private static function getParentsQuery(int $lvl): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
-    {
-        return  ObjProjectQuery::create()
-            ->distinct()
-            ->select(['projectId', 'subprojectId', 'groupId', 'houseId','stageId'])
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::PROJECT->value, ObjProjectTableMap::COL_ID), 'projectId')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::SUBPROJECT->value, ObjSubprojectTableMap::COL_ID), 'subprojectId')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::GROUP->value, ObjGroupTableMap::COL_ID), 'groupId')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::HOUSE->value, ObjHouseTableMap::COL_ID), 'houseId')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::STAGE->value, ObjStageTableMap::COL_ID), 'stageId')
-            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                        ->leftJoinObjStage()
-                    ->endUse()
-                ->endUse()
-            ->endUse();
-    }
-
-    /**
-     * Возвращает массив пользователей, с их разрешениями на объект, соблюдая переданное условие.
-     * @param string $if Строка условия.
-     * @param int|null $userId ID польозвателя.
-     * @return array
-     * @throws PropelException
-     */
-    private static function getUsersCrud(string &$if, ?int $userId = null): array
-    {
-        $query = UsersQuery::create()
-            ->distinct()
-            ->select([
-                UsersTableMap::COL_ID,
-                UsersTableMap::COL_USERNAME,
-                UserRoleTableMap::COL_MANAGE_USERS,
-                UserRoleTableMap::COL_OBJECT_VIEWER,
-                UserRoleTableMap::COL_MANAGE_OBJECTS,
-                UserRoleTableMap::COL_MANAGE_VOLUMES,
-                UserRoleTableMap::COL_MANAGE_HISTORY,
-            ])
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
-            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
-            ->leftJoinUserRole()
-            ->leftJoinProjectRole()
-            ->orderByUsername(Criteria::ASC);
-
-        if ($userId) {
-            $query->filterById($userId);
-        }
-
-        return $query->find()->getData();
-    }
-
-    /**
-     * Получить условие для вывода используя уровень для сравнения.
-     * @param int $lvl Уровень доступа, с которым сравнимают.
-     * @param int $lvlObj Уровень доступа, который сравнивают.
-     * @param string $true Наименование атрибута, который выводится при положительном результате сранения.
-     * @return string
-     */
-    private static function getIfByLvl(int $lvl, int $lvlObj, string $true): string
-    {
-        return "IF ($lvl >= $lvlObj, $true, null)";
-    }
-
-    /**
-     * Разрешен ли CRUD объекта для пользователя.
-     * @param int|bool|null $crud Разрешение пользователя на объект.
-     * @param array $user Данные о пользователе.
-     * @return bool|null
-     */
-    private static function isCrud(null|int|bool &$crud, array &$user): ?bool
-    {
-        if ($user[UserRoleTableMap::COL_MANAGE_USERS]) return true;
-        if ($crud !== null) return (bool)$crud;
-        if ($user[UserRoleTableMap::COL_MANAGE_OBJECTS]) return true;
-        if ($user[UserRoleTableMap::COL_OBJECT_VIEWER]) return false;
-
-        return null;
-    }
-
-    /**
-     * Возвращает строку, с замененным значением при true условия.
-     * @param string $if Строка с условием для вывода.
-     * @param string $true Значение, которое выводится при true условия.
-     * @return string
-     */
-    private static function replaceValueInIf(string $if, string $true): string
-    {
-        return str_replace('true', $true, $if);
-    }
-
-    /**
-     * Корректирование массива данных IDs родителей объекта (уровня).
-     * @param int $lvl Уровень доступа.
-     * @param array|null $result Результат запроса.
-     * @return array
-     */
-    private static function formingParentsResult(int &$lvl, null|array &$result): array
-    {
-        if ($result) {
-            if (array_key_exists('projectId', $result)) {
-                $result = array_combine(
-                    [
-                        ObjProjectTableMap::COL_ID,
-                        ObjSubprojectTableMap::COL_ID,
-                        ObjGroupTableMap::COL_ID,
-                        ObjHouseTableMap::COL_ID,
-                        ObjStageTableMap::COL_ID
-                    ],
-                    array_values($result)
-                );
-
-                return array_slice($result, 0, $lvl);
-            }
-
-            foreach ($result as &$item) {
-                $item = self::formingParentsResult($lvl, $item);
-            }
-        }
-
-        return $result ?? [];
-    }
-
-    /**
-     * Формирование массива IDs родителей объекта, в качестве условий.
-     * @param array $parents Массив IDs родителей объекта.
-     * @return void
-     * @throws InvalidAccessLvlIntException
-     */
-    private static function formingParentsAsCondition(array &$parents): array
-    {
-        if (array_key_exists(ObjProjectTableMap::COL_ID, $parents)) {
-            foreach ($parents as $key=>&$value) {
-                $lvl = AccessLvl::getLvlIntObjByColId($key);
-                $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
-                $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
-                $value = [$wLvl, $wObjId];
-            }
-        } else {
-            foreach ($parents as &$parent) {
-                $parent = self::formingParentsAsCondition($parent);
-            }
-        }
-
-        return $parents;
-    }
-
-    /**
-     * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
-     * @param array $parents Массив IDs родителей объекта.
-     * @return string
-     */
-    private static function formingParentsAsIf(array $parents): string
-    {
-        foreach ($parents as &$parent) {
-            $parent = "($parent[0] AND $parent[1])";
-        }
-
-        return 'IF(' . join(' OR ', $parents) . ', true, NULL)';
-    }
-
-    /**
-     * Форирование массива пользователей.
-     * @param array $users Массив пользователей.
-     * @return array
-     */
-    private static function formingUsers(array &$users): array
-    {
-        $result = [];
-
-        foreach ($users as &$user) {
-            $id =& $user[UsersTableMap::COL_ID];
-            $flag = array_key_exists($id, $result);
-
-            if ($flag &&
-                $result[$id]['lvl'] !== null &&
-                $result[$id]['lvl'] > (int)$user['lvl']) continue;
-            elseif (!$flag) $result[$id] =& $user;
-            else {
-                $result[$id]['lvl'] =& $user['lvl'];
-                $result[$id]['isCrud'] =& $user['isCrud'];
-                $result[$id]['objId'] =& $user['objId'];
-            }
-        }
-
-        foreach ($result as &$item) {
-            $item = [
-                'id' => $item[UsersTableMap::COL_ID],
-                'name' => $item[UsersTableMap::COL_USERNAME],
-                'isCrud' => self::isCrud($item['isCrud'], $item),
-                'isAdmin' => (bool)$item[UserRoleTableMap::COL_MANAGE_USERS]
-            ];
-        }
-
-        return array_values($result);
-    }
+//
+//    /**
+//     * Взвращает массив IDs родителей объекта.
+//     * @param int $lvl Уровень доступа.
+//     * @param int $objId ID объекта.
+//     * @return array
+//     * @throws IncorrectLvlException
+//     * @throws PropelException
+//     */
+//    private static function getParentsForObj(int &$lvl, int &$objId): array
+//    {
+//        $query = self::getParentsQuery($lvl);
+//
+//        if ($objId) {
+//            $colId = Objects::getColIdByLvl($lvl);
+//            $query->where($colId . '=?', $objId);
+//        }
+//
+//        $query = $query->findOne();
+//
+//        return self::formingParentsResult($lvl, $query);
+//    }
+//
+//    /**
+//     * Возвращает массив IDs родителей уровня.
+//     * @param int $lvl Уровень доступа.
+//     * @param int $parentId ID родителя.
+//     * @return array
+//     * @throws IncorrectLvlException
+//     * @throws InvalidAccessLvlIntException
+//     * @throws PropelException
+//     */
+//    private static function getParentsForLvl(int &$lvl, int &$parentId): array
+//    {
+//        $query = self::getParentsQuery($lvl);
+//
+//        if ($parentId) {
+//            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+//            $colId = Objects::getColIdByLvl($preLvl);
+//            $query->where($colId . '=?', $parentId);
+//        }
+//
+//        $query = $query->find()->getData();
+//
+//        return self::formingParentsResult($lvl, $query);
+//    }
+//
+//    /**
+//     * Возвращает запрос на вывод IDs родителей объекта(уровня), без условия.
+//     * @param int $lvl Уроыень достпуа.
+//     * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+//     * @throws PropelException
+//     */
+//    private static function getParentsQuery(int $lvl): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+//    {
+//        return  ObjProjectQuery::create()
+//            ->distinct()
+//            ->select(['projectId', 'subprojectId', 'groupId', 'houseId','stageId'])
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::PROJECT->value, ObjProjectTableMap::COL_ID), 'projectId')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::SUBPROJECT->value, ObjSubprojectTableMap::COL_ID), 'subprojectId')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::GROUP->value, ObjGroupTableMap::COL_ID), 'groupId')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::HOUSE->value, ObjHouseTableMap::COL_ID), 'houseId')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::STAGE->value, ObjStageTableMap::COL_ID), 'stageId')
+//            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+//                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+//                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+//                        ->leftJoinObjStage()
+//                    ->endUse()
+//                ->endUse()
+//            ->endUse();
+//    }
+//
+//    /**
+//     * Возвращает массив пользователей, с их разрешениями на объект, соблюдая переданное условие.
+//     * @param string $if Строка условия.
+//     * @param int|null $userId ID польозвателя.
+//     * @return array
+//     * @throws PropelException
+//     */
+//    private static function getUsersCrud(string &$if, ?int $userId = null): array
+//    {
+//        $query = UsersQuery::create()
+//            ->distinct()
+//            ->select([
+//                UsersTableMap::COL_ID,
+//                UsersTableMap::COL_USERNAME,
+//                UserRoleTableMap::COL_MANAGE_USERS,
+//                UserRoleTableMap::COL_OBJECT_VIEWER,
+//                UserRoleTableMap::COL_MANAGE_OBJECTS,
+//                UserRoleTableMap::COL_MANAGE_VOLUMES,
+//                UserRoleTableMap::COL_MANAGE_HISTORY,
+//            ])
+//            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_LVL), 'lvl')
+//            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_IS_CRUD), 'isCrud')
+//            ->withColumn(self::replaceValueInIf($if, ProjectRoleTableMap::COL_OBJECT_ID), 'objId')
+//            ->leftJoinUserRole()
+//            ->leftJoinProjectRole()
+//            ->orderByUsername(Criteria::ASC);
+//
+//        if ($userId) {
+//            $query->filterById($userId);
+//        }
+//
+//        return $query->find()->getData();
+//    }
+//
+//    /**
+//     * Получить условие для вывода используя уровень для сравнения.
+//     * @param int $lvl Уровень доступа, с которым сравнимают.
+//     * @param int $lvlObj Уровень доступа, который сравнивают.
+//     * @param string $true Наименование атрибута, который выводится при положительном результате сранения.
+//     * @return string
+//     */
+//    private static function getIfByLvl(int $lvl, int $lvlObj, string $true): string
+//    {
+//        return "IF ($lvl >= $lvlObj, $true, null)";
+//    }
+//
+//    /**
+//     * Разрешен ли CRUD объекта для пользователя.
+//     * @param int|bool|null $crud Разрешение пользователя на объект.
+//     * @param array $user Данные о пользователе.
+//     * @return bool|null
+//     */
+//    private static function isCrud(null|int|bool &$crud, array &$user): ?bool
+//    {
+//        if ($user[UserRoleTableMap::COL_MANAGE_USERS]) return true;
+//        if ($crud !== null) return (bool)$crud;
+//        if ($user[UserRoleTableMap::COL_MANAGE_OBJECTS]) return true;
+//        if ($user[UserRoleTableMap::COL_OBJECT_VIEWER]) return false;
+//
+//        return null;
+//    }
+//
+//    /**
+//     * Возвращает строку, с замененным значением при true условия.
+//     * @param string $if Строка с условием для вывода.
+//     * @param string $true Значение, которое выводится при true условия.
+//     * @return string
+//     */
+//    private static function replaceValueInIf(string $if, string $true): string
+//    {
+//        return str_replace('true', $true, $if);
+//    }
+//
+//    /**
+//     * Корректирование массива данных IDs родителей объекта (уровня).
+//     * @param int $lvl Уровень доступа.
+//     * @param array|null $result Результат запроса.
+//     * @return array
+//     */
+//    private static function formingParentsResult(int &$lvl, null|array &$result): array
+//    {
+//        if ($result) {
+//            if (array_key_exists('projectId', $result)) {
+//                $result = array_combine(
+//                    [
+//                        ObjProjectTableMap::COL_ID,
+//                        ObjSubprojectTableMap::COL_ID,
+//                        ObjGroupTableMap::COL_ID,
+//                        ObjHouseTableMap::COL_ID,
+//                        ObjStageTableMap::COL_ID
+//                    ],
+//                    array_values($result)
+//                );
+//
+//                return array_slice($result, 0, $lvl);
+//            }
+//
+//            foreach ($result as &$item) {
+//                $item = self::formingParentsResult($lvl, $item);
+//            }
+//        }
+//
+//        return $result ?? [];
+//    }
+//
+//    /**
+//     * Формирование массива IDs родителей объекта, в качестве условий.
+//     * @param array $parents Массив IDs родителей объекта.
+//     * @return void
+//     * @throws InvalidAccessLvlIntException
+//     */
+//    private static function formingParentsAsCondition(array &$parents): array
+//    {
+//        if (array_key_exists(ObjProjectTableMap::COL_ID, $parents)) {
+//            foreach ($parents as $key=>&$value) {
+//                $lvl = AccessLvl::getLvlIntObjByColId($key);
+//                $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
+//                $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
+//                $value = [$wLvl, $wObjId];
+//            }
+//        } else {
+//            foreach ($parents as &$parent) {
+//                $parent = self::formingParentsAsCondition($parent);
+//            }
+//        }
+//
+//        return $parents;
+//    }
+//
+//    /**
+//     * Формирование массива IDs родителей объекта, в качестве условий по уровню и ID объекта для таблицы ролей проекта.
+//     * @param array $parents Массив IDs родителей объекта.
+//     * @return string
+//     */
+//    private static function formingParentsAsIf(array $parents): string
+//    {
+//        foreach ($parents as &$parent) {
+//            $parent = "($parent[0] AND $parent[1])";
+//        }
+//
+//        return 'IF(' . join(' OR ', $parents) . ', true, NULL)';
+//    }
+//
+//    /**
+//     * Форирование массива пользователей.
+//     * @param array $users Массив пользователей.
+//     * @return array
+//     */
+//    private static function formingUsers(array &$users): array
+//    {
+//        $result = [];
+//
+//        foreach ($users as &$user) {
+//            $id =& $user[UsersTableMap::COL_ID];
+//            $flag = array_key_exists($id, $result);
+//
+//            if ($flag &&
+//                $result[$id]['lvl'] !== null &&
+//                $result[$id]['lvl'] > (int)$user['lvl']) continue;
+//            elseif (!$flag) $result[$id] =& $user;
+//            else {
+//                $result[$id]['lvl'] =& $user['lvl'];
+//                $result[$id]['isCrud'] =& $user['isCrud'];
+//                $result[$id]['objId'] =& $user['objId'];
+//            }
+//        }
+//
+//        foreach ($result as &$item) {
+//            $item = [
+//                'id' => $item[UsersTableMap::COL_ID],
+//                'name' => $item[UsersTableMap::COL_USERNAME],
+//                'isCrud' => self::isCrud($item['isCrud'], $item),
+//                'isAdmin' => (bool)$item[UserRoleTableMap::COL_MANAGE_USERS]
+//            ];
+//        }
+//
+//        return array_values($result);
+//    }
     #endregion
 
     #region Setter Functions

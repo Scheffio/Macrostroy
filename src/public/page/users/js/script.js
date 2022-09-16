@@ -126,6 +126,7 @@ document.querySelectorAll('.uncheckable').forEach((elem) => {
     })
 })
 
+let url = new URL(document.location.href)
 const rolesControl = {
     adminCheckbox: document.querySelector('.admin > input'),
     objectCrudAllCheckbox: document.querySelector('.object-crud-checkboxes > input:nth-child(1)'),
@@ -157,6 +158,7 @@ const rolesControl = {
                     elem.classList.toggle('selected')
                     parsePermissions(this.currentRoleId, elem)
                     rolesControl.saveRolePermissions(this.currentRoleId)
+                    url.searchParams.set('q', this.currentRoleId)
                 },
                 reset() {
                     document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -184,27 +186,20 @@ const rolesControl = {
         document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
             if(elem.tagName === "INPUT") {
                     let inputId = elem.getAttribute("id");
-                    console.log(elem);
-                    console.log(inputId)
                     if(inputId == "watch") {
                         elem.checked ? view_PERM = true : view_PERM = false
-                        console.log(elem.checked, );
                     }else if(inputId == "version-control") {
                         elem.checked ? history_PERM = true : history_PERM = false
-                        console.log(elem.checked);
                     }else if(inputId == "all") {
                         if(elem.checked) {
                             view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM = true 
-                            console.log(elem.checked);
                         }else {
                             view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM = false
                         }
                 }
             }
         })
-        console.log(view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM);
-        console.log();
-        fetch(`/api/v1/role?role_id=${Number(id)}&object_viewer=${view_PERM}&manage_objects=${null}&manage_volumes=${null}&manage_history=${history_PERM}&manage_users=${users_PERM}`).then((elem) => {
+        fetch(`/api/v1/role?role_id=${1}&object_viewer=${view_PERM}&manage_objects=${null}&manage_volumes=${null}&manage_history=${history_PERM}&manage_users=${users_PERM}`).then((elem) => {
             return elem.json()
         }).then((json) => {
             console.log(json);

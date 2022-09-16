@@ -28,6 +28,7 @@ use DB\VolTechnicQuery;
 use DB\VolWorkMaterialQuery;
 use DB\VolWorkQuery;
 use DB\VolWorkTechnicQuery;
+use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
@@ -39,11 +40,10 @@ use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
-class ProjectRoleSelector
+class ProjectRoleSelector extends ProjectRole
 {
     public static function getUsersCrudForObj()
     {
-
     }
 
     public static function getAuthUserCrudForObj()
@@ -152,7 +152,14 @@ class ProjectRoleSelector
         return $i;
     }
 
-    private static function getProjectRolesQuery(array &$where, ?int $userId = null)
+    /**
+     * Запрос на вывод роле проекта.
+     * @param array $where Массив условий.
+     * @param int|null $userId ID пользователя.
+     * @return ProjectRoleQuery|Criteria
+     * @throws PropelException
+     */
+    private static function getProjectRolesQuery(array &$where, ?int $userId = null): ProjectRoleQuery|Criteria
     {
         $i = ProjectRoleQuery::create()
             ->select([
@@ -166,12 +173,15 @@ class ProjectRoleSelector
         }
 
         if ($where) {
-            foreach ($where as $item) {
-                $i->_or()
-                    ->condition('', $item[0])
-                    ->condition('', $item[1])
-            }
+//            foreach ($where as $item) {
+//                $i->_or()
+//                    ->condition('', $item[0])
+//                    ->condition('', $item[1])
+//                    ->where('', '', Criteria::LOGICAL_AND);
+//            }
         }
+
+        return $i;
     }
     #endregion
 
@@ -195,14 +205,35 @@ class ProjectRoleSelector
         ];
     }
 
-    private static function getParentsForObj()
+    /**
+     * Массив IDs родителей объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $objId ID объекта.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    private static function getParentsForObj(int $lvl, int $objId)
     {
-
+        return self::getParentsQueryForObj($lvl, $objId)->find()->getData();
     }
 
-    private static function getParentsForLvl()
+    /**
+     * Массив IDs родителей уровня.
+     * @param int $lvl Уровень доступа.
+     * @param int $parentId ID родительсткого объекта.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws PropelException
+     */
+    private static function getParentsForLvl(int $lvl, int $parentId)
     {
-
+        return self::getParentsQueryForLvl($lvl, $parentId)->find()->getData();
     }
+    #endregion
+
+    #region Forming Functions
+
     #endregion
 }

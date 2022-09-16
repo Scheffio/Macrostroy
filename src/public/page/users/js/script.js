@@ -181,14 +181,10 @@ const rolesControl = {
         })
     },
     saveRolePermissions(type, elem) {
-        elem.getAttribute('watch')
-        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {
-            method: 'PUT'
-        }).then((item) => {
-            return item.json()
-        }).then((json) => {
-            console.log(json);
-        })
+        elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
+        elem.getAttribute('id') == "version-control" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
+        elem.getAttribute('id') == "all" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
+        elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
     },
 }
 

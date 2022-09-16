@@ -289,26 +289,26 @@ class ProjectRole
     public static function getAuthUserCrudByLvl(int &$lvl, int &$parentId): array
     {
         $userId = 17;
+        $result = [];
+        $parents =  self::getParentsForLvl($lvl, $parentId);
+                    self::formingParentsAsCondition($parents);
 
+        foreach ($parents as &$parent) {
+            foreach ($parent as &$item) {
+                $result[] =& $item;
+            }
+        }
 
+        $if = self::formingParentsAsIf($result);
+        $users = self::getUsersCrud($if, $userId);
 
-
-        $parents = self::getParentsForLvl($lvl, $parentId);
-        self::formingParentsAsCondition($parents);
-
-        JsonOutput::success($parents);
-
-//        $parents = self::getParentsForObj($lvl, $objId);
-//        self::formingParentsAsCondition($parents);
-//
-//        $if = self::formingParentsAsIf($parents);
-//        $users = self::getUsersCrud($if, $userId);
-
-//        $parents = self::getParentsForObj($lvl, $objId);
-//        $if = self::formingParentsAsIf($parents);
-//        $users = self::getUsersCrud($if, $userId);
-
-//        JsonOutput::success($users);
+        JsonOutput::success([
+            $parents,
+            $result,
+            $if,
+            $users,
+            self::formingUsers($users)
+        ]);
 
         return [];
     }

@@ -147,6 +147,7 @@ const rolesControl = {
                 option.textContent = roles.name
                 select.appendChild(option)
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
+                console.log(this.currentRoleId);
             })
             
             const selectableUsers = {
@@ -205,7 +206,11 @@ const rolesControl = {
     },
 }
 
-
+document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+    elem.addEventListener('click', () => {
+        rolesControl.saveRolePermissions(role)
+    })
+})
 
 function parsePermissions(id, elem) {
     fetch(`/api/v1/role?role_id=${id}`).then((elem) => {

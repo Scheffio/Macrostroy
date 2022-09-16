@@ -12,8 +12,23 @@ use DB\Map\ObjSubprojectTableMap;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UserRoleTableMap;
 use DB\Map\UsersTableMap;
+use DB\ObjGroupQuery;
+use DB\ObjGroupVersionQuery;
+use DB\ObjHouseQuery;
+use DB\ObjStageMaterialQuery;
+use DB\ObjStageQuery;
+use DB\ObjStageTechnicQuery;
+use DB\ObjStageVersionQuery;
+use DB\ObjStageWorkQuery;
+use DB\ObjSubprojectQuery;
+use DB\UserRoleQuery;
 use DB\UsersQuery as DbUsersQuery;
 use DB\ObjProjectQuery as DbObjProjectQuery;
+use DB\VolMaterialQuery;
+use DB\VolTechnicQuery;
+use DB\VolWorkMaterialQuery;
+use DB\VolWorkQuery;
+use DB\VolWorkTechnicQuery;
 use ext\DB;
 use ext\ProjectRole as ExtProjectRole;
 use DB\Base\ProjectRole as BaseProjectRole;
@@ -275,7 +290,10 @@ class ProjectRole
     {
         $userId = 17;
 
-        $parents = self::getParentsForObj($lvl, $parentId);
+
+
+
+        $parents = self::getParentsForLvl($lvl, $parentId);
 //        self::formingParentsAsCondition($parents);
 
         JsonOutput::success($parents);
@@ -346,7 +364,7 @@ class ProjectRole
     }
 
     /**
-     * Взвращает массив IDs родитеей объекта.
+     * Взвращает массив IDs родителей объекта.
      * @param int $lvl Уровень доступа.
      * @param int $objId ID объекта.
      * @return array
@@ -355,32 +373,64 @@ class ProjectRole
      */
     private static function getParentsForObj(int &$lvl, int &$objId): array
     {
-        $query = ObjProjectQuery::create()
-            ->select([
-                ObjProjectTableMap::COL_ID,
-                ObjSubprojectTableMap::COL_ID,
-                ObjGroupTableMap::COL_ID,
-                ObjHouseTableMap::COL_ID,
-                ObjStageTableMap::COL_ID,
-            ])
-            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                        ->leftJoinObjStage()
-                    ->endUse()
-                ->endUse()
-            ->endUse();
+        $query = self::getParentsQuery();
 
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
             $query->where($colId . '=?', $objId);
         }
 
-        $query = $objId ?
-                (array)$query->findOne() :
-                $query->find()->getData();
+        $query = $query->findOne();
 
         return self::formingParentsResult($lvl, $query);
+    }
+
+    /**
+     * Возвращает массив IDs родителей уровня.
+     * @param int $lvl Уровень доступа.
+     * @param int $parentId ID родителя.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws PropelException
+     */
+    private static function getParentsForLvl(int &$lvl, int &$parentId): array
+    {
+        $query = self::getParentsQuery();
+
+        if ($parentId) {
+            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+            $colId = Objects::getColIdByLvl($preLvl);
+            $query->where($colId . '=?', $parentId);
+        }
+
+        $query = $query->find()->getData();
+
+        return self::formingParentsResult($lvl, $query);
+    }
+
+    /**
+     * Возвращает запрос на вывод IDs родителей объекта(уровня), без условия.
+     * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+     * @throws PropelException
+     */
+    private static function getParentsQuery(): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+    {
+        return  ObjProjectQuery::create()
+                ->select([
+                    ObjProjectTableMap::COL_ID,
+                    ObjSubprojectTableMap::COL_ID,
+                    ObjGroupTableMap::COL_ID,
+                    ObjHouseTableMap::COL_ID,
+                    ObjStageTableMap::COL_ID,
+                ])
+                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                            ->leftJoinObjStage()
+                        ->endUse()
+                    ->endUse()
+                ->endUse();
     }
 
     /**

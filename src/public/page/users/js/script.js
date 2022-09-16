@@ -134,6 +134,7 @@ const rolesControl = {
     volumeCrudExactCheckbox: document.querySelector('.volume-crud-checkboxes > input:nth-child(2)'),
     versionControlCheckbox: document.querySelector('.version-control > input'),
     watchobjectsCheckbox: document.querySelector('.watch > input'),
+    currentRoleId: 0,
     parseRoles() {
         const select = document.querySelector('.modal-body__role > select')        
         fetch(`/api/v1/roles`).then((elem) => {
@@ -151,9 +152,11 @@ const rolesControl = {
             const selectableUsers = {
                 roles: document.querySelectorAll('.roles > .users__user-field'),
                 click(elem) {
+                    this.currentRoleId = elem.children[0].dataset.id
                     this.reset()
                     elem.classList.toggle('selected')
-                    parsePermissions(elem.children[0].dataset.id, elem)
+                    parsePermissions(this.currentRoleId, elem)
+                    rolesControl.saveRolePermissions(this.currentRoleId)
                 },
                 reset() {
                     document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -181,17 +184,18 @@ const rolesControl = {
             return elem.json()
         }).then((json) => {
             console.log(json);
+            document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+                if(elem.tagName === "INPUT") {
+                    elem.addEventListener('click', (item) => {
+                        console.log(elem.getAttribute("class"), item, elem);
+                    })
+                }
+            })
         })
     },
 }
 
-document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-    if(elem.tagName === "INPUT") {
-        elem.addEventListener('click', () => {
-            console.log(1);
-        })
-    }
-})
+
 
 function parsePermissions(id, elem) {
     fetch(`/api/v1/role?role_id=${id}`).then((elem) => {

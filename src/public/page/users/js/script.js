@@ -186,7 +186,10 @@ const rolesControl = {
                 elem.addEventListener('click', () => {
                     let inputId = elem.getAttribute("id");
                     if(inputId === "watch") {
-                        
+                        elem.checked ? view_PERM = true : view_PERM = null
+                    }
+                    if(inputId === "version-control") {
+                        elem.checked ? history_PERM = true : history_PERM
                     }
                 })
             }

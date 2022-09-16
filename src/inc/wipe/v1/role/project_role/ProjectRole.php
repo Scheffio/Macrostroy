@@ -413,6 +413,7 @@ class ProjectRole
 
     /**
      * Возвращает запрос на вывод IDs родителей объекта(уровня), без условия.
+     * @param int $lvl Уровень доступа.
      * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
      * @throws PropelException
      */
@@ -420,11 +421,11 @@ class ProjectRole
     {
         return  ObjProjectQuery::create()
             ->select(['project', 'subproject', 'group', 'house','stage'])
-            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ',0)', 'project')
-            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::SUBPROJECT->value . ',' . ObjSubprojectTableMap::COL_ID . ',0)', 'subproject')
-            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::GROUP->value . ',' . ObjGroupTableMap::COL_ID . ',0)', 'group')
-            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::HOUSE->value . ',' . ObjHouseTableMap::COL_ID . ',0)', 'house')
-            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::STAGE->value . ',' . ObjStageTableMap::COL_ID . ',0)', 'stage')
+            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::PROJECT->value, ObjProjectTableMap::COL_ID), 'project')
+            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::SUBPROJECT->value, ObjSubprojectTableMap::COL_ID), 'subproject')
+            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::GROUP->value, ObjGroupTableMap::COL_ID), 'group')
+            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::HOUSE->value, ObjHouseTableMap::COL_ID), 'house')
+            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::STAGE->value, ObjStageTableMap::COL_ID), 'stage')
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -469,6 +470,18 @@ class ProjectRole
     }
 
     /**
+     * Получить условие для вывода используя уровень для сравнения.
+     * @param int $lvl Уровень доступа, с которым сравнимают.
+     * @param int $lvlObj Уровень доступа, который сравнивают.
+     * @param string $true Наименование атрибута, который выводится при положительном результате сранения.
+     * @return string
+     */
+    private static function getIfByLvl(int $lvl, int $lvlObj, string $true): string
+    {
+        return "IF ($lvl>= $lvlObj, $true, 0)";
+    }
+
+    /**
      * Разрешен ли CRUD объекта для пользователя.
      * @param int|bool|null $crud Разрешение пользователя на объект.
      * @param array $user Данные о пользователе.
@@ -494,8 +507,6 @@ class ProjectRole
     {
         return str_replace('true', $true, $if);
     }
-
-    
 
     /**
      * Корректирование массива данных IDs родителей объекта (уровня).

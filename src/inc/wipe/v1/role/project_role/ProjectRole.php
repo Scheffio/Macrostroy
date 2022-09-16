@@ -307,7 +307,6 @@ class ProjectRole
             $result,
             $if,
             $users,
-            self::formingUsers($users)
         ]);
 
         return [];
@@ -357,7 +356,7 @@ class ProjectRole
     public static function getCrudUsersByObj(int &$lvl, ?int $objId = null, ?int $userId = null): array
     {
         $parents = self::getParentsForObj($lvl, $objId);
-        self::formingParentsAsCondition($parents);
+        $parents = self::formingParentsAsCondition($parents);
 
         $if = self::formingParentsAsIf($parents);
         $users = self::getUsersCrud($if, $userId);
@@ -547,7 +546,7 @@ class ProjectRole
      * @return void
      * @throws InvalidAccessLvlIntException
      */
-    private static function formingParentsAsCondition(array &$parents): void
+    private static function formingParentsAsCondition(array &$parents): array
     {
         if (array_key_exists(ObjProjectTableMap::COL_ID, $parents)) {
             foreach ($parents as $key=>&$value) {
@@ -558,9 +557,11 @@ class ProjectRole
             }
         } else {
             foreach ($parents as &$parent) {
-                self::formingParentsAsCondition($parent);
+                $parent = self::formingParentsAsCondition($parent);
             }
         }
+
+        return $parents;
     }
 
     /**

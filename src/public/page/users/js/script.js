@@ -147,7 +147,6 @@ const rolesControl = {
                 option.textContent = roles.name
                 select.appendChild(option)
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
-                console.log(this.currentRoleId);
             })
             
             const selectableUsers = {
@@ -158,6 +157,7 @@ const rolesControl = {
                     elem.classList.toggle('selected')
                     parsePermissions(this.currentRoleId, elem)
                     rolesControl.saveRolePermissions(this.currentRoleId)
+                    console.log(this.currentRoleId);
                 },
                 reset() {
                     document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
@@ -198,7 +198,7 @@ const rolesControl = {
                 }
             }
         })
-        fetch(`/api/v1/role?role_id=${id}&object_viewer=${view_PERM}&manage_objects=${objects_PERM}&manage_volumes=${volumes_PERM}&manage_history=${history_PERM}&manage_users=${users_PERM}`).then((elem) => {
+        fetch(`/api/v1/role?role_id=${Number(id)}&object_viewer=${view_PERM}&manage_objects=${objects_PERM}&manage_volumes=${volumes_PERM}&manage_history=${history_PERM}&manage_users=${users_PERM}`).then((elem) => {
             return elem.json()
         }).then((json) => {
             console.log(json);
@@ -208,7 +208,7 @@ const rolesControl = {
 
 document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
     elem.addEventListener('click', () => {
-        rolesControl.saveRolePermissions(role)
+        rolesControl.saveRolePermissions(rolesControl.currentRoleId)
     })
 })
 

@@ -181,7 +181,7 @@ const rolesControl = {
         })
     },
     saveRolePermissions(type, elem) {
-        console.log(elem.checked);
+        elem.getAttribute('watch')
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {
             method: 'PUT'
         }).then((item) => {

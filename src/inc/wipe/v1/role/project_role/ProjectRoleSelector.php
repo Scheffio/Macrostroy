@@ -298,7 +298,20 @@ class ProjectRoleSelector
     private static function mergeCrudByUser(array $crud, array $users)
     {
         foreach ($users as $user) {
+            $user['crud'] = [
+                ProjectRoleTableMap::COL_LVL => null,
+                ProjectRoleTableMap::COL_IS_CRUD => null,
+                ProjectRoleTableMap::COL_OBJECT_ID => null,
+            ];
 
+            foreach ($crud as $access) {
+                if ($access[ProjectRoleTableMap::COL_USER_ID] !== $user[UsersTableMap::COL_ID]) continue;
+
+                if ($user['crud'][ProjectRoleTableMap::COL_LVL] < $crud[ProjectRoleTableMap::COL_LVL] &&
+                    $user['crud'][ProjectRoleTableMap::COL_OBJECT_ID] !== $crud[ProjectRoleTableMap::COL_OBJECT_ID]) {
+                    
+                }
+            }
         }
     }
     #endregion

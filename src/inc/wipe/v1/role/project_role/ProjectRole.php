@@ -313,8 +313,8 @@ class ProjectRole
         return [];
     }
 
-//    public static function getUserCrudById(int &$lvl, int &$userId, ?int &$projectId): array
-//    {
+    public static function getUserCrudById(int &$lvl, int &$userId, ?int &$projectId): array
+    {
 //        $user = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
 //
 //        if ($user) {
@@ -323,7 +323,9 @@ class ProjectRole
 //        } else throw new NoUserFoundException();
 //
 //        return $user[0];
-//    }
+
+        return [];
+    }
 
     private static function getCrudByLvl(int $lvl, int $userId, array $parents)
     {
@@ -373,7 +375,7 @@ class ProjectRole
      */
     private static function getParentsForObj(int &$lvl, int &$objId): array
     {
-        $query = self::getParentsQuery();
+        $query = self::getParentsQuery($lvl);
 
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
@@ -396,7 +398,7 @@ class ProjectRole
      */
     private static function getParentsForLvl(int &$lvl, int &$parentId): array
     {
-        $query = self::getParentsQuery();
+        $query = self::getParentsQuery($lvl);
 
         if ($parentId) {
             $preLvl = AccessLvl::getPreLvlIntObj($lvl);
@@ -414,16 +416,17 @@ class ProjectRole
      * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
      * @throws PropelException
      */
-    private static function getParentsQuery(): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+    private static function getParentsQuery(int $lvl): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
     {
         return  ObjProjectQuery::create()
-                ->select([
-                    ObjProjectTableMap::COL_ID,
-                    ObjSubprojectTableMap::COL_ID,
-                    ObjGroupTableMap::COL_ID,
-                    ObjHouseTableMap::COL_ID,
-                    ObjStageTableMap::COL_ID,
-                ])
+//                ->select([
+//                    ObjProjectTableMap::COL_ID,
+//                    ObjSubprojectTableMap::COL_ID,
+//                    ObjGroupTableMap::COL_ID,
+//                    ObjHouseTableMap::COL_ID,
+//                    ObjStageTableMap::COL_ID,
+//                ])
+                ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ',0)', ObjProjectTableMap::COL_ID)
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                         ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)

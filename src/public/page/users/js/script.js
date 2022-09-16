@@ -180,17 +180,16 @@ const rolesControl = {
         })
     },
     saveRolePermissions(id) {
-        fetch(`/api/v1/role?role_id=${id}`).then((elem) => {
-            return elem.json()
-        }).then((json) => {
-            console.log(json);
-            document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-                if(elem.tagName === "INPUT") {
-                    elem.addEventListener('click', (item) => {
-                        console.log(elem.getAttribute("class"), item, elem);
-                    })
-                }
-            })
+        let view_PERM, objectsAll_PERM, objectsExact_PERM, volumesAll_PERM, volumesExact_PERM, history_PERM
+        document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+            if(elem.tagName === "INPUT") {
+                elem.addEventListener('click', () => {
+                    let inputId = elem.getAttribute("id");
+                    if(inputId === "watch") {
+                        
+                    }
+                })
+            }
         })
     },
 }

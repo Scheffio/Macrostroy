@@ -180,20 +180,15 @@ const rolesControl = {
             })
         })
     },
-    saveRolePermissions(type) {
-        type == 'watch' ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((elem) => {
-            return elem.json()
+    saveRolePermissions(type, elem) {
+        elem.checked
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((item) => {
+            return item.json()
         }).then((json) => {
             console.log(json);
-        }) : console.log(1);
+        })
     },
 }
-
-document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-    elem.addEventListener('click', () => {
-        rolesControl.saveRolePermissions(rolesControl.currentRoleId)
-    })
-})
 
 function parsePermissions(id, elem) {
     fetch(`/api/v1/role?role_id=${id}`).then((elem) => {

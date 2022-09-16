@@ -411,7 +411,6 @@ body.fixated {
   display: block;
   background-color: white;
   position: absolute;
-  top: -3px;
   left: 5px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .object-crud-checkboxes input:checked::after,
@@ -467,7 +466,6 @@ body.fixated {
   display: block;
   background-color: white;
   position: absolute;
-  top: -3px;
   left: 5px;
 }
 .wrap .tabs-container .tabs-container__tab-element .content .permissions .permission .permission__checkbox .version-control input:checked::after,

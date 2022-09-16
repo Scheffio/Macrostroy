@@ -50,7 +50,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="admin">
-                                    <input type="radio" class="uncheckable" name="access-radio" id="all">
+                                    <input type="checkbox" onclick="rolesControl.saveRolePermissions('watch', this)" class="uncheckable" name="access-radio" id="all">
                                     <label for="all">Администратор</label>
                                 </div>
                             </div>
@@ -97,7 +97,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="version-control">
-                                    <input type="radio" class="uncheckable" name="version-control-radio" id="version-control">
+                                    <input type="checkbox" onclick="rolesControl.saveRolePermissions('watch', this)" class="uncheckable" name="version-control-radio" id="version-control">
                                     <label for="version-control">Управление версиями</label>
                                 </div>
                             </div>

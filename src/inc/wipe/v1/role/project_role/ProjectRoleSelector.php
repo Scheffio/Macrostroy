@@ -44,16 +44,16 @@ class ProjectRoleSelector
 {
     public static function getUsersCrudForObj(int &$lvl, int &$objId, ?int $userId = null)
     {
-        $users = self::getUsersData();
+        $users = self::getUsersData($userId);
         $parents = self::getParentsForObj($lvl, $objId);
-        $condition = self::formingConditionByParents($parents);
-
-//        $accesses = self::getProjectRolesQuery()
+        $conditions = self::formingConditionByParents($parents);
+        $accesses = self::getProjectRoles($conditions, $userId);
 
         JsonOutput::success([
             '$users' => $users,
             '$parents' => $parents,
-            '$condition' => $condition,
+            '$conditions' => $conditions,
+            '$accesses' => $accesses,
         ]);
     }
 
@@ -171,7 +171,7 @@ class ProjectRoleSelector
      * @return ProjectRoleQuery|Criteria
      * @throws PropelException
      */
-    private static function getProjectRolesQuery(array &$where, ?int $userId = null): ProjectRoleQuery|Criteria
+    private static function getProjectRolesQuery(array $conditions, ?int $userId = null): ProjectRoleQuery|Criteria
     {
         $i = ProjectRoleQuery::create()
             ->select([
@@ -184,15 +184,13 @@ class ProjectRoleSelector
             $i->filterByUserId($userId);
         }
 
-        if ($where) {
-            $where = [];
-
-//            foreach ($where as $item) {
-//                $i->_or()
-//                    ->condition('', $item[0])
-//                    ->condition('', $item[1])
-//                    ->where('', '', Criteria::LOGICAL_AND);
-//            }
+        if ($conditions) {
+            foreach ($conditions as $key=>$value) {
+                $i->_or()
+                    ->condition("{$key}1", "$key=?", $value[0])
+                    ->condition("{$key}2", "$key=?", $value[1])
+                    ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
+            }
         }
 
         return $i;
@@ -257,9 +255,9 @@ class ProjectRoleSelector
         return self::getParentsQueryForLvl($lvl, $parentId)->find()->getData();
     }
 
-    private static function getProjectRoles()
+    private static function getProjectRoles(array &$conditions, ?int $userId = null)
     {
-//        return self::getProjectRolesQuery()
+        return self::getProjectRolesQuery($conditions, $userId)->find()->getData();
     }
     #endregion
 
@@ -270,11 +268,11 @@ class ProjectRoleSelector
      * @return array
      * @throws InvalidAccessLvlIntException
      */
-    private static function formingConditionByParents(array $parents)
+    private static function formingConditionByParents(array &$parents): array
     {
         $i = [];
 
-        foreach ($parents as $key=>$value) {
+        foreach ($parents as $key=>&$value) {
             $i[$key] = [
                 ProjectRoleTableMap::COL_LVL => AccessLvl::getLvlIntObjByColId($key),
                 ProjectRoleTableMap::COL_OBJECT_ID => $value,

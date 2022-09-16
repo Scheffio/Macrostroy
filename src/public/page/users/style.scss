@@ -330,7 +330,6 @@
                                         display: block;
                                         background-color: white;
                                         position: absolute;
-                                        top: -3px;
                                         left: 5px;
                                     }
                                     &:checked {
@@ -358,7 +357,7 @@
                                 flex-direction: row;
                                 gap: 15px;
                                 input {
-                                    @include Checkbox();
+                                    @include Checkbox;
                                 }
                             }
                         }

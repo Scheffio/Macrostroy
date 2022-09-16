@@ -121,8 +121,8 @@ emailInput.addEventListener('blur', () => {
 })
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
-    elem.addEventListener('dbl', () => {
-        elem.checked ? elem.checked = false : elem.checked = true
+    elem.addEventListener('dblclick', () => {
+        elem.checked = false
     })
 })
 
@@ -180,9 +180,8 @@ const rolesControl = {
             })
         })
     },
-    saveRolePermissions(elem) {
-        console.log(elem);
-        elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((elem) => {
+    saveRolePermissions(type) {
+        type == 'watch' ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((elem) => {
             return elem.json()
         }).then((json) => {
             console.log(json);

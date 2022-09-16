@@ -102,6 +102,7 @@ class ProjectRoleSelector
     {
         $i = ObjProjectQuery::create()
             ->distinct()
+            ->clearSelectColumns()
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -110,11 +111,11 @@ class ProjectRoleSelector
                 ->endUse()
             ->endUse();
 
-        if ($lvl >= eLvlObjInt::PROJECT->value) $i->addSelectColumn(ObjProjectTableMap::COL_ID);
-        if ($lvl >= eLvlObjInt::SUBPROJECT->value) $i->addSelectColumn(ObjSubprojectTableMap::COL_ID);
-        if ($lvl >= eLvlObjInt::GROUP->value) $i->addSelectColumn(ObjGroupTableMap::COL_ID);
-        if ($lvl >= eLvlObjInt::HOUSE->value) $i->addSelectColumn(ObjHouseTableMap::COL_ID);
-        if ($lvl >= eLvlObjInt::STAGE->value) $i->addSelectColumn(ObjStageTableMap::COL_ID);
+        if ($lvl >= eLvlObjInt::PROJECT->value) $i->addSelfSelectColumnsFromTableMapClass(ObjProjectTableMap::class);
+//        if ($lvl >= eLvlObjInt::SUBPROJECT->value) $i->addSelectColumn(ObjSubprojectTableMap::COL_ID);
+//        if ($lvl >= eLvlObjInt::GROUP->value) $i->addSelectColumn(ObjGroupTableMap::COL_ID);
+//        if ($lvl >= eLvlObjInt::HOUSE->value) $i->addSelectColumn(ObjHouseTableMap::COL_ID);
+//        if ($lvl >= eLvlObjInt::STAGE->value) $i->addSelectColumn(ObjStageTableMap::COL_ID);
 
         return $i;
     }
@@ -182,6 +183,7 @@ class ProjectRoleSelector
         }
 
         if ($where) {
+            $where = [];
 //            foreach ($where as $item) {
 //                $i->_or()
 //                    ->condition('', $item[0])
@@ -235,7 +237,7 @@ class ProjectRoleSelector
      */
     private static function getParentsForObj(int $lvl, int $objId)
     {
-        return self::getParentsQueryForObj($lvl, $objId)->find()->getData();
+        return (array)self::getParentsQueryForObj($lvl, $objId)->findOne();
     }
 
     /**

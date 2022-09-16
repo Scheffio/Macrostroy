@@ -183,7 +183,7 @@ const rolesControl = {
     saveRolePermissions(elem) {
         elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
         elem.getAttribute('id') == "version-control" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&manage_history=${elem.checked ? true : false}`, {method: 'PUT'}) : null
-        elem.getAttribute('id') == "all" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${true}&manage_objects=${true}&manage_volumes=${true}&manage_his`, {method: 'PUT'}) : null
+        elem.getAttribute('id') == "all" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${true}&manage_objects=${true}&manage_volumes=${true}&manage_history=${true}&manage_users=${true}`, {method: 'PUT'}) : null
     },
 }
 

@@ -28,6 +28,7 @@ use DB\VolTechnicQuery;
 use DB\VolWorkMaterialQuery;
 use DB\VolWorkQuery;
 use DB\VolWorkTechnicQuery;
+use Illuminate\Support\Js;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
@@ -177,20 +178,21 @@ class ProjectRoleSelector
             ->select([
                 ProjectRoleTableMap::COL_LVL,
                 ProjectRoleTableMap::COL_IS_CRUD,
-                ProjectRoleTableMap::COL_OBJECT_ID
+                ProjectRoleTableMap::COL_OBJECT_ID,
+                ProjectRoleTableMap::COL_USER_ID,
             ]);
-
-        if ($userId) {
-            $i->filterByUserId($userId);
-        }
 
         if ($conditions) {
             foreach ($conditions as $key=>$value) {
                 $i->_or()
-                    ->condition("{$key}1", "$key=?", $value[0])
-                    ->condition("{$key}2", "$key=?", $value[1])
+                    ->condition("{$key}1", ProjectRoleTableMap::COL_LVL . '=?', $value[ProjectRoleTableMap::COL_LVL])
+                    ->condition("{$key}2", ProjectRoleTableMap::COL_OBJECT_ID . '=?', $value[ProjectRoleTableMap::COL_OBJECT_ID])
                     ->where(["{$key}1", "{$key}2"], Criteria::LOGICAL_AND);
             }
+        }
+
+        if ($userId) {
+            $i->filterByUserId($userId);
         }
 
         return $i;
@@ -255,10 +257,21 @@ class ProjectRoleSelector
         return self::getParentsQueryForLvl($lvl, $parentId)->find()->getData();
     }
 
+    /**
+     * Массив роле проекта.
+     * @param array $conditions Массив условий.
+     * @param int|null $userId ID пользователя.
+     * @return array
+     * @throws PropelException
+     */
     private static function getProjectRoles(array &$conditions, ?int $userId = null)
     {
         return self::getProjectRolesQuery($conditions, $userId)->find()->getData();
     }
+    #endregion
+
+    #regions Access Functions
+
     #endregion
 
     #region Forming Functions
@@ -280,6 +293,13 @@ class ProjectRoleSelector
         }
 
         return $i;
+    }
+
+    private static function mergeCrudByUser(array $crud, array $users)
+    {
+        foreach ($users as $user) {
+
+        }
     }
     #endregion
 }

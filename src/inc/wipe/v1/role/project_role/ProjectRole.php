@@ -294,7 +294,7 @@ class ProjectRole
 
 
         $parents = self::getParentsForLvl($lvl, $parentId);
-//        self::formingParentsAsCondition($parents);
+        self::formingParentsAsCondition($parents);
 
         JsonOutput::success($parents);
 
@@ -549,11 +549,17 @@ class ProjectRole
      */
     private static function formingParentsAsCondition(array &$parents): void
     {
-        foreach ($parents as $key=>&$value) {
-            $lvl = AccessLvl::getLvlIntObjByColId($key);
-            $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
-            $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
-            $value = [$wLvl, $wObjId];
+        if (array_key_exists(ObjProjectTableMap::COL_ID, $parents)) {
+            foreach ($parents as $key=>&$value) {
+                $lvl = AccessLvl::getLvlIntObjByColId($key);
+                $wLvl = ProjectRoleTableMap::COL_LVL . '=' . $lvl;
+                $wObjId = ProjectRoleTableMap::COL_OBJECT_ID . '=' . $value;
+                $value = [$wLvl, $wObjId];
+            }
+        } else {
+            foreach ($parents as &$parent) {
+                self::formingParentsAsCondition($parent);
+            }
         }
     }
 

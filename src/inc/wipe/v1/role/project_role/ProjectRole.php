@@ -419,21 +419,19 @@ class ProjectRole
     private static function getParentsQuery(int $lvl): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
     {
         return  ObjProjectQuery::create()
-//                ->select([
-//                    ObjProjectTableMap::COL_ID,
-//                    ObjSubprojectTableMap::COL_ID,
-//                    ObjGroupTableMap::COL_ID,
-//                    ObjHouseTableMap::COL_ID,
-//                    ObjStageTableMap::COL_ID,
-//                ])
-                ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ',0)', ObjProjectTableMap::COL_ID)
-                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
-                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
-                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
-                            ->leftJoinObjStage()
-                        ->endUse()
+            ->select(['project', 'subproject', 'group', 'house','stage'])
+            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ',0)', 'project')
+            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::SUBPROJECT->value . ',' . ObjSubprojectTableMap::COL_ID . ',0)', 'subproject')
+            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::GROUP->value . ',' . ObjGroupTableMap::COL_ID . ',0)', 'group')
+            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::HOUSE->value . ',' . ObjHouseTableMap::COL_ID . ',0)', 'house')
+            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::STAGE->value . ',' . ObjStageTableMap::COL_ID . ',0)', 'stage')
+            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                        ->leftJoinObjStage()
                     ->endUse()
-                ->endUse();
+                ->endUse()
+            ->endUse();
     }
 
     /**
@@ -496,6 +494,8 @@ class ProjectRole
     {
         return str_replace('true', $true, $if);
     }
+
+    
 
     /**
      * Корректирование массива данных IDs родителей объекта (уровня).

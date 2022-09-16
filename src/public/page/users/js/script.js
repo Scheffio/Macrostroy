@@ -186,13 +186,13 @@ const rolesControl = {
                     let inputId = elem.getAttribute("id");
                     console.log(elem);
                     console.log(inputId)
-                    if(inputId === "watch") {
+                    if(inputId == "watch") {
                         elem.checked ? view_PERM = true : view_PERM = false
                         console.log(elem.checked, );
-                    }else if(inputId === "version-control") {
+                    }else if(inputId == "version-control") {
                         elem.checked ? history_PERM = true : history_PERM = false
                         console.log(elem.checked);
-                    }else if(inputId === "all") {
+                    }else if(inputId == "all") {
                         if(elem.checked) {
                             view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM = true 
                             console.log(elem.checked);

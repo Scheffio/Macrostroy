@@ -46,12 +46,14 @@ class ProjectRoleSelector
     {
         $users = self::getUsersData();
         $parents = self::getParentsForObj($lvl, $objId);
+        $condition = self::formingConditionByParents($parents);
 
 //        $accesses = self::getProjectRolesQuery()
 
         JsonOutput::success([
             '$users' => $users,
             '$parents' => $parents,
+            '$condition' => $condition,
         ]);
     }
 
@@ -184,6 +186,7 @@ class ProjectRoleSelector
 
         if ($where) {
             $where = [];
+
 //            foreach ($where as $item) {
 //                $i->_or()
 //                    ->condition('', $item[0])
@@ -261,13 +264,21 @@ class ProjectRoleSelector
     #endregion
 
     #region Forming Functions
-    private static function formingConditionByParents(array &$parents)
+    /**
+     * Формирование данных условий для вывода ролей проекта по IDs родителей.
+     * @param array $parents Массив IDs родителей.
+     * @return array
+     * @throws InvalidAccessLvlIntException
+     */
+    private static function formingConditionByParents(array $parents)
     {
         $i = [];
 
         foreach ($parents as $key=>$value) {
-            $i[][ProjectRoleTableMap::COL_LVL] = AccessLvl::getLvlIntObjByColId($key);
-            $i[][ProjectRoleTableMap::COL_LVL]
+            $i[$key] = [
+                ProjectRoleTableMap::COL_LVL => AccessLvl::getLvlIntObjByColId($key),
+                ProjectRoleTableMap::COL_OBJECT_ID => $value,
+            ];
         }
 
         return $i;

@@ -4,6 +4,7 @@
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -13,7 +14,7 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    $user->applyByUserAuth()->isAccessManageUsersOrThrow();
+    AuthUserRole::isAccessManageUsers();
 
     $role_id = $request->getQueryOrThrow('role_id');
     $role_name = $request->getQuery('role_name');
@@ -22,16 +23,6 @@ try {
     $manage_volumes = $request->getQuery('manage_volumes');
     $manage_history = $request->getQuery('manage_history');
     $manage_users = $request->getQuery('manage_users');
-
-    JsonOutput::success([
-        '$role_id' => $role_id,
-        '$role_name' => $role_name,
-        '$object_viewer' => $object_viewer,
-        '$manage_objects' => $manage_objects,
-        '$manage_volumes' => $manage_volumes,
-        '$manage_history' => $manage_history,
-        '$manage_users' => $manage_users,
-    ]);
 
     $user
         ->setRoleId($role_id)

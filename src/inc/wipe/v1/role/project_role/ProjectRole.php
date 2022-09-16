@@ -407,25 +407,31 @@ class ProjectRole
         }
 
         $query = $query->find()->getData();
+        JsonOutput::success($query);
 
         return self::formingParentsResult($lvl, $query);
     }
 
     /**
      * Возвращает запрос на вывод IDs родителей объекта(уровня), без условия.
-     * @param int $lvl Уровень доступа.
      * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
      * @throws PropelException
      */
     private static function getParentsQuery(int $lvl): ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|DbObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|\DB\ProjectRoleQuery|UserRoleQuery|DbUsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
     {
         return  ObjProjectQuery::create()
-            ->select(['project', 'subproject', 'group', 'house','stage'])
+            ->select(['project', 'subproject'])
+//            ->select(['project', 'subproject', 'group', 'house','stage'])
             ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::PROJECT->value, ObjProjectTableMap::COL_ID), 'project')
             ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::SUBPROJECT->value, ObjSubprojectTableMap::COL_ID), 'subproject')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::GROUP->value, ObjGroupTableMap::COL_ID), 'group')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::HOUSE->value, ObjHouseTableMap::COL_ID), 'house')
-            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::STAGE->value, ObjStageTableMap::COL_ID), 'stage')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::GROUP->value, ObjGroupTableMap::COL_ID), 'group')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::HOUSE->value, ObjHouseTableMap::COL_ID), 'house')
+//            ->withColumn(self::getIfByLvl($lvl, eLvlObjInt::STAGE->value, ObjStageTableMap::COL_ID), 'stage')
+//            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::PROJECT->value . ',' . ObjProjectTableMap::COL_ID . ',0)', 'project')
+//            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::SUBPROJECT->value . ',' . ObjSubprojectTableMap::COL_ID . ',0)', 'subproject')
+//            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::GROUP->value . ',' . ObjGroupTableMap::COL_ID . ',0)', 'group')
+//            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::HOUSE->value . ',' . ObjHouseTableMap::COL_ID . ',0)', 'house')
+//            ->withColumn( 'IF(' . $lvl . '>=' . eLvlObjInt::STAGE->value . ',' . ObjStageTableMap::COL_ID . ',0)', 'stage')
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -478,7 +484,7 @@ class ProjectRole
      */
     private static function getIfByLvl(int $lvl, int $lvlObj, string $true): string
     {
-        return "IF ($lvl>= $lvlObj, $true, 0)";
+        return "IF ($lvl >= $lvlObj, $true, null)";
     }
 
     /**

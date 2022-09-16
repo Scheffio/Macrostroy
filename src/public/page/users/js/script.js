@@ -180,20 +180,26 @@ const rolesControl = {
         })
     },
     saveRolePermissions(id) {
-        let view_PERM, objectsAll_PERM, objectsExact_PERM, volumesAll_PERM, volumesExact_PERM, history_PERM
+        let view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM
         document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
             if(elem.tagName === "INPUT") {
                 elem.addEventListener('click', () => {
                     let inputId = elem.getAttribute("id");
                     if(inputId === "watch") {
-                        elem.checked ? view_PERM = true : view_PERM = null
-                    }
-                    if(inputId === "version-control") {
-                        elem.checked ? history_PERM = true : history_PERM
+                        elem.checked ? view_PERM = true : view_PERM = false
+                    }else if(inputId === "version-control") {
+                        elem.checked ? history_PERM = true : history_PERM = false
+                    }else if(inputId === "all") {
+                        if(elem.checked) {
+                            view_PERM, objectsAll_PERM, objectsExact_PERM, volumesAll_PERM, volumesExact_PERM, history_PERM, users_PERM = true 
+                        }else {
+                            view_PERM, objectsAll_PERM, objectsExact_PERM, volumesAll_PERM, volumesExact_PERM, history_PERM, users_PERM = false
+                        }
                     }
                 })
             }
         })
+        fetch(`/api/v1/role?role_id=${id}&object_viewer=${view_PERM}&manage_history=${ob}&manage_history=${history_PERM}&manage_users=${users_PERM}`)
     },
 }
 

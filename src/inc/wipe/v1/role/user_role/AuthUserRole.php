@@ -15,6 +15,9 @@ class AuthUserRole {
     /** @var int|null ID пользователя. */
     private static ?int $userId = null;
 
+    /** @var string|null Имя пользователя. */
+    private static ?string $userName = null;
+
     /** @var UserRole|null Объект роли. */
     private static ?UserRole $userRoleObj = null;
 
@@ -38,6 +41,7 @@ class AuthUserRole {
     public static function applyDefault(): void
     {
         self::$userId = Auth::getUser()->id();
+        self::$userName = Auth::getUser()->getUsername();
         self::$userRoleObj = UserRole::getByUserId(self::$userId);
     }
     #endregion
@@ -53,6 +57,18 @@ class AuthUserRole {
         self::isNoEmptyRoleObjOrApplyDefault();
 
         return self::$userId;
+    }
+
+    /**
+     * @return string|null Имя пользователя.
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     */
+    public static function getUserName(): ?string
+    {
+        self::isNoEmptyRoleObjOrApplyDefault();
+
+        return self::$userName;
     }
 
     /**

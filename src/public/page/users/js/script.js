@@ -181,8 +181,10 @@ const rolesControl = {
         })
     },
     saveRolePermissions(type, elem) {
-        elem.checked
-        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((item) => {
+        console.log(elem.checked);
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${true}`, {
+            method: 'PUT'
+        }).then((item) => {
             return item.json()
         }).then((json) => {
             console.log(json);

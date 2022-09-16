@@ -47,6 +47,8 @@ class ProjectRoleSelector
         $users = self::getUsersData();
         $parents = self::getParentsForObj($lvl, $objId);
 
+//        $accesses = self::getProjectRolesQuery()
+
         JsonOutput::success([
             '$users' => $users,
             '$parents' => $parents,
@@ -251,9 +253,24 @@ class ProjectRoleSelector
     {
         return self::getParentsQueryForLvl($lvl, $parentId)->find()->getData();
     }
+
+    private static function getProjectRoles()
+    {
+//        return self::getProjectRolesQuery()
+    }
     #endregion
 
     #region Forming Functions
+    private static function formingConditionByParents(array &$parents)
+    {
+        $i = [];
 
+        foreach ($parents as $key=>$value) {
+            $i[][ProjectRoleTableMap::COL_LVL] = AccessLvl::getLvlIntObjByColId($key);
+            $i[][ProjectRoleTableMap::COL_LVL]
+        }
+
+        return $i;
+    }
     #endregion
 }

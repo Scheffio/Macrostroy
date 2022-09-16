@@ -23,6 +23,16 @@ try {
     $manage_history = $request->getQuery('manage_history');
     $manage_users = $request->getQuery('manage_users');
 
+    JsonOutput::success([
+        '$role_id' => $role_id,
+        '$role_name' => $role_name,
+        '$object_viewer' => $object_viewer,
+        '$manage_objects' => $manage_objects,
+        '$manage_volumes' => $manage_volumes,
+        '$manage_history' => $manage_history,
+        '$manage_users' => $manage_users,
+    ]);
+
     $user
         ->setRoleId($role_id)
         ->setRoleName($role_name)

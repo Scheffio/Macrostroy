@@ -40,18 +40,25 @@ use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
-class ProjectRoleSelector extends ProjectRole
+class ProjectRoleSelector
 {
-    public static function getUsersCrudForObj()
+    public static function getUsersCrudForObj(int &$lvl, int &$objId, ?int $userId = null)
     {
+        $users = self::getUsersData();
+        $parents = self::getParentsForObj($lvl, $objId);
+
+        JsonOutput::success([
+            '$users' => $users,
+            '$parents' => $parents,
+        ]);
     }
 
-    public static function getAuthUserCrudForObj()
+    public static function getAuthUserCrudForObj(int &$lvl, int &$objId)
     {
 
     }
 
-    public static function getAuthUserCrudForLvl()
+    public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId)
     {
 
     }
@@ -75,7 +82,8 @@ class ProjectRoleSelector extends ProjectRole
                 UserRoleTableMap::COL_MANAGE_VOLUMES,
                 UserRoleTableMap::COL_MANAGE_HISTORY,
             ])
-            ->leftJoinProjectRole();
+            ->leftJoinUserRole()
+            ->orderByUsername();
 
         if ($userId) {
             $i->filterById($userId);
@@ -92,15 +100,8 @@ class ProjectRoleSelector extends ProjectRole
      */
     private static function getParentsQuery(int $lvl): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        return ObjProjectQuery::create()
+        $i = ObjProjectQuery::create()
             ->distinct()
-            ->select([
-                $lvl >= eLvlObjInt::PROJECT->value ? ObjProjectTableMap::COL_ID : null,
-                $lvl >= eLvlObjInt::SUBPROJECT->value ? ObjSubprojectTableMap::COL_ID : null,
-                $lvl >= eLvlObjInt::GROUP->value ? ObjGroupTableMap::COL_ID : null,
-                $lvl >= eLvlObjInt::HOUSE->value ? ObjHouseTableMap::COL_ID : null,
-                $lvl >= eLvlObjInt::STAGE->value ? ObjStageTableMap::COL_ID : null,
-            ])
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -108,6 +109,14 @@ class ProjectRoleSelector extends ProjectRole
                     ->endUse()
                 ->endUse()
             ->endUse();
+
+        if ($lvl >= eLvlObjInt::PROJECT->value) $i->addSelectColumn(ObjProjectTableMap::COL_ID);
+        if ($lvl >= eLvlObjInt::SUBPROJECT->value) $i->addSelectColumn(ObjSubprojectTableMap::COL_ID);
+        if ($lvl >= eLvlObjInt::GROUP->value) $i->addSelectColumn(ObjGroupTableMap::COL_ID);
+        if ($lvl >= eLvlObjInt::HOUSE->value) $i->addSelectColumn(ObjHouseTableMap::COL_ID);
+        if ($lvl >= eLvlObjInt::STAGE->value) $i->addSelectColumn(ObjStageTableMap::COL_ID);
+
+        return $i;
     }
 
     /**
@@ -187,7 +196,7 @@ class ProjectRoleSelector extends ProjectRole
 
     #region Getter Function
     /**
-     * Возвращает данные об авторизированном пользователе.
+     * Массив данных об авторизированном пользователе.
      * @return array
      * @throws NoRoleFoundException
      * @throws NoUserFoundException
@@ -203,6 +212,17 @@ class ProjectRoleSelector extends ProjectRole
             UserRoleTableMap::COL_MANAGE_VOLUMES => AuthUserRole::isAccessManageVolumes(),
             UserRoleTableMap::COL_MANAGE_HISTORY => AuthUserRole::isAccessManageHistory(),
         ];
+    }
+
+    /**
+     * Массив данных о пользователях.
+     * @param int|null $userId ID пользователя.
+     * @return array
+     * @throws PropelException
+     */
+    private static function getUsersData(?int $userId = null): array
+    {
+        return self::getUsersQuery($userId)->find()->getData();
     }
 
     /**

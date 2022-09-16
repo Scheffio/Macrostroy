@@ -121,8 +121,8 @@ emailInput.addEventListener('blur', () => {
 })
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
-    elem.addEventListener('dblclick', () => {
-        elem.checked = false
+    elem.addEventListener('dbl', () => {
+        elem.checked ? elem.checked = false : elem.checked = true
     })
 })
 
@@ -157,7 +157,6 @@ const rolesControl = {
                     this.reset()
                     elem.classList.toggle('selected')
                     parsePermissions(this.currentRoleId, elem)
-                    rolesControl.saveRolePermissions(this.currentRoleId)
                     url.searchParams.set('q', this.currentRoleId)
                 },
                 reset() {
@@ -172,7 +171,7 @@ const rolesControl = {
                 }
             }
             
-            selectableUsers.click(document.querySelector('.roles').children[1])
+            selectableUsers.click(document.querySelector('.roles').children[0])
             
             document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
                 elem.addEventListener('click', () => {
@@ -181,29 +180,13 @@ const rolesControl = {
             })
         })
     },
-    saveRolePermissions(id) {
-        let view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM
-        document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-            if(elem.tagName === "INPUT") {
-                    let inputId = elem.getAttribute("id");
-                    if(inputId == "watch") {
-                        elem.checked ? view_PERM = true : view_PERM = false
-                    }else if(inputId == "version-control") {
-                        elem.checked ? history_PERM = true : history_PERM = false
-                    }else if(inputId == "all") {
-                        if(elem.checked) {
-                            view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM = true 
-                        }else {
-                            view_PERM, objects_PERM, volumes_PERM, history_PERM, users_PERM = false
-                        }
-                }
-            }
-        })
-        fetch(`/api/v1/role?role_id=${1}&object_viewer=${view_PERM}&manage_objects=${null}&manage_volumes=${null}&manage_history=${history_PERM}&manage_users=${users_PERM}`).then((elem) => {
+    saveRolePermissions(elem) {
+        console.log(elem);
+        elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`).then((elem) => {
             return elem.json()
         }).then((json) => {
             console.log(json);
-        })
+        }) : console.log(1);
     },
 }
 

@@ -107,7 +107,7 @@
                         <div class="permission">
                             <div class="permission__checkbox">
                                 <div class="watch">
-                                    <input type="radio" class="uncheckable" name="watch-radio" id="watch">
+                                    <input type="radio" onclick="rolesControl.saveRolePermissions(this)" class="uncheckable" name="watch-radio" id="watch">
                                     <label for="watch">Просмотр объектов</label>
                                 </div>
                             </div>

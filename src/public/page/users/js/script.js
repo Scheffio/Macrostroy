@@ -180,10 +180,18 @@ const rolesControl = {
         fetch(`/api/v1/role?role_id=${id}`).then((elem) => {
             return elem.json()
         }).then((json) => {
-            
+            console.log(json);
         })
     },
 }
+
+document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
+    if(elem.tagName === "INPUT") {
+        elem.addEventListener('click', () => {
+            console.log(1);
+        })
+    }
+})
 
 function parsePermissions(id, elem) {
     fetch(`/api/v1/role?role_id=${id}`).then((elem) => {

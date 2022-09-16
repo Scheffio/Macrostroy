@@ -353,7 +353,7 @@ class ProjectRole
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    public static function getParentsForObj(int &$lvl, int &$objId): array
+    private static function getParentsForObj(int &$lvl, int &$objId): array
     {
         $query = ObjProjectQuery::create()
             ->select([
@@ -374,12 +374,13 @@ class ProjectRole
         if ($objId) {
             $colId = Objects::getColIdByLvl($lvl);
             $query->where($colId . '=?', $objId);
-            $query = $query->findOne();
-
-            return is_array($query) ? array_slice($query, 0, $lvl) : [];
         }
 
-        return $query->find()->getData();
+        $query = $objId ?
+                (array)$query->findOne() :
+                $query->find()->getData();
+
+        return self::formingParentsResult($lvl, $query);
     }
 
     /**
@@ -389,7 +390,7 @@ class ProjectRole
      * @return array
      * @throws PropelException
      */
-    public static function getUsersCrud(string &$if, ?int $userId = null): array
+    private static function getUsersCrud(string &$if, ?int $userId = null): array
     {
         $query = UsersQuery::create()
             ->distinct()
@@ -438,9 +439,30 @@ class ProjectRole
      * @param string $true Значение, которое выводится при true условия.
      * @return string
      */
-    public static function replaceValueInIf(string $if, string $true): string
+    private static function replaceValueInIf(string $if, string $true): string
     {
         return str_replace('true', $true, $if);
+    }
+
+    /**
+     * Корректирование массива данных IDs родителей объекта (уровня).
+     * @param int $lvl Уровень доступа.
+     * @param array|null $result Результат запроса.
+     * @return array
+     */
+    private static function formingParentsResult(int &$lvl, null|array &$result): array
+    {
+        if ($result) {
+            if (array_key_exists(ObjProjectTableMap::COL_ID, $result)) {
+                return array_slice($result, 0, $lvl);
+            } else {
+                foreach ($result as &$item) {
+                    $item = self::formingParentsResult($lvl, $item);
+                }
+            }
+        }
+
+        return $result ?? [];
     }
 
     /**
@@ -449,7 +471,7 @@ class ProjectRole
      * @return void
      * @throws InvalidAccessLvlIntException
      */
-    public static function formingParentsAsCondition(array &$parents): void
+    private static function formingParentsAsCondition(array &$parents): void
     {
         foreach ($parents as $key=>&$value) {
             $lvl = AccessLvl::getLvlIntObjByColId($key);
@@ -464,7 +486,7 @@ class ProjectRole
      * @param array $parents Массив IDs родителей объекта.
      * @return string
      */
-    public static function formingParentsAsIf(array $parents): string
+    private static function formingParentsAsIf(array $parents): string
     {
         foreach ($parents as &$parent) {
             $parent = "($parent[0] AND $parent[1])";
@@ -478,7 +500,7 @@ class ProjectRole
      * @param array $users Массив пользователей.
      * @return array
      */
-    public static function formingUsers(array &$users): array
+    private static function formingUsers(array &$users): array
     {
         $result = [];
 

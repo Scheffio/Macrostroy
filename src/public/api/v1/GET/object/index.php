@@ -18,7 +18,7 @@ try {
     $limit = $request->getQuery('limit') ?? 10;
     $limitFrom = $request->getQuery('limit_from') ?? 0;
 
-    ProjectRoleSelector::getUsersCrudForObj($lvl, $parentId);
+//    ProjectRoleSelector::getUsersCrudForObj($lvl, $parentId);
 
 
 //    JsonOutput::success(

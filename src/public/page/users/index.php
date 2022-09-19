@@ -194,7 +194,9 @@
                 <div class="modal-header">
                     <p>Удаление роли</p>
                 </div>
-                <div class="modal-body">Вы действительно хотитет удалить эту роль? Внимание! Отменить это действие не возможно!</div>
+                <div class="modal-body">
+                    <p>Вы действительно хотитет удалить эту роль? Внимание! Отменить это действие не возможно!</p>
+                </div>
                 <div class="modal-footer">
                     <button>Удалить</button>
                     <button>Отмена</button>

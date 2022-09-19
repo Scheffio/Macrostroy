@@ -869,15 +869,20 @@
             display: none;
             &.opened {
                 display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
             .modal-header{
-
+                @include MainTitle;
             }
             .modal-body {
-
+                @include TabAnchorName;
             }
             .modal-footer {
-                
+                button {
+                    @include Button($EstiminColor4, white, 140px, 40px)
+                }
             }
         }
         

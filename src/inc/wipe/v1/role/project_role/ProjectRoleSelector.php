@@ -56,6 +56,11 @@ class ProjectRoleSelector
     private const ARRAY_KEY_IS_CRUD = 'isCrud';
     private const ARRAY_KEY_IS_ADMIN = 'isAdmin';
 
+    private static ?int $lvl = null;
+    private static ?int $objId = null;
+    private static ?int $limit = null;
+    private static ?int $limitFrom = null;
+
     /**
      * Массив разрешений пользователей к объекту.
      * Вывод для вкладки "Управление доступом".
@@ -67,12 +72,14 @@ class ProjectRoleSelector
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    public static function getUsersCrudForObj(int &$lvl, int &$objId, ?int $userId = null)
+    public static function getUsersCrudForObj(int &$lvl, int &$objId)
     {
-        $users = self::getUsersData($userId);
-        $parents = self::getParentsForObj($lvl, $objId);
+        self::applyForObj($lvl, $objId);
+
+        $users = self::getUsersData();
+        $parents = self::getParentsForObj();
         $conditions = self::formingConditionByParents($parents);
-        $accesses = self::getProjectRoles($conditions, $userId);
+        $accesses = self::getProjectRoles($conditions);
 
         self::mergeCrudByUser($accesses, $users);
         self::formingUsersForObj($users);
@@ -82,12 +89,14 @@ class ProjectRoleSelector
 
     public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom)
     {
+        self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
+
 //        $user = self::getAuthUserData()[0];
         $user = self::getUsersData(17)[0];
-        $parents = self::getParentsForLvl($lvl, $parentId);
+        $parents = self::getParentsForLvl();
         $conditions = self::formingConditionByParents($parents, false);
         $accesses = self::getProjectRoles($conditions, 17);
-        $objs = self::getObjsForLvl($parentId, $lvl, $limit, $limitFrom, $user[UserRoleTableMap::COL_MANAGE_USERS]);
+        $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         return [
             '$user' => $user,
@@ -111,11 +120,13 @@ class ProjectRoleSelector
      */
     public static function isAccessCrudAuthUserByObj(int &$lvl, int &$objId): bool
     {
+        self::applyForObj($lvl, $objId);
+
         $user = self::getAuthUserData();
 
         if ($user[0][UserRoleTableMap::COL_MANAGE_USERS]) return true;
 
-        $parents = self::getParentsForObj($lvl, $objId);
+        $parents = self::getParentsForObj();
         $conditions = self::formingConditionByParents($parents);
         $accesses = self::getProjectRoles($conditions, $user[0][UsersTableMap::COL_ID]);
 
@@ -124,6 +135,21 @@ class ProjectRoleSelector
 
         return $user[0][self::ARRAY_KEY_IS_CRUD] ?? false;
     }
+    #region Apply Function
+    private static function applyForObj(int &$lvl, int &$objId): void
+    {
+        self::$lvl =& $lvl;
+        self::$objId =& $objId;
+    }
+
+    private static function applyForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom): void
+    {
+        self::$lvl =& $lvl;
+        self::$objId =& $parentId;
+        self::$limit =& $limit;
+        self::$limitFrom =& $limitFrom;
+    }
+    #endregion
 
     #region Getter Query Functions
     /**
@@ -156,47 +182,42 @@ class ProjectRoleSelector
 
     /**
      * Возвращает запрос на вывод данных об объекте с стоимость и дополнительной фильтрацией.
-     * @param int $parentId ID родительского объекта.
-     * @param int $lvl Уровень доступа.
-     * @param int $limit Лимит вывода.
-     * @param int $limitFrom Лимит, с которого необходимо начать вывод.
      * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
      * @return ObjHouseQuery|\DB\ObjProjectQuery|ObjStageMaterialQuery|ObjStageMaterialVersionQuery|ObjStageTechnicQuery|ObjStageTechnicVersionQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|UserRoleQuery|VolMaterialQuery|VolUnitQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery|VolWorkVersionQuery
      * @throws IncorrectLvlException
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getObjsQuery(int &$parentId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): ObjStageTechnicVersionQuery|VolUnitQuery|VolMaterialQuery|\DB\ObjProjectQuery|VolWorkMaterialQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolWorkTechnicQuery|ObjStageWorkQuery|VolWorkVersionQuery
+    private static function getObjsQuery(bool &$isAccessManageUsers): ObjStageTechnicVersionQuery|VolUnitQuery|VolMaterialQuery|\DB\ObjProjectQuery|VolWorkMaterialQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolWorkTechnicQuery|ObjStageWorkQuery|VolWorkVersionQuery
     {
-        $i = self::getObjsPriceQuery($lvl);
+        $i = self::getObjsPriceQuery(self::$lvl);
 
-        if ($parentId) {
-            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+        if (self::$objId) {
+            $preLvl = AccessLvl::getPreLvlIntObj(self::$lvl);
             $colId = Objects::getColIdByLvl($preLvl);
-            $i->where($colId . '=?', $parentId);
+            $i->where($colId . '=?', self::$objId);
         }
 
         if (!$isAccessManageUsers) {
-            $colStatus = Objects::getColStatusByLvl($lvl);
+            $colStatus = Objects::getColStatusByLvl(self::$lvl);
             $i->where($colStatus . '!=?', Objects::ATTRIBUTE_STATUS_DELETED);
         }
 
-        if ($limitFrom) {
-            $colId = Objects::getColIdByLvl($lvl);
-            $i->where($colId . '>?', $limitFrom);
+        if (self::$limitFrom) {
+            $colId = Objects::getColIdByLvl(self::$lvl);
+            $i->where($colId . '>?', self::$limitFrom);
         }
 
-        return $i->limit($limit)->orderById();
+        return $i->limit(self::$limit)->orderById();
     }
 
     /**
      * Возвращает запрос на вывод данных об объекте с стоимостью.
-     * @param int $lvl Уроыень доступа.
      * @return VolUnitQuery|ObjStageTechnicVersionQuery|ObjGroupQuery|VolMaterialQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageVersionQuery|ObjStageMaterialQuery|VolTechnicQuery|VolWorkTechnicQuery|VolWorkVersionQuery|ObjStageWorkQuery|UsersQuery
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getObjsPriceQuery(int &$lvl): VolUnitQuery|ObjStageTechnicVersionQuery|ObjGroupQuery|VolMaterialQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageVersionQuery|ObjStageMaterialQuery|VolTechnicQuery|VolWorkTechnicQuery|VolWorkVersionQuery|ObjStageWorkQuery|UsersQuery
+    private static function getObjsPriceQuery(): VolUnitQuery|ObjStageTechnicVersionQuery|ObjGroupQuery|VolMaterialQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageVersionQuery|ObjStageMaterialQuery|VolTechnicQuery|VolWorkTechnicQuery|VolWorkVersionQuery|ObjStageWorkQuery|UsersQuery
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
@@ -205,9 +226,9 @@ class ProjectRoleSelector
 
         return ObjProjectQuery::create()
                 ->select([
-                    Objects::getColNameByLvl($lvl),
-                    Objects::getColStatusByLvl($lvl),
-                    Objects::getColIsPublicByLvl($lvl),
+                    Objects::getColNameByLvl(self::$lvl),
+                    Objects::getColStatusByLvl(self::$lvl),
+                    Objects::getColIsPublicByLvl(self::$lvl),
                     ObjProjectTableMap::COL_ID,
                     ObjSubprojectTableMap::COL_ID,
                     ObjGroupTableMap::COL_ID,
@@ -235,20 +256,19 @@ class ProjectRoleSelector
 
     /**
      * Запрос на вывод IDs родителей объекта/уровня, без условий.
-     * @param int $lvl Уровень доступа.
      * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|\DB\ObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|ProjectRoleQuery|UserRoleQuery|UsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
      * @throws PropelException
      */
-    private static function getParentsQuery(int $lvl): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
+    private static function getParentsQuery(): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
         return ObjProjectQuery::create()
             ->distinct()
             ->select(array_merge(
                 [ObjProjectTableMap::COL_ID],
-                ($lvl >= eLvlObjInt::SUBPROJECT->value ? [ObjSubprojectTableMap::COL_ID] : []),
-                ($lvl >= eLvlObjInt::GROUP->value ? [ObjGroupTableMap::COL_ID] : []),
-                ($lvl >= eLvlObjInt::HOUSE->value ? [ObjHouseTableMap::COL_ID] : []),
-                ($lvl >= eLvlObjInt::STAGE->value ? [ObjStageTableMap::COL_ID] : []),
+                (self::$lvl >= eLvlObjInt::SUBPROJECT->value ? [ObjSubprojectTableMap::COL_ID] : []),
+                (self::$lvl >= eLvlObjInt::GROUP->value ? [ObjGroupTableMap::COL_ID] : []),
+                (self::$lvl >= eLvlObjInt::HOUSE->value ? [ObjHouseTableMap::COL_ID] : []),
+                (self::$lvl >= eLvlObjInt::STAGE->value ? [ObjStageTableMap::COL_ID] : []),
             ))
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
@@ -261,19 +281,17 @@ class ProjectRoleSelector
 
     /**
      * Запрос на вывод IDs родителей объекта.
-     * @param int $lvl Уровень досиупа.
-     * @param int $objId ID родителя объекта.
      * @return UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getParentsQueryForObj(int $lvl, int $objId): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
+    private static function getParentsQueryForObj(): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        $i = self::getParentsQuery($lvl);
+        $i = self::getParentsQuery();
 
-        if ($objId) {
-            $colId = Objects::getColIdByLvl($lvl);
-            $i->where($colId . '=?', $objId);
+        if (self::$objId) {
+            $colId = Objects::getColIdByLvl(self::$lvl);
+            $i->where($colId . '=?', self::$objId);
         }
 
         return $i;
@@ -281,21 +299,19 @@ class ProjectRoleSelector
 
     /**
      * Запрос на вывод IDs родителей уровня.
-     * @param int $lvl Уровень досиупа.
-     * @param int $parentId ID родителя объекта.
      * @return UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      * @throws IncorrectLvlException
      */
-    private static function getParentsQueryForLvl(int $lvl, int $parentId): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
+    private static function getParentsQueryForLvl(): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        $i = self::getParentsQuery($lvl);
+        $i = self::getParentsQuery();
 
-        if ($parentId) {
-            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+        if (self::$objId) {
+            $preLvl = AccessLvl::getPreLvlIntObj(self::$lvl);
             $colId = Objects::getColIdByLvl($preLvl);
-            $i->where($colId . '=?', $parentId);
+            $i->where($colId . '=?', self::$objId);
         }
 
         return $i;
@@ -370,31 +386,27 @@ class ProjectRoleSelector
 
     /**
      * Массив IDs родителей объекта.
-     * @param int $lvl Уровень доступа.
-     * @param int $objId ID объекта.
      * @return array
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getParentsForObj(int $lvl, int $objId): array
+    private static function getParentsForObj(): array
     {
-        return (array)self::getParentsQueryForObj($lvl, $objId)->findOne();
+        return (array)self::getParentsQueryForObj()->findOne();
     }
 
     /**
      * Массив IDs родителей уровня.
-     * @param int $lvl Уровень доступа.
-     * @param int $parentId ID родительсткого объекта.
      * @return array
      * @throws IncorrectLvlException
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getParentsForLvl(int $lvl, int $parentId): array
+    private static function getParentsForLvl(): array
     {
-        $i = self::getParentsQueryForLvl($lvl, $parentId)->find()->getData();
+        $i = self::getParentsQueryForLvl()->find()->getData();
 
-        return $lvl === eLvlObjInt::PROJECT->value
+        return self::$lvl === eLvlObjInt::PROJECT->value
             ? array_map(fn($e) => [ObjProjectTableMap::COL_ID => $e], $i)
             : $i;
     }
@@ -413,19 +425,15 @@ class ProjectRoleSelector
 
     /**
      * Вывод объектов по уровню доступа.
-     * @param int $parentId ID родитеьского объекта.
-     * @param int $lvl Уровень доступа.
-     * @param int $limit Макс. кол-во выводимых записей.
-     * @param int $limitFrom После какого ID объекта начинается вывод.
      * @param bool $isAccessManageUsers Разрешен ли пользователю CRUD учетных записей.
      * @return array
      * @throws IncorrectLvlException
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getObjsForLvl(int &$parentId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): array
+    private static function getObjsForLvl(bool &$isAccessManageUsers): array
     {
-        return self::getObjsQuery($parentId, $lvl, $limit, $limitFrom, $isAccessManageUsers)->find()->getData();
+        return self::getObjsQuery($isAccessManageUsers)->find()->getData();
     }
     #endregion
 
@@ -459,7 +467,7 @@ class ProjectRoleSelector
      * @param bool $isObj Преднозначен ли данный вывод для объекта, иначе - для уровня.
      * @return void
      */
-    private static function mergeCrudByUser(array $crud, array &$users, bool $isObj = true): void
+    private static function mergeCrudByUser(array &$crud, array &$users, bool $isObj = true): void
     {
         foreach ($users as &$user) {
             if ($user[UserRoleTableMap::COL_MANAGE_USERS]) continue;
@@ -529,9 +537,7 @@ class ProjectRoleSelector
 
     private static function formingObjsForLvl(int &$lvl, array &$objs, array &$crud, array &$user): void
     {
-        foreach ($objs as &$obj) {
 
-        }
     }
 
     private static function mergeObjsForLvl(array &$objs): void

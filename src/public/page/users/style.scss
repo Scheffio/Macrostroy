@@ -858,12 +858,20 @@
             display: none;
             &.opened {
                 display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
             .modal-header{
-
+                @include MainTitle;
+                p{
+                    margin: 35px 0px 10px 0px;
+                }
             }
             .modal-body {
-
+                input {
+                    @include Input(500px, 50px);
+                }
             }
             .modal-footer {
                 

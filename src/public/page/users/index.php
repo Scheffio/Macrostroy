@@ -186,9 +186,13 @@
                 <div class="modal-footer"></div>
             </div>
             <div class="add-role">
-                <div class="modal-header"></div>
-                <div class="modal-body"></div>
-                <div class="modal-footer"></div>
+                <div class="modal-header">Добавление роли</div>
+                <div class="modal-body">
+                    <input type="text">
+                </div>
+                <div class="modal-footer">
+                    <button>Добавить</button>
+                </div>
             </div>
             <div class="delete-role">
                 <div class="modal-header">

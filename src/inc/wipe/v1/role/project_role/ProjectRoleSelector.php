@@ -66,13 +66,12 @@ class ProjectRoleSelector
      * Вывод для вкладки "Управление доступом".
      * @param int $lvl Уровень доступа.
      * @param int $objId ID объекта.
-     * @param int|null $userId ID пользователя.
      * @return array
      * @throws IncorrectLvlException
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    public static function getUsersCrudForObj(int &$lvl, int &$objId)
+    public static function getUsersCrudForObj(int &$lvl, int &$objId): array
     {
         self::applyForObj($lvl, $objId);
 
@@ -537,6 +536,20 @@ class ProjectRoleSelector
 
     private static function formingObjsForLvl(int &$lvl, array &$objs, array &$crud, array &$user): void
     {
+        $colId = Objects::getColIdByLvl($lvl);
+
+        foreach ($objs as &$obj) {
+//            $id =& $obj[$colId];
+
+            foreach ($crud as &$access) {
+                $colId = Objects::getColIdByLvl($access[ProjectRoleTableMap::COL_LVL]);
+
+                if ($obj[$colId] !== $access[$colId]) continue;
+
+                
+
+            }
+        }
 
     }
 

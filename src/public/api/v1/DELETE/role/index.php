@@ -16,6 +16,8 @@ try {
 
     $role_id = $request->getQueryOrThrow('role_id');
 
+    if ($role_id === 1) throw new Exception('Невозможно удалить роль по умолчанию');
+
     AuthUserRole::getUserRoleObj()->setRoleId($role_id)->delete();
 
     JsonOutput::success();

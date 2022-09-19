@@ -95,15 +95,13 @@ class ProjectRoleSelector
     {
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
-        $userId = 13;
-//        $user = self::getAuthUserData()[0];
-        $user = self::getUsersData($userId)[0];
+        $user = self::getAuthUserData()[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
             $parents = self::getChildObjsForLvl();
             $conditions = self::formingConditionByParents($parents, false);
-            $accesses = self::getProjectRoles($conditions, $userId);
+            $accesses = self::getProjectRoles($conditions, $user[UsersTableMap::COL_ID]);
             self::formingObjsForLvl($objs, $accesses, $user);
         }
 
@@ -217,7 +215,9 @@ class ProjectRoleSelector
             $i->where($colId . '>?', self::$limitFrom);
         }
 
-        return $i->limit(self::$limit)->orderById();
+        JsonOutput::success($i->toString());
+
+        return $i->limit(self::$limit)->orderById(Criteria::DESC);
     }
 
     /**
@@ -618,10 +618,6 @@ class ProjectRoleSelector
             } else $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, []);
         }
 
-        JsonOutput::success([
-            '$crud' => $crud,
-            '$objs' => $objs,
-        ]);
         $count = count($objs);
 
         for ($i = 0; $i < $count; $i++) {

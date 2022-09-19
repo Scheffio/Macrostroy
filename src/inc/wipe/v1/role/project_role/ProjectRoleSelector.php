@@ -92,12 +92,24 @@ class ProjectRoleSelector
         return $users;
     }
 
-    public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom)
+    /**
+     * Массив объектов уровня.
+     * @param int $lvl Уроыень доступа.
+     * @param int $parentId ID родительского объекта.
+     * @param int $limit Макс. кол-во выводимых записей.
+     * @param int $limitFrom ID объекта, после которого начинается вывод.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     * @throws PropelException
+     */
+    public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom): array
     {
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
-//        $user = self::getAuthUserData()[0];
-        $user = self::getUsersData(17)[0];
+        $user = self::getAuthUserData()[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
         $accesses = [];
 

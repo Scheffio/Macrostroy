@@ -55,10 +55,11 @@ const modalSystem = {
             this.modalWrap.classList.add('delete-role')
         }
         if(type == 'add-role') {
+            console.log(1);
             this.addRoleWindow.classList.add('opened')
         }
         if(type == 'add-user') {
-            this
+            this.addUserWindow.classList.add('opened')
         }
     },
     hide() {
@@ -281,12 +282,10 @@ function parsePermissions(id, elem) {
 
     window.onhashchange = () => {
         const addButton = document.querySelector('.add__button')
-        if(window.location.href == "roles") {
-            console.log(1);
-            addButton.onclick = `modalSystem.show('add-role')`
-        }else {
-            console.log(0);
+        if(window.location.hash == "users") {
             addButton.onclick = `modalSystem.show('add-user')`
+        }else {
+            addButton.onclick = `modalSystem.show('add-role')`
         }
     }
 

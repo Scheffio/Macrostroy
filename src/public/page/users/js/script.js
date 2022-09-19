@@ -279,14 +279,14 @@ function parsePermissions(id, elem) {
     }
 
     window.onhashchange = () => {
-        if(window.location.hash == "users") {
-            addButton.onclick = "alert('1')"
+        const addButton = document.querySelector('.add__button')
+        if(window.location.hash == "#users") {
+            addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
         }else {
-            addButton.onclick = "alert('2')"
+            addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
         }
     }
-    
-    let addButton = document.querySelector('.add__button')
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"

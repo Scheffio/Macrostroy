@@ -186,7 +186,9 @@
                 <div class="modal-footer"></div>
             </div>
             <div class="add-role">
-                <div class="modal-header">Добавление роли</div>
+                <div class="modal-header">
+                    <p>Добавление роли</p>
+                </div>
                 <div class="modal-body">
                     <input type="text">
                 </div>

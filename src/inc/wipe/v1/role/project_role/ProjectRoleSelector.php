@@ -199,7 +199,7 @@ class ProjectRoleSelector
      */
     private static function getObjsQuery(bool &$isAccessManageUsers): ObjStageTechnicVersionQuery|VolUnitQuery|VolMaterialQuery|\DB\ObjProjectQuery|VolWorkMaterialQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolWorkTechnicQuery|ObjStageWorkQuery|VolWorkVersionQuery
     {
-        $i = self::getObjsPriceQuery(self::$lvl);
+        $i = self::getObjsPriceQuery();
 
         if (self::$objId) {
             $preLvl = AccessLvl::getPreLvlIntObj(self::$lvl);
@@ -354,6 +354,7 @@ class ProjectRoleSelector
                 ProjectRoleTableMap::COL_IS_CRUD,
                 ProjectRoleTableMap::COL_OBJECT_ID,
                 ProjectRoleTableMap::COL_USER_ID,
+                ProjectRoleTableMap::COL_PROJECT_ID,
             ]);
 
         if ($conditions) {
@@ -594,13 +595,18 @@ class ProjectRoleSelector
             foreach ($crud as $access) {
                 $colId = Objects::getColIdByLvl($access[ProjectRoleTableMap::COL_LVL]);
 
-                if ($obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID]) continue;
-                if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
-                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL]) continue;
+                if ($obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID] &&
+                    $obj[ObjProjectTableMap::COL_ID] !== $access[ProjectRoleTableMap::COL_PROJECT_ID]) continue;
+
+//                if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
+//                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL] &&
+//                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_PROJECT_ID] === $access[ProjectRoleTableMap::COL_PROJECT_ID]) continue;
 
                 $obj[self::ARRAY_KEY_IS_CRUD] = $access;
             }
         }
+
+        JsonOutput::success([$objs, $crud]);
 
         foreach ($objs as &$obj) {
             $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD] ?? []);

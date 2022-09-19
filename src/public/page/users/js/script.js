@@ -277,5 +277,5 @@ function parsePermissions(id, elem) {
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
-window.location = "#roles"
+window.location = "#users"
 rolesControl.parseRoles()

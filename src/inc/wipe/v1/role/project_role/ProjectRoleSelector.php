@@ -92,14 +92,19 @@ class ProjectRoleSelector
 
 //        $user = self::getAuthUserData()[0];
         $user = self::getUsersData(17)[0];
-        $parents = self::getParentsForLvl();
-        $conditions = self::formingConditionByParents($parents, false);
-        $accesses = self::getProjectRoles($conditions, 17);
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
+
+        if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
+            $parents = self::getParentsForLvl();
+            $conditions = self::formingConditionByParents($parents, false);
+            $accesses = self::getProjectRoles($conditions, 17);
+
+            self::formingObjsForLvl($objs, $accesses);
+        }
 
         return [
             '$user' => $user,
-            '$conditions' => $conditions,
+//            '$conditions' => $conditions,
             '$accesses' => $accesses,
             '$objs' => $objs,
         ];
@@ -534,23 +539,19 @@ class ProjectRoleSelector
         }
     }
 
-    private static function formingObjsForLvl(int &$lvl, array &$objs, array &$crud, array &$user): void
+    private static function formingObjsForLvl(array &$objs, array &$crud): void
     {
-        $colId = Objects::getColIdByLvl($lvl);
-
         foreach ($objs as &$obj) {
-//            $id =& $obj[$colId];
-
             foreach ($crud as &$access) {
                 $colId = Objects::getColIdByLvl($access[ProjectRoleTableMap::COL_LVL]);
 
-                if ($obj[$colId] !== $access[$colId]) continue;
+                if ($obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID]) continue;
+                if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
+                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL]) continue;
 
-                
-
+                $obj[self::ARRAY_KEY_IS_CRUD] =& $access;
             }
         }
-
     }
 
     private static function mergeObjsForLvl(array &$objs): void

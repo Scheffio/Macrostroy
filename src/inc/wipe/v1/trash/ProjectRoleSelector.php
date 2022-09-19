@@ -41,7 +41,7 @@ use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
-class ProjectRoleSelector
+class ProjectRoleSelectorV1
 {
     public static function getUsersCrudForObj(int &$lvl, int &$objId, ?int $userId = null)
     {

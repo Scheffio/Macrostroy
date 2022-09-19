@@ -50,6 +50,7 @@ const modalSystem = {
         this.fixateBackground()
         if(type == 'delete') {
             this.deleteRoleWindow.classList.add('opened')
+            this.modalWrap.style.width = 'width: clamp(500px, 80vw, 780px);'
         }
         if(type == 'add') {
             this.addRoleWindow.classList.add('opened')

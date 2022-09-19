@@ -875,6 +875,9 @@
             }
             .modal-header{
                 @include MainTitle;
+                p{
+                    margin: 35px 0px 10px 0px;
+                }
             }
             .modal-body {
                 @include TabAnchorName;
@@ -883,6 +886,7 @@
                 button {
                     @include Button($EstiminColor4, white, 140px, 40px)
                 }
+                margin-bottom: 60px;
             }
         }
         

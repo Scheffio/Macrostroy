@@ -1091,10 +1091,16 @@ body.fixated {
   font-size: 36px;
   font-weight: 700;
 }
+.modal .modal-wrap .delete-role .modal-header p {
+  margin: 35px 0px 10px 0px;
+}
 .modal .modal-wrap .delete-role .modal-body {
   font-family: "Jost", sans-serif;
   font-size: 24px;
   font-weight: 500;
+}
+.modal .modal-wrap .delete-role .modal-footer {
+  margin-bottom: 60px;
 }
 .modal .modal-wrap .delete-role .modal-footer button {
   width: 140px;

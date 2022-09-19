@@ -612,7 +612,7 @@ CREATE TABLE `project_role` (
   KEY `project_id` (`project_id`),
   CONSTRAINT `project_role_ibfk_23` FOREIGN KEY (`project_id`) REFERENCES `obj_project` (`id`),
   CONSTRAINT `project_role_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,7 +621,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,2,0,4,17,1);
+INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,1,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,2,0,4,17,1),(12,1,1,1,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

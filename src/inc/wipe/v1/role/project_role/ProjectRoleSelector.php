@@ -91,7 +91,7 @@ class ProjectRoleSelector
 
         return [
             '$user' => $user,
-//            '$conditions' => $conditions,
+            '$conditions' => $conditions,
             '$accesses' => $accesses,
             '$objs' => $objs,
         ];
@@ -527,9 +527,11 @@ class ProjectRoleSelector
         }
     }
 
-    private static function formingObjsForLvl(array &$objs, array &$crud): void
+    private static function formingObjsForLvl(int &$lvl, array &$objs, array &$crud, array &$user): void
     {
+        foreach ($objs as &$obj) {
 
+        }
     }
 
     private static function mergeObjsForLvl(array &$objs): void

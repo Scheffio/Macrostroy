@@ -101,24 +101,19 @@ class ProjectRoleSelector
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
             $parents = self::getChildObjsForLvl();
-            $conditions = self::formingConditionByParents($parents, false);
-            $accesses = self::getProjectRoles($conditions, 13);
+//            $conditions = self::formingConditionByParents($parents, false);
 
-            self::formingObjsForLvl($objs, $accesses, $user);
+            JsonOutput::success($parents);
+//            $accesses = self::getProjectRoles($conditions, 13);
+//
+//            self::formingObjsForLvl($objs, $accesses, $user);
         }
 
-        $objs = self::mergeObjsForLvl(
+        return self::mergeObjsForLvl(
             objs: $objs,
             isAccessManageHistory: $user[UserRoleTableMap::COL_MANAGE_HISTORY],
             isAccessManageUsers: $user[UserRoleTableMap::COL_MANAGE_USERS]
         );
-
-        return [
-            '$user' => $user,
-            '$conditions' => $conditions,
-//            '$accesses' => $accesses,
-            '$objs' => $objs,
-        ];
     }
 
     /**
@@ -272,20 +267,33 @@ class ProjectRoleSelector
 
     /**
      * Запрос на вывод IDs родителей объекта/уровня, без условий.
+     * @param bool $isObj Используется ли данный запрос для вывода родителей объекта(true)/уровня(false).
      * @return ObjGroupQuery|ObjGroupVersionQuery|ObjHouseQuery|\DB\ObjProjectQuery|ObjStageMaterialQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|ProjectRoleQuery|UserRoleQuery|UsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
      * @throws PropelException
      */
-    private static function getParentsQuery(): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
+    private static function getParentsQuery(bool $isObj = true): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        return ObjProjectQuery::create()
-            ->distinct()
-            ->select(array_merge(
+        if ($isObj === true) {
+            $select = array_merge(
                 [ObjProjectTableMap::COL_ID],
                 (self::$lvl >= eLvlObjInt::SUBPROJECT->value ? [ObjSubprojectTableMap::COL_ID] : []),
                 (self::$lvl >= eLvlObjInt::GROUP->value ? [ObjGroupTableMap::COL_ID] : []),
                 (self::$lvl >= eLvlObjInt::HOUSE->value ? [ObjHouseTableMap::COL_ID] : []),
                 (self::$lvl >= eLvlObjInt::STAGE->value ? [ObjStageTableMap::COL_ID] : []),
-            ))
+            );
+        } else {
+            $select = [
+                ObjProjectTableMap::COL_ID,
+                ObjSubprojectTableMap::COL_ID,
+                ObjGroupTableMap::COL_ID,
+                ObjHouseTableMap::COL_ID,
+                ObjStageTableMap::COL_ID,
+            ];
+        }
+
+        return ObjProjectQuery::create()
+            ->distinct()
+            ->select($select)
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -322,7 +330,7 @@ class ProjectRoleSelector
      */
     private static function getParentsQueryForLvl(): UsersQuery|ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        $i = self::getParentsQuery();
+        $i = self::getParentsQuery(false);
 
         if (self::$objId) {
             $preLvl = AccessLvl::getPreLvlIntObj(self::$lvl);
@@ -420,11 +428,7 @@ class ProjectRoleSelector
      */
     private static function getChildObjsForLvl(): array
     {
-        $i = self::getParentsQueryForLvl()->find()->getData();
-
-        return self::$lvl === eLvlObjInt::PROJECT->value
-            ? array_map(fn($e) => [ObjProjectTableMap::COL_ID => $e], $i)
-            : $i;
+        return self::getParentsQueryForLvl()->find()->getData();
     }
 
     /**

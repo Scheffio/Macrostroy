@@ -190,20 +190,8 @@ const rolesControl = {
         this.versionControlCheckbox.checked ? history_PERM = true : history_PERM = false
         this.adminCheckbox.checked ? (admin_PERM = true, objectCrud_PERM = true, volumeCrud_PERM = true, history_PERM = true, watch_PERM = true) : admin_PERM = false
 
-        console.log(`object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`);
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
-        parsePermissions(url.searchParams.get('q'), searchRole(url.searchParams.get('q')))
     },
-}
-
-function searchRole(id) {
-    let result
-    document.querySelectorAll('.roles > *').forEach((elem) => {
-        if(elem.children[0].dataset.id == id) {
-            result = elem
-        }
-    })
-    return result
 }
 
 function parsePermissions(id, elem) {

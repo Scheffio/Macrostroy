@@ -18,6 +18,7 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
@@ -45,7 +46,8 @@ try {
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
     JsonOutput::success(
-        ProjectRole::getCrudUsersByObj($lvl, $objId)
+        ProjectRoleSelector::getUsersCrudForObj($lvl, $objId)
+//        ProjectRole::getCrudUsersByObj($lvl, $objId)
     );
 } catch (NoAccessManageUsersException $e) {
     JsonOutput::error('Недостаточно прав');

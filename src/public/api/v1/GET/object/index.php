@@ -18,6 +18,10 @@ try {
     $limit = $request->getQuery('limit') ?? 10;
     $limitFrom = $request->getQuery('limit_from') ?? 0;
 
+    JsonOutput::success(
+        ProjectRoleSelector::getAuthUserCrudForLvl($lvl, $parentId)
+    );
+
 //    ProjectRoleSelector::getUsersCrudForObj($lvl, $parentId);
 
 

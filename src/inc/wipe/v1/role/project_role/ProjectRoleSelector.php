@@ -6,7 +6,10 @@ use DB\Base\ObjProjectQuery;
 use DB\Map\ObjGroupTableMap;
 use DB\Map\ObjHouseTableMap;
 use DB\Map\ObjProjectTableMap;
+use DB\Map\ObjStageMaterialTableMap;
 use DB\Map\ObjStageTableMap;
+use DB\Map\ObjStageTechnicTableMap;
+use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
 use DB\Map\ProjectRoleTableMap;
 use DB\Map\UserRoleTableMap;
@@ -141,6 +144,18 @@ class ProjectRoleSelector
         }
 
         return $i;
+    }
+
+    private static function getLvlQuery(int &$lvl, int &$parentId, int|bool $isAccessManageUsers)
+    {
+        $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
+        $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
+        $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
+        $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
+
+        
+
+
     }
 
     /**
@@ -418,6 +433,11 @@ class ProjectRoleSelector
                 self::ARRAY_KEY_IS_ADMIN => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
             ];
         }
+    }
+
+    private static function formingCrudByObj(array &$objs, array &$crud): void
+    {
+
     }
     #endregion
 }

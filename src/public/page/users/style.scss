@@ -665,7 +665,7 @@
             transition: .6s;
             top: -1000px;
         }
-        &.delete-role {
+        &.roles {
             width: clamp(500px, 80vw, 780px);
             height: auto;
         }
@@ -869,12 +869,41 @@
                 }
             }
             .modal-body {
-                input {
-                    @include Input(500px, 50px);
+                .modal-body__role-name {
+                    position: relative;
+                    &:hover {
+                        cursor: text;
+                    }
+                    input {
+                        @include Input(500px, 50px);
+                    }
+                    &::before {
+                        content: 'Название роли';
+                        display: block;
+                        position: absolute;
+                        top: 20%;
+                        left: 10px;
+                        opacity: .6;
+                        background-color: white;
+                        @include inputPlaceholder;
+                        transition: .3s;
+                    }
+                }
+                .modal-body__role-name.focused {
+                    &::before {
+                        padding: 5px 5px;
+                        left: 10px;
+                        top: -17px;
+                        opacity: 1;
+                        transition: .3s;
+                    }
                 }
             }
             .modal-footer {
-                
+                button {
+                    margin-top: 50px;
+                    @include Button($EstiminColor4, white, 140px, 40px)
+                }
             }
         }
         .delete-role {

@@ -40,7 +40,7 @@ const modalSystem = {
     },
     reset() {
         document.querySelectorAll('.modal-wrap > *').forEach((elem) => {elem.classList.remove('opened')})
-        this.modalWrap.classList.remove('delete-role')
+        this.modalWrap.classList.remove('roles')
     },
     show(type) {
         this.reset()
@@ -51,7 +51,7 @@ const modalSystem = {
         this.fixateBackground()
         if(type == 'delete-role') {
             this.deleteRoleWindow.classList.add('opened')
-            this.modalWrap.classList.add('delete-role')
+            this.modalWrap.classList.add('roles')
         }
         if(type == 'add-role') {
             this.addRoleWindow.classList.add('opened')
@@ -87,38 +87,24 @@ const nameField = document.querySelector('.modal-body__name')
 const emailInput = document.querySelector('.modal-body__email > input')
 const emailField = document.querySelector('.modal-body__email')
 
+const roleNameInput = document.querySelector('.modal-body__role-name > input')
+const roleNameField = document.querySelector('.modal-body__role-name')
+
 nameField.addEventListener('click', () => {nameInput.focus()})
 emailField.addEventListener('click', () => {emailInput.focus()})
+roleNameField.addEventListener('click', () => {roleNameInput.focus()})
 
-nameInput.addEventListener('focus', () => {
-    if(nameInput.value != '') {
-        return
-    }else {
-        nameField.classList.toggle("focused")
-    }
-})
-nameInput.addEventListener('blur', () => {
-    if(nameInput.value != "") {
-        return
-    }else {
-        nameField.classList.toggle("focused")
-    }
-})
+nameInput.addEventListener('focus', () => {nameInput.value != '' ? null : nameField.classList.toggle('focused')})
+nameInput.addEventListener('blur', () => {nameInput.value != '' ? null : nameField.classList.toggle('focused')})
 
-emailInput.addEventListener('focus', () => {
-    if(emailInput.value != '') {
-        return
-    }else {
-        emailField.classList.toggle("focused")
-    }
-})
-emailInput.addEventListener('blur', () => {
-    if(emailInput.value != "") {
-        return
-    }else {
-        emailField.classList.toggle("focused")
-    }
-})
+emailInput.addEventListener('focus', () => {emailInput.value != '' ? null : emailField.classList.toggle('focused')})
+emailInput.addEventListener('blur', () => {emailInput.value != '' ? null : emailField.classList.toggle('focused')})
+
+roleNameInput.addEventListener('focus', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
+roleNameInput.addEventListener('blur', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
+
+
+
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {

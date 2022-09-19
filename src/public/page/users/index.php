@@ -190,7 +190,9 @@
                     <p>Добавление роли</p>
                 </div>
                 <div class="modal-body">
-                    <input type="text">
+                    <div class="modal-body__role-name">
+                        <input type="text">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button>Добавить</button>

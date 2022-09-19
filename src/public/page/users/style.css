@@ -1092,7 +1092,13 @@ body.fixated {
 .modal .modal-wrap .add-role .modal-header p {
   margin: 35px 0px 10px 0px;
 }
-.modal .modal-wrap .add-role .modal-body input {
+.modal .modal-wrap .add-role .modal-body .modal-body__role-name {
+  position: relative;
+}
+.modal .modal-wrap .add-role .modal-body .modal-body__role-name:hover {
+  cursor: text;
+}
+.modal .modal-wrap .add-role .modal-body .modal-body__role-name input {
   width: 500px;
   height: 50px;
   border: 1px solid black;
@@ -1102,6 +1108,26 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 16px;
   font-weight: 400;
+}
+.modal .modal-wrap .add-role .modal-body .modal-body__role-name::before {
+  content: "Название роли";
+  display: block;
+  position: absolute;
+  top: 33%;
+  left: 10px;
+  opacity: 0.6;
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.modal .modal-wrap .add-role .modal-body .modal-body__role-name.focused::before {
+  padding: 5px 5px;
+  left: 10px;
+  top: -17px;
+  opacity: 1;
+  transition: 0.3s;
 }
 .modal .modal-wrap .delete-role {
   display: none;

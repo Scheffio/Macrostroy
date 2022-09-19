@@ -215,8 +215,6 @@ class ProjectRoleSelector
             $i->where($colId . '>?', self::$limitFrom);
         }
 
-        JsonOutput::success($i->toString());
-
         return $i->limit(self::$limit)->orderById(Criteria::DESC);
     }
 

@@ -32,7 +32,7 @@ const modal = document.querySelector('.modal')
 const modalSystem = {
     modalWrap: document.querySelector('.modal-wrap'),
     addRoleWindow: document.querySelector('.add-role'),
-    deleteRoleWindow: document.querySelector('.delete-role'),
+    deleteRoleWindow: document.querySelector('.modal > .modal-wrap > .delete-role'),
     body: document.querySelector('body'),
     fixateBackground() {
         this.body.classList.toggle("fixated")
@@ -49,7 +49,6 @@ const modalSystem = {
         }, 300);
         this.fixateBackground()
         if(type == 'delete') {
-            console.log(1);
             this.deleteRoleWindow.classList.add('opened')
         }
         if(type == 'add') {

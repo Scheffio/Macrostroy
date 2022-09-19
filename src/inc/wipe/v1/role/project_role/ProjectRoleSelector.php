@@ -55,6 +55,11 @@ class ProjectRoleSelector
     private const ARRAY_KEY_NAME = 'name';
     private const ARRAY_KEY_IS_CRUD = 'isCrud';
     private const ARRAY_KEY_IS_ADMIN = 'isAdmin';
+    private const ARRAY_KEY_STATUS = 'status';
+    private const ARRAY_KEY_IS_PUBLIC = 'isPublic';
+    private const ARRAY_KEY_USER = 'user';
+    private const ARRAY_KEY_PRICE = 'price';
+    private const ARRAY_KEY_IS_HISTORY = 'isHistory';
 
     private static ?int $lvl = null;
     private static ?int $objId = null;
@@ -242,7 +247,7 @@ class ProjectRoleSelector
                     UsersTableMap::COL_ID,
                     UsersTableMap::COL_USERNAME,
                 ])
-                ->withColumn($sumStr, 'price')
+                ->withColumn($sumStr, self::ARRAY_KEY_PRICE)
                 ->leftJoinUsers()
                 ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
@@ -462,10 +467,10 @@ class ProjectRoleSelector
     #regions Getter && Setter Functions
     /**
      * Возвращает округленную стоимость с 2 знаками после запятой.
-     * @param int $price
+     * @param int|string $price
      * @return string
      */
-    private static function getPrice(int $price): string
+    private static function getPrice(int|string $price): string
     {
         return number_format((float)$price, 2, '.', '');
     }
@@ -566,12 +571,34 @@ class ProjectRoleSelector
         }
     }
 
-    private static function mergeObjsForLvl(array &$objs)
+    private static function mergeObjsForLvl(int &$lvl, array &$objs, int &$isAccessManageHistory)
     {
         $i = [];
+        $colId = Objects::getColIdByLvl($lvl);
+        $colName = Objects::getColNameByLvl($lvl);
+        $colStatus = Objects::getColStatusByLvl($lvl);
+        $colIsPublic = Objects::getColIsPublicByLvl($lvl);
 
         foreach ($objs as &$obj) {
-            $id =& $obj[]
+            $id =& $obj[$colId];
+
+            if (isset($i[$id])) {
+                $i[$id][self::ARRAY_KEY_PRICE] = self::getPrice($i[$id][self::ARRAY_KEY_PRICE] + $obj[self::ARRAY_KEY_PRICE]);
+            } else {
+                $i[$id] = [
+                    self::ARRAY_KEY_ID => $id,
+                    self::ARRAY_KEY_NAME => $obj[$colName],
+                    self::ARRAY_KEY_STATUS => $obj[$colStatus],
+                    self::ARRAY_KEY_IS_PUBLIC => $obj[$colIsPublic],
+                    self::ARRAY_KEY_USER => [
+                        self::ARRAY_KEY_ID => $obj[UsersTableMap::COL_ID],
+                        self::ARRAY_KEY_NAME => $obj[UsersTableMap::COL_USERNAME],
+                    ],
+                    self::ARRAY_KEY_PRICE => self::getPrice($obj[self::ARRAY_KEY_PRICE]),
+                    self::ARRAY_KEY_IS_CRUD => $obj[self::ARRAY_KEY_IS_CRUD],
+                    self::ARRAY_KEY_IS_HISTORY => $obj[self::ARRAY_KEY_IS_CRUD] ? (bool)$isAccessManageHistory : false,
+                ];
+            }
         }
 
         return $i;

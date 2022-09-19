@@ -63,8 +63,8 @@
                             <div class="permission__checkbox">
                                 <div class="object-crud">
                                     <div class="object-crud-checkboxes">
-                                        <input type="radio" name="object-crud-radio" id="object-crud">
-                                        <input type="radio" name="object-crud-radio" id="object-crud">
+                                        <input type="radio" onclick="rolesControl.saveRolePermissions()" name="object-crud-radio" id="object-crud">
+                                        <input type="radio" onclick="rolesControl.saveRolePermissions()" name="object-crud-radio" id="object-crud">
                                         <div class="checkbox-titles">
                                             <span>Все</span>
                                             <span>Отдельно</span>
@@ -80,8 +80,8 @@
                             <div class="permission__checkbox">
                                 <div class="volume-crud">
                                     <div class="volume-crud-checkboxes">
-                                        <input type="radio" name="volume-crud-radio" id="volume-crud">
-                                        <input type="radio" name="volume-crud-radio" id="volume-crud">
+                                        <input type="radio" onclick="rolesControl.saveRolePermissions()" name="volume-crud-radio" id="volume-crud">
+                                        <input type="radio" onclick="rolesControl.saveRolePermissions()" name="volume-crud-radio" id="volume-crud">
                                         <div class="checkbox-titles">
                                             <span>Все</span>
                                             <span>Отдельно</span>

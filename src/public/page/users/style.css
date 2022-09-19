@@ -1107,6 +1107,8 @@ body.fixated {
   text-align: center;
 }
 .modal .modal-wrap .delete-role .modal-footer {
+  display: flex;
+  gap: 45px;
   margin-bottom: 60px;
 }
 .modal .modal-wrap .delete-role .modal-footer button {

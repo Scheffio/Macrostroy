@@ -198,8 +198,8 @@
                     <p>Вы действительно хотитет удалить эту роль? Внимание! Отменить это действие не возможно!</p>
                 </div>
                 <div class="modal-footer">
-                    <button>Удалить</button>
-                    <button>Отмена</button>
+                    <button onclick="rolesControl.deleteRole()">Удалить</button>
+                    <button onclick="modalSystem.hide()">Отмена</button>
                 </div>
             </div>
         </div>

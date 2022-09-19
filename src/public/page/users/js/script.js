@@ -189,6 +189,9 @@ const rolesControl = {
 
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
     },
+    deleteRole() {
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'})
+    }
 }
 
 function parsePermissions(id, elem) {

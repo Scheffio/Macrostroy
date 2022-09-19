@@ -890,6 +890,8 @@
                 }
             }
             .modal-footer {
+                display: flex;
+                gap: 45px;
                 button {
                     @include Button($EstiminColor4, white, 140px, 40px)
                 }

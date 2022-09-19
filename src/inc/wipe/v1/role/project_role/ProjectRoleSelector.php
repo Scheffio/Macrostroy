@@ -607,15 +607,21 @@ class ProjectRoleSelector
 
 
         foreach ($objs as &$obj) {
-            if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
-                self::$lvl <= $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL]) {
-                $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD]) ?? false;
-            }
+            if (isset($obj[self::ARRAY_KEY_IS_CRUD])) {
+                $objCrud =& $obj[self::ARRAY_KEY_IS_CRUD];
 
-            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, []);
+                if (self::$lvl < $objCrud[ProjectRoleTableMap::COL_LVL]) {
+                    $objCrud[ProjectRoleTableMap::COL_IS_CRUD] = null;
+                }
+
+                $objCrud = self::isAccessCrud($user, $objCrud);
+            } else $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, []);
         }
 
-        JsonOutput::success($objs);
+        JsonOutput::success([
+            '$crud' => $crud,
+            '$objs' => $objs,
+        ]);
         $count = count($objs);
 
         for ($i = 0; $i < $count; $i++) {

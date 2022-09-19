@@ -901,7 +901,7 @@
             }
             .modal-footer {
                 button {
-                    margin-top: 50px;
+                    margin: 35px 0px;
                     @include Button($EstiminColor4, white, 140px, 40px)
                 }
             }

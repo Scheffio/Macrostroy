@@ -54,6 +54,7 @@ const modalSystem = {
             this.modalWrap.classList.add('roles')
         }
         if(type == 'add-role') {
+            this.modalWrap.classList.add('roles')
             this.addRoleWindow.classList.add('opened')
         }
         if(type == 'add-user') {

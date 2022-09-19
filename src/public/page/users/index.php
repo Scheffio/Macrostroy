@@ -159,6 +159,7 @@
                 </div>
             </div>
             <div class="delete-user">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Удаление пользователя</p>
                 </div>
@@ -172,6 +173,7 @@
                 </div>
             </div>
             <div class="info-user">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Информация о «<span class="username-span"></span>»</p>
                 </div>
@@ -179,6 +181,7 @@
                 <div class="modal-footer"></div>
             </div>
             <div class="edit-user">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Редактирование пользователя «<span class="username-span"></span>»</p>
                 </div>
@@ -186,6 +189,7 @@
                 <div class="modal-footer"></div>
             </div>
             <div class="add-role">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Добавление роли</p>
                 </div>
@@ -199,6 +203,7 @@
                 </div>
             </div>
             <div class="delete-role">
+                <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
                     <p>Удаление роли</p>
                 </div>

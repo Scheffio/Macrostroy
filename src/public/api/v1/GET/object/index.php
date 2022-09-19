@@ -4,6 +4,8 @@
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\access_lvl\AccessLvl;
+use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRoleSelector;
@@ -14,7 +16,11 @@ $request = new Request();
 
 try {
     $lvl = $request->getQueryOrThrow('lvl');
-    $parentId = $request->getQuery('parent_id') ?? 0;
+    $lvl = AccessLvl::getLvlIntObj($lvl);
+
+    if ($lvl === eLvlObjInt::PROJECT->value) $parentId = $request->getQuery('parent_id') ?? 0;
+    else $parentId = $request->getQueryOrThrow('parent_id');
+
     $limit = $request->getQuery('limit') ?? 10;
     $limitFrom = $request->getQuery('limit_from') ?? 0;
 

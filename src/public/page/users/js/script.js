@@ -39,11 +39,8 @@ const modalSystem = {
         this.body.classList.toggle("fixated")
     },
     reset() {
-        document.querySelectorAll(`${this.modalWrap} > *`).forEach((elem) => {
-            elem.classList.remove('opened')
-        })
+        document.querySelectorAll('.modal-wrap > *').forEach((elem) => {elem.classList.remove('opened')})
         this.modalWrap.classList.remove('delete-role')
-
     },
     show(type) {
         this.reset()
@@ -284,7 +281,7 @@ function parsePermissions(id, elem) {
     window.onhashchange = () => {
         const addButton = document.querySelector('.add__button')
         if(window.location.hash == "users") {
-            addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
+            addButton.editAt('onclick', `modalSystem.show('add-user')`)
         }else {
             addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
         }

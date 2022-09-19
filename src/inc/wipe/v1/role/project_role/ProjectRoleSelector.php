@@ -82,14 +82,16 @@ class ProjectRoleSelector
 
     public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom)
     {
-        $user = self::getAuthUserData()[0];
+//        $user = self::getAuthUserData()[0];
+        $user = self::getUsersData(17)[0];
         $parents = self::getParentsForLvl($lvl, $parentId);
         $conditions = self::formingConditionByParents($parents, false);
         $accesses = self::getProjectRoles($conditions, 17);
         $objs = self::getObjsForLvl($parentId, $lvl, $limit, $limitFrom, $user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         return [
-            '$conditions' => $conditions,
+            '$user' => $user,
+//            '$conditions' => $conditions,
             '$accesses' => $accesses,
             '$objs' => $objs,
         ];
@@ -525,7 +527,12 @@ class ProjectRoleSelector
         }
     }
 
-    private static function formingCrudByObj(array &$objs, array &$crud): void
+    private static function formingObjsForLvl(array &$objs, array &$crud): void
+    {
+
+    }
+
+    private static function mergeObjsForLvl(array &$objs): void
     {
 
     }

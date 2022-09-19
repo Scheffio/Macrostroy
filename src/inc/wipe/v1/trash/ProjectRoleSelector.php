@@ -1,6 +1,6 @@
 <?php
 
-namespace wipe\inc\v1\role\project_role;
+namespace wipe\inc\v1\trash;
 
 use DB\Base\ObjProjectQuery;
 use DB\Map\ObjGroupTableMap;

@@ -702,7 +702,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,'По умолчанию',1,1,1,1,1),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(4,'CRUD объектов',1,1,0,1,0),(5,'CRUD объемов',0,0,1,1,0);
+INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,0,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(4,'CRUD объектов',1,1,0,1,0),(5,'CRUD объемов',0,0,0,0,0);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

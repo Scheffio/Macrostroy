@@ -122,7 +122,7 @@
         </div>
         <div class="actions">
             <div class="add">
-                <button class="add__button"><span
+                <button class="add__button" onclick="modalSystem.show('add-user')"><span
                         class="add-span"></span>Добавить</button>
             </div>
             <div class="delete">

@@ -110,6 +110,7 @@ class ProjectRoleSelector
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
         $user = self::getAuthUserData()[0];
+
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
         $accesses = [];
 
@@ -649,7 +650,6 @@ class ProjectRoleSelector
             }
         }
 
-
         foreach ($objs as &$obj) {
             if (isset($obj[self::ARRAY_KEY_IS_CRUD])) {
                 $objCrud =& $obj[self::ARRAY_KEY_IS_CRUD];
@@ -699,7 +699,7 @@ class ProjectRoleSelector
                     self::ARRAY_KEY_ID => $id,
                     self::ARRAY_KEY_NAME => $obj[$colName],
                     self::ARRAY_KEY_STATUS => $obj[$colStatus],
-                    self::ARRAY_KEY_IS_PUBLIC => $obj[$colIsPublic],
+                    self::ARRAY_KEY_IS_PUBLIC => (bool)$obj[$colIsPublic],
                     self::ARRAY_KEY_USER => [
                         self::ARRAY_KEY_ID => $obj[UsersTableMap::COL_ID],
                         self::ARRAY_KEY_NAME => $obj[UsersTableMap::COL_USERNAME],

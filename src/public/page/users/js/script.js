@@ -39,9 +39,11 @@ const modalSystem = {
         this.body.classList.toggle("fixated")
     },
     reset() {
-        this.addRoleWindow.classList.remove('opened')
-        this.deleteRoleWindow.classList.remove('opened')
+        document.querySelectorAll(`${this.modalWrap} > *`).forEach((elem) => {
+            elem.classList.remove('opened')
+        })
         this.modalWrap.classList.remove('delete-role')
+
     },
     show(type) {
         this.reset()
@@ -55,7 +57,6 @@ const modalSystem = {
             this.modalWrap.classList.add('delete-role')
         }
         if(type == 'add-role') {
-            console.log(1);
             this.addRoleWindow.classList.add('opened')
         }
         if(type == 'add-user') {
@@ -283,9 +284,9 @@ function parsePermissions(id, elem) {
     window.onhashchange = () => {
         const addButton = document.querySelector('.add__button')
         if(window.location.hash == "users") {
-            addButton.onclick = `modalSystem.show('add-user')`
+            addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
         }else {
-            addButton.onclick = `modalSystem.show('add-role')`
+            addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
         }
     }
 

@@ -231,7 +231,7 @@ class ProjectRoleSelector
 
         if (self::$limitFrom) {
             $colId = Objects::getColIdByLvl(self::$lvl);
-            $i->where($colId . '>?', self::$limitFrom);
+            $i->where($colId . '<?', self::$limitFrom);
         }
 
         return $i->limit(self::$limit)->orderById(Criteria::DESC);

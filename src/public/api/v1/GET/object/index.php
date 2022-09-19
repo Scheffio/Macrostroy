@@ -3,10 +3,10 @@
 
 use inc\artemy\v1\json_output\JsonOutput;
 use inc\artemy\v1\request\Request;
-use wipe\inc\v1\objects\Objects;
-use wipe\inc\v1\role\project_role\ProjectRole;
+use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRoleSelector;
-use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
@@ -25,6 +25,10 @@ try {
     JsonOutput::error('Неизвестная роль');
 } catch (NoUserFoundException $e) {
     JsonOutput::error('Неизвестный пользователь');
-} catch (\Propel\Runtime\Exception\PropelException $e) {
+} catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
+} catch (InvalidAccessLvlIntException $e) {
+    JsonOutput::error('Некорректный номер уровня доступа');
+} catch (IncorrectLvlException $e) {
+    JsonOutput::error('Некорректный уровень доступа');
 }

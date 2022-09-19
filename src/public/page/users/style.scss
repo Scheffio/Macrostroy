@@ -495,13 +495,13 @@
         gap: 40px;
         justify-content: flex-start;
         flex-direction: row-reverse;
-        .add-role,
-        .delete-role {
+        .add,
+        .delete {
             display: flex;
             justify-content: flex-end;
     
-            .add-role__button,
-            .delete-role__button {
+            .add__button,
+            .delete__button {
                 display: flex;
                 justify-content: center;
                 align-items: center;

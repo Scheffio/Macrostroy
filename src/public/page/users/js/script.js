@@ -279,6 +279,17 @@ function parsePermissions(id, elem) {
         })
     }
 
+    window.onhashchange = () => {
+        const addButton = document.querySelector('.add__button')
+        if(window.location.href == "roles") {
+            console.log(1);
+            addButton.onclick = `modalSystem.show('add-role')`
+        }else {
+            console.log(0);
+            addButton.onclick = `modalSystem.show('add-user')`
+        }
+    }
+
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"

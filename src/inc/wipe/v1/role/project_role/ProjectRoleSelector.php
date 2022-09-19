@@ -99,21 +99,17 @@ class ProjectRoleSelector
 //        $user = self::getAuthUserData()[0];
         $user = self::getUsersData(17)[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
+        $accesses = [];
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
             $parents = self::getChildObjsForLvl();
             $conditions = self::formingConditionByParents($parents, false);
             $accesses = self::getProjectRoles($conditions, $user[UsersTableMap::COL_ID]);
             self::formingObjsForLvl($objs, $accesses, $user);
-            JsonOutput::success([
-                $user,
-                $accesses,
-                self::isAccesCrudByParent($user, $accesses)
-            ]);
         }
 
         return [
-            self::ARRAY_KEY_IS_CRUD => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
+            self::ARRAY_KEY_IS_CRUD => self::isAccessCrudByParent($user, $accesses),
             self::ARRAY_KEY_IS_ADMIN => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
             self::ARRAY_KEY_OBJECTS =>  self::mergeObjsForLvl(
                                             objs: $objs,
@@ -501,18 +497,31 @@ class ProjectRoleSelector
         return null;
     }
 
-    private static function isAccesCrudByParent(array $user, array $crud)
+    /**
+     * Разрешен ли пользователю CRUD родительского объекта.
+     * @param array $user Массив данных о пользователе.
+     * @param array $crud Массив ролей проекта.
+     * @return bool
+     * @throws InvalidAccessLvlIntException
+     */
+    private static function isAccessCrudByParent(array $user, array $crud): bool
     {
         $i = [];
 
-        foreach ($crud as &$access) {
-            if ($access[ProjectRoleTableMap::COL_LVL] !== self::$lvl &&
-                !($access[ProjectRoleTableMap::COL_LVL] < self::$lvl)) continue;
+        if ($crud) {
+            $preLvl = AccessLvl::getPreLvlIntObj(self::$lvl);
 
-            $i =& $access;
+            foreach ($crud as &$access) {
+                if ($access[ProjectRoleTableMap::COL_LVL] > $preLvl ||
+                    (   isset($i[ProjectRoleTableMap::COL_LVL]) &&
+                        $i[ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL])
+                ) continue;
+
+                $i =& $access;
+            }
         }
 
-        return $i;
+        return self::isAccessCrud($user, $i) ?? false;
     }
     #endregion
 

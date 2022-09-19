@@ -460,7 +460,15 @@ class ProjectRoleSelector
     #endregion
 
     #regions Getter && Setter Functions
-
+    /**
+     * Возвращает округленную стоимость с 2 знаками после запятой.
+     * @param int $price
+     * @return string
+     */
+    private static function getPrice(int $price): string
+    {
+        return number_format((float)$price, 2, '.', '');
+    }
     #endregion
 
     #region Forming Functions
@@ -542,26 +550,31 @@ class ProjectRoleSelector
     private static function formingObjsForLvl(array &$objs, array &$crud, array &$user): void
     {
         foreach ($objs as &$obj) {
-            foreach ($crud as &$access) {
+            foreach ($crud as $access) {
                 $colId = Objects::getColIdByLvl($access[ProjectRoleTableMap::COL_LVL]);
 
                 if ($obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID]) continue;
                 if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
                     $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL]) continue;
 
-                $obj[self::ARRAY_KEY_IS_CRUD] =& $access;
+                $obj[self::ARRAY_KEY_IS_CRUD] = $access;
             }
         }
 
         foreach ($objs as &$obj) {
-            $crud = $obj[self::ARRAY_KEY_IS_CRUD] ?? [];
-            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $crud);
+            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD] ?? []);
         }
     }
 
     private static function mergeObjsForLvl(array &$objs)
     {
+        $i = [];
 
+        foreach ($objs as &$obj) {
+            $id =& $obj[]
+        }
+
+        return $i;
     }
     #endregion
 }

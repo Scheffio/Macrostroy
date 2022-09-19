@@ -184,13 +184,13 @@ const rolesControl = {
         let admin_PERM, objectCrud_PERM, volumeCrud_PERM, history_PERM, watch_PERM
         this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
         this.objectCrudAllCheckbox.checked ? objectCrud_PERM = true : objectCrud_PERM = false
-        this.objectCrudExactCheckbox.checked ? objectCrud_PERM = false : objectCrud_PERM = true
+        this.objectCrudExactCheckbox.checked ? objectCrud_PERM = false : objectCrud_PERM = null
         this.volumeCrudAllCheckbox.checked ? volumeCrud_PERM = true : volumeCrud_PERM = false
-        this.volumeCrudExactCheckbox.checked ? volumeCrud_PERM = false : volumeCrud_PERM = true
-        this.versionControlCheckbox.checked ? history_PERM = true : watchistory_PERMh_PERM = false
-        this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
-        this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
+        this.volumeCrudExactCheckbox.checked ? volumeCrud_PERM = false : volumeCrud_PERM = null
+        this.versionControlCheckbox.checked ? history_PERM = true : history_PERM = false
+        this.adminCheckbox.checked ? admin_PERM = true : admin_PERM = false
 
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
 
         // elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
         // elem.getAttribute('id') == "version-control" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&manage_history=${elem.checked ? true : false}`, {method: 'PUT'}) : null

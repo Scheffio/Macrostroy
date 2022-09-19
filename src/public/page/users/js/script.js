@@ -33,7 +33,6 @@ const modalSystem = {
     modalWrap: document.querySelector('.modal-wrap'),
     addRoleWindow: document.querySelector('.add-role'),
     deleteRoleWindow: document.querySelector('.delete-role'),
-    saveRoleWindow: document.querySelector('.save-role'),
     body: document.querySelector('body'),
     fixateBackground() {
         this.body.classList.toggle("fixated")
@@ -41,7 +40,6 @@ const modalSystem = {
     reset() {
         this.addRoleWindow.classList.remove('opened')
         this.deleteRoleWindow.classList.remove('opened')
-        this.saveRoleWindow.classList.remove('opened')
     },
     show(type) {
         this.reset()
@@ -51,13 +49,11 @@ const modalSystem = {
         }, 300);
         this.fixateBackground()
         if(type == 'delete') {
+            console.log(1);
             this.deleteRoleWindow.classList.add('opened')
         }
         if(type == 'add') {
             this.addRoleWindow.classList.add('opened')
-        }
-        if(type == 'save') {
-            this.saveRoleWindow.classList.add('opened')
         }
     },
     hide() {

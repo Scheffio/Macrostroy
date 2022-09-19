@@ -850,28 +850,6 @@
                 
             }
         }
-        .save-role {
-            display: none;
-            &.opened {
-                display: flex;
-            }
-            .modal-header{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                p {
-                    margin: 0;
-                }
-                margin: 35px 0px 40px 0px;
-
-            }
-            .modal-body {
-
-            }
-            .modal-footer {
-                
-            }
-        }
         .add-role {
             display: none;
             &.opened {
@@ -891,6 +869,7 @@
             display: none;
             &.opened {
                 display: flex;
+                background-color: red;
             }
             .modal-header{
 

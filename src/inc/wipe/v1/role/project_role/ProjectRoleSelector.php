@@ -96,13 +96,13 @@ class ProjectRoleSelector
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
 //        $user = self::getAuthUserData()[0];
-        $user = self::getUsersData(17)[0];
+        $user = self::getUsersData(13)[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
             $parents = self::getParentsForLvl();
             $conditions = self::formingConditionByParents($parents, false);
-            $accesses = self::getProjectRoles($conditions, 17);
+            $accesses = self::getProjectRoles($conditions, 13);
 
             self::formingObjsForLvl($objs, $accesses, $user);
         }
@@ -552,6 +552,14 @@ class ProjectRoleSelector
         }
     }
 
+    /**
+     * Формирование данных объектов с разрешениями на объект.
+     * @param array $objs Массив объектов.
+     * @param array $crud Массив ролей проекта.
+     * @param array $user Массив данных пользователя.
+     * @return void
+     * @throws IncorrectLvlException
+     */
     private static function formingObjsForLvl(array &$objs, array &$crud, array &$user): void
     {
         foreach ($objs as &$obj) {
@@ -569,20 +577,35 @@ class ProjectRoleSelector
         foreach ($objs as &$obj) {
             $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD] ?? []);
         }
+
+        $count = count($objs);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($objs[$i][self::ARRAY_KEY_IS_CRUD] !== null) continue;
+            else unset($objs[$i]);
+        }
     }
 
-    private static function mergeObjsForLvl(int &$lvl, array &$objs, int &$isAccessManageHistory)
+    /**
+     * Объединение данных объектов.
+     * @param array $objs Массив объектов.
+     * @param int $isAccessManageHistory Разрешен ли пользователю CRUD истории изменений.
+     * @return array
+     * @throws IncorrectLvlException
+     */
+    private static function mergeObjsForLvl(array &$objs, int &$isAccessManageHistory): array
     {
         $i = [];
-        $colId = Objects::getColIdByLvl($lvl);
-        $colName = Objects::getColNameByLvl($lvl);
-        $colStatus = Objects::getColStatusByLvl($lvl);
-        $colIsPublic = Objects::getColIsPublicByLvl($lvl);
+        $colId = Objects::getColIdByLvl(self::$lvl);
+        $colName = Objects::getColNameByLvl(self::$lvl);
+        $colStatus = Objects::getColStatusByLvl(self::$lvl);
+        $colIsPublic = Objects::getColIsPublicByLvl(self::$lvl);
 
         foreach ($objs as &$obj) {
             $id =& $obj[$colId];
 
             if (isset($i[$id])) {
+                if (!$obj[self::ARRAY_KEY_PRICE]) continue;
                 $i[$id][self::ARRAY_KEY_PRICE] = self::getPrice($i[$id][self::ARRAY_KEY_PRICE] + $obj[self::ARRAY_KEY_PRICE]);
             } else {
                 $i[$id] = [
@@ -596,7 +619,7 @@ class ProjectRoleSelector
                     ],
                     self::ARRAY_KEY_PRICE => self::getPrice($obj[self::ARRAY_KEY_PRICE]),
                     self::ARRAY_KEY_IS_CRUD => $obj[self::ARRAY_KEY_IS_CRUD],
-                    self::ARRAY_KEY_IS_HISTORY => $obj[self::ARRAY_KEY_IS_CRUD] ? (bool)$isAccessManageHistory : false,
+                    self::ARRAY_KEY_IS_HISTORY => $obj[self::ARRAY_KEY_IS_CRUD] && $isAccessManageHistory,
                 ];
             }
         }

@@ -621,7 +621,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,3,17,1),(8,1,0,2,17,2),(9,3,1,2,17,1),(10,2,0,1,17,1),(12,1,1,1,17,1);
+INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,3,17,1),(8,1,0,2,17,2),(9,3,1,2,13,1),(10,2,0,1,17,1),(12,1,1,1,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -702,7 +702,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,0,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(4,'CRUD объектов',1,1,0,1,0),(5,'CRUD объемов',0,0,0,0,0);
+INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,1,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(4,'CRUD объектов',1,1,0,1,0),(5,'CRUD объемов',0,0,0,0,0);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

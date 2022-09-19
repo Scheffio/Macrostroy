@@ -869,6 +869,10 @@ body.fixated {
   transition: 0.6s;
   top: -1000px;
 }
+.modal .modal-wrap.delete-role {
+  width: clamp(500px, 80vw, 780px);
+  height: auto;
+}
 .modal .modal-wrap .add-user {
   display: none;
   font-family: "Jost", sans-serif;
@@ -1098,6 +1102,9 @@ body.fixated {
   font-family: "Jost", sans-serif;
   font-size: 24px;
   font-weight: 500;
+}
+.modal .modal-wrap .delete-role .modal-body p {
+  text-align: center;
 }
 .modal .modal-wrap .delete-role .modal-footer {
   margin-bottom: 60px;

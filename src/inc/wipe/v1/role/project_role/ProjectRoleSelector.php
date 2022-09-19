@@ -98,7 +98,6 @@ class ProjectRoleSelector
         $userId = 13;
 //        $user = self::getAuthUserData()[0];
         $user = self::getUsersData($userId)[0];
-        $user[UserRoleTableMap::COL_MANAGE_USERS] = true;
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
@@ -596,37 +595,27 @@ class ProjectRoleSelector
             foreach ($crud as $access) {
                 $colId = Objects::getColIdByLvl($access[ProjectRoleTableMap::COL_LVL]);
 
-//                echo json_encode([
-//                    'obj' => [
-//                        'colName' => $colId,
-//                        'ObjId' => $obj[$colId],
-//                        'AccessObjId' => $access[ProjectRoleTableMap::COL_OBJECT_ID],
-//                        'flagObjId' => $obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID],
-//                    ],
-//                    'project' => [
-//                        'ProjectId' => $obj[ObjProjectTableMap::COL_ID],
-//                        'AccessProjectId' => $access[ProjectRoleTableMap::COL_PROJECT_ID],
-//                        'flagProjectId' => $obj[ObjProjectTableMap::COL_ID] !== $access[ProjectRoleTableMap::COL_PROJECT_ID]
-//                    ],
-//                ]);
-
                 if ($obj[$colId] !== $access[ProjectRoleTableMap::COL_OBJECT_ID] &&
                     $obj[ObjProjectTableMap::COL_ID] !== $access[ProjectRoleTableMap::COL_PROJECT_ID]) continue;
 
-//                if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
-//                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL] &&
-//                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_PROJECT_ID] === $access[ProjectRoleTableMap::COL_PROJECT_ID]) continue;
+                if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
+                    $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL] > $access[ProjectRoleTableMap::COL_LVL]) continue;
 
                 $obj[self::ARRAY_KEY_IS_CRUD] = $access;
             }
         }
 
-        JsonOutput::success([$objs, $crud]);
 
         foreach ($objs as &$obj) {
-            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD] ?? []);
+            if (isset($obj[self::ARRAY_KEY_IS_CRUD]) &&
+                self::$lvl <= $obj[self::ARRAY_KEY_IS_CRUD][ProjectRoleTableMap::COL_LVL]) {
+                $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $obj[self::ARRAY_KEY_IS_CRUD]) ?? false;
+            }
+
+            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, []);
         }
 
+        JsonOutput::success($objs);
         $count = count($objs);
 
         for ($i = 0; $i < $count; $i++) {

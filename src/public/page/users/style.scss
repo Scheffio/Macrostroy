@@ -665,6 +665,10 @@
             transition: .6s;
             top: -1000px;
         }
+        &.delete-role {
+            width: clamp(500px, 80vw, 780px);
+            height: auto;
+        }
         .add-user {
             display: none;
             @include MainTitle;
@@ -881,6 +885,9 @@
             }
             .modal-body {
                 @include TabAnchorName;
+                p {
+                    text-align: center;
+                }
             }
             .modal-footer {
                 button {

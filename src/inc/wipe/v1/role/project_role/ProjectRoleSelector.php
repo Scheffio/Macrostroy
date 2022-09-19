@@ -100,17 +100,23 @@ class ProjectRoleSelector
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
-            $parents = self::getParentsForLvl();
+            $parents = self::getChildObjsForLvl();
             $conditions = self::formingConditionByParents($parents, false);
             $accesses = self::getProjectRoles($conditions, 13);
 
             self::formingObjsForLvl($objs, $accesses, $user);
         }
 
+        $objs = self::mergeObjsForLvl(
+            objs: $objs,
+            isAccessManageHistory: $user[UserRoleTableMap::COL_MANAGE_HISTORY],
+            isAccessManageUsers: $user[UserRoleTableMap::COL_MANAGE_USERS]
+        );
+
         return [
             '$user' => $user,
-//            '$conditions' => $conditions,
-            '$accesses' => $accesses,
+            '$conditions' => $conditions,
+//            '$accesses' => $accesses,
             '$objs' => $objs,
         ];
     }
@@ -144,6 +150,7 @@ class ProjectRoleSelector
 
         return $user[0][self::ARRAY_KEY_IS_CRUD] ?? false;
     }
+
     #region Apply Function
     private static function applyForObj(int &$lvl, int &$objId): void
     {
@@ -411,7 +418,7 @@ class ProjectRoleSelector
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getParentsForLvl(): array
+    private static function getChildObjsForLvl(): array
     {
         $i = self::getParentsQueryForLvl()->find()->getData();
 
@@ -470,9 +477,9 @@ class ProjectRoleSelector
      * @param int|string $price
      * @return string
      */
-    private static function getPrice(int|string $price): string
+    private static function getPrice(float $price): string
     {
-        return number_format((float)$price, 2, '.', '');
+        return number_format($price, 2, '.', '');
     }
     #endregion
 
@@ -590,10 +597,11 @@ class ProjectRoleSelector
      * Объединение данных объектов.
      * @param array $objs Массив объектов.
      * @param int $isAccessManageHistory Разрешен ли пользователю CRUD истории изменений.
+     * @param int $isAccessManageUsers Разрешен ли пользователю CRUD учетныйх записей.
      * @return array
      * @throws IncorrectLvlException
      */
-    private static function mergeObjsForLvl(array &$objs, int &$isAccessManageHistory): array
+    private static function mergeObjsForLvl(array &$objs, int &$isAccessManageHistory, int &$isAccessManageUsers): array
     {
         $i = [];
         $colId = Objects::getColIdByLvl(self::$lvl);
@@ -606,8 +614,10 @@ class ProjectRoleSelector
 
             if (isset($i[$id])) {
                 if (!$obj[self::ARRAY_KEY_PRICE]) continue;
-                $i[$id][self::ARRAY_KEY_PRICE] = self::getPrice($i[$id][self::ARRAY_KEY_PRICE] + $obj[self::ARRAY_KEY_PRICE]);
+                $price = (float)$i[$id][self::ARRAY_KEY_PRICE] + $obj[self::ARRAY_KEY_PRICE];
+                $i[$id][self::ARRAY_KEY_PRICE] = self::getPrice($price);
             } else {
+                $isCrud = $obj[self::ARRAY_KEY_IS_CRUD] ?? $isAccessManageUsers;
                 $i[$id] = [
                     self::ARRAY_KEY_ID => $id,
                     self::ARRAY_KEY_NAME => $obj[$colName],
@@ -617,14 +627,14 @@ class ProjectRoleSelector
                         self::ARRAY_KEY_ID => $obj[UsersTableMap::COL_ID],
                         self::ARRAY_KEY_NAME => $obj[UsersTableMap::COL_USERNAME],
                     ],
-                    self::ARRAY_KEY_PRICE => self::getPrice($obj[self::ARRAY_KEY_PRICE]),
-                    self::ARRAY_KEY_IS_CRUD => $obj[self::ARRAY_KEY_IS_CRUD],
-                    self::ARRAY_KEY_IS_HISTORY => $obj[self::ARRAY_KEY_IS_CRUD] && $isAccessManageHistory,
+                    self::ARRAY_KEY_PRICE => self::getPrice((float)$obj[self::ARRAY_KEY_PRICE]),
+                    self::ARRAY_KEY_IS_CRUD => (bool)$isCrud,
+                    self::ARRAY_KEY_IS_HISTORY => $isCrud && $isAccessManageHistory,
                 ];
             }
         }
 
-        return $i;
+        return array_values($i);
     }
     #endregion
 }

@@ -192,12 +192,18 @@ const rolesControl = {
 
         console.log(`object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`);
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
-        searchRole(url.searchParams.get('q'))
+        parsePermissions(url.searchParams.get('q'), searchRole(url.searchParams.get('q')))
     },
 }
 
 function searchRole(id) {
-    document.querySelectorAll('.roles > *').forEach((elem) => {elem.children[0].dataset.id == id ? return})
+    let result
+    document.querySelectorAll('.roles > *').forEach((elem) => {
+        if(elem.children[0].dataset.id == id) {
+            result = elem
+        }
+    })
+    return result
 }
 
 function parsePermissions(id, elem) {

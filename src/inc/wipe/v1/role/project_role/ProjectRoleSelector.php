@@ -18,8 +18,10 @@ use DB\ObjGroupQuery;
 use DB\ObjGroupVersionQuery;
 use DB\ObjHouseQuery;
 use DB\ObjStageMaterialQuery;
+use DB\ObjStageMaterialVersionQuery;
 use DB\ObjStageQuery;
 use DB\ObjStageTechnicQuery;
+use DB\ObjStageTechnicVersionQuery;
 use DB\ObjStageVersionQuery;
 use DB\ObjStageWorkQuery;
 use DB\ObjSubprojectQuery;
@@ -28,9 +30,11 @@ use DB\UserRoleQuery;
 use DB\UsersQuery;
 use DB\VolMaterialQuery;
 use DB\VolTechnicQuery;
+use DB\VolUnitQuery;
 use DB\VolWorkMaterialQuery;
 use DB\VolWorkQuery;
 use DB\VolWorkTechnicQuery;
+use DB\VolWorkVersionQuery;
 use Illuminate\Support\Js;
 use inc\artemy\v1\json_output\JsonOutput;
 use JetBrains\PhpStorm\ArrayShape;
@@ -76,16 +80,18 @@ class ProjectRoleSelector
         return $users;
     }
 
-    public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId)
+    public static function getAuthUserCrudForLvl(int &$lvl, int &$parentId, int &$limit, int &$limitFrom)
     {
-        $user = self::getAuthUserData();
+        $user = self::getAuthUserData()[0];
         $parents = self::getParentsForLvl($lvl, $parentId);
         $conditions = self::formingConditionByParents($parents, false);
         $accesses = self::getProjectRoles($conditions, 17);
+        $objs = self::getObjsForLvl($parentId, $lvl, $limit, $limitFrom, $user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         return [
             '$conditions' => $conditions,
-            '$accesses' => $accesses
+            '$accesses' => $accesses,
+            '$objs' => $objs,
         ];
     }
 
@@ -146,16 +152,83 @@ class ProjectRoleSelector
         return $i;
     }
 
-    private static function getLvlQuery(int &$lvl, int &$parentId, int|bool $isAccessManageUsers)
+    /**
+     * Возвращает запрос на вывод данных об объекте с стоимость и дополнительной фильтрацией.
+     * @param int $parentId ID родительского объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $limit Лимит вывода.
+     * @param int $limitFrom Лимит, с которого необходимо начать вывод.
+     * @param bool $isAccessManageUsers Разрешено ли пользователю CRUD учетных записей.
+     * @return ObjHouseQuery|\DB\ObjProjectQuery|ObjStageMaterialQuery|ObjStageMaterialVersionQuery|ObjStageTechnicQuery|ObjStageTechnicVersionQuery|ObjStageVersionQuery|ObjStageWorkQuery|ObjSubprojectQuery|UserRoleQuery|VolMaterialQuery|VolUnitQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery|VolWorkVersionQuery
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws PropelException
+     */
+    private static function getObjsQuery(int &$parentId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): ObjStageTechnicVersionQuery|VolUnitQuery|VolMaterialQuery|\DB\ObjProjectQuery|VolWorkMaterialQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolWorkTechnicQuery|ObjStageWorkQuery|VolWorkVersionQuery
+    {
+        $i = self::getObjsPriceQuery($lvl);
+
+        if ($parentId) {
+            $preLvl = AccessLvl::getPreLvlIntObj($lvl);
+            $colId = Objects::getColIdByLvl($preLvl);
+            $i->where($colId . '=?', $parentId);
+        }
+
+        if (!$isAccessManageUsers) {
+            $colStatus = Objects::getColStatusByLvl($lvl);
+            $i->where($colStatus . '!=?', Objects::ATTRIBUTE_STATUS_DELETED);
+        }
+
+        if ($limitFrom) {
+            $colId = Objects::getColIdByLvl($lvl);
+            $i->where($colId . '>?', $limitFrom);
+        }
+
+        return $i->limit($limit)->orderById();
+    }
+
+    /**
+     * Возвращает запрос на вывод данных об объекте с стоимостью.
+     * @param int $lvl Уроыень доступа.
+     * @return VolUnitQuery|ObjStageTechnicVersionQuery|ObjGroupQuery|VolMaterialQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageVersionQuery|ObjStageMaterialQuery|VolTechnicQuery|VolWorkTechnicQuery|VolWorkVersionQuery|ObjStageWorkQuery|UsersQuery
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    private static function getObjsPriceQuery(int &$lvl): VolUnitQuery|ObjStageTechnicVersionQuery|ObjGroupQuery|VolMaterialQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|ObjStageQuery|ObjStageTechnicQuery|ObjStageMaterialVersionQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|ObjSubprojectQuery|ObjHouseQuery|ObjStageVersionQuery|ObjStageMaterialQuery|VolTechnicQuery|VolWorkTechnicQuery|VolWorkVersionQuery|ObjStageWorkQuery|UsersQuery
     {
         $multiplySwStr = ObjStageWorkTableMap::COL_PRICE . '*' . ObjStageWorkTableMap::COL_AMOUNT;
         $multiplyStStr = ObjStageTechnicTableMap::COL_PRICE . '*' . ObjStageTechnicTableMap::COL_AMOUNT;
         $multiplySmStr = ObjStageMaterialTableMap::COL_PRICE . '*' . ObjStageMaterialTableMap::COL_AMOUNT;
         $sumStr = "ROUND(($multiplySwStr) + ($multiplyStStr) + ($multiplySmStr), 2)";
 
-        
-
-
+        return ObjProjectQuery::create()
+                ->select([
+                    Objects::getColNameByLvl($lvl),
+                    Objects::getColStatusByLvl($lvl),
+                    Objects::getColIsPublicByLvl($lvl),
+                    ObjProjectTableMap::COL_ID,
+                    ObjSubprojectTableMap::COL_ID,
+                    ObjGroupTableMap::COL_ID,
+                    ObjHouseTableMap::COL_ID,
+                    ObjStageTableMap::COL_ID,
+                    ObjStageWorkTableMap::COL_ID,
+                    UsersTableMap::COL_ID,
+                    UsersTableMap::COL_USERNAME,
+                ])
+                ->withColumn($sumStr, 'price')
+                ->leftJoinUsers()
+                ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                        ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                            ->useObjStageQuery(joinType: Criteria::LEFT_JOIN)
+                                ->useObjStageWorkQuery(joinType: Criteria::LEFT_JOIN)
+                                    ->leftJoinObjStageMaterial()
+                                    ->leftJoinObjStageTechnic()
+                                ->endUse()
+                            ->endUse()
+                        ->endUse()
+                    ->endUse()
+                ->endUse();
     }
 
     /**
@@ -334,6 +407,23 @@ class ProjectRoleSelector
     private static function getProjectRoles(array &$conditions, ?int $userId = null): array
     {
         return self::getProjectRolesQuery($conditions, $userId)->find()->getData();
+    }
+
+    /**
+     * Вывод объектов по уровню доступа.
+     * @param int $parentId ID родитеьского объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $limit Макс. кол-во выводимых записей.
+     * @param int $limitFrom После какого ID объекта начинается вывод.
+     * @param bool $isAccessManageUsers Разрешен ли пользователю CRUD учетных записей.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws PropelException
+     */
+    private static function getObjsForLvl(int &$parentId, int &$lvl, int &$limit, int &$limitFrom, bool &$isAccessManageUsers): array
+    {
+        return self::getObjsQuery($parentId, $lvl, $limit, $limitFrom, $isAccessManageUsers)->find()->getData();
     }
     #endregion
 

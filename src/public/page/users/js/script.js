@@ -180,10 +180,21 @@ const rolesControl = {
             })
         })
     },
-    saveRolePermissions(elem) {
-        elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
-        elem.getAttribute('id') == "version-control" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&manage_history=${elem.checked ? true : false}`, {method: 'PUT'}) : null
-        elem.getAttribute('id') == "all" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${true}&manage_objects=${true}&manage_volumes=${true}&manage_history=${true}&manage_users=${true}`, {method: 'PUT'}) : null
+    saveRolePermissions() {
+        let admin_PERM, objectCrud_PERM, volumeCrud_PERM, history_PERM, watch_PERM
+        this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
+        this.objectCrudAllCheckbox.checked ? objectCrud_PERM = true : objectCrud_PERM = false
+        this.objectCrudExactCheckbox.checked ? objectCrud_PERM = false : objectCrud_PERM = true
+        this.volumeCrudAllCheckbox.checked ? volumeCrud_PERM = true : volumeCrud_PERM = false
+        this.volumeCrudExactCheckbox.checked ? volumeCrud_PERM = false : volumeCrud_PERM = true
+        this.versionControlCheckbox.checked ? history_PERM = true : watchistory_PERMh_PERM = false
+        this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
+        this.watchobjectsCheckbox.checked ? watch_PERM = true : watch_PERM = false
+
+
+        // elem.getAttribute('id') == "watch" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${elem.checked ? true : false}`, {method: 'PUT'}) : null
+        // elem.getAttribute('id') == "version-control" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&manage_history=${elem.checked ? true : false}`, {method: 'PUT'}) : null
+        // elem.getAttribute('id') == "all" ? fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${true}&manage_objects=${true}&manage_volumes=${true}&manage_history=${true}&manage_users=${true}`, {method: 'PUT'}) : null
     },
 }
 

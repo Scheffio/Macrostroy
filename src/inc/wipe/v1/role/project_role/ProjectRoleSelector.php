@@ -99,7 +99,7 @@ class ProjectRoleSelector
             $conditions = self::formingConditionByParents($parents, false);
             $accesses = self::getProjectRoles($conditions, 17);
 
-            self::formingObjsForLvl($objs, $accesses);
+            self::formingObjsForLvl($objs, $accesses, $user);
         }
 
         return [
@@ -539,7 +539,7 @@ class ProjectRoleSelector
         }
     }
 
-    private static function formingObjsForLvl(array &$objs, array &$crud): void
+    private static function formingObjsForLvl(array &$objs, array &$crud, array &$user): void
     {
         foreach ($objs as &$obj) {
             foreach ($crud as &$access) {
@@ -552,9 +552,14 @@ class ProjectRoleSelector
                 $obj[self::ARRAY_KEY_IS_CRUD] =& $access;
             }
         }
+
+        foreach ($objs as &$obj) {
+            $crud = $obj[self::ARRAY_KEY_IS_CRUD] ?? [];
+            $obj[self::ARRAY_KEY_IS_CRUD] = self::isAccessCrud($user, $crud);
+        }
     }
 
-    private static function mergeObjsForLvl(array &$objs): void
+    private static function mergeObjsForLvl(array &$objs)
     {
 
     }

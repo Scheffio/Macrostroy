@@ -14,7 +14,7 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -36,11 +36,7 @@ try {
         // Проверка, что таблица доступна для редактирования, т.е. статус равен "В процессе".
         Objects::getObject(id: $parentId, lvl: $parentLvl)->isEditableOrThrow();
 
-        $flag = ProjectRole::isAccessCrudObj(
-            lvl: $parentLvl,
-            userId: AuthUserRole::getUserId(),
-            objId: $parentId
-        );
+        $flag = ProjectRoleSelector::isAccessCrudAuthUserByObj(lvl: $lvl, objId: $parentId);
     }
 
     if (!AuthUserRole::isAccessManageUsers() &&

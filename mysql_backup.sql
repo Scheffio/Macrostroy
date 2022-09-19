@@ -38,7 +38,7 @@ CREATE TABLE `obj_group` (
   KEY `version_created_by` (`version_created_by`),
   CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`subproject_id`) REFERENCES `obj_subproject` (`id`),
   CONSTRAINT `obj_group_ibfk_12` FOREIGN KEY (`version_created_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `obj_group` (
 
 LOCK TABLES `obj_group` WRITE;
 /*!40000 ALTER TABLE `obj_group` DISABLE KEYS */;
-INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert');
+INSERT INTO `obj_group` VALUES (1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert'),(3,'GroupBlaBla','in_process',1,1,1,1,'2022-09-19 09:23:08',12,'insert');
 /*!40000 ALTER TABLE `obj_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,7 +83,7 @@ CREATE TABLE `obj_group_version` (
 
 LOCK TABLES `obj_group_version` WRITE;
 /*!40000 ALTER TABLE `obj_group_version` DISABLE KEYS */;
-INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12',12,'insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42',12,'update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete',2,'| 1 |','| 4 |'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert',1,NULL,NULL);
+INSERT INTO `obj_group_version` VALUES (1,'GroupTest1','in_process',1,1,3,1,'2022-09-05 09:27:12',12,'insert',1,NULL,NULL),(1,'PutTestGroup','in_process',1,1,3,2,'2022-09-05 09:38:42',12,'update',2,'| 1 |','| 2 |'),(1,'PutTestGroup','deleted',0,0,3,3,'2022-09-05 10:15:01',12,'delete',2,'| 1 |','| 4 |'),(2,'Group','in_process',1,1,1,1,'2022-09-07 11:09:10',12,'insert',1,NULL,NULL),(3,'GroupBlaBla','in_process',1,1,1,1,'2022-09-19 09:23:08',12,'insert',1,NULL,NULL);
 /*!40000 ALTER TABLE `obj_group_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -621,7 +621,7 @@ CREATE TABLE `project_role` (
 
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
-INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,3,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,2,0,4,17,1),(12,1,1,1,17,1);
+INSERT INTO `project_role` VALUES (4,2,1,2,17,2),(7,2,1,3,17,1),(8,1,0,2,17,2),(9,3,0,2,17,1),(10,2,0,1,17,1),(12,1,1,1,17,1);
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

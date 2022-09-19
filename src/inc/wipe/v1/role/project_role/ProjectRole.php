@@ -165,23 +165,6 @@ class ProjectRole
     }
     #endregion
 
-    #region Static Access Control Functions
-    /**
-     * Разрешен ли пользователю CRUD по объекту.
-     * @param int $lvl Номер уровня доступа.
-     * @param int $userId ID пользователя.
-     * @param int|null $objId ID объекта.
-     * @return bool
-     * @throws IncorrectLvlException
-     * @throws InvalidAccessLvlIntException
-     * @throws PropelException
-     */
-    public static function isAccessCrudObj(int $lvl, int $userId, ?int $objId = null): bool
-    {
-        return self::getCrudUsersByObj($lvl, $objId, $userId)[0]['isCrud'] ?? false;
-    }
-    #endregion
-
     #region Getter Functions
     /** @return int|null ID роли проекта. */
     public function getProjectRoleId(): ?int
@@ -284,61 +267,6 @@ class ProjectRole
     public static function getDefault(): ProjectRole
     {
         return new ProjectRole();
-    }
-
-    public static function getAuthUserCrudByLvl(int &$lvl, int &$parentId): array
-    {
-        $userId = 17;
-        $result = [];
-        $parents =  self::getParentsForLvl($lvl, $parentId);
-                    self::formingParentsAsCondition($parents);
-
-        foreach ($parents as &$parent) {
-            foreach ($parent as &$item) {
-                $result[] =& $item;
-            }
-        }
-
-        $if = self::formingParentsAsIf($result);
-        $users = self::getUsersCrud($if, $userId);
-
-        JsonOutput::success([
-            $parents,
-            $result,
-            $if,
-            $users,
-        ]);
-
-        return [];
-    }
-
-    public static function getUserCrudById(int &$lvl, int &$userId, ?int &$projectId): array
-    {
-//        $user = self::getUsersQuery($lvl, $projectId, $userId)->find()->getData();
-//
-//        if ($user) {
-//            self::formingUsersDataById($user);
-//            self::filterUsersCrudByLvl($lvl, $user);
-//        } else throw new NoUserFoundException();
-//
-//        return $user[0];
-
-        return [];
-    }
-
-    private static function getCrudByLvl(int $lvl, int $userId, array $parents)
-    {
-//        $query = ProjectRoleQuery::create()
-//                ->select([
-//                    ProjectRoleTableMap::COL_LVL,
-//                    ProjectRoleTableMap::COL_IS_CRUD,
-//                    ProjectRoleTableMap::COL_OBJECT_ID,
-//                ])
-//                ->where(ProjectRoleTableMap::COL_LVL . '>=?', $lvl);
-//
-//        if ($parentId) {
-//
-//        }
     }
     #endregion
 

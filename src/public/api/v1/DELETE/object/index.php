@@ -14,7 +14,7 @@ use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -33,11 +33,7 @@ try {
 
     if (!AuthUserRole::isAccessManageUsers() &&
         !AuthUserRole::isAccessManageObjects() &&
-        !ProjectRole::isAccessCrudObj(
-            lvl: $lvl,
-            userId: AuthUserRole::getUserId(),
-            objId: $id
-        )
+        !ProjectRoleSelector::isAccessCrudAuthUserByObj(lvl: $lvl, objId: $id)
     ) {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }

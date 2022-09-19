@@ -95,18 +95,16 @@ class ProjectRoleSelector
     {
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
+        $userId = 13;
 //        $user = self::getAuthUserData()[0];
-        $user = self::getUsersData(13)[0];
+        $user = self::getUsersData($userId)[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
             $parents = self::getChildObjsForLvl();
-//            $conditions = self::formingConditionByParents($parents, false);
-
-            JsonOutput::success($parents);
-//            $accesses = self::getProjectRoles($conditions, 13);
-//
-//            self::formingObjsForLvl($objs, $accesses, $user);
+            $conditions = self::formingConditionByParents($parents, false);
+            $accesses = self::getProjectRoles($conditions, $userId);
+            self::formingObjsForLvl($objs, $accesses, $user);
         }
 
         return self::mergeObjsForLvl(
@@ -428,7 +426,26 @@ class ProjectRoleSelector
      */
     private static function getChildObjsForLvl(): array
     {
-        return self::getParentsQueryForLvl()->find()->getData();
+        $a = [];
+        $r = [];
+        $i = self::getParentsQueryForLvl()->find()->getData();
+
+        foreach ($i as &$item) {
+            foreach ($item as $key=>&$value) {
+                if ($value === null ||
+                    (isset($a[$key])) && in_array($value, $a[$key])) continue;
+
+                $a[$key][] =& $value;
+            }
+        }
+
+        foreach ($a as $key=>&$value) {
+            foreach ($value as &$item) {
+                $r[][$key] =& $item;
+            }
+        }
+
+        return $r;
     }
 
     /**

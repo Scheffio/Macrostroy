@@ -122,11 +122,11 @@
         </div>
         <div class="actions">
             <div class="add-role">
-                <button class="add-role__button" onclick="modalSystem.show('add')"><span
+                <button class="add-role__button" onclick="modalSystem.show('add-role')"><span
                         class="add"></span>Добавить</button>
             </div>
             <div class="delete-role">
-                <button class="delete-role__button" onclick="modalSystem.show('delete')"><span
+                <button class="delete-role__button" onclick="modalSystem.show('delete-role')"><span
                         class="delete"></span>Удалить</button>
             </div>
         </div>

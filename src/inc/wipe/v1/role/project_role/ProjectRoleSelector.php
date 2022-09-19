@@ -60,6 +60,7 @@ class ProjectRoleSelector
     private const ARRAY_KEY_USER = 'user';
     private const ARRAY_KEY_PRICE = 'price';
     private const ARRAY_KEY_IS_HISTORY = 'isHistory';
+    private const ARRAY_KEY_OBJECTS = 'objects';
 
     private static ?int $lvl = null;
     private static ?int $objId = null;
@@ -95,7 +96,8 @@ class ProjectRoleSelector
     {
         self::applyForLvl($lvl, $parentId, $limit, $limitFrom);
 
-        $user = self::getAuthUserData()[0];
+//        $user = self::getAuthUserData()[0];
+        $user = self::getUsersData(17)[0];
         $objs = self::getObjsForLvl($user[UserRoleTableMap::COL_MANAGE_USERS]);
 
         if (!$user[UserRoleTableMap::COL_MANAGE_USERS]) {
@@ -103,13 +105,22 @@ class ProjectRoleSelector
             $conditions = self::formingConditionByParents($parents, false);
             $accesses = self::getProjectRoles($conditions, $user[UsersTableMap::COL_ID]);
             self::formingObjsForLvl($objs, $accesses, $user);
+            JsonOutput::success([
+                $user,
+                $accesses,
+                self::isAccesCrudByParent($user, $accesses)
+            ]);
         }
 
-        return self::mergeObjsForLvl(
-            objs: $objs,
-            isAccessManageHistory: $user[UserRoleTableMap::COL_MANAGE_HISTORY],
-            isAccessManageUsers: $user[UserRoleTableMap::COL_MANAGE_USERS]
-        );
+        return [
+            self::ARRAY_KEY_IS_CRUD => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
+            self::ARRAY_KEY_IS_ADMIN => (bool)$user[UserRoleTableMap::COL_MANAGE_USERS],
+            self::ARRAY_KEY_OBJECTS =>  self::mergeObjsForLvl(
+                                            objs: $objs,
+                                            isAccessManageHistory: $user[UserRoleTableMap::COL_MANAGE_HISTORY],
+                                            isAccessManageUsers: $user[UserRoleTableMap::COL_MANAGE_USERS]
+                                        )
+        ];
     }
 
     /**
@@ -489,9 +500,23 @@ class ProjectRoleSelector
 
         return null;
     }
+
+    private static function isAccesCrudByParent(array $user, array $crud)
+    {
+        $i = [];
+
+        foreach ($crud as &$access) {
+            if ($access[ProjectRoleTableMap::COL_LVL] !== self::$lvl &&
+                !($access[ProjectRoleTableMap::COL_LVL] < self::$lvl)) continue;
+
+            $i =& $access;
+        }
+
+        return $i;
+    }
     #endregion
 
-    #regions Getter && Setter Functions
+    #region Getter && Setter Functions
     /**
      * Возвращает округленную стоимость с 2 знаками после запятой.
      * @param int|string $price

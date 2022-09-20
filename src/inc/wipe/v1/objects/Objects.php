@@ -46,6 +46,7 @@ use wipe\inc\v1\objects\children\Project;
 use wipe\inc\v1\objects\children\Stage;
 use wipe\inc\v1\objects\children\Subproject;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
+use wipe\inc\v1\objects\exception\NoAccessEditStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
 use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
@@ -53,6 +54,8 @@ use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\user_role\AuthUserRole;
+use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
+use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
 
 class Objects
@@ -689,10 +692,16 @@ class Objects
      * @param string|null $status Наименование статуса разработки (self::ATTRIBUTE_STATUS_).
      * @return Objects
      * @throws IncorrectStatusException
+     * @throws NoAccessEditStatusException
+     * @throws NoUserFoundException
+     * @throws NoRoleFoundException
      */
     public function setStatus(?string $status): Objects
     {
         if ($status !== null && $this->status !== $status) {
+            if ($status === $this::ATTRIBUTE_STATUS_IN_PROCESS
+                && !AuthUserRole::isAccessManageUsers()) throw new NoAccessEditStatusException();
+
             if ($status === $this::ATTRIBUTE_STATUS_IN_PROCESS ||
                 $status === $this::ATTRIBUTE_STATUS_COMPLETED ||
                 $status === $this::ATTRIBUTE_STATUS_DELETED) $this->status = $status;
@@ -710,6 +719,7 @@ class Objects
     public function setIsPublic(?bool $isPublic = true): Objects
     {
         if ($isPublic !== null && $this->isPublic !== $isPublic) {
+            if (!AuthUserRole::isAccessManageUsers()) 
             $this->isPublic = $isPublic;
         }
 

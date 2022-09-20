@@ -674,38 +674,7 @@
             @include MainTitle;
             flex-direction: column;
             span {
-                width: 25px;
-                height: 25px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                position: absolute;
-                top: 20px;
-                transition: .3s;
-                right: 20px;
-                &::before{
-                    content: '';
-                    display: block;
-                    width: 15px;
-                    height: 2px;
-                    background-color: black;
-                    transform: rotate(-45deg);
-                    position: absolute;
-                }
-                &::after {
-                    content: '';
-                    display: block;
-                    width: 15px;
-                    height: 2px;
-                    background-color: black;
-                    transform: rotate(45deg);
-                    position: absolute;
-                }
-                &:hover {
-                    cursor: pointer;
-                    opacity: .6;
-                    transition: .3s;
-                }
+                @include modalCloseButton;
             }
             &.opened {
                 display: flex;
@@ -810,6 +779,9 @@
             }
         }
         .delete-user {
+            span {
+                @include modalCloseButton;
+            }
             display: none;
             &.opened {
                 display: flex;
@@ -825,6 +797,9 @@
             }
         }
         .info-user {
+            span {
+                @include modalCloseButton;
+            }
             display: none;
             &.opened {
                 display: flex;
@@ -840,6 +815,9 @@
             }
         }
         .edit-user {
+            span {
+                @include modalCloseButton;
+            }
             display: none;
             &.opened {
                 display: flex;
@@ -855,6 +833,9 @@
             }
         }
         .add-role {
+            span {
+                @include modalCloseButton;
+            }
             display: none;
             &.opened {
                 display: flex;
@@ -907,6 +888,9 @@
             }
         }
         .delete-role {
+            span {
+                @include modalCloseButton;
+            }
             display: none;
             &.opened {
                 display: flex;
@@ -932,7 +916,7 @@
                 button {
                     @include Button($EstiminColor4, white, 140px, 40px)
                 }
-                margin-bottom: 60px;
+                margin-bottom: 30px;
             }
         }
         

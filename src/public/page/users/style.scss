@@ -801,7 +801,7 @@
             }
         }
         .delete-user {
-            span {
+            span[onclick="modalSystem.hide()"] {
                 @include modalCloseButton;
             }
             display: none;
@@ -821,9 +821,6 @@
                 @include TabAnchorName;
                 p {
                     text-align: center;
-                    span {
-                        color: red;
-                    }
                 }
             }
             .modal-footer {

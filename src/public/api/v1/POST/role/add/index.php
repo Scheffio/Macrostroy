@@ -4,6 +4,7 @@
 use inc\artemy\v1\request\Request;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
+use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -13,20 +14,16 @@ $user = new UserRole();
 $request = new Request();
 
 try {
-    $user->applyByUserAuth()->isAccessManageUsersOrThrow();
-
-    $request->checkRequestVariablesOrError(
-        'role_name', 'object_viewer', 'manage_objects', 'manage_volumes', 'manage_history', 'manage_users'
-    );
+    AuthUserRole::isAccessManageUsersOrThrow();
 
     JsonOutput::success(
         $user
-            ->setRoleName($request->getRequest("role_name"))
-            ->setAccessObjectViewer($request->getRequest("object_viewer"))
-            ->setAccessManageObjects($request->getRequest("manage_objects"))
-            ->setAccessManageVolumes($request->getRequest("manage_volumes"))
-            ->setAccessManageHistory($request->getRequest("manage_history"))
-            ->setAccessManageUsers($request->getRequest("manage_users"))
+            ->setRoleName($request->getRequestOrThrow("role_name"))
+            ->setAccessObjectViewer(false)
+            ->setAccessManageObjects(false)
+            ->setAccessManageVolumes(false)
+            ->setAccessManageHistory(false)
+            ->setAccessManageUsers(false)
             ->add()
             ->getRoleId()
     );

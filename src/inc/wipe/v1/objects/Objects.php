@@ -949,8 +949,16 @@ class Objects
                         $lvlKey !== $key ||
                         in_array($value, $lvlValue)) continue;
 
-
+                    $parentId = null;
                     $objLvl = AccessLvl::getLvlIntObjByColId($key);
+
+                    if ($objLvl !== eLvlObjInt::PROJECT->value) {
+                        $preLvl = AccessLvl::getPreLvlIntObj($objLvl);
+                        $parentId =& $obj[self::getColIdByLvl($preLvl)];
+                    }
+
+                    $newId = self::copeObjById($objLvl, $value, $parentId);
+                    $lvlValue[] =+
                 }
             }
         }
@@ -965,12 +973,13 @@ class Objects
      * Копирование объекта по уровню и ID.
      * @param int $lvl Уровень доступа.
      * @param int $id ID объекта.
+     * @param int|null $parentId ID родительского объекта.
      * @return int
      * @throws IncorrectLvlException
      * @throws NoFindObjectException
      * @throws PropelException
      */
-    private static function copeObjById(int $lvl, int $id): int
+    private static function copeObjById(int $lvl, int $id, ?int $parentId = null): int
     {
         $i = self::getObjDataById($lvl, $id);
 
@@ -980,7 +989,15 @@ class Objects
         $n->setIsPublic($i->getName());
         $n->setIsAvailable($i->getName());
 
-        if ()
+        if ($lvl !== eLvlObjInt::PROJECT->value) {
+            switch ($lvl) {
+                case eLvlObjInt::SUBPROJECT->value: $n->setProjectId($parentId); break;
+                case eLvlObjInt::GROUP->value: $n->setSubprojectId($parentId); break;
+                case eLvlObjInt::HOUSE->value: $n->setGroupId($parentId); break;
+                case eLvlObjInt::STAGE->value: $n->setHouseId($parentId); break;
+                default: throw new IncorrectLvlException();
+            }
+        }
 
         $n->save();
 

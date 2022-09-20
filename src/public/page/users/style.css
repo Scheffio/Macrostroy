@@ -1064,7 +1064,7 @@ body.fixated {
 .modal .modal-wrap .delete-user {
   display: none;
 }
-.modal .modal-wrap .delete-user span {
+.modal .modal-wrap .delete-user span[onclick="modalSystem.hide()"] {
   width: 25px;
   height: 25px;
   display: flex;
@@ -1075,7 +1075,7 @@ body.fixated {
   transition: 0.3s;
   right: 20px;
 }
-.modal .modal-wrap .delete-user span::before {
+.modal .modal-wrap .delete-user span[onclick="modalSystem.hide()"]::before {
   content: "";
   display: block;
   width: 15px;
@@ -1084,7 +1084,7 @@ body.fixated {
   transform: rotate(-45deg);
   position: absolute;
 }
-.modal .modal-wrap .delete-user span::after {
+.modal .modal-wrap .delete-user span[onclick="modalSystem.hide()"]::after {
   content: "";
   display: block;
   width: 15px;
@@ -1093,7 +1093,7 @@ body.fixated {
   transform: rotate(45deg);
   position: absolute;
 }
-.modal .modal-wrap .delete-user span:hover {
+.modal .modal-wrap .delete-user span[onclick="modalSystem.hide()"]:hover {
   cursor: pointer;
   opacity: 0.6;
   transition: 0.3s;
@@ -1119,9 +1119,6 @@ body.fixated {
 }
 .modal .modal-wrap .delete-user .modal-body p {
   text-align: center;
-}
-.modal .modal-wrap .delete-user .modal-body p span {
-  color: red;
 }
 .modal .modal-wrap .delete-user .modal-footer {
   display: flex;

@@ -183,7 +183,7 @@
             <div class="edit-user">
                 <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
-                    <p>Редактирование пользователя «<span class="username-span"></span>»</p>
+                    <p>Редактирование пользователя</p>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer"></div>

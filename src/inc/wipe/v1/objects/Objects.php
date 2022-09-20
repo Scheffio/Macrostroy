@@ -825,6 +825,8 @@ class Objects
         $objs = self::getObjs($lvl, $id);
 
         if ($objs) {
+            self::copy($lvl, $id, $objs);
+
             JsonOutput::success([
                 '$id' => $id,
                 '$lvl' => $lvl,
@@ -894,21 +896,40 @@ class Objects
 
     private static function copy(int $lvl, int $id, array $objs)
     {
-        $keys = [
-            ObjProjectTableMap::COL_ID,
-            ObjSubprojectTableMap::COL_ID,
-            ObjGroupTableMap::COL_ID,
-            ObjHouseTableMap::COL_ID,
-            ObjStageTableMap::COL_ID,
+        $lvlKeys = [
+            ObjProjectTableMap::COL_ID => [],
+            ObjSubprojectTableMap::COL_ID => [],
+            ObjGroupTableMap::COL_ID => [],
+            ObjHouseTableMap::COL_ID => [],
+            ObjStageTableMap::COL_ID => [],
         ];
 
-        foreach ($keys as &$key) {
+        foreach ($lvlKeys as $lvlKey=>&$lvlValue) {
             foreach ($objs as &$obj) {
-                foreach ($objs as $key=>&$value) {
-                    if ()
+                foreach ($obj as $key=>&$value) {
+                    if ($value === null) continue;
+
+                    if ($lvlKey === $key && !in_array($value, $lvlValue)) {
+//                        $lvlValue[] = $value;
+                        $objLvl = AccessLvl::getLvlIntObjByColId($key);
+
+                    }
                 }
             }
         }
+
+        JsonOutput::success([
+            '$objs' => $objs,
+            '$lvlKeys' => $lvlKeys
+        ]);
+    }
+
+    private static function addProjectById(int $id)
+    {
+        $i = ObjProjectQuery::create()->findPk($id) ?? throw new NoFindObjectException();
+
+        $n = new ObjProject();
+        $n->setName()->setStatus()->setIsPublic()->setIsAvailable()
     }
     #endregion
 

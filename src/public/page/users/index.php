@@ -199,7 +199,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button>Добавить</button>
+                    <button onclick="rolesControl.addRole(this.)">Добавить</button>
                 </div>
             </div>
             <div class="delete-role">

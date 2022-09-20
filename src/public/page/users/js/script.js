@@ -4,6 +4,7 @@ fetch(`/api/v1/users`).then((elem) => {
 }).then((json) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+        document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', ())})
     })
 })
 
@@ -284,4 +285,3 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 rolesControl.parseRoles()
-document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {modalSystem.show('delete-user')})})

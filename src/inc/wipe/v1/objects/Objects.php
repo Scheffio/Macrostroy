@@ -810,4 +810,11 @@ class Objects
         return $this;
     }
     #endregion
+
+    #region Copy Functions
+    public static function copyObj()
+    {
+
+    }
+    #endregion
 }

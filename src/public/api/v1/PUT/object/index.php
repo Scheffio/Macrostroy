@@ -95,20 +95,22 @@ try {
     }
 
     JsonOutput::success();
-} catch (InvalidAccessLvlIntException|IncorrectLvlException $e) {
-    JsonOutput::error('Некорректный номер уровня доступа');
-} catch (InvalidAccessLvlStrException $e) {
-    JsonOutput::error('Некорректное наименование уровня доступа');
-} catch (IncorrectStatusException $e) {
-    JsonOutput::error('Некорректный статус объекта');
+} catch (AccessDeniedException|PropelException $e) {
+    JsonOutput::error($e->getMessage());
 } catch (NoFindObjectException $e) {
     JsonOutput::error('Некорректный объект');
-} catch (PropelException|AccessDeniedException $e) {
-    JsonOutput::error($e->getMessage());
+} catch (IncorrectLvlException $e) {
+    JsonOutput::error('Некорректный уровень доступа');
+} catch (IncorrectStatusException $e) {
+    JsonOutput::error('Некорректный статус объекта');
+} catch (InvalidAccessLvlIntException $e) {
+    JsonOutput::error('Некорректный номер уровня доступа');
 } catch (NoRoleFoundException $e) {
     JsonOutput::error('Некорректная роль');
 } catch (NoUserFoundException $e) {
     JsonOutput::error('Неизвестный пользователь');
+} catch (InvalidAccessLvlStrException $e) {
+    JsonOutput::error('Некорректное наименование уровня доступа');
 } catch (ObjectIsNotEditableException $e) {
     JsonOutput::error('Объект недоступен для редактирования');
 }

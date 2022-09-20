@@ -46,6 +46,7 @@ use wipe\inc\v1\objects\children\Project;
 use wipe\inc\v1\objects\children\Stage;
 use wipe\inc\v1\objects\children\Subproject;
 use wipe\inc\v1\objects\exception\AccessDeniedException;
+use wipe\inc\v1\objects\exception\NoAccessEditPrivacyException;
 use wipe\inc\v1\objects\exception\NoAccessEditStatusException;
 use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
@@ -715,11 +716,15 @@ class Objects
      * Присваивание свойству класса доступа (пуличный, приватный) к объекту.
      * @param bool|null $isPublic Доступ к объекту (пуличный, приватный).
      * @return Objects
+     * @throws NoAccessEditPrivacyException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
      */
     public function setIsPublic(?bool $isPublic = true): Objects
     {
+        if (!AuthUserRole::isAccessManageUsers()) throw new NoAccessEditPrivacyException();
+
         if ($isPublic !== null && $this->isPublic !== $isPublic) {
-            if (!AuthUserRole::isAccessManageUsers()) 
             $this->isPublic = $isPublic;
         }
 

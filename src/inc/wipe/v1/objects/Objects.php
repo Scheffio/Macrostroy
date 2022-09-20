@@ -812,9 +812,11 @@ class Objects
     #endregion
 
     #region Copy Functions
-    public static function copyObj()
+    public static function copyObj(int $lvl, int $id)
     {
-
+        ObjProjectQuery::create()->findPk(1)->copy()
     }
+
+//    private static function getObj
     #endregion
 }

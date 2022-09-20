@@ -26,7 +26,7 @@ try {
     $lvl = $request->getRequestOrThrow('lvl');
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
-    // Проверка, что таблица доступна для редактирования, т.е. статус равен "В процессе".
+    // Проверка, что объект доступен для редактирования, т.е. статус равен "В процессе".
     Objects::getObject(id: $id, lvl: $lvl)->isEditableOrThrow();
 
     if (!AuthUserRole::isAccessManageUsers() &&

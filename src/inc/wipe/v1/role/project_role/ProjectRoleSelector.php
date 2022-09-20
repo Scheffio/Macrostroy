@@ -45,6 +45,7 @@ use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -161,6 +162,12 @@ class ProjectRoleSelector
 
         return $user[0][self::ARRAY_KEY_IS_CRUD] ?? false;
     }
+
+    public static function isAccessCrudAuthUserByObjOrThrow(int &$lvl, int &$objId): bool
+    {
+        return self::isAccessCrudAuthUserByObj($lvl, $objId) ? new static : throw new NoAccessCrudException();
+    }
+
 
     #region Apply Function
     private static function applyForObj(int &$lvl, int &$objId): void

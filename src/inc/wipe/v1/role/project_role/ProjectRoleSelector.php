@@ -45,6 +45,7 @@ use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\exception\NoAccessCopyObjectException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCrudException;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
@@ -163,11 +164,23 @@ class ProjectRoleSelector
         return $user[0][self::ARRAY_KEY_IS_CRUD] ?? false;
     }
 
-    public static function isAccessCrudAuthUserByObjOrThrow(int &$lvl, int &$objId): bool
+    /**
+     * Разрешен ли пользователю CRUD по объекту, иначе - ошибка.
+     * Проверка для добавления/редактирования/удаления объекта.
+     * @param int $lvl Уровень доступа.
+     * @param int $objId ID родителя/объекта (добавление/редактирвоание и удаление).
+     * @return ProjectRoleSelector
+     * @throws IncorrectLvlException
+     * @throws InvalidAccessLvlIntException
+     * @throws NoAccessCopyObjectException
+     * @throws NoRoleFoundException
+     * @throws NoUserFoundException
+     * @throws PropelException
+     */
+    public static function isAccessCrudAuthUserByObjOrThrow(int &$lvl, int &$objId): ProjectRoleSelector
     {
-        return self::isAccessCrudAuthUserByObj($lvl, $objId) ? new static : throw new NoAccessCrudException();
+        return self::isAccessCrudAuthUserByObj($lvl, $objId) ? new static : throw new NoAccessCopyObjectException();
     }
-
 
     #region Apply Function
     private static function applyForObj(int &$lvl, int &$objId): void
@@ -545,10 +558,10 @@ class ProjectRoleSelector
     }
     #endregion
 
-    #region Getter && Setter Functions
+    #region Getter Functions
     /**
      * Возвращает округленную стоимость с 2 знаками после запятой.
-     * @param int|string $price
+     * @param float $price
      * @return string
      */
     private static function getPrice(float $price): string

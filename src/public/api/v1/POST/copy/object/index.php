@@ -8,9 +8,12 @@ use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
+use wipe\inc\v1\role\project_role\exception\NoAccessCopyObjectException;
+use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
@@ -30,11 +33,13 @@ try {
     $lvl = AccessLvl::getLvlIntObj($lvl);
 
     if (AuthUserRole::isAccessManageUsers() === false) {
-        // Проверка, что объект доступен для редактирования, т.е. статус равен "В процессе".
-        Objects::getObject(id: $id, lvl: $lvl)->isEditableOrThrow();
-
-
+        // Проверка, что у пользователя есть CRUD к объекту.
+        ProjectRoleSelector::isAccessCrudAuthUserByObjOrThrow(lvl: $lvl, objId: $id);
+        // Проверка, что объект не удален.
+        Objects::getObject(id: $id, lvl: $lvl)->isNotDeletedTableOrThrow();
     }
+
+
 
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
@@ -50,6 +55,8 @@ try {
     JsonOutput::error('Неизвестный пользователь');
 } catch (IncorrectStatusException $e) {
     JsonOutput::error('Некорректный статус объекта');
-} catch (ObjectIsNotEditableException $e) {
-    JsonOutput::error('Объект недоступен для редактирования');
+} catch (NoAccessCopyObjectException $e) {
+    JsonOutput::error('Недостаточно прав для копирования объекта');
+} catch (ObjectIsDeletedException $e) {
+    JsonOutput::error('Недостаточно прав для копирования удаленного объекта');
 }

@@ -54,6 +54,7 @@ use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
 use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRole;
+use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
@@ -814,13 +815,7 @@ class Objects
     #region Copy Functions
     public static function copyObj(int $lvl, int $id)
     {
-//        $p = new ObjProject();
-//        $p->toArray(ObjProjectQuery::create()->findPk($id)->copy(true)->toArray());
 
-//        ObjProjectQuery::create()->findPk($id)->copyInto();
-        JsonOutput::success(
-            ObjProjectQuery::create()->findPk($id)->copy(true)->toArray()
-        );
     }
 
 //    private static function getObj

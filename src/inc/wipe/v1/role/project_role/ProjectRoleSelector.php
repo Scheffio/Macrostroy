@@ -419,7 +419,7 @@ class ProjectRoleSelector
      * @throws NoRoleFoundException
      * @throws NoUserFoundException
      */
-    private static function getAuthUserData(): array
+    public static function getAuthUserData(): array
     {
         return [
             [
@@ -440,7 +440,7 @@ class ProjectRoleSelector
      * @return array
      * @throws PropelException
      */
-    private static function getUsersData(?int $userId = null): array
+    public static function getUsersData(?int $userId = null): array
     {
         return self::getUsersQuery($userId)->find()->getData();
     }
@@ -451,7 +451,7 @@ class ProjectRoleSelector
      * @throws IncorrectLvlException
      * @throws PropelException
      */
-    private static function getParentsForObj(): array
+    public static function getParentsForObj(): array
     {
         return (array)self::getParentsQueryForObj()->findOne();
     }
@@ -463,7 +463,7 @@ class ProjectRoleSelector
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getChildObjsForLvl(): array
+    public static function getChildObjsForLvl(): array
     {
         $a = [];
         $r = [];
@@ -494,7 +494,7 @@ class ProjectRoleSelector
      * @return array
      * @throws PropelException
      */
-    private static function getProjectRoles(array &$conditions, ?int $userId = null): array
+    public static function getProjectRoles(array &$conditions, ?int $userId = null): array
     {
         return self::getProjectRolesQuery($conditions, $userId)->find()->getData();
     }
@@ -507,7 +507,7 @@ class ProjectRoleSelector
      * @throws InvalidAccessLvlIntException
      * @throws PropelException
      */
-    private static function getObjsForLvl(bool &$isAccessManageUsers): array
+    public static function getObjsForLvl(bool &$isAccessManageUsers): array
     {
         return self::getObjsQuery($isAccessManageUsers)->find()->getData();
     }

@@ -15,14 +15,21 @@ use DB\Map\ObjStageTechnicTableMap;
 use DB\Map\ObjStageWorkTableMap;
 use DB\Map\ObjSubprojectTableMap;
 use DB\Map\UsersTableMap;
+use DB\ObjGroupVersionQuery;
+use DB\ObjStageMaterialQuery;
 use DB\ObjStageMaterialVersionQuery;
+use DB\ObjStageTechnicQuery;
 use DB\ObjStageTechnicVersionQuery;
 use DB\ObjStageVersionQuery;
 use DB\ObjStageWorkQuery;
+use DB\ProjectRoleQuery;
+use DB\UserRoleQuery;
+use DB\UsersQuery;
 use DB\VolMaterialQuery;
 use DB\VolTechnicQuery;
 use DB\VolUnitQuery;
 use DB\VolWorkMaterialQuery;
+use DB\VolWorkQuery;
 use DB\VolWorkTechnicQuery;
 use DB\VolWorkVersionQuery;
 use ext\ObjGroup;
@@ -815,23 +822,33 @@ class Objects
     #region Copy Functions
     public static function copyObj(int $lvl, int $id)
     {
+        $objs = self::getObjs($lvl, $id);
+
         JsonOutput::success([
-            self::getObjsQuery($lvl, $id)->find()->getData()
+            '$id' => $id,
+            '$lvl' => $lvl,
+            '$objs' => $objs
         ]);
     }
 
-    private static function getObjsQuery(int &$lvl, int &$id)
+    /**
+     * Запрос на вывод IDs объектов.
+     * @param int $lvl Уровень доступа.
+     * @param int $id ID объекта.
+     * @return \DB\ObjGroupQuery|ObjGroupVersionQuery|\DB\ObjHouseQuery|\DB\ObjProjectQuery|ObjStageMaterialQuery|\DB\ObjStageQuery|ObjStageTechnicQuery|ObjStageVersionQuery|ObjStageWorkQuery|\DB\ObjSubprojectQuery|ProjectRoleQuery|UserRoleQuery|UsersQuery|VolMaterialQuery|VolTechnicQuery|VolWorkMaterialQuery|VolWorkQuery|VolWorkTechnicQuery
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    private static function getObjsQuery(int $lvl, int $id): UsersQuery|\DB\ObjGroupQuery|VolMaterialQuery|ObjGroupVersionQuery|VolWorkMaterialQuery|\DB\ObjProjectQuery|\DB\ObjStageQuery|ObjStageTechnicQuery|UserRoleQuery|VolWorkQuery|ProjectRoleQuery|\DB\ObjSubprojectQuery|\DB\ObjHouseQuery|ObjStageMaterialQuery|ObjStageVersionQuery|VolTechnicQuery|VolWorkTechnicQuery|ObjStageWorkQuery
     {
-        $colId = self::getColIdByLvl($lvl);
-
         return ObjProjectQuery::create()
-            ->select(
-                ($lvl <= eLvlObjInt::SUBPROJECT->value ? [ObjProjectTableMap::COL_ID] : []) +
-                ($lvl <= eLvlObjInt::SUBPROJECT->value ? [ObjSubprojectTableMap::COL_ID] : []) +
-                ($lvl <= eLvlObjInt::GROUP->value ? [ObjGroupTableMap::COL_ID] : []) +
-                ($lvl <= eLvlObjInt::HOUSE->value ? [ObjHouseTableMap::COL_ID] : []) +
-                ($lvl <= eLvlObjInt::STAGE->value ? [ObjStageTableMap::COL_ID] : [])
-            )
+            ->select([
+                ObjProjectTableMap::COL_ID,
+                ObjSubprojectTableMap::COL_ID,
+                ObjGroupTableMap::COL_ID,
+                ObjHouseTableMap::COL_ID,
+                ObjStageTableMap::COL_ID,
+            ])
             ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
                 ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
                     ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
@@ -839,7 +856,20 @@ class Objects
                     ->endUse()
                 ->endUse()
             ->endUse()
-            ->where($colId . '=?', $id);
+            ->where(self::getColIdByLvl($lvl) . '=?', $id);
+    }
+
+    /**
+     * Массив IDs объектов.
+     * @param int $lvl Уровень доступа.
+     * @param int $id ID объекта.
+     * @return array
+     * @throws IncorrectLvlException
+     * @throws PropelException
+     */
+    private static function getObjs(int $lvl, int $id): array
+    {
+        return self::getObjsQuery($lvl, $id)->find()->getData();
     }
     #endregion
 }

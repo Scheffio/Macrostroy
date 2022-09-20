@@ -627,6 +627,7 @@ body.fixated {
   display: block;
 }
 .wrap .actions {
+  margin-top: 20px;
   display: flex;
   width: clamp(768px, 90vw, 1555px);
   gap: 40px;

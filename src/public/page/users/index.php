@@ -126,7 +126,7 @@
                         class="add-span"></span>Добавить</button>
             </div>
             <div class="delete">
-                <button class="delete__button" onclick="modalSystem.show('delete-role')"><span
+                <button clas s="delete__button" onclick="modalSystem.show('delete-role')"><span
                         class="delete-span"></span>Удалить</button>
             </div>
         </div>

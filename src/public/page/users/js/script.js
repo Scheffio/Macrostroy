@@ -280,3 +280,4 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 rolesControl.parseRoles()
+document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {modalSystem.show('delete-users')})})

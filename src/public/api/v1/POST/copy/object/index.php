@@ -8,8 +8,8 @@ use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\objects\exception\IncorrectStatusException;
+use wipe\inc\v1\objects\exception\NoFindObjectException;
 use wipe\inc\v1\objects\exception\ObjectIsDeletedException;
-use wipe\inc\v1\objects\exception\ObjectIsNotEditableException;
 use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\exception\NoAccessCopyObjectException;
@@ -44,20 +44,22 @@ try {
     JsonOutput::success();
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
-} catch (InvalidAccessLvlIntException $e) {
+} catch (InvalidAccessLvlIntException) {
     JsonOutput::error('Некорректный номер уровня доступа');
-} catch (InvalidAccessLvlStrException $e) {
+} catch (InvalidAccessLvlStrException) {
     JsonOutput::error('Некорректное наименование уровня доступа');
-} catch (IncorrectLvlException $e) {
+} catch (IncorrectLvlException) {
     JsonOutput::error('Некорректный уровень доступа');
-} catch (NoRoleFoundException $e) {
+} catch (NoRoleFoundException) {
     JsonOutput::error('Некорректная роль');
-} catch (NoUserFoundException $e) {
+} catch (NoUserFoundException) {
     JsonOutput::error('Неизвестный пользователь');
-} catch (IncorrectStatusException $e) {
+} catch (IncorrectStatusException) {
     JsonOutput::error('Некорректный статус объекта');
-} catch (NoAccessCopyObjectException $e) {
+} catch (NoAccessCopyObjectException) {
     JsonOutput::error('Недостаточно прав для копирования объекта');
-} catch (ObjectIsDeletedException $e) {
+} catch (ObjectIsDeletedException) {
     JsonOutput::error('Недостаточно прав для копирования удаленного объекта');
+} catch (NoFindObjectException) {
+    JsonOutput::error('Неизвестный объект');
 }

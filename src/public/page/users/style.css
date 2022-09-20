@@ -1289,10 +1289,12 @@ body.fixated {
   border: 2px solid #7E99AD;
   color: #7E99AD;
 }
-.modal .modal-wrap .delete-role {
+.modal .modal-wrap .delete-role,
+.modal .modal-wrap .delete-user {
   display: none;
 }
-.modal .modal-wrap .delete-role span {
+.modal .modal-wrap .delete-role span,
+.modal .modal-wrap .delete-user span {
   width: 25px;
   height: 25px;
   display: flex;
@@ -1303,7 +1305,8 @@ body.fixated {
   transition: 0.3s;
   right: 20px;
 }
-.modal .modal-wrap .delete-role span::before {
+.modal .modal-wrap .delete-role span::before,
+.modal .modal-wrap .delete-user span::before {
   content: "";
   display: block;
   width: 15px;
@@ -1312,7 +1315,8 @@ body.fixated {
   transform: rotate(-45deg);
   position: absolute;
 }
-.modal .modal-wrap .delete-role span::after {
+.modal .modal-wrap .delete-role span::after,
+.modal .modal-wrap .delete-user span::after {
   content: "";
   display: block;
   width: 15px;
@@ -1321,39 +1325,47 @@ body.fixated {
   transform: rotate(45deg);
   position: absolute;
 }
-.modal .modal-wrap .delete-role span:hover {
+.modal .modal-wrap .delete-role span:hover,
+.modal .modal-wrap .delete-user span:hover {
   cursor: pointer;
   opacity: 0.6;
   transition: 0.3s;
 }
-.modal .modal-wrap .delete-role.opened {
+.modal .modal-wrap .delete-role.opened,
+.modal .modal-wrap .delete-user.opened {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.modal .modal-wrap .delete-role .modal-header {
+.modal .modal-wrap .delete-role .modal-header,
+.modal .modal-wrap .delete-user .modal-header {
   font-family: "Jost", sans-serif;
   font-size: 36px;
   font-weight: 700;
 }
-.modal .modal-wrap .delete-role .modal-header p {
+.modal .modal-wrap .delete-role .modal-header p,
+.modal .modal-wrap .delete-user .modal-header p {
   margin: 35px 0px 10px 0px;
 }
-.modal .modal-wrap .delete-role .modal-body {
+.modal .modal-wrap .delete-role .modal-body,
+.modal .modal-wrap .delete-user .modal-body {
   font-family: "Jost", sans-serif;
   font-size: 24px;
   font-weight: 500;
 }
-.modal .modal-wrap .delete-role .modal-body p {
+.modal .modal-wrap .delete-role .modal-body p,
+.modal .modal-wrap .delete-user .modal-body p {
   text-align: center;
 }
-.modal .modal-wrap .delete-role .modal-footer {
+.modal .modal-wrap .delete-role .modal-footer,
+.modal .modal-wrap .delete-user .modal-footer {
   display: flex;
   gap: 45px;
   margin-bottom: 30px;
 }
-.modal .modal-wrap .delete-role .modal-footer button {
+.modal .modal-wrap .delete-role .modal-footer button,
+.modal .modal-wrap .delete-user .modal-footer button {
   width: 140px;
   height: 40px;
   background-color: #7E99AD;
@@ -1366,7 +1378,8 @@ body.fixated {
   font-size: 20px;
   font-weight: 400;
 }
-.modal .modal-wrap .delete-role .modal-footer button:hover {
+.modal .modal-wrap .delete-role .modal-footer button:hover,
+.modal .modal-wrap .delete-user .modal-footer button:hover {
   transition: 0.3s;
   background-color: white;
   border: 2px solid #7E99AD;

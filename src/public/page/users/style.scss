@@ -909,7 +909,8 @@
                 }
             }
         }
-        .delete-role {
+        .delete-role,
+        .delete-user {
             span {
                 @include modalCloseButton;
             }

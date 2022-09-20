@@ -48,7 +48,7 @@ try {
 } catch (InvalidAccessLvlStrException $e) {
     JsonOutput::error('Некорректное наименование уровня одступа');
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Некорректный объект');
+    JsonOutput::error('Неизвестный объект');
 } catch (IncorrectLvlException $e) {
     JsonOutput::error('Некорректный уровень доступа');
 } catch (ObjectIsNotEditableException $e) {

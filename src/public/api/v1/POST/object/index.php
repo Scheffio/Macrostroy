@@ -67,7 +67,7 @@ try {
 } catch (IncorrectStatusException $e) {
     JsonOutput::error('Некорректный статус объекта');
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Некорректный объект');
+    JsonOutput::error('Неизвестный объект');
 } catch (PropelException|AccessDeniedException $e) {
     JsonOutput::error($e->getMessage());
 } catch (ObjectIsNotEditableException $e) {

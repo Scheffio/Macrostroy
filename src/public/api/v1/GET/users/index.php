@@ -3,27 +3,16 @@ namespace wipe\api\v1\get\users;
 //Вывод пользователей.
 
 use DB\Base\UsersQuery;
-use DB\Map\ProjectRoleTableMap;
-use DB\Map\UserRoleTableMap;
-use DB\Map\UsersTableMap;
-use Delight\Auth\Auth;
-use Illuminate\Support\Js;
 use inc\artemy\v1\request\Request;
-use Propel\Runtime\ActiveQuery\Criteria;
-use Symfony\Component\Validator\Constraints\Json;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
-use wipe\inc\v1\objects\exception\NoFindObjectException;
-use wipe\inc\v1\objects\Objects;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
-use wipe\inc\v1\role\project_role\ProjectRole;
 use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\AuthUserRole;
 use wipe\inc\v1\role\user_role\exception\NoAccessManageUsersException;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
 use wipe\inc\v1\role\user_role\exception\NoUserFoundException;
-use wipe\inc\v1\role\user_role\UserRole;
 use inc\artemy\v1\json_output\JsonOutput;
 use Propel\Runtime\Exception\PropelException;
 
@@ -48,20 +37,18 @@ try {
     JsonOutput::success(
         ProjectRoleSelector::getUsersCrudForObj($lvl, $objId)
     );
-} catch (NoAccessManageUsersException $e) {
+} catch (NoAccessManageUsersException) {
     JsonOutput::error('Недостаточно прав');
-} catch (NoRoleFoundException $e) {
+} catch (NoRoleFoundException) {
     JsonOutput::error('Некорректная роль');
-} catch (NoUserFoundException $e) {
+} catch (NoUserFoundException) {
     JsonOutput::error('Неизвестный пользователь');
-} catch (InvalidAccessLvlIntException $e) {
+} catch (InvalidAccessLvlIntException) {
     JsonOutput::error('Некорректный номер уровя доступа');
-} catch (InvalidAccessLvlStrException $e) {
+} catch (InvalidAccessLvlStrException) {
     JsonOutput::error('Некорректное наименование урвня доступа');
-}  catch (IncorrectLvlException $e) {
+}  catch (IncorrectLvlException) {
     JsonOutput::error('Некорректный уровень доступа');
-} catch (NoFindObjectException $e) {
-        JsonOutput::error('Некорректный объект');
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
 }

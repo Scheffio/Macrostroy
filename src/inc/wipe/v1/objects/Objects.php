@@ -894,10 +894,20 @@ class Objects
 
     private static function copy(int $lvl, int $id, array $objs)
     {
-        $colId = self::getColIdByLvl($lvl);
+        $keys = [
+            ObjProjectTableMap::COL_ID,
+            ObjSubprojectTableMap::COL_ID,
+            ObjGroupTableMap::COL_ID,
+            ObjHouseTableMap::COL_ID,
+            ObjStageTableMap::COL_ID,
+        ];
 
-        foreach ($objs as &$obj) {
-
+        foreach ($keys as &$key) {
+            foreach ($objs as &$obj) {
+                foreach ($objs as $key=>&$value) {
+                    if ()
+                }
+            }
         }
     }
     #endregion
@@ -1042,6 +1052,27 @@ class Objects
         }
     }
 
+    /**
+     * Удаления объекта.
+     * @param int $id ID объекта.
+     * @param int $lvl Уровень доступа.
+     * @return void
+     * @throws IncorrectLvlException
+     * @throws IncorrectStatusException
+     * @throws NoFindObjectException
+     * @throws PropelException
+     */
+    public static function deleteObj(int &$id, int &$lvl): void
+    {
+        switch ($lvl) {
+            case eLvlObjInt::PROJECT->value: Objects::getProject($id)->delete(); break;
+            case eLvlObjInt::SUBPROJECT->value: Objects::getSubproject($id)->delete(); break;
+            case eLvlObjInt::GROUP->value: Objects::getGroup($id)->delete(); break;
+            case eLvlObjInt::HOUSE->value: Objects::getHouse($id)->delete(); break;
+            case eLvlObjInt::STAGE->value: Objects::getStage($id)->delete(); break;
 
+            default: throw new IncorrectLvlException();
+        }
+    }
     #endregion
 }

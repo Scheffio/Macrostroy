@@ -38,15 +38,10 @@ try {
         throw new AccessDeniedException('Недостаточно прав для редактирования объекта');
     }
 
-    switch ($lvl) {
-        case eLvlObjInt::PROJECT->value: Objects::getProject($id)->delete(); break;
-        case eLvlObjInt::SUBPROJECT->value: Objects::getSubproject($id)->delete(); break;
-        case eLvlObjInt::GROUP->value: Objects::getGroup($id)->delete(); break;
-        case eLvlObjInt::HOUSE->value: Objects::getHouse($id)->delete(); break;
-        case eLvlObjInt::STAGE->value: Objects::getStage($id)->delete(); break;
-
-        default: throw new IncorrectLvlException();
-    }
+    Objects::deleteObj(
+        id: $id,
+        lvl: $lvl
+    );
 
     JsonOutput::success();
 } catch (InvalidAccessLvlIntException|IncorrectLvlException $e) {
@@ -56,7 +51,7 @@ try {
 } catch (IncorrectStatusException $e) {
     JsonOutput::error('Некорректный статус объекта');
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Некорректный объект');
+    JsonOutput::error('Неизвестный объект');
 } catch (PropelException|AccessDeniedException $e) {
     JsonOutput::error($e->getMessage());
 } catch (NoRoleFoundException $e) {

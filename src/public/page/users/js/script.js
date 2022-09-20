@@ -63,6 +63,7 @@ const modalSystem = {
             this.addUserWindow.classList.add('opened')
         }
         if(type == 'delete-user') {
+            this.modalWrap.classList.add('roles')
             this.deleteUserWindow.classList.add('opened')
         }
     },
@@ -108,9 +109,6 @@ emailInput.addEventListener('blur', () => {emailInput.value != '' ? null : email
 
 roleNameInput.addEventListener('focus', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
 roleNameInput.addEventListener('blur', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
-
-
-
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {

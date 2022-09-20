@@ -47,12 +47,12 @@ try {
         id: $id,
         lvl: $lvl
     );
-    
+
     JsonOutput::success();
 } catch (AccessDeniedException|PropelException $e) {
     JsonOutput::error($e->getMessage());
 } catch (NoFindObjectException $e) {
-    JsonOutput::error('Некорректный объект');
+    JsonOutput::error('Неизвестный объект');
 } catch (IncorrectLvlException $e) {
     JsonOutput::error('Некорректный уровень доступа');
 } catch (IncorrectStatusException $e) {

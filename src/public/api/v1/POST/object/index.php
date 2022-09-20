@@ -51,58 +51,13 @@ try {
     $status = $request->getRequest('status');
     $isPublic = $request->getRequest('is_public');
 
-    switch ($lvl) {
-        case eLvlObjInt::PROJECT->value:
-            Objects::getProject()
-                ->setObjDefaultValues(
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic
-                )
-                ->add();
-            break;
-        case eLvlObjInt::SUBPROJECT->value:
-            Objects::getSubproject()
-                ->setObjDefaultValues(
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic
-                )
-                ->setProjectId($parentId)
-                ->add();
-            break;
-        case eLvlObjInt::GROUP->value:
-            Objects::getGroup()
-                ->setObjDefaultValues(
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic
-                )
-                ->setSubprojectId($parentId)
-                ->add();
-            break;
-        case eLvlObjInt::HOUSE->value:
-            Objects::getHouse()
-                ->setObjDefaultValues(
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic
-                )
-                ->setGroupId($parentId)
-                ->add();
-            break;
-        case eLvlObjInt::STAGE->value:
-            Objects::getStage()
-                ->setObjDefaultValues(
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic
-                )
-                ->setHouseId($parentId)
-                ->add();
-            break;
-        default: throw new IncorrectLvlException();
-    }
+    Objects::addObj(
+        name: $name,
+        status: $status,
+        isPublic: $isPublic,
+        lvl: $lvl,
+        parentId: $parentId
+    );
 
     JsonOutput::success();
 } catch (InvalidAccessLvlIntException|IncorrectLvlException $e) {

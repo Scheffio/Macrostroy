@@ -556,8 +556,8 @@ body.fixated {
   width: 19px;
   height: 19px;
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 8px;
+  right: 8px;
   transition: 0.3s;
 }
 .wrap .tabs-container .users__list .users__close-btn::after {
@@ -567,8 +567,6 @@ body.fixated {
   width: 19px;
   height: 19px;
   position: absolute;
-  top: 5px;
-  right: 5px;
 }
 .wrap .tabs-container .users__list .users__close-btn:hover {
   cursor: pointer;

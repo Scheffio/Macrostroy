@@ -40,60 +40,14 @@ try {
     $status = $request->getRequest('status');
     $isPublic = $request->getRequest('is_public');
 
-    switch ($lvl) {
-        case eLvlObjInt::PROJECT->value:
-            Objects::getProject($id)
-                ->setObjDefaultValues(
-                    id: $id,
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic,
-                )
-                ->update();
-            break;
-        case eLvlObjInt::SUBPROJECT->value:
-            Objects::getSubproject($id)
-                ->setObjDefaultValues(
-                    id: $id,
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic,
-                )
-                ->update();
-            break;
-        case eLvlObjInt::GROUP->value:
-            Objects::getGroup($id)
-                ->setObjDefaultValues(
-                    id: $id,
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic,
-                )
-                ->update();
-            break;
-        case eLvlObjInt::HOUSE->value:
-            Objects::getHouse($id)
-                ->setObjDefaultValues(
-                    id: $id,
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic,
-                )
-                ->update();
-            break;
-        case eLvlObjInt::STAGE->value:
-            Objects::getStage($id)
-                ->setObjDefaultValues(
-                    id: $id,
-                    name: $name,
-                    status: $status,
-                    isPublic: $isPublic,
-                )
-                ->update();
-            break;
-        default: throw new IncorrectLvlException();
-    }
-
+    Objects::updateObj(
+        name: $name,
+        status: $status,
+        isPublic: $isPublic,
+        id: $id,
+        lvl: $lvl
+    );
+    
     JsonOutput::success();
 } catch (AccessDeniedException|PropelException $e) {
     JsonOutput::error($e->getMessage());

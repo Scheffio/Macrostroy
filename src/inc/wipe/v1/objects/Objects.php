@@ -892,11 +892,6 @@ class Objects
         }
     }
 
-    private static function copyParent(int $lvl, int $id)
-    {
-        
-    }
-
     private static function copy(int $lvl, int $id, array $objs)
     {
         $colId = self::getColIdByLvl($lvl);
@@ -905,5 +900,148 @@ class Objects
 
         }
     }
+    #endregion
+
+    #region CRUD Functions
+    /**
+     * Добавление объекта.
+     * @param string $name Наименование.
+     * @param string $status Статус разработки.
+     * @param int|bool $isPublic Яв. ли публичным.
+     * @param int $lvl Уровень доступа.
+     * @param int|null $parentId ID родителя.
+     * @return void
+     * @throws IncorrectLvlException
+     * @throws IncorrectStatusException
+     * @throws NoFindObjectException
+     * @throws PropelException
+     */
+    public static function addObj(string &$name, string &$status, int|bool &$isPublic, int &$lvl, ?int &$parentId): void
+    {
+        switch ($lvl) {
+            case eLvlObjInt::PROJECT->value:
+                Objects::getProject()
+                    ->setObjDefaultValues(
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic
+                    )
+                    ->add();
+                break;
+            case eLvlObjInt::SUBPROJECT->value:
+                Objects::getSubproject()
+                    ->setObjDefaultValues(
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic
+                    )
+                    ->setProjectId($parentId)
+                    ->add();
+                break;
+            case eLvlObjInt::GROUP->value:
+                Objects::getGroup()
+                    ->setObjDefaultValues(
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic
+                    )
+                    ->setSubprojectId($parentId)
+                    ->add();
+                break;
+            case eLvlObjInt::HOUSE->value:
+                Objects::getHouse()
+                    ->setObjDefaultValues(
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic
+                    )
+                    ->setGroupId($parentId)
+                    ->add();
+                break;
+            case eLvlObjInt::STAGE->value:
+                Objects::getStage()
+                    ->setObjDefaultValues(
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic
+                    )
+                    ->setHouseId($parentId)
+                    ->add();
+                break;
+            default: throw new IncorrectLvlException();
+        }
+    }
+
+    /**
+     * Редактирование объекта.
+     * @param string $name Наименование.
+     * @param string $status Статус разработки.
+     * @param int|bool $isPublic Яв. ли публичным.
+     * @param int $id ID объекта.
+     * @param int $lvl Уровень доступа.
+     * @return void
+     * @throws IncorrectLvlException
+     * @throws IncorrectStatusException
+     * @throws NoFindObjectException
+     * @throws PropelException
+     */
+    public static function updateObj(string &$name, string &$status, int|bool &$isPublic, int &$id, int &$lvl): void
+    {
+        switch ($lvl) {
+            case eLvlObjInt::PROJECT->value:
+                Objects::getProject($id)
+                    ->setObjDefaultValues(
+                        id: $id,
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic,
+                    )
+                    ->update();
+                break;
+            case eLvlObjInt::SUBPROJECT->value:
+                Objects::getSubproject($id)
+                    ->setObjDefaultValues(
+                        id: $id,
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic,
+                    )
+                    ->update();
+                break;
+            case eLvlObjInt::GROUP->value:
+                Objects::getGroup($id)
+                    ->setObjDefaultValues(
+                        id: $id,
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic,
+                    )
+                    ->update();
+                break;
+            case eLvlObjInt::HOUSE->value:
+                Objects::getHouse($id)
+                    ->setObjDefaultValues(
+                        id: $id,
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic,
+                    )
+                    ->update();
+                break;
+            case eLvlObjInt::STAGE->value:
+                Objects::getStage($id)
+                    ->setObjDefaultValues(
+                        id: $id,
+                        name: $name,
+                        status: $status,
+                        isPublic: (bool)$isPublic,
+                    )
+                    ->update();
+                break;
+            default: throw new IncorrectLvlException();
+        }
+    }
+
+
     #endregion
 }

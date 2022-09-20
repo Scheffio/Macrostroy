@@ -430,8 +430,8 @@
                 width: 19px;
                 height: 19px;
                 position: absolute;
-                top: 5px;
-                right: 5px;
+                top: 8px;
+                right: 8px;
                 transition: .3s;
                 &::after {
                     content: '';
@@ -440,8 +440,6 @@
                     width: 19px;
                     height: 19px;
                     position: absolute;
-                    top: 5px;
-                    right: 5px;
                 }
                 &:hover {
                     cursor: pointer;

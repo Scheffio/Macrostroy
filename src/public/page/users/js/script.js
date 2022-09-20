@@ -190,6 +190,7 @@ const rolesControl = {
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'})
     },
     addRole(name) {
+        console.log(name);
         fetch(`/api/v1/role/add?role_name=${name}`, {method: 'POST'})
     }
 }

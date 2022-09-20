@@ -199,7 +199,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="rolesControl.addRole(this.)">Добавить</button>
+                    <button onclick="rolesControl.addRole(this.previousElementSibling)">Добавить</button>
                 </div>
             </div>
             <div class="delete-role">

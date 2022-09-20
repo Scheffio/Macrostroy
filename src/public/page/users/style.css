@@ -634,19 +634,12 @@ body.fixated {
   flex-direction: row-reverse;
 }
 .wrap .actions .delete {
+  justify-content: flex-end;
   display: none;
 }
 .wrap .actions .delete.roles-page {
   display: flex;
 }
-.wrap .actions .add,
-.wrap .actions .delete {
-  display: flex;
-  justify-content: flex-end;
-}
-.wrap .actions .add .add__button,
-.wrap .actions .add .delete__button,
-.wrap .actions .delete .add__button,
 .wrap .actions .delete .delete__button {
   display: flex;
   justify-content: center;
@@ -663,81 +656,21 @@ body.fixated {
   font-size: 20px;
   font-weight: 400;
 }
-.wrap .actions .add .add__button:hover,
-.wrap .actions .add .delete__button:hover,
-.wrap .actions .delete .add__button:hover,
 .wrap .actions .delete .delete__button:hover {
   transition: 0.3s;
   background-color: white;
   border: 2px solid #7E99AD;
   color: #7E99AD;
 }
-.wrap .actions .add .add__button:hover .add::before, .wrap .actions .add .add__button:hover .add::after,
-.wrap .actions .add .add__button:hover .delete::before,
-.wrap .actions .add .add__button:hover .delete::after,
-.wrap .actions .add .delete__button:hover .add::before,
-.wrap .actions .add .delete__button:hover .add::after,
-.wrap .actions .add .delete__button:hover .delete::before,
-.wrap .actions .add .delete__button:hover .delete::after,
-.wrap .actions .delete .add__button:hover .add::before,
-.wrap .actions .delete .add__button:hover .add::after,
-.wrap .actions .delete .add__button:hover .delete::before,
-.wrap .actions .delete .add__button:hover .delete::after,
-.wrap .actions .delete .delete__button:hover .add::before,
-.wrap .actions .delete .delete__button:hover .add::after,
-.wrap .actions .delete .delete__button:hover .delete::before,
-.wrap .actions .delete .delete__button:hover .delete::after {
+.wrap .actions .delete .delete__button:hover .delete::before, .wrap .actions .delete .delete__button:hover .delete::after {
   background-color: #7E99AD;
   transition: 0.3s;
 }
-.wrap .actions .add .add__button .add-span,
-.wrap .actions .add .delete__button .add-span,
-.wrap .actions .delete .add__button .add-span,
-.wrap .actions .delete .delete__button .add-span {
-  width: 20px;
-  height: 20px;
-  position: relative;
-}
-.wrap .actions .add .add__button .add-span::before,
-.wrap .actions .add .delete__button .add-span::before,
-.wrap .actions .delete .add__button .add-span::before,
-.wrap .actions .delete .delete__button .add-span::before {
-  content: "";
-  display: block;
-  width: 2px;
-  height: 15px;
-  position: absolute;
-  background-color: #E5EBEF;
-  top: 3px;
-  left: 5px;
-  transition: 0.3s;
-}
-.wrap .actions .add .add__button .add-span::after,
-.wrap .actions .add .delete__button .add-span::after,
-.wrap .actions .delete .add__button .add-span::after,
-.wrap .actions .delete .delete__button .add-span::after {
-  content: "";
-  display: block;
-  width: 2px;
-  height: 15px;
-  background-color: #E5EBEF;
-  transform: rotate(90deg);
-  position: absolute;
-  top: 3px;
-  left: 5px;
-  transition: 0.3s;
-}
-.wrap .actions .add .add__button .delete-span,
-.wrap .actions .add .delete__button .delete-span,
-.wrap .actions .delete .add__button .delete-span,
 .wrap .actions .delete .delete__button .delete-span {
   width: 20px;
   height: 20px;
   position: relative;
 }
-.wrap .actions .add .add__button .delete-span::before,
-.wrap .actions .add .delete__button .delete-span::before,
-.wrap .actions .delete .add__button .delete-span::before,
 .wrap .actions .delete .delete__button .delete-span::before {
   content: "";
   display: block;
@@ -750,9 +683,6 @@ body.fixated {
   left: 5px;
   transition: 0.3s;
 }
-.wrap .actions .add .add__button .delete-span::after,
-.wrap .actions .add .delete__button .delete-span::after,
-.wrap .actions .delete .add__button .delete-span::after,
 .wrap .actions .delete .delete__button .delete-span::after {
   content: "";
   display: block;
@@ -760,6 +690,75 @@ body.fixated {
   height: 15px;
   background-color: #E5EBEF;
   transform: rotate(315deg);
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  transition: 0.3s;
+}
+.wrap .actions .add {
+  display: flex;
+  justify-content: flex-end;
+}
+.wrap .actions .add .add__button,
+.wrap .actions .add .delete__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 40px;
+  background-color: #7E99AD;
+  color: #E5EBEF;
+  border-radius: 5px;
+  transition: 0.3s;
+  border: 2px solid transparent;
+  outline: 0;
+  font-family: "Jost", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+.wrap .actions .add .add__button:hover,
+.wrap .actions .add .delete__button:hover {
+  transition: 0.3s;
+  background-color: white;
+  border: 2px solid #7E99AD;
+  color: #7E99AD;
+}
+.wrap .actions .add .add__button:hover .add::before, .wrap .actions .add .add__button:hover .add::after,
+.wrap .actions .add .add__button:hover .delete::before,
+.wrap .actions .add .add__button:hover .delete::after,
+.wrap .actions .add .delete__button:hover .add::before,
+.wrap .actions .add .delete__button:hover .add::after,
+.wrap .actions .add .delete__button:hover .delete::before,
+.wrap .actions .add .delete__button:hover .delete::after {
+  background-color: #7E99AD;
+  transition: 0.3s;
+}
+.wrap .actions .add .add__button .add-span,
+.wrap .actions .add .delete__button .add-span {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+.wrap .actions .add .add__button .add-span::before,
+.wrap .actions .add .delete__button .add-span::before {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 15px;
+  position: absolute;
+  background-color: #E5EBEF;
+  top: 3px;
+  left: 5px;
+  transition: 0.3s;
+}
+.wrap .actions .add .add__button .add-span::after,
+.wrap .actions .add .delete__button .add-span::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 15px;
+  background-color: #E5EBEF;
+  transform: rotate(90deg);
   position: absolute;
   top: 3px;
   left: 5px;

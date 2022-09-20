@@ -815,9 +815,31 @@ class Objects
     #region Copy Functions
     public static function copyObj(int $lvl, int $id)
     {
-
+        JsonOutput::success([
+            self::getObjsQuery($lvl, $id)->find()->getData()
+        ]);
     }
 
-//    private static function getObj
+    private static function getObjsQuery(int &$lvl, int &$id)
+    {
+        $colId = self::getColIdByLvl($lvl);
+
+        return ObjProjectQuery::create()
+            ->select(
+                ($lvl <= eLvlObjInt::SUBPROJECT->value ? [ObjProjectTableMap::COL_ID] : []) +
+                ($lvl <= eLvlObjInt::SUBPROJECT->value ? [ObjSubprojectTableMap::COL_ID] : []) +
+                ($lvl <= eLvlObjInt::GROUP->value ? [ObjGroupTableMap::COL_ID] : []) +
+                ($lvl <= eLvlObjInt::HOUSE->value ? [ObjHouseTableMap::COL_ID] : []) +
+                ($lvl <= eLvlObjInt::STAGE->value ? [ObjStageTableMap::COL_ID] : [])
+            )
+            ->useObjSubprojectQuery(joinType: Criteria::LEFT_JOIN)
+                ->useObjGroupQuery(joinType: Criteria::LEFT_JOIN)
+                    ->useObjHouseQuery(joinType: Criteria::LEFT_JOIN)
+                        ->leftJoinObjStage()
+                    ->endUse()
+                ->endUse()
+            ->endUse()
+            ->where($colId . '=?', $id);
+    }
     #endregion
 }

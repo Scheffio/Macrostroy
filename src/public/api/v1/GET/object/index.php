@@ -7,6 +7,7 @@ use Propel\Runtime\Exception\PropelException;
 use wipe\inc\v1\access_lvl\AccessLvl;
 use wipe\inc\v1\access_lvl\enum\eLvlObjInt;
 use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlIntException;
+use wipe\inc\v1\access_lvl\exception\InvalidAccessLvlStrException;
 use wipe\inc\v1\role\project_role\exception\IncorrectLvlException;
 use wipe\inc\v1\role\project_role\ProjectRoleSelector;
 use wipe\inc\v1\role\user_role\exception\NoRoleFoundException;
@@ -37,4 +38,6 @@ try {
     JsonOutput::error('Некорректный номер уровня доступа');
 } catch (IncorrectLvlException $e) {
     JsonOutput::error('Некорректный уровень доступа');
+} catch (InvalidAccessLvlStrException $e) {
+    JsonOutput::error('Некорректное наименование уровеня доступа');
 }

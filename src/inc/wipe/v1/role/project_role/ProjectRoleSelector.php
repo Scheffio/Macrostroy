@@ -53,14 +53,14 @@ class ProjectRoleSelector
 {
     private const ARRAY_KEY_ID = 'id';
     private const ARRAY_KEY_NAME = 'name';
-    private const ARRAY_KEY_IS_CRUD = 'isCrud';
-    private const ARRAY_KEY_IS_ADMIN = 'isAdmin';
-    private const ARRAY_KEY_STATUS = 'status';
-    private const ARRAY_KEY_IS_PUBLIC = 'isPublic';
     private const ARRAY_KEY_USER = 'user';
     private const ARRAY_KEY_PRICE = 'price';
-    private const ARRAY_KEY_IS_HISTORY = 'isHistory';
+    private const ARRAY_KEY_STATUS = 'status';
     private const ARRAY_KEY_OBJECTS = 'objects';
+    private const ARRAY_KEY_IS_CRUD = 'isCrud';
+    private const ARRAY_KEY_IS_ADMIN = 'isAdmin';
+    private const ARRAY_KEY_IS_PUBLIC = 'isPublic';
+    private const ARRAY_KEY_IS_HISTORY = 'isHistory';
 
     private static ?int $lvl = null;
     private static ?int $objId = null;

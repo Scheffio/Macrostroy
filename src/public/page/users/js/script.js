@@ -33,6 +33,7 @@ const modalSystem = {
     modalWrap: document.querySelector('.modal-wrap'),
     addRoleWindow: document.querySelector('.modal > .modal-wrap > .add-role'),
     deleteRoleWindow: document.querySelector('.modal > .modal-wrap > .delete-role'),
+    deleteUserWindow: document.querySelector('.modal > .modal-wrap > .delete-user'),
     addUserWindow: document.querySelector('.modal > .modal-wrap > .add-user'),
     body: document.querySelector('body'),
     fixateBackground() {
@@ -59,6 +60,9 @@ const modalSystem = {
         }
         if(type == 'add-user') {
             this.addUserWindow.classList.add('opened')
+        }
+        if(type == 'delete-user') {
+            this.deleteUserWindow.classList.add('opened')
         }
     },
     hide() {
@@ -280,4 +284,4 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 rolesControl.parseRoles()
-document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {modalSystem.show('delete-users')})})
+document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {modalSystem.show('delete-user')})})

@@ -195,11 +195,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="modal-body__role-name">
-                        <input type="text">
+                        <input type="text" class="role-name">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="rolesControl.addRole(this.previousElementSibling)">Добавить</button>
+                    <button onclick="rolesControl.addRole()">Добавить</button>
                 </div>
             </div>
             <div class="delete-role">

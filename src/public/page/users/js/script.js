@@ -189,9 +189,9 @@ const rolesControl = {
     deleteRole() {
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'})
     },
-    addRole(name) {
-        console.log(name);
-        fetch(`/api/v1/role/add?role_name=${name}`, {method: 'POST'})
+    addRole() {
+        // document.querySelector('.test').closest('div').previousElementSibling.children[0].children[0].value
+        fetch(`/api/v1/role/add?role_name=${document.querySelector('.role-name').value}`, {method: 'POST'})
     }
 }
 

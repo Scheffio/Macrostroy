@@ -39,8 +39,9 @@ try {
         Objects::getObject(id: $id, lvl: $lvl)->isNotDeletedTableOrThrow();
     }
 
+    Objects::copyObj($lvl, $id);
 
-
+    JsonOutput::success();
 } catch (PropelException $e) {
     JsonOutput::error($e->getMessage());
 } catch (InvalidAccessLvlIntException $e) {

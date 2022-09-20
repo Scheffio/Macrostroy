@@ -814,7 +814,13 @@ class Objects
     #region Copy Functions
     public static function copyObj(int $lvl, int $id)
     {
-        ObjProjectQuery::create()->findPk(1)->copy()
+//        $p = new ObjProject();
+//        $p->toArray(ObjProjectQuery::create()->findPk($id)->copy(true)->toArray());
+
+//        ObjProjectQuery::create()->findPk($id)->copyInto();
+        JsonOutput::success(
+            ObjProjectQuery::create()->findPk($id)->copy(true)->toArray()
+        );
     }
 
 //    private static function getObj

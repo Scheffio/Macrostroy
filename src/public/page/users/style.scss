@@ -807,15 +807,32 @@
             display: none;
             &.opened {
                 display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
             .modal-header{
-
+                @include MainTitle;
+                p{
+                    margin: 35px 0px 10px 0px;
+                }
             }
             .modal-body {
-
+                @include TabAnchorName;
+                p {
+                    text-align: center;
+                    span {
+                        color: red;
+                    }
+                }
             }
             .modal-footer {
-                
+                display: flex;
+                gap: 45px;
+                button {
+                    @include Button($EstiminColor4, white, 140px, 40px)
+                }
+                margin-bottom: 30px;
             }
         }
         .info-user {
@@ -909,8 +926,7 @@
                 }
             }
         }
-        .delete-role,
-        .delete-user {
+        .delete-role {
             span {
                 @include modalCloseButton;
             }

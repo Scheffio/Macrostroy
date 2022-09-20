@@ -877,6 +877,44 @@ class Objects
     }
 
     /**
+     * Объект данных по уровню доступа и ID.
+     * @param int $lvl Уровень доступа.
+     * @param int $id ID объекта.
+     * @return array|\DB\ObjGroup|\DB\ObjHouse|\DB\ObjProject|\DB\ObjStage|\DB\ObjSubproject|mixed
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     */
+    private static function getObjDataById(int $lvl, int $id): mixed
+    {
+        return match ($lvl) {
+            eLvlObjInt::PROJECT->value => ObjProjectQuery::create()->findPk($id),
+            eLvlObjInt::SUBPROJECT->value => ObjSubprojectQuery::create()->findPk($id),
+            eLvlObjInt::GROUP->value => ObjGroupQuery::create()->findPk($id),
+            eLvlObjInt::HOUSE->value => ObjHouseQuery::create()->findPk($id),
+            eLvlObjInt::STAGE->value => ObjStageQuery::create()->findPk($id),
+            default => throw new IncorrectLvlException(),
+        } ?? throw new NoFindObjectException();
+    }
+
+    /**
+     * Класс новго объекта.
+     * @param int $lvl Уровень доступа.
+     * @return ObjGroup|ObjHouse|ObjProject|ObjStage|ObjSubproject
+     * @throws IncorrectLvlException
+     */
+    private static function getNewObjByLvl(int $lvl): ObjHouse|ObjProject|ObjSubproject|ObjStage|ObjGroup
+    {
+        return match ($lvl) {
+            eLvlObjInt::PROJECT->value => new ObjProject(),
+            eLvlObjInt::SUBPROJECT->value => new ObjSubproject(),
+            eLvlObjInt::GROUP->value => new ObjGroup(),
+            eLvlObjInt::HOUSE->value => new ObjHouse(),
+            eLvlObjInt::STAGE->value => new ObjStage(),
+            default => throw new IncorrectLvlException(),
+        };
+    }
+
+    /**
      * Обновление значений массива.
      * @param string $nameKey Наименование ключа в массиве.
      * @param int $oldValue Старое значение.
@@ -907,13 +945,12 @@ class Objects
         foreach ($lvlKeys as $lvlKey=>&$lvlValue) {
             foreach ($objs as &$obj) {
                 foreach ($obj as $key=>&$value) {
-                    if ($value === null) continue;
+                    if ($value === null ||
+                        $lvlKey !== $key ||
+                        in_array($value, $lvlValue)) continue;
 
-                    if ($lvlKey === $key && !in_array($value, $lvlValue)) {
-//                        $lvlValue[] = $value;
-                        $objLvl = AccessLvl::getLvlIntObjByColId($key);
 
-                    }
+                    $objLvl = AccessLvl::getLvlIntObjByColId($key);
                 }
             }
         }
@@ -924,12 +961,30 @@ class Objects
         ]);
     }
 
-    private static function addProjectById(int $id)
+    /**
+     * Копирование объекта по уровню и ID.
+     * @param int $lvl Уровень доступа.
+     * @param int $id ID объекта.
+     * @return int
+     * @throws IncorrectLvlException
+     * @throws NoFindObjectException
+     * @throws PropelException
+     */
+    private static function copeObjById(int $lvl, int $id): int
     {
-        $i = ObjProjectQuery::create()->findPk($id) ?? throw new NoFindObjectException();
+        $i = self::getObjDataById($lvl, $id);
 
-        $n = new ObjProject();
-        $n->setName()->setStatus()->setIsPublic()->setIsAvailable()
+        $n = self::getNewObjByLvl($lvl);
+        $n->setName($i->getName());
+        $n->setStatus($i->getName());
+        $n->setIsPublic($i->getName());
+        $n->setIsAvailable($i->getName());
+
+        if ()
+
+        $n->save();
+
+        return $n->getId();
     }
     #endregion
 

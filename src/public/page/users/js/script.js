@@ -7,7 +7,7 @@ fetch(`/api/v1/users`).then((elem) => {
     })
     document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {
             modalSystem.show('delete-user')
-            console.log(elem.closest('p'));
+            document.querySelector('.delete-user > * > * > .username-span').textContent = elem.previousElementSibling.textContent
         })
     })
 })

@@ -914,24 +914,6 @@ class Objects
         };
     }
 
-    /**
-     * Обновление значений массива.
-     * @param string $nameKey Наименование ключа в массиве.
-     * @param int $oldValue Старое значение.
-     * @param int $newValue Новое значение.
-     * @param array $objs Массив объектов.
-     * @return void
-     */
-    private static function setObjsId(string $nameKey, int $oldValue, int $newValue, array $objs): void
-    {
-        foreach ($objs as &$obj) {
-            foreach ($obj as $key=>&$value) {
-                if ($value === null) continue;
-                if ($key === $nameKey && $value === $oldValue) $value =& $newValue;
-            }
-        }
-    }
-
     private static function copy(int $lvl, int $id, array $objs)
     {
         $lvlKeys = [
@@ -958,7 +940,14 @@ class Objects
                     }
 
                     $newId = self::copeObjById($objLvl, $value, $parentId);
-                    $lvlValue[] =+
+                    $lvlValue[] = $newId;
+
+                    foreach ($objs as &$obj) {
+                        foreach ($obj as $objKey=>&$objValue) {
+                            if ($value === null) continue;
+                            if ($objKey === $key && $objValue === $value) $value =& $newId;
+                        }
+                    }
                 }
             }
         }

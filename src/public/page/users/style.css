@@ -633,6 +633,12 @@ body.fixated {
   justify-content: flex-start;
   flex-direction: row-reverse;
 }
+.wrap .actions .delete {
+  display: none;
+}
+.wrap .actions .delete.roles-page {
+  display: flex;
+}
 .wrap .actions .add,
 .wrap .actions .delete {
   display: flex;

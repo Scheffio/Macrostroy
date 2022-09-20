@@ -269,7 +269,9 @@ function parsePermissions(id, elem) {
         const addButton = document.querySelector('.add__button')
         if(window.location.hash == "#users") {
             addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
+            document.querySelector('.actions > .delete').classList.remove('roles-page')
         }else {
+            document.querySelector('.actions > .delete').classList.add('roles-page')
             addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
         }
     }

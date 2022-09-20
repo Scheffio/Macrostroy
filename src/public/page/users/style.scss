@@ -495,6 +495,12 @@
         gap: 40px;
         justify-content: flex-start;
         flex-direction: row-reverse;
+        .delete {
+            display: none;
+            &.roles-page {
+                display: flex;
+            }
+        }
         .add,
         .delete {
             display: flex;

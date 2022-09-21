@@ -164,7 +164,7 @@
                     <p>Удаление пользователя</p>
                 </div>
                 <div class="modal-body">
-                    <p>Вы действительно хотите удалить пользователя «<span class="username-span"></span>»</p>
+                    <p>Вы действительно хотите удалить пользователя «<span class="username-span"></span>»?</p>
                     <p>Предупреждаем, это действие не возможно отменить!</p>
                 </div>
                 <div class="modal-footer">

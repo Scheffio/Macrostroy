@@ -693,7 +693,7 @@ CREATE TABLE `user_role` (
   `manage_history` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Управление историей',
   `manage_users` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'CRUD учетными записями',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,7 +702,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,0,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0);
+INSERT INTO `user_role` VALUES (1,'По умолчанию',0,0,0,0,0),(2,'Администратор',1,1,1,1,1),(3,'Просмотр',1,0,0,0,0),(12,'Crud-объёмов',0,0,1,1,0),(13,'Crud-объектов',1,1,0,0,0);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

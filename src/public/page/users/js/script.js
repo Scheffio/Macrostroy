@@ -191,7 +191,16 @@ const rolesControl = {
     },
     addRole() {
         // document.querySelector('.test').closest('div').previousElementSibling.children[0].children[0].value
-        fetch(`/api/v1/role/add?role_name=${document.querySelector('.role-name').value}`, {method: 'POST'})
+        fetch(`/api/v1/role/add`, {
+            method: 'POST', 
+            body: JSON.stringify({role_name})
+        })
+        .then(function(res) {
+            return res.json();
+        })
+        .then(function(json) {
+            console.log(json);
+        })
     }
 }
 

@@ -202,7 +202,7 @@ const rolesControl = {
             return res.json();
         })
         .then(function(json) {
-            console.log(json);
+            modalSystem.hide()
         })
     }
 }

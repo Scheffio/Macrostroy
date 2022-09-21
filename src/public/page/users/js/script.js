@@ -135,6 +135,7 @@ const rolesControl = {
         fetch(`/api/v1/roles`).then((elem) => {
             return elem.json()
         }).then((json) => {
+            this.clearRoles()
             json.data.forEach((roles) => {
                 let option = document.createElement('option')
                 option.dataset.id = roles.id
@@ -187,7 +188,12 @@ const rolesControl = {
         fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
     },
     deleteRole() {
-        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'})
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'}).then(function(res) {
+            return res.json()
+        }).then(function () {
+            modalSystem.hide()
+            rolesControl.parseRoles()
+        })
     },
     addRole() {
         // document.querySelector('.test').closest('div').previousElementSibling.children[0].children[0].value
@@ -201,9 +207,13 @@ const rolesControl = {
         .then(function(res) {
             return res.json();
         })
-        .then(function(json) {
+        .then(function() {
             modalSystem.hide()
+            rolesControl.parseRoles()
         })
+    },
+    clearRoles() {
+        document.querySelector('.roles').innerHTML = ''
     }
 }
 

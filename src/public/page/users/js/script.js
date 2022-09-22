@@ -5,9 +5,11 @@ fetch(`/api/v1/users`).then((elem) => {
     json.data.forEach((elem) => {
         usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
     })
-    document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {
+    document.querySelectorAll('.users__close-btn').forEach((elem) => {
+        elem.addEventListener('click', () => {
             modalSystem.show('delete-user')
             document.querySelector('.delete-user > * > * > .username-span').textContent = elem.previousElementSibling.textContent
+            url.searchParams.set('id', elem.dataset.id)
         })
     })
 })
@@ -31,7 +33,11 @@ const userGenerator = {
 
 // ==================
 
-const userDeleteBtn = document.querySelectorAll('.users__close-btn').forEach((elem) => {elem.addEventListener('click', () => {console.log(1);})})
+const userDeleteBtn = document.querySelectorAll('.users__close-btn').forEach((elem) => {
+    elem.addEventListener('click', () => {
+        console.log(1);
+    })
+})
 const modal = document.querySelector('.modal')
 
 const modalSystem = {
@@ -45,7 +51,9 @@ const modalSystem = {
         this.body.classList.toggle("fixated")
     },
     reset() {
-        document.querySelectorAll('.modal-wrap > *').forEach((elem) => {elem.classList.remove('opened')})
+        document.querySelectorAll('.modal-wrap > *').forEach((elem) => {
+            elem.classList.remove('opened')
+        })
         this.modalWrap.classList.remove('roles')
     },
     show(type) {
@@ -55,18 +63,18 @@ const modalSystem = {
             this.modalWrap.classList.add('opened')
         }, 300);
         this.fixateBackground()
-        if(type == 'delete-role') {
+        if (type == 'delete-role') {
             this.deleteRoleWindow.classList.add('opened')
             this.modalWrap.classList.add('roles')
         }
-        if(type == 'add-role') {
+        if (type == 'add-role') {
             this.modalWrap.classList.add('roles')
             this.addRoleWindow.classList.add('opened')
         }
-        if(type == 'add-user') {
+        if (type == 'add-user') {
             this.addUserWindow.classList.add('opened')
         }
-        if(type == 'delete-user') {
+        if (type == 'delete-user') {
             this.modalWrap.classList.add('roles')
             this.deleteUserWindow.classList.add('opened')
         }
@@ -85,11 +93,11 @@ const modalSystem = {
 }
 
 modal.addEventListener('click', (e) => {
-    if(e.target == modal) modalSystem.hide()
+    if (e.target == modal) modalSystem.hide()
 })
 
 document.addEventListener('keydown', (e) => {
-    if(e.keyCode === 27) modalSystem.hide()
+    if (e.keyCode === 27) modalSystem.hide()
 })
 
 const nameInput = document.querySelector('.modal-body__name > input')
@@ -101,18 +109,36 @@ const emailField = document.querySelector('.modal-body__email')
 const roleNameInput = document.querySelector('.modal-body__role-name > input')
 const roleNameField = document.querySelector('.modal-body__role-name')
 
-nameField.addEventListener('click', () => {nameInput.focus()})
-emailField.addEventListener('click', () => {emailInput.focus()})
-roleNameField.addEventListener('click', () => {roleNameInput.focus()})
+nameField.addEventListener('click', () => {
+    nameInput.focus()
+})
+emailField.addEventListener('click', () => {
+    emailInput.focus()
+})
+roleNameField.addEventListener('click', () => {
+    roleNameInput.focus()
+})
 
-nameInput.addEventListener('focus', () => {nameInput.value != '' ? null : nameField.classList.toggle('focused')})
-nameInput.addEventListener('blur', () => {nameInput.value != '' ? null : nameField.classList.toggle('focused')})
+nameInput.addEventListener('focus', () => {
+    nameInput.value != '' ? null : nameField.classList.toggle('focused')
+})
+nameInput.addEventListener('blur', () => {
+    nameInput.value != '' ? null : nameField.classList.toggle('focused')
+})
 
-emailInput.addEventListener('focus', () => {emailInput.value != '' ? null : emailField.classList.toggle('focused')})
-emailInput.addEventListener('blur', () => {emailInput.value != '' ? null : emailField.classList.toggle('focused')})
+emailInput.addEventListener('focus', () => {
+    emailInput.value != '' ? null : emailField.classList.toggle('focused')
+})
+emailInput.addEventListener('blur', () => {
+    emailInput.value != '' ? null : emailField.classList.toggle('focused')
+})
 
-roleNameInput.addEventListener('focus', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
-roleNameInput.addEventListener('blur', () => {roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')})
+roleNameInput.addEventListener('focus', () => {
+    roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
+})
+roleNameInput.addEventListener('blur', () => {
+    roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
+})
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
@@ -131,7 +157,7 @@ const rolesControl = {
     watchobjectsCheckbox: document.querySelector('.watch > input'),
     currentRoleId: 0,
     parseRoles() {
-        const select = document.querySelector('.modal-body__role > select')        
+        const select = document.querySelector('.modal-body__role > select')
         fetch(`/api/v1/roles`).then((elem) => {
             return elem.json()
         }).then((json) => {
@@ -144,7 +170,7 @@ const rolesControl = {
                 select.appendChild(option)
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
             })
-            
+
             const selectableUsers = {
                 roles: document.querySelectorAll('.roles > .users__user-field'),
                 click(elem) {
@@ -156,7 +182,7 @@ const rolesControl = {
                 },
                 reset() {
                     document.querySelectorAll('.permission__checkbox > * > *').forEach((elem) => {
-                        if(elem.tagName === 'INPUT') {
+                        if (elem.tagName === 'INPUT') {
                             elem.checked = false
                         }
                     })
@@ -165,9 +191,9 @@ const rolesControl = {
                     })
                 }
             }
-            
+
             selectableUsers.click(document.querySelector('.roles').children[0])
-            
+
             document.querySelectorAll('.roles > .users__user-field').forEach((elem) => {
                 elem.addEventListener('click', () => {
                     selectableUsers.click(elem)
@@ -185,10 +211,14 @@ const rolesControl = {
         this.versionControlCheckbox.checked ? history_PERM = true : history_PERM = false
         this.adminCheckbox.checked ? (admin_PERM = true, objectCrud_PERM = true, volumeCrud_PERM = true, history_PERM = true, watch_PERM = true) : admin_PERM = false
 
-        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {method: 'PUT'})
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}&object_viewer=${watch_PERM}&manage_objects=${objectCrud_PERM}&manage_volumes=${volumeCrud_PERM}&manage_history=${history_PERM}&manage_users=${admin_PERM}`, {
+            method: 'PUT'
+        })
     },
     deleteRole() {
-        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {method: 'DELETE'}).then(function(res) {
+        fetch(`/api/v1/role?role_id=${url.searchParams.get('q')}`, {
+            method: 'DELETE'
+        }).then(function (res) {
             return res.json()
         }).then(function () {
             modalSystem.hide()
@@ -198,19 +228,21 @@ const rolesControl = {
     addRole() {
         // document.querySelector('.test').closest('div').previousElementSibling.children[0].children[0].value
         fetch(`/api/v1/role/add`, {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({role_name: document.querySelector('.role-name').value})
-        })
-        .then(function(res) {
-            return res.json();
-        })
-        .then(function() {
-            modalSystem.hide()
-            rolesControl.parseRoles()
-        })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    role_name: document.querySelector('.role-name').value
+                })
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function () {
+                modalSystem.hide()
+                rolesControl.parseRoles()
+            })
     },
     clearRoles() {
         document.querySelector('.roles').innerHTML = ''
@@ -221,93 +253,101 @@ function parsePermissions(id, elem) {
     fetch(`/api/v1/role?role_id=${id}`).then((elem) => {
         return elem.json()
     }).then((json) => {
-        if(json.status === "success") {
+        if (json.status === "success") {
             document.querySelector('.no-access-window').classList.remove('show')
             document.querySelector('.wrap').classList.remove('no-access')
-                if(elem.children[0].dataset.id == json.data.id) {
-                    let parameter = json.data
-                    if(parameter.object_viewer) {
-                        rolesControl.watchobjectsCheckbox.checked = true
-                    } 
-                    if(parameter.manage_history) {
-                        rolesControl.versionControlCheckbox.checked = true
-                    } 
-                    if(parameter.manage_objects) {
-                        rolesControl.objectCrudAllCheckbox.checked = true
-                        rolesControl.objectCrudExactCheckbox.checked = false
-                    } 
-                    if(!parameter.manage_objects) {
-                        rolesControl.objectCrudAllCheckbox.checked = false
-                        rolesControl.objectCrudExactCheckbox.checked = true
-                    } 
-                    if(parameter.manage_volumes) {
-                        rolesControl.volumeCrudAllCheckbox.checked = true
-                        rolesControl.volumeCrudExactCheckbox.checked = false
-                    } 
-                    if(!parameter.manage_volumes) {
-                        rolesControl.volumeCrudAllCheckbox.checked = false
-                        rolesControl.volumeCrudExactCheckbox.checked = true
-                    }
-                    if(parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
-                        rolesControl.adminCheckbox.checked = true
-                    }
+            if (elem.children[0].dataset.id == json.data.id) {
+                let parameter = json.data
+                if (parameter.object_viewer) {
+                    rolesControl.watchobjectsCheckbox.checked = true
                 }
-            }else {
-                if(json.error_message == 'Недостаточно прав') {
-                    document.querySelector('.no-access-window').classList.add('show')
-                    document.querySelector('.wrap').classList.add('no-access')
+                if (parameter.manage_history) {
+                    rolesControl.versionControlCheckbox.checked = true
+                }
+                if (parameter.manage_objects) {
+                    rolesControl.objectCrudAllCheckbox.checked = true
+                    rolesControl.objectCrudExactCheckbox.checked = false
+                }
+                if (!parameter.manage_objects) {
+                    rolesControl.objectCrudAllCheckbox.checked = false
+                    rolesControl.objectCrudExactCheckbox.checked = true
+                }
+                if (parameter.manage_volumes) {
+                    rolesControl.volumeCrudAllCheckbox.checked = true
+                    rolesControl.volumeCrudExactCheckbox.checked = false
+                }
+                if (!parameter.manage_volumes) {
+                    rolesControl.volumeCrudAllCheckbox.checked = false
+                    rolesControl.volumeCrudExactCheckbox.checked = true
+                }
+                if (parameter.object_viewer && parameter.manage_history && parameter.manage_objects && parameter.manage_volumes && parameter.manage_users) {
+                    rolesControl.adminCheckbox.checked = true
                 }
             }
-        })
-    }
-    
-    function resetInputs() {
-        document.querySelector('.modal-body > input').forEach((elem) => {
-            elem.value = ''
-        })
-    }
+        } else {
+            if (json.error_message == 'Недостаточно прав') {
+                document.querySelector('.no-access-window').classList.add('show')
+                document.querySelector('.wrap').classList.add('no-access')
+            }
+        }
+    })
+}
 
-    function addUser() {
+const userControl = {
+    addUser() {
         const username = document.querySelector(".modal-body__name > input")
         const email = document.querySelector('.modal-body__email > input')
         const select = document.querySelector('.modal-body__role > select')
-        
-        fetch("/api/v1/admin/create_account", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({user_email: email.value, user_nickname: username.value, user_role_id: select[select.selectedIndex].dataset.id})
-        })
-        .then(function(res) {
-            return res.json();
-        })
-        .then(function(json) {
-            if(json.status === 'error') {
-                if(json.error_message === 'Недостаточно прав') {
-                    alert(json.error_message)
-                }else if (json.error_message === 'Роль не была найдена') {
-                    alert(json.error_message)
-                }else if (json.error_message === 'Пользователь не найден') {
-                    alert(json.error_message)
-                }
-            }else {
-                resetInputs()
-                modalSystem.hide()
-            }
-        })
-    }
 
-    window.onhashchange = () => {
-        const addButton = document.querySelector('.add__button')
-        if(window.location.hash == "#users") {
-            addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
-            document.querySelector('.actions > .delete').classList.remove('roles-page')
-        }else {
-            document.querySelector('.actions > .delete').classList.add('roles-page')
-            addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
-        }
+        fetch("/api/v1/admin/create_account", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_email: email.value,
+                    user_nickname: username.value,
+                    user_role_id: select[select.selectedIndex].dataset.id
+                })
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (json) {
+                if (json.status === 'error') {
+                    if (json.error_message === 'Недостаточно прав') {
+                        alert(json.error_message)
+                    } else if (json.error_message === 'Роль не была найдена') {
+                        alert(json.error_message)
+                    } else if (json.error_message === 'Пользователь не найден') {
+                        alert(json.error_message)
+                    }
+                } else {
+                    resetInputs()
+                    modalSystem.hide()
+                }
+            })
+    },
+    resetInputs() {
+        document.querySelector('.modal-body > input').forEach((elem) => {
+            elem.value = ''
+        })
+    },
+    deleteUser() {
+
     }
+}
+
+window.onhashchange = () => {
+    const addButton = document.querySelector('.add__button')
+    if (window.location.hash == "#users") {
+        addButton.setAttribute('onclick', `modalSystem.show('add-user')`)
+        document.querySelector('.actions > .delete').classList.remove('roles-page')
+    } else {
+        document.querySelector('.actions > .delete').classList.add('roles-page')
+        addButton.setAttribute('onclick', `modalSystem.show('add-role')`)
+    }
+}
 
 titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)

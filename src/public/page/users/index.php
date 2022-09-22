@@ -168,7 +168,7 @@
                     <p>Предупреждаем, это действие не возможно отменить!</p>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="">Удалить</button>
+                    <button onclick="userControl.deleteUser()">Удалить</button>
                     <button onclick="modalSystem.hide()">Отмена</button>
                 </div>
             </div>

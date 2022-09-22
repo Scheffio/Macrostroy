@@ -320,7 +320,13 @@ const userControl = {
     },
     deleteUser() {
         fetch('/api/v1/user', {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: url.searchParams.get('id')
+            })
         }).then(function (res) {
             return res.json()
         }).then(function (json) {

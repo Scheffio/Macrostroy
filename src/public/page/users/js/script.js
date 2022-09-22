@@ -350,7 +350,7 @@ const userControl = {
                 elem.addEventListener('click', () => {
                     modalSystem.show('delete-user')
                     document.querySelector('.delete-user > * > * > .username-span').textContent = elem.previousElementSibling.textContent
-                    url.searchParams.set('id', elem.dataset.id)
+                    url.searchParams.set('id', elem.previousElementSibling.dataset.id)
                 })
             })
         })

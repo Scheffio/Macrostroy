@@ -334,7 +334,7 @@ const userControl = {
                 alert(json.error_message)
             } else {
                 modalSystem.hide()
-                this.parseUsers()
+                userControl.parseUsers()
             }
         })
     },

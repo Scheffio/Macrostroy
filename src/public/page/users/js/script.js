@@ -278,6 +278,7 @@ function parsePermissions(id, elem) {
 }
 
 const userControl = {
+    usersList: document.querySelector('.users__list'),
     addUser() {
         const username = document.querySelector(".modal-body__name > input")
         const email = document.querySelector('.modal-body__email > input')
@@ -327,16 +328,17 @@ const userControl = {
                 alert(json.error_message)
             } else {
                 modalSystem.hide()
+                this.parseUsers()
             }
         })
     },
     parseUsers() {
-        const usersList = document.querySelector('.users__list')
         fetch(`/api/v1/users`).then((elem) => {
             return elem.json()
         }).then((json) => {
+            this.resetUsers()
             json.data.forEach((elem) => {
-                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+                this.usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
             })
             document.querySelectorAll('.users__close-btn').forEach((elem) => {
                 elem.addEventListener('click', () => {
@@ -348,7 +350,7 @@ const userControl = {
         })
     },
     resetUsers() {
-        
+        this.usersList.innerHTML = ''
     }
 }
 
@@ -367,3 +369,4 @@ titleChecker.resetClasses()
 titleChecker.checkTitle(document.title)
 window.location = "#users"
 rolesControl.parseRoles()
+userControl.parseUsers()

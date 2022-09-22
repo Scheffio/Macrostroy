@@ -325,7 +325,7 @@ const userControl = {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                user_id: url.searchParams.get('id')
+                user_id: Number(url.searchParams.get('id'))
             })
         }).then(function (res) {
             return res.json()

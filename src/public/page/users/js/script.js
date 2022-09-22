@@ -101,20 +101,19 @@ const roleNameField = document.querySelector('.modal-body__role-name')
 
 nameField.forEach((elem) => {
     elem.addEventListener('click', () => {
-        nameField.forEach((input) => {
-            input.focus()
-        })
+        elem.children[0].focus()
     })
 })
-// nameField.addEventListener('click', () => {
-//     nameInput.focus()
-// })
-// emailField.addEventListener('click', () => {
-//     emailInput.focus()
-// })
-// roleNameField.addEventListener('click', () => {
-//     roleNameInput.focus()
-// })
+
+emailField.forEach((elem) => {
+    elem.addEventListener('click', () => {
+        elem.children[0].focus()
+    })
+})
+
+roleNameField.addEventListener('click', () => {
+    roleNameInput.focus()
+})
 
 // nameInput.addEventListener('focus', () => {
 //     nameInput.value != '' ? null : nameField.classList.toggle('focused')

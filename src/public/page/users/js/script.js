@@ -1,19 +1,3 @@
-const usersList = document.querySelector('.users__list')
-fetch(`/api/v1/users`).then((elem) => {
-    return elem.json()
-}).then((json) => {
-    json.data.forEach((elem) => {
-        usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
-    })
-    document.querySelectorAll('.users__close-btn').forEach((elem) => {
-        elem.addEventListener('click', () => {
-            modalSystem.show('delete-user')
-            document.querySelector('.delete-user > * > * > .username-span').textContent = elem.previousElementSibling.textContent
-            url.searchParams.set('id', elem.dataset.id)
-        })
-    })
-})
-
 const userGenerator = {
     createElement(element, elementClass, elementModificator, elementContent) {
         let create = document.createElement(`${element}`)
@@ -311,7 +295,7 @@ const userControl = {
                 })
             })
             .then(function (res) {
-                return res.json();
+                return res.json()
             })
             .then(function (json) {
                 if (json.status === 'error') {
@@ -334,7 +318,37 @@ const userControl = {
         })
     },
     deleteUser() {
-
+        fetch('/api/v1/user', {
+            method: 'DELETE'
+        }).then(function (res) {
+            return res.json()
+        }).then(function (json) {
+            if (json.status === 'error') {
+                alert(json.error_message)
+            } else {
+                modalSystem.hide()
+            }
+        })
+    },
+    parseUsers() {
+        const usersList = document.querySelector('.users__list')
+        fetch(`/api/v1/users`).then((elem) => {
+            return elem.json()
+        }).then((json) => {
+            json.data.forEach((elem) => {
+                usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+            })
+            document.querySelectorAll('.users__close-btn').forEach((elem) => {
+                elem.addEventListener('click', () => {
+                    modalSystem.show('delete-user')
+                    document.querySelector('.delete-user > * > * > .username-span').textContent = elem.previousElementSibling.textContent
+                    url.searchParams.set('id', elem.dataset.id)
+                })
+            })
+        })
+    },
+    resetUsers() {
+        
     }
 }
 

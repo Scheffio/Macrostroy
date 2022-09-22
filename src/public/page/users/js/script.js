@@ -30,6 +30,7 @@ const modalSystem = {
     deleteRoleWindow: document.querySelector('.modal > .modal-wrap > .delete-role'),
     deleteUserWindow: document.querySelector('.modal > .modal-wrap > .delete-user'),
     addUserWindow: document.querySelector('.modal > .modal-wrap > .add-user'),
+    editUserWindow: document.querySelector('.modal > .modal-wrap > .edit-user'),
     body: document.querySelector('body'),
     fixateBackground() {
         this.body.classList.toggle("fixated")
@@ -61,6 +62,10 @@ const modalSystem = {
         if (type == 'delete-user') {
             this.modalWrap.classList.add('roles')
             this.deleteUserWindow.classList.add('opened')
+        }
+        if (type == 'edit-user') {
+            this.modalWrap.classList.add('roles')
+            this.editUserWindow.classList.add('opened')
         }
     },
     hide() {
@@ -345,6 +350,11 @@ const userControl = {
             this.resetUsers()
             json.data.forEach((elem) => {
                 this.usersList.appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p id="user-field__username" data-id="${elem.id}">${elem.username}</p>`)).appendChild(userGenerator.createElement('div', 'users__close-btn', '', ''))
+            })
+            document.querySelectorAll('.users__user-field').forEach((elem) => {
+                elem.addEventListener('click', () => {
+                    modalSystem.show('edit-user')
+                })
             })
             document.querySelectorAll('.users__close-btn').forEach((elem) => {
                 elem.addEventListener('click', () => {

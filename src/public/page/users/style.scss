@@ -691,7 +691,8 @@
             width: clamp(500px, 80vw, 780px);
             height: auto;
         }
-        .add-user {
+        .add-user,
+        .edit-user {
             display: none;
             @include MainTitle;
             flex-direction: column;

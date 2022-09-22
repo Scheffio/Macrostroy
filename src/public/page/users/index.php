@@ -181,12 +181,25 @@
                 <div class="modal-footer"></div>
             </div>
             <div class="edit-user">
-                <span onclick="modalSystem.hide()"></span>
+            <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
-                    <p>Редактирование пользователя</p>
+                    <p>Добавить пользователя</p>
                 </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer"></div>
+                <div class="modal-body">
+                    <div class="modal-body__name">
+                        <input type="text">
+                    </div>
+                    <div class="modal-body__email">
+                        <input type="email">
+                    </div>
+                    <div class="modal-body__role">
+                        <select>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="addUser()">Добавить</button>
+                </div>
             </div>
             <div class="add-role">
                 <span onclick="modalSystem.hide()"></span>

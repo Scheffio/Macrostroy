@@ -877,14 +877,16 @@ body.fixated {
   width: clamp(500px, 80vw, 780px);
   height: auto;
 }
-.modal .modal-wrap .add-user {
+.modal .modal-wrap .add-user,
+.modal .modal-wrap .edit-user {
   display: none;
   font-family: "Jost", sans-serif;
   font-size: 36px;
   font-weight: 700;
   flex-direction: column;
 }
-.modal .modal-wrap .add-user span {
+.modal .modal-wrap .add-user span,
+.modal .modal-wrap .edit-user span {
   width: 25px;
   height: 25px;
   display: flex;
@@ -895,7 +897,8 @@ body.fixated {
   transition: 0.3s;
   right: 20px;
 }
-.modal .modal-wrap .add-user span::before {
+.modal .modal-wrap .add-user span::before,
+.modal .modal-wrap .edit-user span::before {
   content: "";
   display: block;
   width: 15px;
@@ -904,7 +907,8 @@ body.fixated {
   transform: rotate(-45deg);
   position: absolute;
 }
-.modal .modal-wrap .add-user span::after {
+.modal .modal-wrap .add-user span::after,
+.modal .modal-wrap .edit-user span::after {
   content: "";
   display: block;
   width: 15px;
@@ -913,35 +917,43 @@ body.fixated {
   transform: rotate(45deg);
   position: absolute;
 }
-.modal .modal-wrap .add-user span:hover {
+.modal .modal-wrap .add-user span:hover,
+.modal .modal-wrap .edit-user span:hover {
   cursor: pointer;
   opacity: 0.6;
   transition: 0.3s;
 }
-.modal .modal-wrap .add-user.opened {
+.modal .modal-wrap .add-user.opened,
+.modal .modal-wrap .edit-user.opened {
   display: flex;
 }
-.modal .modal-wrap .add-user .modal-header {
+.modal .modal-wrap .add-user .modal-header,
+.modal .modal-wrap .edit-user .modal-header {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 35px 0px 40px 0px;
 }
-.modal .modal-wrap .add-user .modal-header p {
+.modal .modal-wrap .add-user .modal-header p,
+.modal .modal-wrap .edit-user .modal-header p {
   margin: 0;
 }
-.modal .modal-wrap .add-user .modal-body {
+.modal .modal-wrap .add-user .modal-body,
+.modal .modal-wrap .edit-user .modal-body {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__name {
+.modal .modal-wrap .add-user .modal-body .modal-body__name,
+.modal .modal-wrap .edit-user .modal-body .modal-body__name {
   position: relative;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__name:hover {
+.modal .modal-wrap .add-user .modal-body .modal-body__name:hover,
+.modal .modal-wrap .edit-user .modal-body .modal-body__name:hover {
   cursor: text;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__name input {
+.modal .modal-wrap .add-user .modal-body .modal-body__name input,
+.modal .modal-wrap .edit-user .modal-body .modal-body__name input {
   width: 500px;
   height: 50px;
   border: 1px solid black;
@@ -952,7 +964,8 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__name::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__name::before,
+.modal .modal-wrap .edit-user .modal-body .modal-body__name::before {
   content: "Имя пользователя";
   display: block;
   position: absolute;
@@ -965,20 +978,24 @@ body.fixated {
   font-weight: 500;
   transition: 0.3s;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__name.focused::before,
+.modal .modal-wrap .edit-user .modal-body .modal-body__name.focused::before {
   padding: 5px 5px;
   left: 10px;
   top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__email {
+.modal .modal-wrap .add-user .modal-body .modal-body__email,
+.modal .modal-wrap .edit-user .modal-body .modal-body__email {
   position: relative;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__email:hover {
+.modal .modal-wrap .add-user .modal-body .modal-body__email:hover,
+.modal .modal-wrap .edit-user .modal-body .modal-body__email:hover {
   cursor: text;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__email input {
+.modal .modal-wrap .add-user .modal-body .modal-body__email input,
+.modal .modal-wrap .edit-user .modal-body .modal-body__email input {
   width: 500px;
   height: 50px;
   border: 1px solid black;
@@ -989,7 +1006,8 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__email::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__email::before,
+.modal .modal-wrap .edit-user .modal-body .modal-body__email::before {
   content: "Электронная почта";
   display: block;
   position: absolute;
@@ -1002,17 +1020,20 @@ body.fixated {
   font-weight: 500;
   transition: 0.3s;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__email.focused::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__email.focused::before,
+.modal .modal-wrap .edit-user .modal-body .modal-body__email.focused::before {
   padding: 5px 5px;
   left: 10px;
   top: -17px;
   opacity: 1;
   transition: 0.3s;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__role {
+.modal .modal-wrap .add-user .modal-body .modal-body__role,
+.modal .modal-wrap .edit-user .modal-body .modal-body__role {
   position: relative;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__role select {
+.modal .modal-wrap .add-user .modal-body .modal-body__role select,
+.modal .modal-wrap .edit-user .modal-body .modal-body__role select {
   background-color: white;
   width: 250px;
   height: 50px;
@@ -1024,7 +1045,8 @@ body.fixated {
   font-size: 16px;
   font-weight: 400;
 }
-.modal .modal-wrap .add-user .modal-body .modal-body__role::before {
+.modal .modal-wrap .add-user .modal-body .modal-body__role::before,
+.modal .modal-wrap .edit-user .modal-body .modal-body__role::before {
   content: "Роль";
   display: block;
   position: absolute;
@@ -1036,12 +1058,14 @@ body.fixated {
   font-weight: 500;
   padding: 0px 5px;
 }
-.modal .modal-wrap .add-user .modal-footer {
+.modal .modal-wrap .add-user .modal-footer,
+.modal .modal-wrap .edit-user .modal-footer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.modal .modal-wrap .add-user .modal-footer button {
+.modal .modal-wrap .add-user .modal-footer button,
+.modal .modal-wrap .edit-user .modal-footer button {
   margin-top: 30px;
   width: 140px;
   height: 40px;
@@ -1055,7 +1079,8 @@ body.fixated {
   font-size: 20px;
   font-weight: 400;
 }
-.modal .modal-wrap .add-user .modal-footer button:hover {
+.modal .modal-wrap .add-user .modal-footer button:hover,
+.modal .modal-wrap .edit-user .modal-footer button:hover {
   transition: 0.3s;
   background-color: white;
   border: 2px solid #7E99AD;

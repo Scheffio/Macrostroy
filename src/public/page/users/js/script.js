@@ -115,6 +115,12 @@ roleNameField.addEventListener('click', () => {
     roleNameInput.focus()
 })
 
+nameInput.forEach((elem) => {
+    elem.addEventListener('focus', () => {
+        elem.value != '' ? null : elem.closest('.modal-body__name')
+    }) 
+})
+
 // nameInput.addEventListener('focus', () => {
 //     nameInput.value != '' ? null : nameField.classList.toggle('focused')
 // })

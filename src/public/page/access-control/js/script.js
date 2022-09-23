@@ -120,4 +120,4 @@ const userGenerator = {
 }
 
 setItemName()
-titleChecker.checkTitle()
+titleChecker.checkTitle(document.title)

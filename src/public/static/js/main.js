@@ -57,7 +57,7 @@ const titleChecker = {
             menu_elements.forEach((element) => {
                 if (element.textContent === menuElement) {
                     element.classList.add('selected')
-                    // ищем есть ли такой элемент в меню, есть - кидаем стиль
+                    // ищем есть ли такой элемент в меню, есть - кидаем стиль4
                 }
             })
         } else {

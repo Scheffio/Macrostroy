@@ -183,7 +183,7 @@
             <div class="edit-user">
             <span onclick="modalSystem.hide()"></span>
                 <div class="modal-header">
-                    <p>Добавить пользователя</p>
+                    <p>Редактрование пользователя</p>
                 </div>
                 <div class="modal-body">
                     <div class="modal-body__name">
@@ -198,7 +198,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="addUser()">Добавить</button>
+                    <button onclick="addUser()">Изменить</button>
                 </div>
             </div>
             <div class="add-role">

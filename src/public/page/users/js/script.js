@@ -164,14 +164,17 @@ const rolesControl = {
         }).then((json) => {
             this.clearRoles()
             json.data.forEach((roles) => {
-                let option = document.createElement('option')
-                option.dataset.id = roles.id
-                option.value = roles.name
-                option.textContent = roles.name
+                
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
             })
             select.forEach((elem) => {
-                
+                json.data.forEach((roles) => {
+                    let option = document.createElement('option')
+                    option.dataset.id = roles.id
+                    option.value = roles.name
+                    option.textContent = roles.name
+                    elem.appendChild(option)
+                })
             })
 
             const selectableUsers = {

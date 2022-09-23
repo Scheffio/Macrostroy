@@ -24,291 +24,30 @@
     <div class="wrap">
         <div class="tabs-controller">
             <div class="tabs-controller__tab-anchor">
-                <a href="#cities" class="tab-anchor__anchor-name selected">Города</a>
+                <a href="#works" class="tab-anchor__anchor-name selected">Работы</a>
             </div>
             <div class="tabs-controller__tab-anchor">
-                <a href="#areas" class="tab-anchor__anchor-name">Районы</a>
+                <a href="#materials" class="tab-anchor__anchor-name">Материалы</a>
             </div>
             <div class="tabs-controller__tab-anchor">
-                <a href="#residential-complexes" class="tab-anchor__anchor-name">ЖК</a>
+                <a href="#technics" class="tab-anchor__anchor-name">Техника</a>
             </div>
             <div class="tabs-controller__tab-anchor">
-                <a href="#houses" class="tab-anchor__anchor-name">Дома</a>
+                <a href="#units" class="tab-anchor__anchor-name">Единицы измерения</a>
             </div>
-            <div class="tabs-controller__tab-anchor">
-                <a href="#stages" class="tab-anchor__anchor-name">Этапы</a>
-            </div> 
         </div>
         <div class="tabs-container">
             <div id="cities" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
+                
             </div>
             <div id="residential-complexes" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
+                
             </div>
             <div id="houses" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
+                
             </div>
             <div id="stages" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
-            </div>
-            <div id="areas" class="tabs-container__tab-element">
-                <div class="grid">
-                    <div class="grid__header">
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Название</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Статус</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Доступ</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Последнее изменение</p>
-                        </div>
-                        <div class="header__element">
-                            <div class="sorter">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по убыванию">
-                                <img src="../../static/icons/sorter/sorter-default.svg"
-                                    alt="Кнопка сортировки по возрастанию">
-                            </div>
-                            <p>Общая стоимость</p>
-                        </div>
-                    </div>
-                    <div class="grid__body">
-
-                    </div>
-                </div>
+                
             </div>
         </div>
         <div class="add-project">

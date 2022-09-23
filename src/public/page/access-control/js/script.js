@@ -120,3 +120,4 @@ const userGenerator = {
 }
 
 setItemName()
+titleChecker.checkTitle()

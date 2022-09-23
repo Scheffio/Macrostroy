@@ -1,8 +1,6 @@
 // Anchor Checker
 const anchors = document.querySelectorAll('.tabs-controller__tab-anchor')
 
-
-
 const anchorChecker = {
     anchorReset() {
         // обнулятор якорей

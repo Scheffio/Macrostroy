@@ -66,7 +66,6 @@ const modalSystem = {
         if (type == 'edit-user') {
             this.modalWrap.classList.add('roles')
             this.editUserWindow.classList.add('opened')
-            rolesControl.parseRoles()
         }
     },
     hide() {
@@ -169,10 +168,10 @@ const rolesControl = {
                 option.dataset.id = roles.id
                 option.value = roles.name
                 option.textContent = roles.name
-                select.forEach((elem) => {
-                    elem.appendChild(option)
-                })
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
+            })
+            select.forEach((elem) => {
+                
             })
 
             const selectableUsers = {

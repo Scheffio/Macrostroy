@@ -37,16 +37,16 @@
             </div>
         </div>
         <div class="tabs-container">
-            <div id="cities" class="tabs-container__tab-element">
+            <div id="works" class="tabs-container__tab-element">
                 
             </div>
-            <div id="residential-complexes" class="tabs-container__tab-element">
+            <div id="materials" class="tabs-container__tab-element">
                 
             </div>
-            <div id="houses" class="tabs-container__tab-element">
+            <div id="technics" class="tabs-container__tab-element">
                 
             </div>
-            <div id="stages" class="tabs-container__tab-element">
+            <div id="units" class="tabs-container__tab-element">
                 
             </div>
         </div>

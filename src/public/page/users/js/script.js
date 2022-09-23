@@ -66,6 +66,7 @@ const modalSystem = {
         if (type == 'edit-user') {
             this.modalWrap.classList.add('roles')
             this.editUserWindow.classList.add('opened')
+            rolesControl.parseRoles()
         }
     },
     hide() {
@@ -117,30 +118,29 @@ roleNameField.addEventListener('click', () => {
 
 nameInput.forEach((elem) => {
     elem.addEventListener('focus', () => {
-        elem.value != '' ? null : elem.closest('.modal-body__name')
+        elem.value != '' ? null : elem.closest('.modal-body__name').classList.toggle('focused')
     }) 
+    elem.addEventListener('blur', () => {
+        elem.value != '' ? null : elem.closest('.modal-body__name').classList.toggle('focused')
+    })
 })
 
-// nameInput.addEventListener('focus', () => {
-//     nameInput.value != '' ? null : nameField.classList.toggle('focused')
-// })
-// nameInput.addEventListener('blur', () => {
-//     nameInput.value != '' ? null : nameField.classList.toggle('focused')
-// })
+emailInput.forEach((elem) => {
+    elem.addEventListener('focus', () => {
+        elem.value != '' ? null : elem.closest('.modal-body__email').classList.toggle('focused')
+    }) 
+    elem.addEventListener('blur', () => {
+        elem.value != '' ? null : elem.closest('.modal-body__email').classList.toggle('focused')
+    })
+})
 
-// emailInput.addEventListener('focus', () => {
-//     emailInput.value != '' ? null : emailField.classList.toggle('focused')
-// })
-// emailInput.addEventListener('blur', () => {
-//     emailInput.value != '' ? null : emailField.classList.toggle('focused')
-// })
 
-// roleNameInput.addEventListener('focus', () => {
-//     roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
-// })
-// roleNameInput.addEventListener('blur', () => {
-//     roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
-// })
+roleNameInput.addEventListener('focus', () => {
+    roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
+})
+roleNameInput.addEventListener('blur', () => {
+    roleNameInput.value != '' ? null : roleNameField.classList.toggle('focused')
+})
 
 document.querySelectorAll('.uncheckable').forEach((elem) => {
     elem.addEventListener('dblclick', () => {
@@ -159,7 +159,7 @@ const rolesControl = {
     watchobjectsCheckbox: document.querySelector('.watch > input'),
     currentRoleId: 0,
     parseRoles() {
-        const select = document.querySelector('.modal-body__role > select')
+        const select = document.querySelectorAll('.modal-body__role > select')
         fetch(`/api/v1/roles`).then((elem) => {
             return elem.json()
         }).then((json) => {
@@ -169,7 +169,9 @@ const rolesControl = {
                 option.dataset.id = roles.id
                 option.value = roles.name
                 option.textContent = roles.name
-                select.appendChild(option)
+                select.forEach((elem) => {
+                    elem.appendChild(option)
+                })
                 document.querySelector('.roles').appendChild(userGenerator.createElement('div', 'users__user-field', '', `<p data-id="${roles.id}">${roles.name}</p>`))
             })
 
@@ -248,6 +250,9 @@ const rolesControl = {
     },
     clearRoles() {
         document.querySelector('.roles').innerHTML = ''
+        document.querySelectorAll('.modal-body__role > select').forEach((elem) => {
+            elem.innerHTML = ""
+        })
     }
 }
 
